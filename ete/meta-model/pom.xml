@@ -13,5 +13,6 @@
         <module>meta-model-impl</module>
         <module>meta-model-io</module>
         <module>xmi-io</module>
+        <module>plain-text-io</module>
     </modules>
 </project>
