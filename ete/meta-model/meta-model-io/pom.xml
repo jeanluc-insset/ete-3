@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>fr.insset.jeanluc</groupId>
+        <artifactId>meta-model</artifactId>
+        <version>3.1</version>
+    </parent>
+    <artifactId>meta-model-io</artifactId>
+    <packaging>jar</packaging>
+    <dependencies>
+        <dependency>
+            <groupId>fr.insset.jeanluc</groupId>
+            <artifactId>meta-model-api</artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
+        </dependency>
+
+        <dependency>
+            <groupId>fr.insset.jeanluc</groupId>
+            <artifactId>util</artifactId>
+            <version>1.1</version>
+            <type>jar</type>
+        </dependency>
+
+        <!--        <dependency>
+            <groupId>fr.insset.jeanluc</groupId>
+            <artifactId>ete-api</artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
+        </dependency>-->
+
+    </dependencies>
+</project>

@@ -11,5 +11,7 @@
     <modules>
         <module>meta-model-api</module>
         <module>meta-model-impl</module>
+        <module>meta-model-io</module>
+        <module>xmi-io</module>
     </modules>
 </project>
