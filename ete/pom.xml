@@ -10,5 +10,6 @@
     <packaging>pom</packaging>
     <modules>
         <module>meta-model</module>
+        <module>meta-model-impl</module>
     </modules>
 </project>
