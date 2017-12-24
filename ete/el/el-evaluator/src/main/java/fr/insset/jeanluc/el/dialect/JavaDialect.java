@@ -37,28 +37,28 @@ public interface JavaDialect extends Dialect {
         }
         String result = inString;
         switch (inString) {
-            case BOOLEAN_TYPE:
+//            case BOOLEAN_TYPE:
             case BOOLEAN_TYPE + TYPE_SUFFIX:
                 result = "boolean";
                 break;
-            case STRING_TYPE:
+//            case STRING_TYPE:
             case STRING_TYPE + TYPE_SUFFIX:
                 result =  "String";
                 break;
-            case INT_TYPE:
+//            case INT_TYPE:
             case INT_TYPE + TYPE_SUFFIX :
                 result = "int";
                 break;
-            case FLOAT_TYPE:
+//            case FLOAT_TYPE:
             case FLOAT_TYPE + TYPE_SUFFIX:
                 result = "double";
                 break;
-            case DATE_TYPE:
+//            case DATE_TYPE:
             case DATE_TYPE + TYPE_SUFFIX:
 //                result = "java.time.LocalDate";
                 result = "java.util.Date";
                 break;
-            case UNLIMITED_NATURAL_TYPE:
+//            case UNLIMITED_NATURAL_TYPE:
             case UNLIMITED_NATURAL_TYPE + TYPE_SUFFIX :
                 result = "fr.insset.jeanluc.ete.meta.model.datatype.UnlimitedNatural";
                 break;

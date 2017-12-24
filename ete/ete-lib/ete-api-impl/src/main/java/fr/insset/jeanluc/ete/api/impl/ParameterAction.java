@@ -2,7 +2,7 @@ package fr.insset.jeanluc.ete.api.impl;
 
 
 
-import fr.insset.jeanluc.el.evaluator.ELEvaluator;
+import fr.insset.jeanluc.el.evaluator.JSR341Evaluator;
 import fr.insset.jeanluc.ete.api.ActionSupport;
 import fr.insset.jeanluc.ete.api.EteException;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.MofPackage;
@@ -45,7 +45,7 @@ public class ParameterAction extends ActionSupport {
             return null;
         }
         if (inValue instanceof String) {
-            ELEvaluator evaluator = new ELEvaluator(inPackage, getAllParameters());
+            JSR341Evaluator evaluator = new JSR341Evaluator(inPackage, getAllParameters());
             inValue = evaluator.evaluate((String)inValue);
         }
         return inValue;

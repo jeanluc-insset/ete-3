@@ -10,3 +10,14 @@
 /ete/meta-model/xmi-io/target/
 /ete/el/el-evaluator/target/
 /ete/meta-model/plain-text-io/target/
+/ete/ete-lib/ete-api-impl/target/
+/ete/execution-language/action-semantics-builder/nbproject/
+/ete/execution-language/action-semantics-to-java/nbproject/
+/ete/execution-language/execution-language-spec/target/
+/ete/gel/gel-api/nbproject/
+/ete/gel/gel-impl/target/
+/ete/gel/gel-api/target/
+/ete/gel/gel-spec/target/
+/ete/ete-maven-plugin/target/
+/target/
+/ete/gel/gel-evaluator/target/

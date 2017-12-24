@@ -235,7 +235,7 @@ public interface Action {
      * @return
      * @throws EteException 
      */
-    public default String getFullUrl(String inUrl) throws EteException {
+    public default String getFullUrl(String inUrl) {
         Logger.getGlobal().log(Level.FINE, "Recherche de la ressource " + inUrl);
         if (!inUrl.contains(":/")) {
             // Actually we must get a file must we not ?
@@ -272,14 +272,14 @@ public interface Action {
     }
 
     public default InputStream getResource(String inUrl) throws EteException {
-        String fullUrl = getFullUrl(inUrl);
         try {
-            URL url = new URL(fullUrl);
-            return url.openStream();
+            String fullUrl = getFullUrl(inUrl);
+            URL url;
+            url = new URL(fullUrl);
+            return url.openStream();        
         } catch (IOException ex) {
             throw new EteException(ex);
         }
-        
     }
 
 

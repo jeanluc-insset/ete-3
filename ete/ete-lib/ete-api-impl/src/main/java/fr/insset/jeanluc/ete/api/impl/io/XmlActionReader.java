@@ -1,11 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package fr.insset.jeanluc.ete.api.impl.io;
 
-import fr.insset.jeanluc.el.evaluator.ELEvaluator;
+import fr.insset.jeanluc.el.evaluator.JSR341Evaluator;
 import fr.insset.jeanluc.ete.api.Action;
 import fr.insset.jeanluc.ete.api.ActionReader;
 import fr.insset.jeanluc.ete.api.ActionSupport;
@@ -100,7 +95,7 @@ public class XmlActionReader implements ActionReader {
             String name = item.getNodeName();
             String stringValue = item.getNodeValue();
             try {
-                ELEvaluator evaluator = new ELEvaluator();
+                JSR341Evaluator evaluator = new JSR341Evaluator();
                 Object value = evaluator.evaluate(stringValue, action.getAllParameters());
                 action.addParameter(name, value);
             }

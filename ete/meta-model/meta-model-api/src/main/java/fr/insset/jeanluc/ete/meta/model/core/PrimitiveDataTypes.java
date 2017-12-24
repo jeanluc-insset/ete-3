@@ -15,7 +15,8 @@ import java.util.logging.Logger;
  */
 public abstract class PrimitiveDataTypes {
 
-    public final    static String   TYPE_SUFFIX     = "Type";
+//    public final    static String   TYPE_SUFFIX     = "Type";
+    public final    static String   TYPE_SUFFIX     = "";
 
     public final    static String   STRING_TYPE     = "String";
     public final    static String   BOOLEAN_TYPE    = "boolean";

@@ -1,7 +1,7 @@
 package fr.insset.jeanluc.ete.api.impl;
 
 
-import fr.insset.jeanluc.el.evaluator.ELEvaluator;
+import fr.insset.jeanluc.el.evaluator.JSR341Evaluator;
 import fr.insset.jeanluc.ete.api.ActionSupport;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.MofPackage;
 
@@ -18,7 +18,7 @@ public class IfAction extends ActionSupport {
 
     @Override
     public boolean shouldIProcess(MofPackage inModel) {
-        ELEvaluator evaluator = new ELEvaluator(inModel, getAllParameters());
+        JSR341Evaluator evaluator = new JSR341Evaluator(inModel, getAllParameters());
         String test = (String) getParameter("test");
         boolean result;
         try {

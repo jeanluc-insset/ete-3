@@ -8,6 +8,7 @@ import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.MofPackage;
 import fr.insset.jeanluc.meta.model.io.ModelReader;
 import fr.insset.jeanluc.util.factory.FactoryRegistry;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,18 +44,19 @@ public class ModelAction extends ActionSupport {
         String parameter = (String) getParameter("url");
         Logger.getGlobal().log(Level.INFO, "Reading model... {0}", parameter);
         InputStream resource = getResource(parameter);
-        try {
             // obtenir le "reader" par une fabrique abstraite
-            ModelReader   reader = (ModelReader) FactoryRegistry.newInstance(MODEL_READER);
+        ModelReader   reader;
+        try {
+            reader = (ModelReader) FactoryRegistry.newInstance(MODEL_READER);
             result = reader.readModel(resource, (EteModel) inModel);
-            getParent().addParameter(MODEL, result);
-        } catch (EteException e) {
-            throw e;
-
-        } catch (Exception ex) {
+        } catch (InstantiationException ex) {
             Logger.getLogger(ModelAction.class.getName()).log(Level.SEVERE, null, ex);
-            throw new EteException(ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(ModelAction.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ModelAction.class.getName()).log(Level.SEVERE, null, ex);
         }
+        getParent().addParameter(MODEL, result);
         Logger.getGlobal().log(Level.FINE, "Lecture -> {0}", inModel);
         return result;
     }

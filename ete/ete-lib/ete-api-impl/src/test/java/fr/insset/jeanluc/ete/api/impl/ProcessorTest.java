@@ -61,7 +61,7 @@ public class ProcessorTest {
     public void testRun() throws InstantiationException, IllegalAccessException {
         System.out.println("run");
 
-        ProcessorAction instance = new ProcessorAction("../../src/test/mda/ete-config.xml");
+        ProcessorAction instance = new ProcessorAction("../../../src/test/mda/ete-config.xml");
         instance.addParameter(OUTPUT_BASE, "target");
         instance.run();
 

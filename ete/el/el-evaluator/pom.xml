@@ -21,7 +21,7 @@
         </dependency>
         <dependency>
             <groupId>fr.insset.jeanluc</groupId>
-            <artifactId>meta-model</artifactId>
+            <artifactId>meta-model-api</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>

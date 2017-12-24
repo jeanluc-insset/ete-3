@@ -12,5 +12,8 @@
         <module>meta-model</module>
         <module>el</module>
         <module>ete-lib</module>
+        <module>ete-maven-plugin</module>
+        <module>gel</module>
+        <module>execution-language</module>
     </modules>
 </project>

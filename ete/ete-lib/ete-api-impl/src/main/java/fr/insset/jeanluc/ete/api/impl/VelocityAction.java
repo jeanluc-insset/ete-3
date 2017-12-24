@@ -2,7 +2,7 @@ package fr.insset.jeanluc.ete.api.impl;
 
 
 
-import fr.insset.jeanluc.el.evaluator.ELEvaluator;
+import fr.insset.jeanluc.el.evaluator.JSR341Evaluator;
 import static fr.insset.jeanluc.ete.api.impl.GenericTemplate.TEMPLATE;
 import fr.insset.jeanluc.ete.meta.model.core.NamedElement;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.MofPackage;
@@ -124,7 +124,7 @@ public class VelocityAction extends GenericTemplate {
      */
     protected   String  getTemplateUrl() {
         String  result = (String) getParameter(TEMPLATE);
-        ELEvaluator elEvaluator = new ELEvaluator(getModel(), getAllParameters());
+        JSR341Evaluator elEvaluator = new JSR341Evaluator(getModel(), getAllParameters());
         String evaluate = (String) elEvaluator.evaluate(result);
         return evaluate;
     }

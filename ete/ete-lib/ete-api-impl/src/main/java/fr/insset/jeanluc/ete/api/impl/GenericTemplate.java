@@ -2,7 +2,7 @@ package fr.insset.jeanluc.ete.api.impl;
 
 
 
-import fr.insset.jeanluc.el.evaluator.ELEvaluator;
+import fr.insset.jeanluc.el.evaluator.JSR341Evaluator;
 import fr.insset.jeanluc.ete.meta.model.core.NamedElement;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.MofPackage;
@@ -93,7 +93,7 @@ public abstract class GenericTemplate extends ForEachAction {
         Logger logger = Logger.getGlobal();
         String  result = (String) getParameter(TEMPLATE);
         logger.log(Level.FINER, "Template path : " + TEMPLATE);
-        ELEvaluator elEvaluator = new ELEvaluator(getModel(), getAllParameters());
+        JSR341Evaluator elEvaluator = new JSR341Evaluator(getModel(), getAllParameters());
         String evaluate = (String)elEvaluator.evaluate(result);
         String  baseUrl = getBaseUrl();
         logger.log(Level.FINER, "BASE_URL : " + baseUrl);
@@ -160,7 +160,7 @@ public abstract class GenericTemplate extends ForEachAction {
         logger.log(Level.FINE, "current : " + inContext.getName());
         localParameters.put("current", inContext);
         localParameters.put("model", inModel);
-        ELEvaluator evaluator = new ELEvaluator(inModel, localParameters);
+        JSR341Evaluator evaluator = new JSR341Evaluator(inModel, localParameters);
         String  evaluateString = (String) evaluator.evaluate(inTarget);
         int     slashIndex = evaluateString.lastIndexOf('/');
         if (slashIndex >= 0) {

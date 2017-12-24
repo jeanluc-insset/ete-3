@@ -1,8 +1,7 @@
 package fr.insset.jeanluc.ete.api.impl;
 
 
-//import fr.insset.jeanluc.el.evaluator.ELEvaluator;
-import fr.insset.jeanluc.el.evaluator.ELEvaluator;
+import fr.insset.jeanluc.el.evaluator.JSR341Evaluator;
 import fr.insset.jeanluc.ete.api.Action;
 import fr.insset.jeanluc.ete.api.ActionSupport;
 import fr.insset.jeanluc.ete.api.EteException;
@@ -66,8 +65,8 @@ public class ForEachAction extends ActionSupport {
                 items.add(inModel);
                 return items;
             }
-//            ELEvaluator elEvaluator = new ELEvaluator(inModel, getParameters());
-            ELEvaluator elEvaluator = new ELEvaluator(inModel);
+//            JSR341Evaluator elEvaluator = new JSR341Evaluator(inModel, getParameters());
+            JSR341Evaluator elEvaluator = new JSR341Evaluator(inModel);
             Collection evaluate = (Collection)elEvaluator.evaluate(itemsExpression);
             System.out.println("Items : " + evaluate);
             return evaluate;
