@@ -17,7 +17,7 @@
 
     <transformation-set output_base="../../generated-projects/">
         <!-- reads a model -->
-        <model  url="ActionSemantics.xml"/>
+        <model  url="ExecutionLanguage.xml"/>
         <!--<model model="models/Simple.xml"/>-->
 
         <!-- outputs the model in a readable form -->
@@ -26,8 +26,8 @@
         <!-- Generate interfaces into the action-semantics-api project and the
             classes into the action-semantics-impl project
           -->
-        <module src="../../../../../../src/main/mda/modules/java/ete-config.xml"
-                projectName="action-semantics"
+        <module src="../../../../../src/main/mda/java/ete-config.xml"
+                projectName="execution-language"
             />
         <!-- Generate a generic interface.
             We need to write a dedicated implementation in order to target a

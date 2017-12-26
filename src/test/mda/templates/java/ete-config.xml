@@ -28,12 +28,12 @@
       -->
 
     <transformation-set>
-        <velocity template="essai-modele.vm"
+<!--        <velocity template="essai-modele.vm"
                   target="hello.txt"/>
         <velocity template="essai-classes.vm"
                   items="${classes}"
                   target="${current.name}.java"
-                  />
+                  />-->
     </transformation-set>
 
 </mda>

@@ -81,28 +81,28 @@ public class TreeBuilder extends GelParserBaseVisitor<GelExpression> {
         }
 
         FactoryRegistry registry = FactoryRegistry.getRegistry();
-        registry.registerDefaultFactory("not", NotImpl.class);
-        registry.registerDefaultFactory(">=", GreaterOrEqualImpl.class);
-        registry.registerDefaultFactory("|", LambdaImpl.class);
-        registry.registerDefaultFactory("-", MinusImpl.class);
-        registry.registerDefaultFactory("Boolean", BooleanLiteralImpl.class);
-        registry.registerDefaultFactory("Double", FloatingPointLiteralImpl.class);
-        registry.registerDefaultFactory("and", AndImpl.class);
-        registry.registerDefaultFactory("opp", OppImpl.class);
-        registry.registerDefaultFactory("+", AddImpl.class);
-        registry.registerDefaultFactory("*", MultImpl.class);
-        registry.registerDefaultFactory("/", DivImpl.class);
         registry.registerDefaultFactory("xor", XorImpl.class);
-        registry.registerDefaultFactory("or", OrImpl.class);
-        registry.registerDefaultFactory("date", DateLiteralImpl.class);
+        registry.registerDefaultFactory("not", NotImpl.class);
         registry.registerDefaultFactory(">", GreaterThanImpl.class);
-        registry.registerDefaultFactory("<>", DifferentImpl.class);
+        registry.registerDefaultFactory("+", AddImpl.class);
+        registry.registerDefaultFactory(">=", GreaterOrEqualImpl.class);
+        registry.registerDefaultFactory("<", LessThanImpl.class);
+        registry.registerDefaultFactory("-", MinusImpl.class);
+        registry.registerDefaultFactory("<=", LessOrEqualImpl.class);
+        registry.registerDefaultFactory("or", OrImpl.class);
+        registry.registerDefaultFactory("/", DivImpl.class);
+        registry.registerDefaultFactory("=", EqualImpl.class);
+        registry.registerDefaultFactory("opp", OppImpl.class);
+        registry.registerDefaultFactory("@", AtPreImpl.class);
         registry.registerDefaultFactory("String", StringLiteralImpl.class);
         registry.registerDefaultFactory("Integer", IntegerLiteralImpl.class);
-        registry.registerDefaultFactory("=", EqualImpl.class);
-        registry.registerDefaultFactory("@", AtPreImpl.class);
-        registry.registerDefaultFactory("<=", LessOrEqualImpl.class);
-        registry.registerDefaultFactory("<", LessThanImpl.class);
+        registry.registerDefaultFactory("date", DateLiteralImpl.class);
+        registry.registerDefaultFactory("Boolean", BooleanLiteralImpl.class);
+        registry.registerDefaultFactory("|", LambdaImpl.class);
+        registry.registerDefaultFactory("Double", FloatingPointLiteralImpl.class);
+        registry.registerDefaultFactory("*", MultImpl.class);
+        registry.registerDefaultFactory("<>", DifferentImpl.class);
+        registry.registerDefaultFactory("and", AndImpl.class);
         registry.registerDefaultFactory("self", SelfImpl.class);
         registry.registerDefaultFactory("Navigation", NavigationImpl.class);
         registry.registerDefaultFactory(CollectionOperationExpression.class, CollectionOperationExpressionImpl.class);
@@ -130,30 +130,7 @@ public class TreeBuilder extends GelParserBaseVisitor<GelExpression> {
     //========================================================================//
 
 
-                                            @Override
-    public GelExpression visitBooleanLiteral(GelParser.BooleanLiteralContext ctx) {
-        Literal result =  buildLiteral(ctx, "Boolean");
-        result.setValue(Boolean.parseBoolean(result.getValueAsString()));
-        return result;
-    }
-            @Override
-    public GelExpression visitFloatingPointLiteral(GelParser.FloatingPointLiteralContext ctx) {
-        Literal result =  buildLiteral(ctx, "Double");
-        result.setValue(Double.parseDouble(result.getValueAsString()));
-        return result;
-    }
-                                                                @Override
-    public GelExpression visitDateLiteral(GelParser.DateLiteralContext ctx) {
-        Literal result =  buildLiteral(ctx, "date");
-        String  valueAsString = result.getValueAsString();
-        valueAsString = valueAsString.substring(1, valueAsString.length()-1);
-        final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        final LocalDate dt = LocalDate.parse(valueAsString, dtf);
-        result.setValueAsString(valueAsString);
-        result.setValue(dt);
-        return result;
-    }
-                                    @Override
+                                                                                                                        @Override
     public GelExpression visitStringLiteral(GelParser.StringLiteralContext ctx) {
         Literal result =  buildLiteral(ctx, "String");
         String  valueAsString = result.getValueAsString();
@@ -167,7 +144,30 @@ public class TreeBuilder extends GelParserBaseVisitor<GelExpression> {
         result.setValue(Integer.parseInt(result.getValueAsString()));
         return result;
     }
-                            
+                    @Override
+    public GelExpression visitDateLiteral(GelParser.DateLiteralContext ctx) {
+        Literal result =  buildLiteral(ctx, "date");
+        String  valueAsString = result.getValueAsString();
+        valueAsString = valueAsString.substring(1, valueAsString.length()-1);
+        final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        final LocalDate dt = LocalDate.parse(valueAsString, dtf);
+        result.setValueAsString(valueAsString);
+        result.setValue(dt);
+        return result;
+    }
+            @Override
+    public GelExpression visitBooleanLiteral(GelParser.BooleanLiteralContext ctx) {
+        Literal result =  buildLiteral(ctx, "Boolean");
+        result.setValue(Boolean.parseBoolean(result.getValueAsString()));
+        return result;
+    }
+                @Override
+    public GelExpression visitFloatingPointLiteral(GelParser.FloatingPointLiteralContext ctx) {
+        Literal result =  buildLiteral(ctx, "Double");
+        result.setValue(Double.parseDouble(result.getValueAsString()));
+        return result;
+    }
+                
     //========================================================================//
 
 

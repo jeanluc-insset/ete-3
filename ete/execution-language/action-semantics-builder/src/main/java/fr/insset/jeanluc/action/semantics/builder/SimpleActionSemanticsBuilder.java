@@ -1,9 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package fr.insset.jeanluc.action.semantics.builder;
+
 
 import fr.insset.jeanluc.ete.as.Assignment;
 import fr.insset.jeanluc.ete.as.Statement;
@@ -46,7 +42,8 @@ public class SimpleActionSemanticsBuilder extends DynamicVisitorSupport {
 
 
     public Equal visitEqual(Equal inEqual, Object... inParameters) throws InstantiationException, IllegalAccessException {
-        System.out.println("Visit of an equality");
+        Logger      logger = Logger.getGlobal();
+        logger.log(Level.FINE, "Visit of an equality");
         Assignment assignment = (Assignment) FactoryRegistry.newInstance(Assignment.class);
         List<GelExpression> operands = inEqual.getOperand();
         GelExpression leftValue = operands.get(0);

@@ -9,7 +9,7 @@
     </parent>
     <artifactId>execution-language-spec</artifactId>
 
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
 
     <dependencies>
         <dependency>
@@ -50,7 +50,7 @@
 
     <build>
         <plugins>
-<!--            <plugin>
+            <plugin>
                 <groupId>org.antlr</groupId>
                 <artifactId>antlr4-maven-plugin</artifactId>
                 <version>4.5.3</version>
@@ -58,7 +58,9 @@
                     <visitor>true</visitor>
                     <listener>true</listener>
                     <libDirectory>${basedir}/../../src/main/antlr4/fr/insset/jeanluc/gel</libDirectory>
-                    <sourceDirectory>../../src/main/antlr4</sourceDirectory>
+                    <sourceDirectory>src/main/antlr4</sourceDirectory>
+                    <outputDirectory>../execution-language-api/src/main/java</outputDirectory>
+                    <!--<outputDirectory>../execution-language-api/target/generated-sources/antlr</outputDirectory>-->
                 </configuration>
                 <executions>
                     <execution>
@@ -68,7 +70,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>-->
+            </plugin>
 
             <plugin>
                 <groupId>fr.insset.jeanluc</groupId>

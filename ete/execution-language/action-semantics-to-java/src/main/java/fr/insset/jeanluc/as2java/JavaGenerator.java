@@ -120,7 +120,8 @@ public class JavaGenerator extends DynamicVisitorSupport implements Generator, J
         }
         printWriter.flush();
         String result = stringWriter.toString();
-        System.out.println("Operation generee : \n" + result);
+        Logger      logger = Logger.getGlobal();
+        logger.log(Level.FINE, "Operation generee : \n" + result);
         return result;
     }
 

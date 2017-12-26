@@ -149,7 +149,8 @@ public class XmlModelReader implements ModelReader {
     }
 
     public Collection<NamedElement>  readInstances(Object inDocument, EteModel inoutModel) throws IOException {
-        System.out.println("Reading instances");
+        Logger  logger = Logger.getGlobal();
+        logger.log(Level.FINER, "Reading instances");
         Collection<NamedElement> result = readElements((Document) inDocument, inoutModel, INSTANCE_PATH, INSTANCE_SPECIFICATION);
         readSlots(inDocument, inoutModel);
         return result;        
@@ -217,10 +218,11 @@ public class XmlModelReader implements ModelReader {
      * @throws IOException 
      */
     protected List<NamedElement> readElements(Node inNode, EteModel inModel,
-            String inPath, String inType) throws IOException {
+                    String inPath, String inType) throws IOException {
+        Logger      logger = Logger.getGlobal();
         try {
             NodeList elementsByType = getElementsByType(inPath, inNode);
-            System.out.println("Reading elements with " + inPath + " of type " + inType + " found " + elementsByType.getLength() + " elements");
+            logger.log(Level.FINE, "Reading elements with " + inPath + " of type " + inType + " found " + elementsByType.getLength() + " elements");
             return _doReadElements(elementsByType, inNode, inModel, inPath, inType);
         } catch (XPathExpressionException ex) {
             Logger.getLogger(XmlModelReader.class.getName()).log(Level.INFO, null, ex);

@@ -10,5 +10,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>execution-language-spec</module>
+        <module>execution-language-api</module>
+        <module>execution-language-impl</module>
     </modules>
 </project>

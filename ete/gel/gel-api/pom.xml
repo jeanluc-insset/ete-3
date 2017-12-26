@@ -24,7 +24,8 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>meta-model-api</artifactId>
-            <version>${project.version}</version>
+            <version>3.1</version>
+            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

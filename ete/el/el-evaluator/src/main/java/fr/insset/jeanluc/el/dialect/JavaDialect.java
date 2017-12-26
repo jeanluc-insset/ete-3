@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -100,13 +101,14 @@ public interface JavaDialect extends Dialect {
         if (inNamedObject == null) {
             return "void";
         }
-        System.out.println("JavaDialect.getQualifiedName(" + inNamedObject.getName() + ")");
+        Logger  logger = Logger.getLogger(getClass().getName());
+        logger.log(Level.FINE, "JavaDialect.getQualifiedName(" + inNamedObject.getName() + ")");
         if (inNamedObject instanceof MofCollection) {
-            System.out.println("Collection");
+            logger.log(Level.FINER, "Collection");
             MofCollection coll = (MofCollection) inNamedObject;
             if (coll instanceof MofSequence) {
                 String result = "List<" + getQualifiedName(coll.getBaseType()) + ">";
-                System.out.println("Sequence -> " + result);
+                logger.log(Level.FINER, "Sequence -> " + result);
                 return result;
             }
             else if (coll instanceof MofSet) {
@@ -151,6 +153,7 @@ public interface JavaDialect extends Dialect {
     }
 
     public default String toString(MofClass inClass) {
+        Logger  logger = Logger.getLogger(getClass().getName());
         List<MofProperty>       stereotypedProperties = new LinkedList<>();
         List<MofProperty>       allProperties = inClass.getOwnedAttribute();
         switch (allProperties.size()) {
@@ -177,7 +180,7 @@ public interface JavaDialect extends Dialect {
             if (value1 == null) {
                 return 1;
             }
-            System.out.println("Class of value1 : " + value1.getClass());
+            logger.log(Level.FINE, "Class of value1 : " + value1.getClass());
             Object value2 = p2.getValueOf("order");
             return 0;
         });

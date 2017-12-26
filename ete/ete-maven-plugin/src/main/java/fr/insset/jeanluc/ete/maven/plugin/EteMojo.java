@@ -50,8 +50,8 @@ public class EteMojo
         Logger.getGlobal().log(Level.INFO, "Ete plugin running");
 
         Logger logger = Logger.getGlobal();
-        logger.log(Level.INFO, "Working directory : " + new File(".").getAbsolutePath());
-        logger.log(Level.INFO, "BaseDir : " + basedir);
+        logger.log(Level.FINE, "Working directory : " + new File(".").getAbsolutePath());
+        logger.log(Level.FINE, "BaseDir : " + basedir);
         // If we run outside of maven, the property may be unset
         if (basedir == null) {
             basedir = ".";

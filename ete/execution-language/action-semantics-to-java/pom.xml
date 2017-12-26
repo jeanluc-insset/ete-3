@@ -54,7 +54,7 @@
         </dependency>
         <dependency>
             <groupId>fr.insset.jeanluc</groupId>
-            <artifactId>ete-api-impl</artifactId>
+            <artifactId>ete-lib-impl</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
             <type>jar</type>

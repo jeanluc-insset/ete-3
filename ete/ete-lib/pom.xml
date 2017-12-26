@@ -11,7 +11,7 @@
     <artifactId>ete-lib</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>ete-api</module>
-        <module>ete-api-impl</module>
+        <module>ete-lib-api</module>
+        <module>ete-lib-impl</module>
     </modules>
 </project>

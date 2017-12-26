@@ -23,12 +23,5 @@
             <type>jar</type>
         </dependency>
 
-        <!--        <dependency>
-            <groupId>fr.insset.jeanluc</groupId>
-            <artifactId>ete-api</artifactId>
-            <version>${project.version}</version>
-            <type>jar</type>
-        </dependency>-->
-
     </dependencies>
 </project>

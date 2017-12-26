@@ -19,7 +19,9 @@
         interfaces to handle it.
     </description>
 
-
+    <properties>
+        <project-name>gel</project-name>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -32,6 +34,30 @@
             <artifactId>meta-model-api</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-core</artifactId>
+            <version>1.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>fr.insset.jeanluc</groupId>
+            <artifactId>ete-lib-impl</artifactId>
+            <version>3.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>ete-lib-api</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -57,7 +83,7 @@
                     <visitor>true</visitor>
                     <listener>true</listener>
                     <sourceDirectory>${basedir}/src/main/antlr4</sourceDirectory>
-                    <outputDirectory>${basedir}/../gel-impl/src/main/java</outputDirectory>
+                    <outputDirectory>${basedir}/../${project-name}-impl/src/main/java</outputDirectory>
                 </configuration>
                 <executions>
                     <execution>

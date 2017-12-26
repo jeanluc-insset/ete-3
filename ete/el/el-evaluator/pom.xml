@@ -52,7 +52,7 @@
         </dependency>
         <dependency>
             <groupId>fr.insset.jeanluc</groupId>
-            <artifactId>ete-api</artifactId>
+            <artifactId>ete-lib-api</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
             <type>jar</type>

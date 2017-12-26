@@ -335,7 +335,8 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
         EteModel model = (EteModel)inParam[1];
         MofType classifier = (MofType) model.getElementById(classifierId);
         if (classifier != null) {
-            System.out.println("Setting instance type to " + classifier.getName());
+            Logger logger = Logger.getGlobal();
+            logger.log(Level.FINE, "Setting instance type to " + classifier.getName());
             inInstance.setType(classifier);
             classifier.addInstance(inInstance);
         }
@@ -463,7 +464,7 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
             }
             
             Logger globalLogger = Logger.getGlobal();
-            globalLogger.log(Level.INFO, "Visiting stereotype " + inStereotype.getName());
+            globalLogger.log(Level.FINE, "Visiting stereotype " + inStereotype.getName());
             // add the sterotype to the profile
             MofPackage  profile = (MofPackage)inParam[0];
             profile.addPackagedElement(inStereotype);
@@ -503,16 +504,16 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
             EteModel    model       = (EteModel) inParam[1];
             Element     domElement  = (Element) inParam[2];
             path        = "//*[name()='" + tagName + "']";
-            globalLogger.log(Level.INFO, "path : " +  path);
+            globalLogger.log(Level.FINE, "path : " +  path);
             evaluate = (NodeList) xPath.evaluate(path, domElement.getOwnerDocument(), XPathConstants.NODESET);
-            globalLogger.log(Level.INFO, tagName  + " -> " + evaluate + " " + evaluate.getLength() + " elements");
+            globalLogger.log(Level.FINE, tagName  + " -> " + evaluate + " " + evaluate.getLength() + " elements");
             
             // 3-c : link the stereotype and the element
             extern : for (int i=0 ; i<evaluate.getLength() ; i++) {
                 // 3-c-1 : find the setereotyped element
                 NamedElement stereotypedElement = null;
                 Element next = (Element)evaluate.item(i);
-                globalLogger.log(Level.INFO, "examining " + next);
+                globalLogger.log(Level.FINE, "examining " + next);
                 NamedNodeMap attributes = next.getAttributes();
                 for (int j=0 ; j<attributes.getLength() ; j++) {
                     Node item = attributes.item(j);

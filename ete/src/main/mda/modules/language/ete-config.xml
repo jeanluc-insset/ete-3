@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
+    This module helps to create a bunch of projects to parse and evaluate
+    a language.
+    It is supposed to be called from a specific project named "xxxx-spec"
+    and to receive the "projectName" parameter with the value xxxx.
+    It builds interfaces for the classes, implementationsand evaluator in the
+    xxxx-api, xxxx-impl and xxxx-evaluator projects respectively.
+
+ -->
+
+
+<mda>
+
+
+    <transformation-set>
+        <module src="../from-spec/ete-config.xml"/>
+    </transformation-set>
+
+</mda>
+

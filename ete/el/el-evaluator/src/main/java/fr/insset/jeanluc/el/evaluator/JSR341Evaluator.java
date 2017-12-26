@@ -60,7 +60,8 @@ public class JSR341Evaluator implements Evaluator {
             public Object getValue(ELContext elc, Object o, Object o1) {
                 if (o == null) {
                     String propertyName = o1.toString();
-                    System.out.println("Resolving root variable " + propertyName);
+                    Logger  logger = Logger.getLogger(getClass().getName());
+                    logger.log(Level.FINE, "Resolving root variable " + propertyName);
                     String postfix = propertyName.substring(0,1).toUpperCase() + propertyName.substring(1);
                     Object result = getValue("get" + postfix);
                     if (result != null) {

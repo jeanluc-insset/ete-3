@@ -6,6 +6,8 @@ import fr.insset.jeanluc.gel.*;
 import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -73,7 +75,8 @@ public class GelEvaluator extends DynamicVisitorSupport implements Evaluator {
      */
 
     public Object evaluateAdd(Add inAdd, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        System.out.println("Evaluate Add");
+        Logger      logger = Logger.getGlobal();
+        logger.log(Level.FINE, "Evaluate Add");
         List<GelExpression> operands = inAdd.getOperand();
         Object left = genericVisit(operands.get(0), inParameters);
         Object right = genericVisit(operands.get(1), inParameters);
