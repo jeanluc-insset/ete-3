@@ -19,5 +19,18 @@
         <module src="../from-spec/ete-config.xml"/>
     </transformation-set>
 
+
+    <transformation-set>
+                   <!--Implementation of specific features--> 
+        <velocity template="tree-builder.vm"
+                dialect="fr.insset.jeanluc.el.dialect.BasicJavaDialect"
+                target="${projectName}-impl/src/main/java/fr/insset/jeanluc/ete/gel/impl/TreeBuilder.java"/>
+        <velocity template="parser-wrapper.vm"
+                dialect="fr.insset.jeanluc.el.dialect.BasicJavaDialect"
+                target="${projectName}-impl/src/main/java/fr/insset/jeanluc/ete/gel/impl/GelParserFactory.java"/>
+        <velocity template="language-factory.vm"
+                dialect="fr.insset.jeanluc.el.dialect.BasicJavaDialect"
+                target="${projectName}-impl/src/main/java/fr/insset/jeanluc/ete/gel/impl/factory/GelFactory.java"/>
+    </transformation-set>
 </mda>
 

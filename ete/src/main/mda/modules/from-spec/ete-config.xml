@@ -14,7 +14,6 @@
 
 <mda>
 
-
     <transformation-set>
         <velocity template="class2interface.vm"
                   items="${classes}"

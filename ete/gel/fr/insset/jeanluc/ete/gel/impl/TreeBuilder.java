@@ -81,28 +81,28 @@ public class TreeBuilder extends GelParserBaseVisitor<GelExpression> {
         }
 
         FactoryRegistry registry = FactoryRegistry.getRegistry();
-        registry.registerDefaultFactory("<>", DifferentImpl.class);
-        registry.registerDefaultFactory("<=", LessOrEqualImpl.class);
-        registry.registerDefaultFactory("Double", FloatingPointLiteralImpl.class);
-        registry.registerDefaultFactory("<", LessThanImpl.class);
-        registry.registerDefaultFactory("|", LambdaImpl.class);
-        registry.registerDefaultFactory("and", AndImpl.class);
-        registry.registerDefaultFactory("xor", XorImpl.class);
-        registry.registerDefaultFactory("/", DivImpl.class);
-        registry.registerDefaultFactory("@", AtPreImpl.class);
-        registry.registerDefaultFactory("=", EqualImpl.class);
-        registry.registerDefaultFactory("-", MinusImpl.class);
-        registry.registerDefaultFactory("opp", OppImpl.class);
-        registry.registerDefaultFactory("date", DateLiteralImpl.class);
-        registry.registerDefaultFactory(">", GreaterThanImpl.class);
-        registry.registerDefaultFactory("Integer", IntegerLiteralImpl.class);
-        registry.registerDefaultFactory("String", StringLiteralImpl.class);
-        registry.registerDefaultFactory("*", MultImpl.class);
-        registry.registerDefaultFactory("or", OrImpl.class);
-        registry.registerDefaultFactory("Boolean", BooleanLiteralImpl.class);
         registry.registerDefaultFactory("not", NotImpl.class);
-        registry.registerDefaultFactory(">=", GreaterOrEqualImpl.class);
+        registry.registerDefaultFactory("*", MultImpl.class);
+        registry.registerDefaultFactory("Integer", IntegerLiteralImpl.class);
+        registry.registerDefaultFactory("or", OrImpl.class);
         registry.registerDefaultFactory("+", AddImpl.class);
+        registry.registerDefaultFactory("<>", DifferentImpl.class);
+        registry.registerDefaultFactory("xor", XorImpl.class);
+        registry.registerDefaultFactory("date", DateLiteralImpl.class);
+        registry.registerDefaultFactory("/", DivImpl.class);
+        registry.registerDefaultFactory("Boolean", BooleanLiteralImpl.class);
+        registry.registerDefaultFactory("<", LessThanImpl.class);
+        registry.registerDefaultFactory(">", GreaterThanImpl.class);
+        registry.registerDefaultFactory("and", AndImpl.class);
+        registry.registerDefaultFactory("-", MinusImpl.class);
+        registry.registerDefaultFactory("<=", LessOrEqualImpl.class);
+        registry.registerDefaultFactory("String", StringLiteralImpl.class);
+        registry.registerDefaultFactory("=", EqualImpl.class);
+        registry.registerDefaultFactory(">=", GreaterOrEqualImpl.class);
+        registry.registerDefaultFactory("opp", OppImpl.class);
+        registry.registerDefaultFactory("|", LambdaImpl.class);
+        registry.registerDefaultFactory("Double", FloatingPointLiteralImpl.class);
+        registry.registerDefaultFactory("@", AtPreImpl.class);
         registry.registerDefaultFactory("self", SelfImpl.class);
         registry.registerDefaultFactory("Navigation", NavigationImpl.class);
         registry.registerDefaultFactory(CollectionOperationExpression.class, CollectionOperationExpressionImpl.class);
@@ -130,13 +130,13 @@ public class TreeBuilder extends GelParserBaseVisitor<GelExpression> {
     //========================================================================//
 
 
-                            @Override
-    public GelExpression visitFloatingPointLiteral(GelParser.FloatingPointLiteralContext ctx) {
-        Literal result =  buildLiteral(ctx, "Double");
-        result.setValue(Double.parseDouble(result.getValueAsString()));
+                                    @Override
+    public GelExpression visitIntegerLiteral(GelParser.IntegerLiteralContext ctx) {
+        Literal result =  buildLiteral(ctx, "Integer");
+        result.setValue(Integer.parseInt(result.getValueAsString()));
         return result;
     }
-                                                                        @Override
+                                                    @Override
     public GelExpression visitDateLiteral(GelParser.DateLiteralContext ctx) {
         Literal result =  buildLiteral(ctx, "date");
         String  valueAsString = result.getValueAsString();
@@ -147,13 +147,13 @@ public class TreeBuilder extends GelParserBaseVisitor<GelExpression> {
         result.setValue(dt);
         return result;
     }
-                            @Override
-    public GelExpression visitIntegerLiteral(GelParser.IntegerLiteralContext ctx) {
-        Literal result =  buildLiteral(ctx, "Integer");
-        result.setValue(Integer.parseInt(result.getValueAsString()));
+                @Override
+    public GelExpression visitBooleanLiteral(GelParser.BooleanLiteralContext ctx) {
+        Literal result =  buildLiteral(ctx, "Boolean");
+        result.setValue(Boolean.parseBoolean(result.getValueAsString()));
         return result;
     }
-                        @Override
+                                                    @Override
     public GelExpression visitStringLiteral(GelParser.StringLiteralContext ctx) {
         Literal result =  buildLiteral(ctx, "String");
         String  valueAsString = result.getValueAsString();
@@ -161,13 +161,13 @@ public class TreeBuilder extends GelParserBaseVisitor<GelExpression> {
         result.setValue(valueAsString);
         return result;
     }
-                                @Override
-    public GelExpression visitBooleanLiteral(GelParser.BooleanLiteralContext ctx) {
-        Literal result =  buildLiteral(ctx, "Boolean");
-        result.setValue(Boolean.parseBoolean(result.getValueAsString()));
+                                    @Override
+    public GelExpression visitFloatingPointLiteral(GelParser.FloatingPointLiteralContext ctx) {
+        Literal result =  buildLiteral(ctx, "Double");
+        result.setValue(Double.parseDouble(result.getValueAsString()));
         return result;
     }
-                
+        
 
 */
 

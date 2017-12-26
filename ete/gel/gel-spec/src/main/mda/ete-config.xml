@@ -17,8 +17,8 @@
                     projectName="gel"/>
         </transformation-set>
 
-        <transformation-set output_base="../../gel-impl/src/main/java">
-                       <!--Implementation of specific features--> 
+<!--        <transformation-set output_base="../../gel-impl/src/main/java">
+                       Implementation of specific features 
             <velocity template="modules/gel-impl/java/tree-builder.vm"
                     dialect="fr.insset.jeanluc.el.dialect.BasicJavaDialect"
                     target="fr/insset/jeanluc/ete/gel/impl/TreeBuilder.java"/>
@@ -28,7 +28,7 @@
             <velocity template="modules/gel-impl/java/gel-factory.vm"
                     dialect="fr.insset.jeanluc.el.dialect.BasicJavaDialect"
                     target="fr/insset/jeanluc/ete/gel/impl/factory/GelFactory.java"/>
-        </transformation-set>
+        </transformation-set>-->
 
 
                                  <!--and some tests...--> 

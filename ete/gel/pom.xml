@@ -13,6 +13,5 @@
         <module>gel-api</module>
         <module>gel-impl</module>
         <module>gel-evaluator</module>
-        <module>essai-gel</module>
     </modules>
 </project>
