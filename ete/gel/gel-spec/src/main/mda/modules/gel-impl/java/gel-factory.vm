@@ -20,6 +20,7 @@ public class GelFactory {
     public static void registerFactories() {
         FactoryRegistry registry = FactoryRegistry.getRegistry();
         registry.registerDefaultFactory(MOF_TYPE, MofTypeImpl.class);
+/*
 #foreach($aClass in ${current.classes})
     #if($aClass.getValueOf("symbol"))
         registry.registerDefaultFactory("${aClass.getValueOf("symbol")}", ${aClass.package.name}.impl.${aClass.name}Impl.class);        
@@ -28,6 +29,7 @@ public class GelFactory {
         registry.registerDefaultFactory("${aClass.getValueOf("literalType")}", ${aClass.name}Impl.class);                
     #end
 #end
+*/
     }
 
     public static EteModel      newModel() throws InstantiationException, IllegalAccessException {

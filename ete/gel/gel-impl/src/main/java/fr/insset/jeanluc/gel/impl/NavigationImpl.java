@@ -1,44 +1,51 @@
 package fr.insset.jeanluc.gel.impl;
 
-
+import fr.insset.jeanluc.ete.meta.model.emof.Feature;
+import fr.insset.jeanluc.gel.GelExpression;
+import fr.insset.jeanluc.gel.Navigable;
 import fr.insset.jeanluc.gel.*;
+import java.util.List;
 
 
-public class NavigationImpl implements Navigation {
+
+public class NavigationImpl  extends fr.insset.jeanluc.gel.impl.NavigableImpl  implements Navigation {
 
 
     //========================================================================//
 
 
-        public Feature gettoFeature() {
+    public Feature getToFeature() {
         return toFeature;
     }
 
-    public void settoFeature(Feature inValue) {
+    public void setToFeature(Feature inValue) {
         toFeature = inValue;
     }
-            public Navigable getfrom() {
+
+    public Navigable getFrom() {
         return from;
     }
 
-    public void setfrom(Navigable inValue) {
+    public void setFrom(Navigable inValue) {
         from = inValue;
     }
-            public Sequence<GelExpression> getparameter() {
+
+    public List<GelExpression> getParameter() {
         return parameter;
     }
 
-    public void setparameter(Sequence<GelExpression> inValue) {
+    public void setParameter(List<GelExpression> inValue) {
         parameter = inValue;
     }
-    
+
+
 
     //========================================================================//
 
 
         private Feature toFeature;
             private Navigable from;
-            private Sequence<GelExpression> parameter;
+            private List<GelExpression> parameter;
     
 
 }

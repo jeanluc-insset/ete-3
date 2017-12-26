@@ -1,9 +1,10 @@
 package fr.insset.jeanluc.gel;
 
 
+import java.util.List;
 
 
-public interface Navigable {
+public interface Navigable  extends fr.insset.jeanluc.gel.GelExpression  {
 
 
     //========================================================================//

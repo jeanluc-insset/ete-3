@@ -1,30 +1,34 @@
 package fr.insset.jeanluc.gel.impl;
 
-
+import java.lang.Object;
 import fr.insset.jeanluc.gel.*;
+import java.util.List;
 
 
-public class LiteralImpl implements Literal {
+
+public class LiteralImpl  extends fr.insset.jeanluc.gel.impl.GelExpressionImpl  implements Literal {
 
 
     //========================================================================//
 
 
-        public String getvalueAsString() {
+    public String getValueAsString() {
         return valueAsString;
     }
 
-    public void setvalueAsString(String inValue) {
+    public void setValueAsString(String inValue) {
         valueAsString = inValue;
     }
-            public Object getvalue() {
+
+    public Object getValue() {
         return value;
     }
 
-    public void setvalue(Object inValue) {
+    public void setValue(Object inValue) {
         value = inValue;
     }
-    
+
+
 
     //========================================================================//
 

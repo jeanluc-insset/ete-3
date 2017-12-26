@@ -1,10 +1,11 @@
 package fr.insset.jeanluc.gel.impl;
 
-
 import fr.insset.jeanluc.gel.*;
+import java.util.List;
 
 
-public class AddImpl implements Add {
+
+public class AddImpl  extends fr.insset.jeanluc.gel.impl.NumberOperationImpl  implements Add {
 
 
     //========================================================================//

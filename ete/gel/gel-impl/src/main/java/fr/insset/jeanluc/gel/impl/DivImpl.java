@@ -1,10 +1,11 @@
 package fr.insset.jeanluc.gel.impl;
 
-
 import fr.insset.jeanluc.gel.*;
+import java.util.List;
 
 
-public class DivImpl implements Div {
+
+public class DivImpl  extends fr.insset.jeanluc.gel.impl.NumberOperationImpl  implements Div {
 
 
     //========================================================================//

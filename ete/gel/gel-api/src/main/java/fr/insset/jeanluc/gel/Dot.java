@@ -1,9 +1,10 @@
 package fr.insset.jeanluc.gel;
 
 
+import java.util.List;
 
 
-public interface Dot {
+public interface Dot  extends fr.insset.jeanluc.gel.Navigation  {
 
 
     //========================================================================//

@@ -115,7 +115,7 @@ public class TreeBuilder extends GelParserBaseVisitor<GelExpression> {
         return super.visitGelExpression(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
-
+/*
     //========================================================================//
 
 
@@ -159,6 +159,9 @@ public class TreeBuilder extends GelParserBaseVisitor<GelExpression> {
     #end
 #end
 
+
+*/
+
     //========================================================================//
 
 
@@ -174,6 +177,7 @@ public class TreeBuilder extends GelParserBaseVisitor<GelExpression> {
      *  provided context or the type of the owning class if the context is an
      *  operation.
      */
+/*
     public GelExpression visitSelfExpression(GelParser.SelfExpressionContext ctx) {
         try {
             Self result = (Self)FactoryRegistry.newInstance("self");
@@ -242,7 +246,7 @@ public class TreeBuilder extends GelParserBaseVisitor<GelExpression> {
         }
         return result;
     }
-
+*/
 
    /**
      * <div>
@@ -261,6 +265,7 @@ public class TreeBuilder extends GelParserBaseVisitor<GelExpression> {
      * @param ctx concrete tree
      * @return abstract tree
      */
+/*
     @Override
     public GelExpression visitPropertyNavigationExpression(GelParser.PropertyNavigationExpressionContext ctx) {
         try {
@@ -343,7 +348,7 @@ public class TreeBuilder extends GelParserBaseVisitor<GelExpression> {
             throw new RuntimeException("Unable to instantiate a navigation");
         }
     }
-
+*/
 
 
     /**
@@ -352,6 +357,7 @@ public class TreeBuilder extends GelParserBaseVisitor<GelExpression> {
      * Currently, they are handled as is, i.e. as a blanck object storing the
      * identifier and the parameters of the operation.
      */
+/*
     private GelExpression visitCollectionOperationExpression(GelParser.OperationNavigationExpressionContext ctx) throws InstantiationException, IllegalAccessException {
         fr.insset.jeanluc.ete.meta.model.emof.MofOperation operation
                                     = null;
@@ -378,6 +384,8 @@ public class TreeBuilder extends GelParserBaseVisitor<GelExpression> {
         currentNavigation = result;
         return result;
     }
+*/
+
 
 /*
     @Override
@@ -406,7 +414,7 @@ public class TreeBuilder extends GelParserBaseVisitor<GelExpression> {
 
     //========================================================================//
 
-
+/*
     protected GelExpression buildBinaryExpression(RuleNode ctx) {
         int         childCount = ctx.getChildCount();
         GelExpression   result = ctx.getChild(0).accept(this);
@@ -442,7 +450,7 @@ public class TreeBuilder extends GelParserBaseVisitor<GelExpression> {
             throw new RuntimeException(ex);
         }
     }
-
+*/
 
     //========================================================================//
 

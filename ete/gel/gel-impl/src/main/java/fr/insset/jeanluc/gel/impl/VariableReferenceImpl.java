@@ -1,23 +1,26 @@
 package fr.insset.jeanluc.gel.impl;
 
-
+import fr.insset.jeanluc.gel.VariableDefinition;
 import fr.insset.jeanluc.gel.*;
+import java.util.List;
 
 
-public class VariableReferenceImpl implements VariableReference {
+
+public class VariableReferenceImpl  extends fr.insset.jeanluc.gel.impl.NavigableImpl  implements VariableReference {
 
 
     //========================================================================//
 
 
-        public VariableDefinition getdeclaration() {
+    public VariableDefinition getDeclaration() {
         return declaration;
     }
 
-    public void setdeclaration(VariableDefinition inValue) {
+    public void setDeclaration(VariableDefinition inValue) {
         declaration = inValue;
     }
-    
+
+
 
     //========================================================================//
 

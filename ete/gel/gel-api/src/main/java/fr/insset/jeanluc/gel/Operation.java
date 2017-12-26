@@ -1,17 +1,19 @@
 package fr.insset.jeanluc.gel;
 
 
+import fr.insset.jeanluc.gel.GelExpression;
+import java.util.List;
 
 
-public interface Operation {
+public interface Operation  extends fr.insset.jeanluc.gel.GelExpression  {
 
 
     //========================================================================//
 
 
-        public Sequence<GelExpression> getoperand();
-    public void setoperand(Sequence<GelExpression> inValue);
-    
+    public List<GelExpression> getOperand();
+    public void setOperand(List<GelExpression> inValue);
+
 
 }
 

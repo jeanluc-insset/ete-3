@@ -1,19 +1,22 @@
 package fr.insset.jeanluc.gel;
 
 
+import fr.insset.jeanluc.gel.GelExpression;
+import fr.insset.jeanluc.gel.VariableDefinition;
+import java.util.List;
 
 
-public interface Lambda {
+public interface Lambda  extends fr.insset.jeanluc.gel.BinaryOperation  {
 
 
     //========================================================================//
 
 
-        public Sequence<VariableDefinition> getvariables();
-    public void setvariables(Sequence<VariableDefinition> inValue);
-            public GelExpression getbody();
-    public void setbody(GelExpression inValue);
-    
+    public List<VariableDefinition> getVariables();
+    public void setVariables(List<VariableDefinition> inValue);
+    public GelExpression getBody();
+    public void setBody(GelExpression inValue);
+
 
 }
 

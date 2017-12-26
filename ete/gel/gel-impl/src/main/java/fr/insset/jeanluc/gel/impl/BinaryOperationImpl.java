@@ -1,10 +1,11 @@
 package fr.insset.jeanluc.gel.impl;
 
-
 import fr.insset.jeanluc.gel.*;
+import java.util.List;
 
 
-public class BinaryOperationImpl implements BinaryOperation {
+
+public class BinaryOperationImpl  extends fr.insset.jeanluc.gel.impl.OperationImpl  implements BinaryOperation {
 
 
     //========================================================================//

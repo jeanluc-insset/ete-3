@@ -1,35 +1,40 @@
 package fr.insset.jeanluc.gel.impl;
 
-
+import fr.insset.jeanluc.gel.GelExpression;
+import fr.insset.jeanluc.gel.VariableDefinition;
 import fr.insset.jeanluc.gel.*;
+import java.util.List;
 
 
-public class LambdaImpl implements Lambda {
+
+public class LambdaImpl  extends fr.insset.jeanluc.gel.impl.BinaryOperationImpl  implements Lambda {
 
 
     //========================================================================//
 
 
-        public Sequence<VariableDefinition> getvariables() {
+    public List<VariableDefinition> getVariables() {
         return variables;
     }
 
-    public void setvariables(Sequence<VariableDefinition> inValue) {
+    public void setVariables(List<VariableDefinition> inValue) {
         variables = inValue;
     }
-            public GelExpression getbody() {
+
+    public GelExpression getBody() {
         return body;
     }
 
-    public void setbody(GelExpression inValue) {
+    public void setBody(GelExpression inValue) {
         body = inValue;
     }
-    
+
+
 
     //========================================================================//
 
 
-        private Sequence<VariableDefinition> variables;
+        private List<VariableDefinition> variables;
             private GelExpression body;
     
 

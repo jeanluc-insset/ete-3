@@ -1,17 +1,19 @@
 package fr.insset.jeanluc.gel;
 
 
+import fr.insset.jeanluc.gel.Navigation;
+import java.util.List;
 
 
-public interface AtPre {
+public interface AtPre  extends fr.insset.jeanluc.gel.Navigable  {
 
 
     //========================================================================//
 
 
-        public Navigation getnavigation();
-    public void setnavigation(Navigation inValue);
-    
+    public Navigation getNavigation();
+    public void setNavigation(Navigation inValue);
+
 
 }
 

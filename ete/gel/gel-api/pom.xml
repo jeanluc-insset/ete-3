@@ -22,11 +22,12 @@
             <version>4.5.3</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>fr.insset.jeanluc</groupId>
             <artifactId>meta-model-api</artifactId>
-            <version>3.1</version>
+            <version>${project.version}</version>
             <type>jar</type>
         </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -38,13 +39,6 @@
             <artifactId>hamcrest-core</artifactId>
             <version>1.3</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>fr.insset.jeanluc</groupId>
-            <artifactId>meta-model-api</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-            <type>jar</type>
         </dependency>
     </dependencies>
 

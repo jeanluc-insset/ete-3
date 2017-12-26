@@ -1,19 +1,21 @@
 package fr.insset.jeanluc.gel;
 
 
+import java.lang.Object;
+import java.util.List;
 
 
-public interface Literal {
+public interface Literal  extends fr.insset.jeanluc.gel.GelExpression  {
 
 
     //========================================================================//
 
 
-        public String getvalueAsString();
-    public void setvalueAsString(String inValue);
-            public Object getvalue();
-    public void setvalue(Object inValue);
-    
+    public String getValueAsString();
+    public void setValueAsString(String inValue);
+    public Object getValue();
+    public void setValue(Object inValue);
+
 
 }
 
