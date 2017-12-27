@@ -1,8 +1,8 @@
 package fr.insset.jeanluc.gel.impl;
 
-import fr.insset.jeanluc.gel.Navigable;
 import fr.insset.jeanluc.ete.meta.model.emof.Feature;
 import fr.insset.jeanluc.gel.GelExpression;
+import fr.insset.jeanluc.gel.Navigable;
 import fr.insset.jeanluc.gel.*;
 import java.util.List;
 

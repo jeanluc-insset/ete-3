@@ -1,7 +1,7 @@
 package fr.insset.jeanluc.gel.impl;
 
-import fr.insset.jeanluc.gel.VariableDefinition;
 import fr.insset.jeanluc.gel.GelExpression;
+import fr.insset.jeanluc.gel.VariableDefinition;
 import fr.insset.jeanluc.gel.*;
 import java.util.List;
 

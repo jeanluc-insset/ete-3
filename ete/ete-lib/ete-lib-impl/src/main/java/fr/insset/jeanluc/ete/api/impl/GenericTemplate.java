@@ -131,12 +131,32 @@ public abstract class GenericTemplate extends ForEachAction {
         if (targetBase == null) {
             targetBase = "./";
         }
-        if (! targetBase.endsWith("/")) {
-            targetBase += '/';
+        StringBuilder   builder = new StringBuilder(targetBase);
+        int length = builder.length();
+        if (builder.charAt(length-1) != '/') {
+            builder.append('/');
         }
         String target = (String) getParameter(TARGET);
         logger.log(Level.FINER, "Target : {0}", target);
-        return targetBase + target;
+        builder.append(target);
+        do {
+            int indexOf = builder.indexOf("/..");
+            if (indexOf <= 0) {
+                break;
+            }
+            int indexSlash = 0;
+            do {
+                int next = builder.indexOf("/", indexSlash+1);
+                if (next >= indexOf) {
+                    break;
+                }
+                indexSlash = next;
+            } while (true);
+            builder.delete(indexSlash, indexOf+3);
+        } while (true);
+        String  result = builder.toString();
+        logger.log(Level.FINER, "Target after simplification : {0}", result);
+        return result;
     }
 
 
