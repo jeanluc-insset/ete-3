@@ -12,7 +12,7 @@ public interface Mult  extends fr.insset.jeanluc.gel.NumberOperation  {
     //========================================================================//
 
 
-
+        
 
 }
 

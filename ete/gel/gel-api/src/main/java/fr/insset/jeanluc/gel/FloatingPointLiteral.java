@@ -12,7 +12,7 @@ public interface FloatingPointLiteral  extends fr.insset.jeanluc.gel.Literal  {
     //========================================================================//
 
 
-
+        
 
 }
 

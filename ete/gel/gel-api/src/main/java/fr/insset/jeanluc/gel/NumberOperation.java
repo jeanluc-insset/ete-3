@@ -12,7 +12,7 @@ public interface NumberOperation  extends fr.insset.jeanluc.gel.BinaryOperation 
     //========================================================================//
 
 
-
+        
 
 }
 

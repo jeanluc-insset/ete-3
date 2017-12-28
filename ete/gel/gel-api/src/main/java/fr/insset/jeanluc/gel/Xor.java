@@ -12,7 +12,7 @@ public interface Xor  extends fr.insset.jeanluc.gel.BooleanOperation  {
     //========================================================================//
 
 
-
+        
 
 }
 

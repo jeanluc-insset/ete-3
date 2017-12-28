@@ -12,7 +12,7 @@ public interface Or  extends fr.insset.jeanluc.gel.BooleanOperation  {
     //========================================================================//
 
 
-
+        
 
 }
 

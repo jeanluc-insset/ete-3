@@ -6,7 +6,6 @@ package fr.insset.jeanluc.as2java;
 import fr.insset.jeanluc.action.semantics.builder.EnhancedMofOperationImpl;
 import fr.insset.jeanluc.action.semantics.builder.StatementContainer;
 import fr.insset.jeanluc.el.dialect.JavaDialect;
-import fr.insset.jeanluc.ete.as.*;
 import fr.insset.jeanluc.ete.meta.model.constraint.Condition;
 import static fr.insset.jeanluc.ete.meta.model.core.PrimitiveDataTypes.FLOAT_TYPE;
 import static fr.insset.jeanluc.ete.meta.model.core.PrimitiveDataTypes.INT_TYPE;
@@ -16,6 +15,16 @@ import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
 import fr.insset.jeanluc.ete.meta.model.types.MofType;
 import fr.insset.jeanluc.ete.meta.model.types.collections.MofCollection;
+import fr.insset.jeanluc.ete.xlang.Assignment;
+import fr.insset.jeanluc.ete.xlang.Conditional;
+import fr.insset.jeanluc.ete.xlang.DoWhileLoop;
+import fr.insset.jeanluc.ete.xlang.ForLoop;
+import fr.insset.jeanluc.ete.xlang.Instanciation;
+import fr.insset.jeanluc.ete.xlang.MethodInvocation;
+import fr.insset.jeanluc.ete.xlang.Statement;
+import fr.insset.jeanluc.ete.xlang.VariableDeclaration;
+import fr.insset.jeanluc.ete.xlang.WhileDoLoop;
+import fr.insset.jeanluc.ete.xlang.generator.Generator;
 import fr.insset.jeanluc.gel.CollectionOperationExpression;
 import fr.insset.jeanluc.gel.GelExpression;
 import fr.insset.jeanluc.gel.Navigable;
@@ -24,11 +33,11 @@ import fr.insset.jeanluc.gel.Self;
 import fr.insset.jeanluc.gel.StringLiteral;
 import fr.insset.jeanluc.gel.VariableDefinition;
 import fr.insset.jeanluc.gel.VariableReference;
-import fr.insset.jeanluc.mda.ete.as.generator.Generator;
 import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -79,6 +88,23 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
         register("asVisit", "fr.insset.jeanluc.ete.as");
         register("mofVisit", "fr.insset.jeanluc.ete.meta.model.emof");
     }
+
+
+    //========================================================================//
+    //            G E N E R A T O R   I M P L E M E N T A T I O N             //
+    //========================================================================//
+
+
+    @Override
+    public List<Statement> getStatements(String inKey) {
+        return statements.get(inKey);
+    }
+
+    @Override
+    public void setStatements(String inKey, List<Statement> inValue) {
+        statements.put(inKey, inValue);
+    }
+
 
 
     //========================================================================//
@@ -503,8 +529,9 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
     //========================================================================//
 
 
-    private     String          indentation;
-    private     MofOperation    operation;
+    private     String                          indentation;
+    private     MofOperation                    operation;
+    private     Map<String, List<Statement>>    statements = new HashMap<>();
 
 
 
@@ -518,5 +545,7 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
         public Navigation   caller;
         public boolean      top;
     }       // GenerationInformation
+
+
 
 }       // JavaGenerator

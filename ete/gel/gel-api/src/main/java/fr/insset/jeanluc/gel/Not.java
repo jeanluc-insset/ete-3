@@ -12,7 +12,7 @@ public interface Not  extends fr.insset.jeanluc.gel.UnaryOperation  {
     //========================================================================//
 
 
-
+        
 
 }
 

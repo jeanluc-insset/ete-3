@@ -14,7 +14,7 @@ public interface CollectionOperationExpression  extends fr.insset.jeanluc.gel.Na
 
     public String getIdentifier();
     public void setIdentifier(String inValue);
-
+        
 
 }
 

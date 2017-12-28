@@ -13,6 +13,7 @@
         <module>xlang-api</module>
         <module>xlang-impl</module>
         <module>xlang-builder</module>
+        <module>action-semantics-to-java</module>
     </modules>
     <name>xlang</name>
 </project>

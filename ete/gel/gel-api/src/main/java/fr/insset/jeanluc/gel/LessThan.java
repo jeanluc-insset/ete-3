@@ -12,7 +12,7 @@ public interface LessThan  extends fr.insset.jeanluc.gel.BooleanOperation  {
     //========================================================================//
 
 
-
+        
 
 }
 

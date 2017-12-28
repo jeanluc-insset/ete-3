@@ -15,7 +15,7 @@ public interface VariableReference  extends fr.insset.jeanluc.gel.Navigable  {
 
     public VariableDefinition getDeclaration();
     public void setDeclaration(VariableDefinition inValue);
-
+        
 
 }
 

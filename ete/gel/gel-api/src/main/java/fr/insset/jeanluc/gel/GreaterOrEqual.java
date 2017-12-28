@@ -12,7 +12,7 @@ public interface GreaterOrEqual  extends fr.insset.jeanluc.gel.BooleanOperation 
     //========================================================================//
 
 
-
+        
 
 }
 

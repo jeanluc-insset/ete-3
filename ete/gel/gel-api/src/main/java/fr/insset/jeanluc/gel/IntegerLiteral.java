@@ -12,7 +12,7 @@ public interface IntegerLiteral  extends fr.insset.jeanluc.gel.Literal  {
     //========================================================================//
 
 
-
+        
 
 }
 

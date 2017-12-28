@@ -12,7 +12,7 @@ public interface BooleanOperation  extends fr.insset.jeanluc.gel.BinaryOperation
     //========================================================================//
 
 
-
+        
 
 }
 

@@ -17,7 +17,7 @@ public interface Literal  extends fr.insset.jeanluc.gel.GelExpression  {
     public void setValueAsString(String inValue);
     public Object getValue();
     public void setValue(Object inValue);
-
+        
 
 }
 

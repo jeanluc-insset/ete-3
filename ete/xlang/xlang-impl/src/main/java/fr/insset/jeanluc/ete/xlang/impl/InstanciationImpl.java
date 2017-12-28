@@ -2,7 +2,9 @@ package fr.insset.jeanluc.ete.xlang.impl;
 
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 import fr.insset.jeanluc.ete.xlang.*;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 
 
@@ -21,12 +23,11 @@ public class InstanciationImpl  extends fr.insset.jeanluc.gel.impl.GelExpression
     }
 
 
-
     //========================================================================//
 
 
-        private MofClass mofClass;
-    
+    private MofClass mofClass;
+
 
 }
 

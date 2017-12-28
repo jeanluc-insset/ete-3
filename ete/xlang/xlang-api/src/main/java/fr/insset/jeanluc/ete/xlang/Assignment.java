@@ -17,7 +17,7 @@ public interface Assignment  extends fr.insset.jeanluc.ete.xlang.Statement  {
     public void setValue(GelExpression inValue);
     public GelExpression getLeftValue();
     public void setLeftValue(GelExpression inValue);
-
+        
 
 }
 

@@ -12,7 +12,7 @@ public interface Dot  extends fr.insset.jeanluc.gel.Navigation  {
     //========================================================================//
 
 
-
+        
 
 }
 

@@ -12,7 +12,7 @@ public interface LessOrEqual  extends fr.insset.jeanluc.gel.BooleanOperation  {
     //========================================================================//
 
 
-
+        
 
 }
 

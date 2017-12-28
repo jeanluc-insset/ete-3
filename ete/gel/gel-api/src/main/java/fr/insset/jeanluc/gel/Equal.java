@@ -12,7 +12,7 @@ public interface Equal  extends fr.insset.jeanluc.gel.BooleanOperation  {
     //========================================================================//
 
 
-
+        
 
 }
 

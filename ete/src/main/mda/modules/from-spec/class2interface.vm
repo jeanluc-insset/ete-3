@@ -16,14 +16,22 @@ public interface $current.name #if ($current.superClass && $current.superClass.s
 
 
 #foreach ($aProperty in $current.ownedAttribute)
+#if ($aProperty.qualifierName)
+    public ${dialect.mt2lt($aProperty.type)} get${dialect.i2uc($aProperty.name)}(${dialect.mt2lt($aProperty.qualifierType)} inKey);
+    public void set${dialect.i2uc($aProperty.name)}(${dialect.mt2lt($aProperty.qualifierType)} inKey, ${dialect.mt2lt($aProperty.type)} inValue);
+#if ($aProperty.isCollection())
+    public void add${dialect.i2uc($aProperty.name)}(${dialect.mt2lt($aProperty.qualifierType)} inKey, ${dialect.mt2lt($aProperty.type)} inValue);
+#end        ## isCollection
+#else
 #if($aProperty.name && $aProperty.type.name)
     public ${dialect.mt2lt($aProperty.type)} get${dialect.i2uc($aProperty.name)}();
     public void set${dialect.i2uc($aProperty.name)}(${dialect.mt2lt($aProperty.type)} inValue);
 #if ($aProperty.isCollection())
     public void add${dialect.i2uc($aProperty.name)}(${dialect.mt2lt($aProperty.type)} inValue);
+#end        
 #end
 #end
-#end
+#end        ## foreach property
 
 
 }

@@ -15,7 +15,7 @@ public interface Instanciation  extends fr.insset.jeanluc.gel.GelExpression  {
 
     public MofClass getMofClass();
     public void setMofClass(MofClass inValue);
-
+        
 
 }
 

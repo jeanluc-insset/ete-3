@@ -12,7 +12,7 @@ public interface Navigable  extends fr.insset.jeanluc.gel.GelExpression  {
     //========================================================================//
 
 
-
+        
 
 }
 

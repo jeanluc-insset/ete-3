@@ -17,7 +17,7 @@ public interface ForLoop  extends fr.insset.jeanluc.ete.xlang.Loop  {
     public void setInitialization(List<Statement> inValue);
     public List<Statement> getIncrementation();
     public void setIncrementation(List<Statement> inValue);
-
+        
 
 }
 

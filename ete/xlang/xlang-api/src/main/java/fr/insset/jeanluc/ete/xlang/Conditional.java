@@ -20,7 +20,7 @@ public interface Conditional  extends fr.insset.jeanluc.ete.xlang.Statement  {
     public void setThenPart(Statement inValue);
     public Statement getElsePart();
     public void setElsePart(Statement inValue);
-
+        
 
 }
 

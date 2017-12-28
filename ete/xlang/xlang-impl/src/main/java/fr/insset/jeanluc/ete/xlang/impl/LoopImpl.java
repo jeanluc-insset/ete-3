@@ -1,9 +1,11 @@
 package fr.insset.jeanluc.ete.xlang.impl;
 
-import fr.insset.jeanluc.gel.GelExpression;
 import fr.insset.jeanluc.ete.xlang.Statement;
+import fr.insset.jeanluc.gel.GelExpression;
 import fr.insset.jeanluc.ete.xlang.*;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 
 
@@ -20,7 +22,6 @@ public class LoopImpl  extends fr.insset.jeanluc.ete.xlang.impl.StatementImpl  i
     public void setBody(List<Statement> inValue) {
         body = inValue;
     }
-
     public GelExpression getCondition() {
         return condition;
     }
@@ -30,13 +31,12 @@ public class LoopImpl  extends fr.insset.jeanluc.ete.xlang.impl.StatementImpl  i
     }
 
 
-
     //========================================================================//
 
 
-        private List<Statement> body;
-            private GelExpression condition;
-    
+    private List<Statement> body;
+    private GelExpression condition;
+
 
 }
 

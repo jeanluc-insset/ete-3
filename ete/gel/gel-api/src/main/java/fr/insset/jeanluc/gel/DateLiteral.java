@@ -12,7 +12,7 @@ public interface DateLiteral  extends fr.insset.jeanluc.gel.Literal  {
     //========================================================================//
 
 
-
+        
 
 }
 

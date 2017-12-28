@@ -12,7 +12,7 @@ public interface UnaryOperation  extends fr.insset.jeanluc.gel.Operation  {
     //========================================================================//
 
 
-
+        
 
 }
 

@@ -12,7 +12,7 @@ public interface Div  extends fr.insset.jeanluc.gel.NumberOperation  {
     //========================================================================//
 
 
-
+        
 
 }
 

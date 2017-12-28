@@ -20,7 +20,7 @@ public interface MethodInvocation  extends fr.insset.jeanluc.ete.xlang.Statement
     public void setTarget(GelExpression inValue);
     public List<GelExpression> getParameters();
     public void setParameters(List<GelExpression> inValue);
-
+        
 
 }
 

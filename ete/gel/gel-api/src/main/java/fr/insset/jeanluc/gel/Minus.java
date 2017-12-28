@@ -12,7 +12,7 @@ public interface Minus  extends fr.insset.jeanluc.gel.NumberOperation  {
     //========================================================================//
 
 
-
+        
 
 }
 

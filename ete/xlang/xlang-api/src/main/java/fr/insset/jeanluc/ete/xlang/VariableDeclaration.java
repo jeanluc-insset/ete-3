@@ -1,8 +1,8 @@
 package fr.insset.jeanluc.ete.xlang;
 
 
-import fr.insset.jeanluc.gel.VariableDefinition;
 import fr.insset.jeanluc.gel.GelExpression;
+import fr.insset.jeanluc.gel.VariableDefinition;
 import java.util.List;
 import javax.annotation.Generated;
 
@@ -20,7 +20,7 @@ public interface VariableDeclaration  extends fr.insset.jeanluc.ete.xlang.Statem
     public void setDefinitionExpression(VariableDefinition inValue);
     public GelExpression getInitValue();
     public void setInitValue(GelExpression inValue);
-
+        
 
 }
 

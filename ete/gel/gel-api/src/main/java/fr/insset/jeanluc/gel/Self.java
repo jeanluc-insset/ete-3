@@ -12,7 +12,7 @@ public interface Self  extends fr.insset.jeanluc.gel.VariableReference  {
     //========================================================================//
 
 
-
+        
 
 }
 

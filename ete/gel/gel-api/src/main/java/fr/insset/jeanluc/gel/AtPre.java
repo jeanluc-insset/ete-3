@@ -15,7 +15,7 @@ public interface AtPre  extends fr.insset.jeanluc.gel.Navigable  {
 
     public Navigation getNavigation();
     public void setNavigation(Navigation inValue);
-
+        
 
 }
 

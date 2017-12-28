@@ -12,7 +12,7 @@ public interface BooleanLiteral  extends fr.insset.jeanluc.gel.Literal  {
     //========================================================================//
 
 
-
+        
 
 }
 

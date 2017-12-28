@@ -12,7 +12,7 @@ public interface GelExpression  extends fr.insset.jeanluc.ete.meta.model.types.T
     //========================================================================//
 
 
-
+        
 
 }
 

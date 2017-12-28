@@ -3,7 +3,9 @@ package fr.insset.jeanluc.ete.xlang.impl;
 import fr.insset.jeanluc.gel.GelExpression;
 import fr.insset.jeanluc.ete.xlang.Statement;
 import fr.insset.jeanluc.ete.xlang.*;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 
 
@@ -20,7 +22,6 @@ public class ConditionalImpl  extends fr.insset.jeanluc.ete.xlang.impl.Statement
     public void setCondition(GelExpression inValue) {
         condition = inValue;
     }
-
     public Statement getThenPart() {
         return thenPart;
     }
@@ -28,7 +29,6 @@ public class ConditionalImpl  extends fr.insset.jeanluc.ete.xlang.impl.Statement
     public void setThenPart(Statement inValue) {
         thenPart = inValue;
     }
-
     public Statement getElsePart() {
         return elsePart;
     }
@@ -38,14 +38,13 @@ public class ConditionalImpl  extends fr.insset.jeanluc.ete.xlang.impl.Statement
     }
 
 
-
     //========================================================================//
 
 
-        private GelExpression condition;
-            private Statement thenPart;
-            private Statement elsePart;
-    
+    private GelExpression condition;
+    private Statement thenPart;
+    private Statement elsePart;
+
 
 }
 

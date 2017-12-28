@@ -2,7 +2,9 @@ package fr.insset.jeanluc.ete.xlang.impl;
 
 import fr.insset.jeanluc.gel.GelExpression;
 import fr.insset.jeanluc.ete.xlang.*;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 
 
@@ -19,7 +21,6 @@ public class AssignmentImpl  extends fr.insset.jeanluc.ete.xlang.impl.StatementI
     public void setValue(GelExpression inValue) {
         value = inValue;
     }
-
     public GelExpression getLeftValue() {
         return leftValue;
     }
@@ -29,13 +30,12 @@ public class AssignmentImpl  extends fr.insset.jeanluc.ete.xlang.impl.StatementI
     }
 
 
-
     //========================================================================//
 
 
-        private GelExpression value;
-            private GelExpression leftValue;
-    
+    private GelExpression value;
+    private GelExpression leftValue;
+
 
 }
 

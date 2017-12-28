@@ -18,7 +18,7 @@ public interface Lambda  extends fr.insset.jeanluc.gel.BinaryOperation  {
     public void setVariables(List<VariableDefinition> inValue);
     public GelExpression getBody();
     public void setBody(GelExpression inValue);
-
+        
 
 }
 

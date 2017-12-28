@@ -15,7 +15,7 @@ public interface Operation  extends fr.insset.jeanluc.gel.GelExpression  {
 
     public List<GelExpression> getOperand();
     public void setOperand(List<GelExpression> inValue);
-
+        
 
 }
 
