@@ -5,9 +5,11 @@ package ${current.owningPackage};
 import ${dialect.getQualifiedName($aDependance)};
 #end
 import java.util.List;
+import javax.annotation.Generated;
 
 
-public interface $current.name #if ($current.superClass) extends ${dialect.getQualifiedName($current.superClass.get(0))} #end {
+@Generated("jean-luc@insset.fr template : ete/src/main/mda/modules/from-spec/class2interface.vm")
+public interface $current.name #if ($current.superClass && $current.superClass.size()>0) extends ${dialect.getQualifiedName($current.superClass.get(0))} #end {
 
 
     //========================================================================//

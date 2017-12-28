@@ -147,11 +147,11 @@ public class XmlModelReaderTest {
 
         // 3-c check some associations
         // 3-c-1 check the relation passage -> questionsPosees
-        MofClass passageClass = (MofClass) result.getElementByName("Passage");
-        MofClass questionPoseeClass = (MofClass) result.getElementByName("QuestionPosee");
+        MofClass passageClass = (MofClass) result.getElementByName("Session");
+        MofClass questionPoseeClass = (MofClass) result.getElementByName("EffectiveQuestion");
         MofCollection  sequenceQuestionsPoseesClass = (MofCollection) FactoryRegistry.newInstance(MOF_SEQUENCE);
         sequenceQuestionsPoseesClass.setBaseType(questionPoseeClass);
-        MofProperty questionsPosees = passageClass.getOwnedAttribute("questionsPosees");
+        MofProperty questionsPosees = passageClass.getOwnedAttribute("askedQuestions");
         MofType typeQuestionsPosees = questionsPosees.getType();
         assertEquals(sequenceQuestionsPoseesClass, typeQuestionsPosees);
         Collection<Invariant> invariants = questionPoseeClass.getInvariants();

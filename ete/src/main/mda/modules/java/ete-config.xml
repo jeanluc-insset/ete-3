@@ -8,7 +8,7 @@
       -->
 
     <transformation-set>
-        <velocity template="templates/class2pojo.vm"
+        <velocity template="class2pojo.vm"
                   items="${classes}"
                   target='${current.owningPackage.name.replace(".", "/")}/${current.name}.java'
                   />

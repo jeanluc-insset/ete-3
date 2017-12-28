@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<mda>
+
+    <!--
+    Description :
+
+    This project defines the abstract syntax of an imperative language
+    coined to translate the specifications into "programs".
+    Other project will contain templates to translate instructions from this
+    abstract language to instructions in concrete language(s).
+    There is no concrete syntax for this language since instructions are
+    supposed to be synthetized from specifications (in OCL or any other
+    specification language).
+    TODO : should we implement the Alf syntax ?
+    -->
+
+    <transformation-set output_base="../../">
+        <!-- reads a model -->
+        <model  url="ExecutionLanguage.xml"/>
+        <!--<model model="models/Simple.xml"/>-->
+
+        <!-- outputs the model in a readable form -->
+        <!--<dump file="target/dump.xml"/>-->
+
+        <!-- Generate interfaces into the xlang-api project and the
+            classes into the xlang-impl project
+          -->
+        <module src="../../../../../src/main/mda/modules/language/ete-config.xml"
+                    dialect="fr.insset.jeanluc.el.dialect.BasicJavaDialect"
+                    projectName="xlang"/>
+            />
+        <!-- Generate a generic interface.
+            We need to write a dedicated implementation in order to target a
+            programming language
+          -->
+<!--        <velocity template="templates/generator.vm"
+                  output_base="xlang-api/"
+                  target="src/main/java/fr/insset/jeanluc/mda/ete/as/generator/Generator.java"/>-->
+
+    </transformation-set>
+
+<!--    <transformation-set output_base="../../xlang-builder/target/generated-sources/ete/">
+        <model url="../../../../gel-spec/src/main/mda/Gel.xml"/>
+        <velocity template="templates/checker.vm"
+                  target="fr/insset/jeanluc/mda/ete/as/builder/CheckerBuilder.java"/>
+        <velocity template="templates/operation.vm"
+                  target="fr/insset/jeanluc/mda/ete/as/builder/OperationBuilder.java"/>
+    </transformation-set>-->
+
+</mda>
+
+
+

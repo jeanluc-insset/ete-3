@@ -1,6 +1,7 @@
 ################################################################################
 ##                                                                            ##
-## Generates an abstract tree builder.                                        ##
+## Generates an abstract tree builder for the Generic Expression Language     ##
+## (GEL).                                                                     ##
 ## An instance of this class is a visitor for GelExpressions. It takes any    ##
 ## GelExpression concrete tree and returns the matching abstract tree.        ##
 ##                                                                            ##
@@ -10,6 +11,7 @@
 ##  TreeBuilder           treeBuilder  = new TreeBuilder(inContext);          ##
 ##  GelExpression         expression   = treeBuilder.visitGelExpression(ctx); ##
 ##                                                                            ##
+## A future release will be more generic to be usable with any language       ##
 ##                                                                            ##
 ################################################################################
 package fr.insset.jeanluc.ete.gel.impl;
@@ -65,7 +67,7 @@ GelExpression        abstractExpression = treeBuilder.visitGelExpression(ctx);
 </pre></code>
  *
  */
-@Generated("ete - jean-luc@insset.fr  modules/maven-project/gel-impl/java/tree-builder.vm")
+@Generated("ete - jean-luc@insset.fr  ete/src/main/mda/modules/modules/language/tree-builder.vm")
 public class TreeBuilder extends GelParserBaseVisitor<GelExpression> {
 
 
