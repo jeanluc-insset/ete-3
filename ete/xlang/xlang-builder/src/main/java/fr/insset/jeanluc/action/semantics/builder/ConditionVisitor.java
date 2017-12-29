@@ -16,6 +16,7 @@ import fr.insset.jeanluc.gel.VariableDefinition;
 import fr.insset.jeanluc.gel.impl.VariableDefinitionImpl;
 import fr.insset.jeanluc.meta.model.io.ModelReader;
 import fr.insset.jeanluc.util.factory.FactoryMethods;
+import fr.insset.jeanluc.util.factory.FactoryRegistry;
 import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -161,6 +162,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
 
 
     public static void  enableActionSemantics(ModelReader inReader) {
+        FactoryRegistry registry = FactoryRegistry.getRegistry();
         inReader.addVisitors(new ConditionVisitor());
     }
 

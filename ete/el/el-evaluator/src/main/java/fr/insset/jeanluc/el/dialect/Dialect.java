@@ -1,5 +1,8 @@
 package fr.insset.jeanluc.el.dialect;
 
+
+
+import fr.insset.jeanluc.ete.meta.model.core.MofElement;
 import fr.insset.jeanluc.ete.meta.model.core.NamedElement;
 import fr.insset.jeanluc.ete.meta.model.datatype.UnlimitedNatural;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
@@ -18,8 +21,8 @@ import java.util.regex.Pattern;
  * A dialect makes easier template creation.<br>
  * For instance it contains methods to manipulate strings such as converting
  * from camel case to separated words, changing the case of the initial
- * character of a string. It contains enhancements to MOF as well, such as
- * looking for dependencies, some stereotypes...
+ * character of a string and so on. It can contain enhancements to MOF as well,
+ * such as looking for dependencies, some stereotypes...
  *
  * @author jldeleage
  */
@@ -236,8 +239,6 @@ public interface Dialect {
 
 
 
-
-
     /**
      * Return a string identifying the HTML component to use to edit the value
      * of a property. The string is supposed to be the name of template to
@@ -271,8 +272,6 @@ public interface Dialect {
         }
         return INPUT;
     }
-
-
 
 
 
@@ -343,8 +342,50 @@ public interface Dialect {
     }
 
 
+    /**
+     * Creates a "constant" from an identifier by inserting an underscore
+     * character before any inner upper case, then converting every character
+     * to upper case.
+     * 
+     * @param name
+     * @return 
+     */
+    public default String toConstant(String name) {
+        if (name == null) {
+            return "ANONYMOUS";
+        }
+        String regex = "([A-Z][a-z]+)";
+        String replacement = "_$1";
+        // insert _ before 
+        name = name.replaceAll(regex, replacement);
+        // remove the leading _
+        if (name.charAt(1) <= 'Z') {
+            name = name.substring(1);
+        }
+        return name.toUpperCase();
+    }
+
+
+    /**
+     * Returns the symbol associated to the named element. If the named element
+     * has a tag symbol named "symbol", that value is returned. Otherwise, the
+     * method builds a constant from the name of the element.
+     * @param NamedElement inElement : the elelement we need a symbol for.
+     * @return : the associated symbol
+     */
+    public default String   getSymbol(NamedElement inElement) {
+        Object valueOf = inElement.getValueOf("symbol");
+        if (valueOf != null) {
+            return valueOf.toString();
+        }
+        return toConstant(inElement.getName());
+    }
+
+
+
     public default String getQualifiedName(NamedElement inElement) {
         return inElement.getQualifiedName();
     }
+
 
 }
