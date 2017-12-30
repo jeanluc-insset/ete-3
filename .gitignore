@@ -39,3 +39,7 @@
 /ete/xlang/xlang-impl/target/
 /ete/xlang/xlang-builder/nbproject/
 /ete/xlang/xlang-builder/target/
+/ete/gel/gel-api/src/main/java
+/ete/gel/gel-impl/src/main/java
+/ete/gel/xlang-api/src/main/java
+/ete/gel/xlang-impl/src/main/java
