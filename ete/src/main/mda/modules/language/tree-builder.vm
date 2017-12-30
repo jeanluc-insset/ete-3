@@ -67,7 +67,7 @@ GelExpression        abstractExpression = treeBuilder.visitGelExpression(ctx);
 </pre></code>
  *
  */
-@Generated("ete - jean-luc@insset.fr  ete/src/main/mda/modules/modules/language/tree-builder.vm")
+@Generated("ete - jean-luc@insset.fr  ete/src/main/mda/modules/language/tree-builder.vm")
 public class TreeBuilder extends GelParserBaseVisitor<GelExpression> {
 
 
@@ -116,6 +116,19 @@ public class TreeBuilder extends GelParserBaseVisitor<GelExpression> {
         navigable = new Stack<>();
         return super.visitGelExpression(ctx); //To change body of generated methods, choose Tools | Templates.
     }
+
+
+
+// current = $current
+// current.classes = $current.classes
+#foreach ($aClass in $current.classes)
+#if ($aClass.getValueOf("symbol"))
+// We should visit specifically the class : $aClass
+    public GelExpression visit${aClass.name}Expression(
+#end
+#end
+
+
 
 /*
     //========================================================================//
