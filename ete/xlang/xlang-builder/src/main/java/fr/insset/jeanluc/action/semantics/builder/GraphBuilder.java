@@ -1,12 +1,17 @@
 package fr.insset.jeanluc.action.semantics.builder;
 
 
+import fr.insset.jeanluc.ete.gel.And;
+import fr.insset.jeanluc.ete.gel.AtPre;
+import fr.insset.jeanluc.ete.gel.Equal;
+import fr.insset.jeanluc.ete.gel.GelExpression;
+import fr.insset.jeanluc.ete.gel.Navigation;
+import fr.insset.jeanluc.ete.gel.Operation;
 import fr.insset.jeanluc.ete.meta.model.constraint.Postcondition;
 import fr.insset.jeanluc.ete.meta.model.emof.Feature;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 import fr.insset.jeanluc.ete.meta.model.types.MofType;
 import fr.insset.jeanluc.ete.meta.model.types.collections.MofCollection;
-import fr.insset.jeanluc.gel.*;
 import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;

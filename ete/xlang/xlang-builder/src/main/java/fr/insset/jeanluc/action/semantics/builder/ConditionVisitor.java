@@ -1,8 +1,12 @@
 package fr.insset.jeanluc.action.semantics.builder;
 
 
-import fr.insset.jeanluc.ete.gel.impl.GelParserFactory;
+import fr.insset.jeanluc.ete.gel.GelExpression;
+import fr.insset.jeanluc.ete.gel.GelParser;
+import fr.insset.jeanluc.ete.gel.VariableDefinition;
+import fr.insset.jeanluc.ete.gel.impl.GelParserWrapper;
 import fr.insset.jeanluc.ete.gel.impl.TreeBuilder;
+import fr.insset.jeanluc.ete.gel.impl.VariableDefinitionImpl;
 import fr.insset.jeanluc.ete.meta.model.constraint.Condition;
 import fr.insset.jeanluc.ete.meta.model.constraint.Postcondition;
 import fr.insset.jeanluc.ete.meta.model.constraint.Precondition;
@@ -10,12 +14,9 @@ import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
 import fr.insset.jeanluc.ete.meta.model.types.MofType;
 import fr.insset.jeanluc.ete.xlang.Statement;
-import fr.insset.jeanluc.gel.GelExpression;
-import fr.insset.jeanluc.gel.GelParser;
-import fr.insset.jeanluc.gel.VariableDefinition;
-import fr.insset.jeanluc.gel.impl.VariableDefinitionImpl;
 import fr.insset.jeanluc.meta.model.io.ModelReader;
 import fr.insset.jeanluc.util.factory.FactoryMethods;
+import fr.insset.jeanluc.util.factory.FactoryRegistry;
 import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -106,7 +107,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
 
         // 1- parse the condition
         String          specificationAsString = inCondition.getSpecificationAsString();
-        GelParser       parser                = GelParserFactory.newParser(specificationAsString);
+        GelParser       parser                = GelParserWrapper.newParser(specificationAsString);
         GelParser.GelExpressionContext   ctx  = parser.gelExpression();
 
         // 2- build expression as an abstract tree
@@ -161,6 +162,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
 
 
     public static void  enableActionSemantics(ModelReader inReader) {
+        FactoryRegistry registry = FactoryRegistry.getRegistry();
         inReader.addVisitors(new ConditionVisitor());
     }
 

@@ -6,8 +6,8 @@
     a language.
     It is supposed to be called from a specific project named "xxxx-spec"
     and to receive the "projectName" parameter with the value xxxx.
-    It builds interfaces for the classes, implementationsand evaluator in the
-    xxxx-api, xxxx-impl and xxxx-evaluator projects respectively.
+    It builds interfaces and implementations classes in thebxxxx-api, xxxx-impl
+    projects respectively
 
  -->
 
@@ -24,13 +24,11 @@
                    <!--Implementation of specific features--> 
         <velocity template="tree-builder.vm"
                 dialect="fr.insset.jeanluc.el.dialect.BasicJavaDialect"
-                target="${projectName}-impl/src/main/java/fr/insset/jeanluc/ete/gel/impl/TreeBuilder.java"/>
+                target="${projectName}-impl/src/main/java/fr/insset/jeanluc/ete/${projectName.toLowerCase()}/impl/TreeBuilder.java"/>
         <velocity template="parser-wrapper.vm"
                 dialect="fr.insset.jeanluc.el.dialect.BasicJavaDialect"
-                target="${projectName}-impl/src/main/java/fr/insset/jeanluc/ete/gel/impl/GelParserFactory.java"/>
-        <velocity template="language-factory.vm"
-                dialect="fr.insset.jeanluc.el.dialect.BasicJavaDialect"
-                target="${projectName}-impl/src/main/java/fr/insset/jeanluc/ete/gel/impl/factory/GelFactory.java"/>
+                target="${projectName}-impl/src/main/java/fr/insset/jeanluc/ete/${projectName.toLowerCase()}/impl/${projectName.substring(0,1).toUpperCase()}${projectName.substring(1)}ParserWrapper.java"/>
     </transformation-set>
+
 </mda>
 

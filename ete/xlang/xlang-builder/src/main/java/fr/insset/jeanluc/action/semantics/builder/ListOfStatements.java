@@ -1,11 +1,10 @@
 package fr.insset.jeanluc.action.semantics.builder;
 
 
+import fr.insset.jeanluc.ete.gel.VariableDefinition;
 import fr.insset.jeanluc.ete.xlang.Statement;
-import fr.insset.jeanluc.gel.VariableDefinition;
 import fr.insset.jeanluc.util.factory.FactoryMethods;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 
 /**

@@ -1,8 +1,8 @@
 package fr.insset.jeanluc.action.semantics.builder;
 
 
+import fr.insset.jeanluc.ete.gel.VariableDefinition;
 import fr.insset.jeanluc.ete.meta.model.constraint.Constraint;
-import fr.insset.jeanluc.gel.VariableDefinition;
 import java.util.LinkedList;
 import java.util.List;
 

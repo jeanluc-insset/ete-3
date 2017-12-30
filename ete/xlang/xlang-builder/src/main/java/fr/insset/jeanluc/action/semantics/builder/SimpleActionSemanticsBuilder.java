@@ -1,14 +1,17 @@
 package fr.insset.jeanluc.action.semantics.builder;
 
 
+import fr.insset.jeanluc.ete.gel.BinaryOperation;
+import fr.insset.jeanluc.ete.gel.Equal;
+import fr.insset.jeanluc.ete.gel.GelExpression;
+import fr.insset.jeanluc.ete.gel.VariableDefinition;
+import fr.insset.jeanluc.ete.gel.impl.VariableDefinitionImpl;
 import fr.insset.jeanluc.ete.meta.model.types.MofType;
 import fr.insset.jeanluc.ete.xlang.Assignment;
 import fr.insset.jeanluc.ete.xlang.Statement;
 import fr.insset.jeanluc.ete.xlang.VariableDeclaration;
 import fr.insset.jeanluc.ete.xlang.impl.AssignmentImpl;
 import fr.insset.jeanluc.ete.xlang.impl.VariableDeclarationImpl;
-import fr.insset.jeanluc.gel.*;
-import fr.insset.jeanluc.gel.impl.VariableDefinitionImpl;
 import fr.insset.jeanluc.util.factory.FactoryRegistry;
 import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
 import java.lang.reflect.InvocationTargetException;
