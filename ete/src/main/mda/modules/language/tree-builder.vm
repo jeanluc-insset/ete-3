@@ -16,8 +16,17 @@
 ################################################################################
 package fr.insset.jeanluc.ete.gel.impl;
 
+################################################################################
+##                                                                            ##
+#if ($baseClass)                                                              ##
+#else                                                                         ##
+#set ($baseClass = $dialect.i2uc($projectName) + "Expression")                ##
+#end                                                                          ##
+##                                                                            ##
+################################################################################
 
 
+import fr.insset.jeanluc.ete.${projectName.toLowerCase()}.${dialect.i2uc($projectName)}Parser;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 import fr.insset.jeanluc.ete.meta.model.emof.MofParameter;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
@@ -27,19 +36,9 @@ import fr.insset.jeanluc.ete.meta.model.types.Classifier;
 import fr.insset.jeanluc.ete.meta.model.types.MofType;
 import fr.insset.jeanluc.ete.meta.model.types.TypedElement;
 import fr.insset.jeanluc.ete.meta.model.types.collections.MofCollection;
-import fr.insset.jeanluc.gel.GelParser;
-import fr.insset.jeanluc.gel.GelParserBaseVisitor;
-import fr.insset.jeanluc.gel.CollectionOperationExpression;
-import fr.insset.jeanluc.gel.GelExpression;
-import fr.insset.jeanluc.gel.Literal;
-import fr.insset.jeanluc.gel.Navigable;
-import fr.insset.jeanluc.gel.Navigation;
-// import static fr.insset.jeanluc.gel.api.Navigation.NAVIGATION;
-import fr.insset.jeanluc.gel.Operation;
-import fr.insset.jeanluc.gel.Self;
-import fr.insset.jeanluc.gel.VariableDefinition;
-import fr.insset.jeanluc.gel.VariableReference;
-import fr.insset.jeanluc.gel.impl.*;
+// import fr.insset.jeanluc.${projectName.toLowerCase()}.*;
+import fr.insset.jeanluc.ete.${projectName.toLowerCase()}.*;
+import fr.insset.jeanluc.ete.${projectName.toLowerCase()}.impl.*;
 import fr.insset.jeanluc.util.factory.FactoryRegistry;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -56,8 +55,8 @@ import org.antlr.v4.runtime.tree.RuleNode;
 
 /**
  * Generates an abstract tree builder.
- * An instance of this class is a visitor for GelExpressions. It takes any
- * GelExpression concrete tree and returns the matching abstract tree.
+ * An instance of this class is a visitor for ${baseClass}. It takes any
+ * ${baseClass} concrete tree and returns the matching abstract tree.
  *
  * Usage : <code><pre>
 GelParser            parser             = GelParserFactory.newParser(aString);
@@ -68,14 +67,13 @@ GelExpression        abstractExpression = treeBuilder.visitGelExpression(ctx);
  *
  */
 @Generated("ete - jean-luc@insset.fr  ete/src/main/mda/modules/modules/language/tree-builder.vm")
-public class TreeBuilder extends GelParserBaseVisitor<GelExpression> {
-
+public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<${baseClass}>  {
 
 
     public TreeBuilder(MofPackage inModel, TypedElement inContext) {
         this(inModel, inContext, new HashMap<>());
     }
-    
+
     public TreeBuilder(MofPackage inModel, TypedElement inContext, Map<String, VariableDefinition> inVariables) {
         variables = inVariables;
         model = inModel;
@@ -111,11 +109,26 @@ public class TreeBuilder extends GelParserBaseVisitor<GelExpression> {
     }
 
 
+
+ #if ($baseClass)
+    public ${baseClass}    visit${baseClass}(${dialect.i2uc($projectName)}Parser.${baseClass}Context ctx) {
+        return null;
+    }
+#else
+    public ${dialect.i2uc($projectName)}Expression    visit${dialect.i2uc($projectName)}(${dialect.i2uc($projectName)}Parser.${dialect.i2uc($projectName)}ExpressionContext ctx) {
+        return null;
+    }
+#end
+
+
+/*
     @Override
     public GelExpression visitGelExpression(GelParser.GelExpressionContext ctx) {
         navigable = new Stack<>();
         return super.visitGelExpression(ctx); //To change body of generated methods, choose Tools | Templates.
     }
+
+*/
 
 /*
     //========================================================================//
@@ -456,7 +469,10 @@ public class TreeBuilder extends GelParserBaseVisitor<GelExpression> {
 
     //========================================================================//
 
+
     private     MofPackage                              model;
+
+
 
     /**
      *  Should be an instance of MofClass or (Mof)Operation.
@@ -470,6 +486,7 @@ public class TreeBuilder extends GelParserBaseVisitor<GelExpression> {
      * context instanceof MofClass ==&gt; context == contextClass<br>
      * context instanceof Operation ==&gt; context.getOwningMofClass() == contextClass</code>
      */
+
     private     Stack<Classifier>                       contextClass = new Stack<>();
 
     private     Stack<Navigable>                        navigable;
@@ -477,6 +494,8 @@ public class TreeBuilder extends GelParserBaseVisitor<GelExpression> {
     private     Map<String, VariableDefinition>         variables = new HashMap<>();
 
     private     String                                  currentNavOperator;
+
+
 
 }
 

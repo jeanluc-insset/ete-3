@@ -1,8 +1,8 @@
 package fr.insset.jeanluc.action.semantics.builder;
 
 
+import fr.insset.jeanluc.ete.gel.And;
 import fr.insset.jeanluc.ete.meta.model.constraint.Invariant;
-import fr.insset.jeanluc.gel.And;
 import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
 import java.util.LinkedList;
 import java.util.List;

@@ -2,7 +2,7 @@ package fr.insset.jeanluc.ete.xlang;
 
 
 import fr.insset.jeanluc.ete.xlang.Statement;
-import fr.insset.jeanluc.gel.GelExpression;
+import fr.insset.jeanluc.ete.gel.GelExpression;
 import java.util.List;
 import javax.annotation.Generated;
 

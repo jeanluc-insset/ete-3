@@ -1,7 +1,7 @@
 package fr.insset.jeanluc.ete.xlang;
 
 
-import fr.insset.jeanluc.gel.GelExpression;
+import fr.insset.jeanluc.ete.gel.GelExpression;
 import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
 import java.util.List;
 import javax.annotation.Generated;

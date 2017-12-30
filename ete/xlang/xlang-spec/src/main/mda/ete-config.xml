@@ -27,7 +27,7 @@
         <!-- Generate interfaces into the xlang-api project and the
             classes into the xlang-impl project
           -->
-        <module src="../../../../../src/main/mda/modules/language/ete-config.xml"
+        <module src="../../../../../src/main/mda/modules/from-spec/ete-config.xml"
                     dialect="fr.insset.jeanluc.el.dialect.BasicJavaDialect"
                     projectName="xlang"/>
             />

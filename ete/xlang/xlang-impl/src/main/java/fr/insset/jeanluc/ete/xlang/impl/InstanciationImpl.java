@@ -8,7 +8,7 @@ import java.util.Map;
 
 
 
-public class InstanciationImpl  extends fr.insset.jeanluc.gel.impl.GelExpressionImpl  implements Instanciation {
+public class InstanciationImpl  extends fr.insset.jeanluc.ete.gel.impl.GelExpressionImpl  implements Instanciation {
 
 
     //========================================================================//

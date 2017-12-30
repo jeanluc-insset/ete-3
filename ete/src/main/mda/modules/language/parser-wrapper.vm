@@ -5,25 +5,26 @@
 ################################################################################
 package fr.insset.jeanluc.ete.gel.impl;
 
-import fr.insset.jeanluc.gel.GelLexer;
-import fr.insset.jeanluc.gel.GelParser;
+import fr.insset.jeanluc.ete.${projectName.toLowerCase()}.${dialect.i2uc($projectName)}Lexer;
+import fr.insset.jeanluc.ete.${projectName.toLowerCase()}.${dialect.i2uc($projectName)}Parser;
 import javax.annotation.Generated;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
+
 
 /**
  *
  * @author jldeleage
  */
 @Generated("ete - jean-luc@insset.fr  modules/maven-project/gel-impl/java/parser-wrapper.vm")
-public class GelParserFactory {
+public class ${dialect.i2uc($projectName)}ParserWrapper {
     
-    public static GelParser newParser(String inExpression) {
-        GelLexer lexer = null;
+    public static ${dialect.i2uc($projectName)}Parser newParser(String inExpression) {
+        ${dialect.i2uc($projectName)}Lexer lexer = null;
         ANTLRInputStream input = new ANTLRInputStream(inExpression);
-        lexer = new GelLexer(input);
+        lexer = new ${dialect.i2uc($projectName)}Lexer(input);
         CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
-        GelParser parser = new GelParser(commonTokenStream);
+        ${dialect.i2uc($projectName)}Parser parser = new ${dialect.i2uc($projectName)}Parser(commonTokenStream);
         return parser;
     }
 
