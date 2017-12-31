@@ -47,17 +47,35 @@ public interface GelParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitNotExpression(GelParser.NotExpressionContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link GelParser#notNotExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitNotNotExpression(GelParser.NotNotExpressionContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link GelParser#orderExpression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitOrderExpression(GelParser.OrderExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link GelParser#greaterThanExpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitGreaterThanExpression(GelParser.GreaterThanExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link GelParser#greaterOrEqualExpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitGreaterOrEqualExpression(GelParser.GreaterOrEqualExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link GelParser#lessThanExpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLessThanExpression(GelParser.LessThanExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link GelParser#lessOrEqualExpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLessOrEqualExpression(GelParser.LessOrEqualExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link GelParser#compareExpression}.
 	 * @param ctx the parse tree
@@ -65,17 +83,59 @@ public interface GelParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitCompareExpression(GelParser.CompareExpressionContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link GelParser#equalExpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitEqualExpression(GelParser.EqualExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link GelParser#differentExpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDifferentExpression(GelParser.DifferentExpressionContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link GelParser#addOrSubExpression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitAddOrSubExpression(GelParser.AddOrSubExpressionContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link GelParser#addExpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAddExpression(GelParser.AddExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link GelParser#minusExpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMinusExpression(GelParser.MinusExpressionContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link GelParser#multOrDivExpression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitMultOrDivExpression(GelParser.MultOrDivExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link GelParser#multExpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMultExpression(GelParser.MultExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link GelParser#divExpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDivExpression(GelParser.DivExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link GelParser#modExpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitModExpression(GelParser.ModExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link GelParser#operand}.
 	 * @param ctx the parse tree
@@ -94,6 +154,18 @@ public interface GelParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitStepExpression(GelParser.StepExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link GelParser#directExpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDirectExpression(GelParser.DirectExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link GelParser#atPreExpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAtPreExpression(GelParser.AtPreExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link GelParser#filterExpression}.
 	 * @param ctx the parse tree

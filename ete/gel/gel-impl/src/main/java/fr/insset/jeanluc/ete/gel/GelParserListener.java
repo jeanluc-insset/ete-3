@@ -68,16 +68,6 @@ public interface GelParserListener extends ParseTreeListener {
 	 */
 	void exitNotExpression(GelParser.NotExpressionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link GelParser#notNotExpression}.
-	 * @param ctx the parse tree
-	 */
-	void enterNotNotExpression(GelParser.NotNotExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link GelParser#notNotExpression}.
-	 * @param ctx the parse tree
-	 */
-	void exitNotNotExpression(GelParser.NotNotExpressionContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link GelParser#orderExpression}.
 	 * @param ctx the parse tree
 	 */
@@ -87,6 +77,46 @@ public interface GelParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitOrderExpression(GelParser.OrderExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link GelParser#greaterThanExpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterGreaterThanExpression(GelParser.GreaterThanExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link GelParser#greaterThanExpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitGreaterThanExpression(GelParser.GreaterThanExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link GelParser#greaterOrEqualExpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterGreaterOrEqualExpression(GelParser.GreaterOrEqualExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link GelParser#greaterOrEqualExpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitGreaterOrEqualExpression(GelParser.GreaterOrEqualExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link GelParser#lessThanExpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterLessThanExpression(GelParser.LessThanExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link GelParser#lessThanExpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitLessThanExpression(GelParser.LessThanExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link GelParser#lessOrEqualExpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterLessOrEqualExpression(GelParser.LessOrEqualExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link GelParser#lessOrEqualExpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitLessOrEqualExpression(GelParser.LessOrEqualExpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link GelParser#compareExpression}.
 	 * @param ctx the parse tree
@@ -98,6 +128,26 @@ public interface GelParserListener extends ParseTreeListener {
 	 */
 	void exitCompareExpression(GelParser.CompareExpressionContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link GelParser#equalExpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterEqualExpression(GelParser.EqualExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link GelParser#equalExpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitEqualExpression(GelParser.EqualExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link GelParser#differentExpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterDifferentExpression(GelParser.DifferentExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link GelParser#differentExpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitDifferentExpression(GelParser.DifferentExpressionContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link GelParser#addOrSubExpression}.
 	 * @param ctx the parse tree
 	 */
@@ -108,6 +158,26 @@ public interface GelParserListener extends ParseTreeListener {
 	 */
 	void exitAddOrSubExpression(GelParser.AddOrSubExpressionContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link GelParser#addExpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterAddExpression(GelParser.AddExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link GelParser#addExpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitAddExpression(GelParser.AddExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link GelParser#minusExpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterMinusExpression(GelParser.MinusExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link GelParser#minusExpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitMinusExpression(GelParser.MinusExpressionContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link GelParser#multOrDivExpression}.
 	 * @param ctx the parse tree
 	 */
@@ -117,6 +187,36 @@ public interface GelParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitMultOrDivExpression(GelParser.MultOrDivExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link GelParser#multExpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterMultExpression(GelParser.MultExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link GelParser#multExpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitMultExpression(GelParser.MultExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link GelParser#divExpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterDivExpression(GelParser.DivExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link GelParser#divExpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitDivExpression(GelParser.DivExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link GelParser#modExpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterModExpression(GelParser.ModExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link GelParser#modExpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitModExpression(GelParser.ModExpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link GelParser#operand}.
 	 * @param ctx the parse tree
@@ -147,6 +247,26 @@ public interface GelParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitStepExpression(GelParser.StepExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link GelParser#directExpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterDirectExpression(GelParser.DirectExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link GelParser#directExpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitDirectExpression(GelParser.DirectExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link GelParser#atPreExpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterAtPreExpression(GelParser.AtPreExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link GelParser#atPreExpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitAtPreExpression(GelParser.AtPreExpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link GelParser#filterExpression}.
 	 * @param ctx the parse tree

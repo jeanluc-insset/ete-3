@@ -1,20 +1,19 @@
 ################################################################################
 ##                                                                            ##
-## Generates an abstract tree builder for the Generic Expression Language     ##
-## (GEL).                                                                     ##
-## An instance of this class is a visitor for GelExpressions. It takes any    ##
-## GelExpression concrete tree and returns the matching abstract tree.        ##
+## Generates an abstract tree builder for any Expression Language             ##
+## An instance of this class is a visitor for these Expressions. It takes any ##
+## expression concrete tree and returns the matching abstract tree.           ##
 ##                                                                            ##
 ## Usage :                                                                    ##
-##  GelParser             parser  = GelParserFactory.newParser(inExpression); ##
-##  GelExpressionContext  ctx          = parser.gelExpression();              ##
+##  XxxParser             parser  = XxxParserFactory.newParser(inExpression); ##
+##  XxxExpressionContext  ctx          = parser.xxxExpression();              ##
 ##  TreeBuilder           treeBuilder  = new TreeBuilder(inContext);          ##
-##  GelExpression         expression   = treeBuilder.visitGelExpression(ctx); ##
+##  XxxExpression         expression   = treeBuilder.visitXxxExpression(ctx); ##
 ##                                                                            ##
 ## A future release will be more generic to be usable with any language       ##
 ##                                                                            ##
 ################################################################################
-package fr.insset.jeanluc.ete.gel.impl;
+package fr.insset.jeanluc.ete.${dialect.i2lc($projectName)}.impl;
 
 
 
@@ -27,23 +26,15 @@ import fr.insset.jeanluc.ete.meta.model.types.Classifier;
 import fr.insset.jeanluc.ete.meta.model.types.MofType;
 import fr.insset.jeanluc.ete.meta.model.types.TypedElement;
 import fr.insset.jeanluc.ete.meta.model.types.collections.MofCollection;
-import fr.insset.jeanluc.gel.GelParser;
-import fr.insset.jeanluc.gel.GelParserBaseVisitor;
-import fr.insset.jeanluc.gel.CollectionOperationExpression;
-import fr.insset.jeanluc.gel.GelExpression;
-import fr.insset.jeanluc.gel.Literal;
-import fr.insset.jeanluc.gel.Navigable;
-import fr.insset.jeanluc.gel.Navigation;
-// import static fr.insset.jeanluc.gel.api.Navigation.NAVIGATION;
-import fr.insset.jeanluc.gel.Operation;
-import fr.insset.jeanluc.gel.Self;
-import fr.insset.jeanluc.gel.VariableDefinition;
-import fr.insset.jeanluc.gel.VariableReference;
-import fr.insset.jeanluc.gel.impl.*;
+import fr.insset.jeanluc.ete.${dialect.i2lc($projectName)}.${dialect.i2uc($projectName)}Parser;
+import fr.insset.jeanluc.ete.${dialect.i2lc($projectName)}.${dialect.i2uc($projectName)}ParserBaseVisitor;
+import fr.insset.jeanluc.ete.${dialect.i2lc($projectName)}.*;
+import fr.insset.jeanluc.util.factory.FactoryMethods;
 import fr.insset.jeanluc.util.factory.FactoryRegistry;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import java.util.logging.Level;
@@ -54,21 +45,22 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.RuleNode;
 
 
+
 /**
  * Generates an abstract tree builder.
- * An instance of this class is a visitor for GelExpressions. It takes any
- * GelExpression concrete tree and returns the matching abstract tree.
+ * An instance of this class is a visitor for ${dialect.i2uc($projectName)}Expressions. It takes any
+ * ${dialect.i2uc($projectName)}Expression concrete tree and returns the matching abstract tree.
  *
  * Usage : <code><pre>
-GelParser            parser             = GelParserFactory.newParser(aString);
-GelExpressionContext ctx                = parser.gelExpression();
+${dialect.i2uc($projectName)}Parser            parser             = ${dialect.i2uc($projectName)}ParserFactory.newParser(aString);
+${dialect.i2uc($projectName)}ExpressionContext ctx                = parser.${dialect.i2lc($projectName)}Expression();
 TreeBuilder          treeBuilder        = new TreeBuilder(inContext);
-GelExpression        abstractExpression = treeBuilder.visitGelExpression(ctx);
+${dialect.i2uc($projectName)}Expression        abstractExpression = treeBuilder.visit${dialect.i2uc($projectName)}Expression(ctx);
 </pre></code>
  *
  */
 @Generated("ete - jean-luc@insset.fr  ete/src/main/mda/modules/language/tree-builder.vm")
-public class TreeBuilder extends GelParserBaseVisitor<GelExpression> {
+public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<${dialect.i2uc($projectName)}Expression> {
 
 
 
@@ -112,360 +104,42 @@ public class TreeBuilder extends GelParserBaseVisitor<GelExpression> {
 
 
     @Override
-    public GelExpression visitGelExpression(GelParser.GelExpressionContext ctx) {
+    public ${dialect.i2uc($projectName)}Expression visit${dialect.i2uc($projectName)}Expression(${dialect.i2uc($projectName)}Parser.${dialect.i2uc($projectName)}ExpressionContext ctx) {
         navigable = new Stack<>();
-        return super.visitGelExpression(ctx); //To change body of generated methods, choose Tools | Templates.
+        return super.visit${dialect.i2uc($projectName)}Expression(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
 
-
-// current = $current
-// current.classes = $current.classes
 #foreach ($aClass in $current.classes)
 #if ($aClass.getValueOf("symbol"))
-// We should visit specifically the class : $aClass
-    public GelExpression visit${aClass.name}Expression(
+#set ($kind = $aClass.getValueOf("kind"))
+#if (! $kind)
+#set ($kind = "nokind")
 #end
-#end
-
-
-
-/*
-    //========================================================================//
-
-
+#set ($arity = $aClass.getValueOf("arity"))
     @Override
-    public GelExpression visitChildren(RuleNode node) {
-        return buildBinaryExpression(node);
-    }
-
-
-
-    //========================================================================//
-
-
-## Literal classes are annotated with Literal stereotype
-## They have the "literalType" tagged value
-#foreach ($aClass in $current.classes)
-    #if (${aClass.getValueOf("literalType")})
-    @Override
-    public GelExpression visit${aClass.name}(GelParser.${aClass.name}Context ctx) {
-        Literal result =  buildLiteral(ctx, "${aClass.getValueOf("literalType")}");
-#if (${aClass.getValueOf("literalType")} == "Integer")
-        result.setValue(Integer.parseInt(result.getValueAsString()));
-#elseif (${aClass.getValueOf("literalType")} == "Double")
-        result.setValue(Double.parseDouble(result.getValueAsString()));
-#elseif (${aClass.getValueOf("literalType")} == "Boolean")
-        result.setValue(Boolean.parseBoolean(result.getValueAsString()));
-#elseif (${aClass.getValueOf("literalType")} == "date")
-        String  valueAsString = result.getValueAsString();
-        valueAsString = valueAsString.substring(1, valueAsString.length()-1);
-        final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        final LocalDate dt = LocalDate.parse(valueAsString, dtf);
-        result.setValueAsString(valueAsString);
-        result.setValue(dt);
-#else
-        String  valueAsString = result.getValueAsString();
-        valueAsString = valueAsString.substring(1, valueAsString.length()-1);
-        result.setValue(valueAsString);
-#end
-        return result;
-    }
-    #end
-#end
-
-
-*/
-
-    //========================================================================//
-
-
-
-
-    //========================================================================//
-    //                             N A V I G A T I O N                        //
-    //========================================================================//
-
-
-    /**
-     *  Returns an instance of Self. The type of that instance is the
-     *  provided context or the type of the owning class if the context is an
-     *  operation.
-     */
-/*
-    public GelExpression visitSelfExpression(GelParser.SelfExpressionContext ctx) {
+    // The $aClass class contains the tag value "symbol" with the value of {$aClass.getValueOf("symbol")}
+    public ${dialect.i2uc($projectName)}Expression visit${aClass.name}Expression(${dialect.i2uc($projectName)}Parser.${aClass.name}ExpressionContext ctx) {
+        List<ParseTree> children = ctx.children;
+        if (children.size() == 1) {
+            return children.get(0).accept(this);
+        }
         try {
-            Self result = (Self)FactoryRegistry.newInstance("self");
-            result.setType(contextClass.firstElement());
-            navigable.push(result);
-            return result;
-        } catch (InstantiationException | IllegalAccessException ex) {
-            Logger.getLogger(TreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
+#set ($fragment = "fragments/" + $kind + ".vm")
+#parse ($fragment)
+        }
+        catch (Exception ex) {
             throw new RuntimeException(ex);
         }
     }
 
-    @Override
-    public GelExpression visitComplexNavExpression(GelParser.ComplexNavExpressionContext ctx) {
-        int     childCount = ctx.getChildCount();
-        ParseTree   child = ctx.getChild(0);
-        String      text = child.getText();
-        Navigable   result = null;
-        int         startToParseFrom = 2;
-
-        if ("self".equals(text)) {
-            result = (Navigable)child.accept(this);
-            navigable.push(result);
-        }
-        else {
-            VariableDefinition declaration = variables.get(text);
-            if (declaration != null) {
-                try {
-                    VariableReference   reference = (VariableReference)FactoryRegistry.newInstance(VariableReference.class);
-                    reference.setDeclaration(declaration);
-                    reference.setType(declaration.getType());
-                    result = reference;
-                } catch (InstantiationException | IllegalAccessException ex) {
-                    Logger.getLogger(TreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
-                    throw new RuntimeException("Unable to instanciate variable");
-                }
-            }
-            else {
-                // Implicit start of navigation
-                // Warning : it can be another context than the initial context
-                // in case of sub expression
-                // Warning : currently we use Self because variables are not
-                // yet handled. Should be turned to VariableReference sooner or
-                // later.
-                try {
-                    result = (Navigable)FactoryRegistry.newInstance("self");
-                } catch (InstantiationException | IllegalAccessException ex) {
-                    Logger.getLogger(TreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
-                    throw new RuntimeException("Unable to instanciate self");
-                }
-    //            self.setName("self");
-                result.setType(contextClass.peek());
-                navigable.push(result);
-                startToParseFrom = 0;
-            }
-        }
-        for (int i=startToParseFrom ; i<childCount ; i+=2) {
-            if (i>0) {
-                this.currentNavOperator = ctx.getChild(i-1).getText();
-            }
-            else {
-                this.currentNavOperator = ".";
-            }
-            // Actually the result is a Navigation
-            result = (Navigable)ctx.getChild(i).accept(this);
-        }
-        return result;
-    }
-*/
-
-   /**
-     * <div>
-     * This method does not flatten any collection of collections.<br>
-     * E.g. if we have the associations :<br>
-     * A ->*  B ->* C -> D<br>
-     * when we parse a.b.c.d the result is a collection of collections of Ds
-     * not a collection of Ds.<br>
-     * TODO : check the specification of OCL 2.
-     * </div>
-     * 
-     * <div>
-     * Warning : this method works only for "dot" navigations.
-     * </div>
-     * 
-     * @param ctx concrete tree
-     * @return abstract tree
-     */
-/*
-    @Override
-    public GelExpression visitPropertyNavigationExpression(GelParser.PropertyNavigationExpressionContext ctx) {
-        try {
-            String      identifier         = ctx.getText();
-            Navigable   currentNavigation  = navigable.peek();
-            MofType     currentNavType     = currentNavigation.getType();
-            MofType     currentType        = currentNavType;
-            Classifier  mofClass           = null;
-            while (currentType instanceof MofCollection) {
-                MofCollection   collection = (MofCollection) currentType;
-                currentType = collection.getBaseType();
-            }
-            mofClass = (Classifier)currentType;
-
-            MofProperty attribute = mofClass.getOwnedAttribute(identifier);
-            MofType propertyType = attribute.getType();
-            Navigation  result = (Navigation)FactoryRegistry.newInstance("Navigation");
-            result.setFrom(currentNavigation);
-            result.setToFeature(attribute);
-            if (currentNavType instanceof MofCollection) {
-                // Let's create a new collection instance of the same type
-                MofCollection newCollection = (MofCollection)FactoryRegistry.newInstance(currentNavType.getClass());
-                newCollection.setBaseType(propertyType);
-                result.setType(newCollection);
-            }
-            else {
-                result.setType(attribute.getType());
-            }
-            navigable.push(result);
-            return result;
-        } catch (InstantiationException | IllegalAccessException ex) {
-            Logger.getLogger(TreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
-            throw new RuntimeException("Unable to instantiate a navigation");
-        }
-    }
+#end
+#end
 
 
-
-    @Override
-    public GelExpression visitOperationNavigationExpression(GelParser.OperationNavigationExpressionContext ctx) {
-        if ("->".equals(currentNavOperator)) {
-            try {
-                return visitCollectionOperationExpression(ctx);
-            } catch (InstantiationException | IllegalAccessException ex) {
-                Logger.getLogger(TreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
-                throw new RuntimeException(ex);
-            }
-        }
-        try {
-            String      identifier         = ctx.getText();
-            Navigable   currentNavigation  = navigable.peek();
-            MofType     currentNavType     = currentNavigation.getType();
-            MofType     currentType        = currentNavType;
-            Classifier  mofClass           = null;
-            while (currentType instanceof MofCollection) {
-                MofCollection   collection = (MofCollection) currentType;
-                currentType = collection.getBaseType();
-            }
-            mofClass = (Classifier)currentType;
-
-            fr.insset.jeanluc.ete.meta.model.emof.MofOperation operation
-                    = (fr.insset.jeanluc.ete.meta.model.emof.MofOperation)mofClass.getOwnedOperation(identifier);
-            MofType propertyType = operation.getType();
-            Navigation  result = (Navigation)FactoryRegistry.newInstance("Navigation");
-            result.setFrom(currentNavigation);
-            result.setToFeature(operation);
-            if (currentNavType instanceof MofCollection) {
-                // Let's create a new collection instance of the same type
-                MofCollection newCollection = (MofCollection)FactoryRegistry.newInstance(currentNavType.getClass());
-                newCollection.setBaseType(propertyType);
-                result.setType(newCollection);
-            }
-            else {
-                result.setType(operation.getType());
-            }
-            navigable.push(result);
-            return result;
-        } catch (InstantiationException | IllegalAccessException ex) {
-            Logger.getLogger(TreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
-            throw new RuntimeException("Unable to instantiate a navigation");
-        }
-    }
-*/
-
-
-    /**
-     * Such an operation is provided by the meta-model instead of the model
-     * itself.<br>
-     * Currently, they are handled as is, i.e. as a blanck object storing the
-     * identifier and the parameters of the operation.
-     */
-/*
-    private GelExpression visitCollectionOperationExpression(GelParser.OperationNavigationExpressionContext ctx) throws InstantiationException, IllegalAccessException {
-        fr.insset.jeanluc.ete.meta.model.emof.MofOperation operation
-                                    = null;
-        String    identifier        = ctx.getChild(0).getText();
-        Navigable currentNavigation = navigable.peek();
-        CollectionOperationExpression  result;
-        result = (CollectionOperationExpression) FactoryRegistry.newInstance(CollectionOperationExpression.class);
-        MofType   currentNavType    = currentNavigation.getType();
-        // We should look for an operation in that type but to achieve that
-        // we must manage the meta-model in the program
-        // Next subversion ?
-        // operation = (MofOperation)currentNavType.getOwnedOperation(identifier);
-        // The, we should get the result type from that operation
-        // Same next subversion ?
-        // result.setType(operation.getType());
-        result.setToFeature(operation);
-        result.setIdentifier(identifier);
-        result.setFrom(currentNavigation);
-        ParseTree parameterList = ctx.getChild(2);
-        int      childCount = parameterList.getChildCount();
-        for (int i=0 ; i<childCount ; i+=2) {
-            result.addParameter(parameterList.getChild(i).accept(this));
-        }
-        currentNavigation = result;
-        return result;
-    }
-*/
-
-
-/*
-    @Override
-    public GelExpression visitNavExpression(GelParser.NavExpressionContext ctx) {
-        int         childCount = ctx.getChildCount();
-        GelExpression source = ctx.getChild(0).accept(this);
-        for (int i=2 ; i<childCount ; i+=2) {
-            ParseTree child = ctx.getChild(i);
-            String    identifier = child.getText();
-            String    operator   = ctx.getChild(i-1).getText();
-            switch (operator) {
-                case "." :
-                    MofClass sourceType = (MofClass) source.getType();
-                    sourceType.getOwnedAttribute(identifier);
-                    break;
-                case "->" :
-                    break;
-                default :
-                    throw new RuntimeException("Unexpected operator : " + operator);
-            }
-            System.out.println("child : " + child + " -> " + identifier);
-        }
-        return source;
-    }
-*/
 
     //========================================================================//
 
-/*
-    protected GelExpression buildBinaryExpression(RuleNode ctx) {
-        int         childCount = ctx.getChildCount();
-        GelExpression   result = ctx.getChild(0).accept(this);
-        // run through the operands
-        for (int i=2 ; i<childCount ; i+=2) {
-            GelExpression   child   = ctx.getChild(i).accept(this);
-            String          operator = ctx.getChild(i-1).getText();
-            Operation       exp;
-            try {
-                exp = (Operation)FactoryRegistry.newInstance(operator);
-            } catch (InstantiationException | IllegalAccessException ex) {
-                Logger.getLogger(TreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
-                throw new RuntimeException(ex);
-            }
-            exp.addOperand(result);
-            exp.addOperand(child);
-            result = exp;
-            // TODO : manage type
-        }
-        return result;
-    }
-
-
-    protected   Literal   buildLiteral(ParserRuleContext ctx, String inMofTypeName) {
-        PackageableElement type = model.getElementByName(inMofTypeName);
-        try {
-            Object newInstance = FactoryRegistry.newInstance(inMofTypeName);
-            Literal result = (Literal)newInstance;
-            result.setValueAsString(ctx.getText());
-            return result;
-        } catch (InstantiationException | IllegalAccessException ex) {
-            Logger.getLogger(TreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
-            throw new RuntimeException(ex);
-        }
-    }
-*/
 
     //========================================================================//
 

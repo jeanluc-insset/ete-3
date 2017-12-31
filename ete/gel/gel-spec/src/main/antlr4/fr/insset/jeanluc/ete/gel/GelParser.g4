@@ -10,7 +10,7 @@ options {
 
 //============================================================================//
 // This parser is the basis for OCL parser, UEL parser and MOF-QVTo parser    //
-// It handles operator priority.                                              //
+// It handles operator priority through hierarchical rules.                   //
 // Any parser which imports this one can override any rule to customize the   //
 // parser to its own needs.                                                   //
 //============================================================================//
@@ -64,17 +64,11 @@ andExpression :
 notOrNotNotExpression:
     notExpression
     |
-    notNotExpression
-;
-
-notExpression :
-    NOT
     orderExpression
 ;
 
-notNotExpression :
-    orderExpression
-;
+notExpression : NOT orderExpression;
+
 
 //============================================================================//
 
@@ -83,39 +77,40 @@ notNotExpression :
 // expressions such that
 //      a > b > c
 orderExpression :
-    (
-        compareExpression
-        (
-            GT
-            |
-            GE
-            |
-            LT
-            |
-            LE
-        )
-    )?
+    greaterThanExpression
+    |
+    greaterOrEqualExpression
+    |
+    lessThanExpression
+    |
+    lessOrEqualExpression
+    |
     compareExpression
 ;
 
 
+greaterThanExpression : compareExpression GT compareExpression;
+greaterOrEqualExpression : compareExpression GE compareExpression;
+lessThanExpression : compareExpression LT compareExpression;
+lessOrEqualExpression : compareExpression LE compareExpression;
 
 
 // In this grammar, = and <> are not associative : one cannot write expressions
 // such that
 //      a = b = c
 compareExpression :
-    (
-        addOrSubExpression
-        (
-            EQUAL
-            |
-            NOTEQUAL
-        )
-    )?
+    equalExpression
+    |
+    differentExpression
+    |
     addOrSubExpression
 ;
 
+
+equalExpression : addOrSubExpression EQUAL addOrSubExpression;
+
+
+differentExpression : addOrSubExpression NOTEQUAL addOrSubExpression;
 
 
 
@@ -126,35 +121,34 @@ compareExpression :
 
 addOrSubExpression :
     (
-        multOrDivExpression
-        (
-            ADD
-            |
-            SUB
-        )
-    )*
+        addExpression
+        |
+        minusExpression
+    )+
+    |
     multOrDivExpression
 ;
 
-
+addExpression : multOrDivExpression ADD multOrDivExpression ;
+minusExpression : multOrDivExpression SUB multOrDivExpression ;
 
 
 
 multOrDivExpression :
     (
-        operand
-        (
-            MUL
-            |
-            DIV
-            |
-            MOD
-        )
-    )*
-    
+        multExpression
+        |
+        divExpression
+        |
+        modExpression
+    )+
+    |
     operand
 ;
 
+multExpression : operand MUL operand;
+divExpression  : operand DIV operand;
+modExpression  : operand MOD operand;
 
 
 //============================================================================//
@@ -171,6 +165,7 @@ operand :
     |
     selfExpression
 ;
+
 
 
 complexNavExpression:
@@ -198,14 +193,29 @@ complexNavExpression:
 
 
 stepExpression :
+    directExpression
+    |
+    atPreExpression
+;
+
+
+directExpression :
     featureExpression
     (
         filterExpression
     )*
+    atPreExpression?
+;
+
+
+atPreExpression:
+    directExpression
+    AT
 ;
 
 
 //----------------------------------------------------------------------------//
+
 
 
 filterExpression :
