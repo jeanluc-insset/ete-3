@@ -1,5 +1,6 @@
 package fr.insset.jeanluc.ete.gel.impl;
 
+import fr.insset.jeanluc.ete.gel.GelExpression;
 import fr.insset.jeanluc.ete.gel.*;
 import java.util.Collection;
 import java.util.List;
@@ -13,11 +14,19 @@ public class GelExpressionImpl  extends fr.insset.jeanluc.ete.meta.model.types.i
     //========================================================================//
 
 
+    public List<GelExpression> getOperand() {
+        return operand;
+    }
+
+    public void setOperand(List<GelExpression> inValue) {
+        operand = inValue;
+    }
 
 
     //========================================================================//
 
 
+    private List<GelExpression> operand;
 
 
 }

@@ -1,8 +1,8 @@
 package fr.insset.jeanluc.ete.gel.impl;
 
 import fr.insset.jeanluc.ete.gel.Navigable;
-import fr.insset.jeanluc.ete.meta.model.emof.Feature;
 import fr.insset.jeanluc.ete.gel.GelExpression;
+import fr.insset.jeanluc.ete.meta.model.emof.Feature;
 import fr.insset.jeanluc.ete.gel.*;
 import java.util.Collection;
 import java.util.List;
@@ -30,12 +30,12 @@ public class NavigationImpl  extends fr.insset.jeanluc.ete.gel.impl.NavigableImp
     public void setFrom(Navigable inValue) {
         from = inValue;
     }
-    public List<GelExpression> getParameter() {
-        return parameter;
+    public List<GelExpression> getOperand() {
+        return operand;
     }
 
-    public void setParameter(List<GelExpression> inValue) {
-        parameter = inValue;
+    public void setOperand(List<GelExpression> inValue) {
+        operand = inValue;
     }
 
 
@@ -44,7 +44,7 @@ public class NavigationImpl  extends fr.insset.jeanluc.ete.gel.impl.NavigableImp
 
     private Feature toFeature;
     private Navigable from;
-    private List<GelExpression> parameter;
+    private List<GelExpression> operand;
 
 
 }

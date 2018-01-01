@@ -111,6 +111,9 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
 
 
 #foreach ($aClass in $current.classes)
+#if ($aClass.getValueOf("literalType"))
+// LITERAL TYPE : ${aClass.getValueOf("literalType")}
+#end
 #if ($aClass.getValueOf("symbol"))
 #set ($kind = $aClass.getValueOf("kind"))
 #if (! $kind)

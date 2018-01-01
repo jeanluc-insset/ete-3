@@ -1,6 +1,7 @@
 package fr.insset.jeanluc.ete.gel;
 
 
+import fr.insset.jeanluc.ete.gel.GelExpression;
 import java.util.List;
 import javax.annotation.Generated;
 
@@ -12,6 +13,8 @@ public interface GelExpression  extends fr.insset.jeanluc.ete.meta.model.types.T
     //========================================================================//
 
 
+    public List<GelExpression> getOperand();
+    public void setOperand(List<GelExpression> inValue);
         
 
 }

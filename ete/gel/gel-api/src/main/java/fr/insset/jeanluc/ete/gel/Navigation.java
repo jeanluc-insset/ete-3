@@ -2,8 +2,8 @@ package fr.insset.jeanluc.ete.gel;
 
 
 import fr.insset.jeanluc.ete.gel.Navigable;
-import fr.insset.jeanluc.ete.meta.model.emof.Feature;
 import fr.insset.jeanluc.ete.gel.GelExpression;
+import fr.insset.jeanluc.ete.meta.model.emof.Feature;
 import java.util.List;
 import javax.annotation.Generated;
 
@@ -19,8 +19,8 @@ public interface Navigation  extends fr.insset.jeanluc.ete.gel.Navigable  {
     public void setToFeature(Feature inValue);
     public Navigable getFrom();
     public void setFrom(Navigable inValue);
-    public List<GelExpression> getParameter();
-    public void setParameter(List<GelExpression> inValue);
+    public List<GelExpression> getOperand();
+    public void setOperand(List<GelExpression> inValue);
         
 
 }

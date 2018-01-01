@@ -5,8 +5,11 @@
 ################################################################################
 package fr.insset.jeanluc.ete.gel.impl;
 
+import fr.insset.jeanluc.ete.${projectName.toLowerCase()}.${dialect.i2uc($projectName)}Expression;
 import fr.insset.jeanluc.ete.${projectName.toLowerCase()}.${dialect.i2uc($projectName)}Lexer;
 import fr.insset.jeanluc.ete.${projectName.toLowerCase()}.${dialect.i2uc($projectName)}Parser;
+import fr.insset.jeanluc.ete.meta.model.mofpackage.MofPackage;
+import fr.insset.jeanluc.ete.meta.model.types.TypedElement;
 import javax.annotation.Generated;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -27,6 +30,15 @@ public class ${dialect.i2uc($projectName)}ParserWrapper {
         ${dialect.i2uc($projectName)}Parser parser = new ${dialect.i2uc($projectName)}Parser(commonTokenStream);
         return parser;
     }
+
+    public static ${dialect.i2uc($projectName)}Expression buildAbstractTree(String inExpression, MofPackage inModel, TypedElement inContext) {
+        ${dialect.i2uc($projectName)}Parser parser = ${dialect.i2uc($projectName)}ParserWrapper.newParser(inExpression);
+        ${dialect.i2uc($projectName)}Parser.${dialect.i2uc($projectName)}ExpressionContext concreteExpression = parser.${dialect.i2lc($projectName)}Expression();
+        TreeBuilder builder = new TreeBuilder(inModel, inContext);
+        ${dialect.i2uc($projectName)}Expression abstractExpression = builder.visit(concreteExpression);
+        return abstractExpression;
+    }
+
 
 }
 
