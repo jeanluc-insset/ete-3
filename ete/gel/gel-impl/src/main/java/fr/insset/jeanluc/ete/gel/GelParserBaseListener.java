@@ -280,37 +280,73 @@ public class GelParserBaseListener implements GelParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterComplexNavExpression(GelParser.ComplexNavExpressionContext ctx) { }
+	@Override public void enterNavExpression(GelParser.NavExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitComplexNavExpression(GelParser.ComplexNavExpressionContext ctx) { }
+	@Override public void exitNavExpression(GelParser.NavExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterStepExpression(GelParser.StepExpressionContext ctx) { }
+	@Override public void enterDotNavExpression(GelParser.DotNavExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitStepExpression(GelParser.StepExpressionContext ctx) { }
+	@Override public void exitDotNavExpression(GelParser.DotNavExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterDirectExpression(GelParser.DirectExpressionContext ctx) { }
+	@Override public void enterArrowNavExpression(GelParser.ArrowNavExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitDirectExpression(GelParser.DirectExpressionContext ctx) { }
+	@Override public void exitArrowNavExpression(GelParser.ArrowNavExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterSuffixNavExpression(GelParser.SuffixNavExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSuffixNavExpression(GelParser.SuffixNavExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterPropertyNavigationExpression(GelParser.PropertyNavigationExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPropertyNavigationExpression(GelParser.PropertyNavigationExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFiltersExpression(GelParser.FiltersExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFiltersExpression(GelParser.FiltersExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -467,30 +503,6 @@ public class GelParserBaseListener implements GelParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitVariableReference(GelParser.VariableReferenceContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterFeatureExpression(GelParser.FeatureExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitFeatureExpression(GelParser.FeatureExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterPropertyNavigationExpression(GelParser.PropertyNavigationExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitPropertyNavigationExpression(GelParser.PropertyNavigationExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

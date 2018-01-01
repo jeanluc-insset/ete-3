@@ -228,35 +228,65 @@ public interface GelParserListener extends ParseTreeListener {
 	 */
 	void exitOperand(GelParser.OperandContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link GelParser#complexNavExpression}.
+	 * Enter a parse tree produced by {@link GelParser#navExpression}.
 	 * @param ctx the parse tree
 	 */
-	void enterComplexNavExpression(GelParser.ComplexNavExpressionContext ctx);
+	void enterNavExpression(GelParser.NavExpressionContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link GelParser#complexNavExpression}.
+	 * Exit a parse tree produced by {@link GelParser#navExpression}.
 	 * @param ctx the parse tree
 	 */
-	void exitComplexNavExpression(GelParser.ComplexNavExpressionContext ctx);
+	void exitNavExpression(GelParser.NavExpressionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link GelParser#stepExpression}.
+	 * Enter a parse tree produced by {@link GelParser#dotNavExpression}.
 	 * @param ctx the parse tree
 	 */
-	void enterStepExpression(GelParser.StepExpressionContext ctx);
+	void enterDotNavExpression(GelParser.DotNavExpressionContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link GelParser#stepExpression}.
+	 * Exit a parse tree produced by {@link GelParser#dotNavExpression}.
 	 * @param ctx the parse tree
 	 */
-	void exitStepExpression(GelParser.StepExpressionContext ctx);
+	void exitDotNavExpression(GelParser.DotNavExpressionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link GelParser#directExpression}.
+	 * Enter a parse tree produced by {@link GelParser#arrowNavExpression}.
 	 * @param ctx the parse tree
 	 */
-	void enterDirectExpression(GelParser.DirectExpressionContext ctx);
+	void enterArrowNavExpression(GelParser.ArrowNavExpressionContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link GelParser#directExpression}.
+	 * Exit a parse tree produced by {@link GelParser#arrowNavExpression}.
 	 * @param ctx the parse tree
 	 */
-	void exitDirectExpression(GelParser.DirectExpressionContext ctx);
+	void exitArrowNavExpression(GelParser.ArrowNavExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link GelParser#suffixNavExpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterSuffixNavExpression(GelParser.SuffixNavExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link GelParser#suffixNavExpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitSuffixNavExpression(GelParser.SuffixNavExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link GelParser#propertyNavigationExpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterPropertyNavigationExpression(GelParser.PropertyNavigationExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link GelParser#propertyNavigationExpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitPropertyNavigationExpression(GelParser.PropertyNavigationExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link GelParser#filtersExpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterFiltersExpression(GelParser.FiltersExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link GelParser#filtersExpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitFiltersExpression(GelParser.FiltersExpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link GelParser#atPreExpression}.
 	 * @param ctx the parse tree
@@ -387,26 +417,6 @@ public interface GelParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitVariableReference(GelParser.VariableReferenceContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link GelParser#featureExpression}.
-	 * @param ctx the parse tree
-	 */
-	void enterFeatureExpression(GelParser.FeatureExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link GelParser#featureExpression}.
-	 * @param ctx the parse tree
-	 */
-	void exitFeatureExpression(GelParser.FeatureExpressionContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link GelParser#propertyNavigationExpression}.
-	 * @param ctx the parse tree
-	 */
-	void enterPropertyNavigationExpression(GelParser.PropertyNavigationExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link GelParser#propertyNavigationExpression}.
-	 * @param ctx the parse tree
-	 */
-	void exitPropertyNavigationExpression(GelParser.PropertyNavigationExpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link GelParser#operationNavigationExpression}.
 	 * @param ctx the parse tree

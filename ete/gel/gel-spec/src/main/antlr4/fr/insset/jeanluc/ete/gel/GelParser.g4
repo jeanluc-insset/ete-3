@@ -159,60 +159,57 @@ modExpression  : operand MOD operand;
 operand :
     oppExpression
     |
-    complexNavExpression
+    navExpression
     |
     literal
-    |
-    selfExpression
 ;
 
 
 
-complexNavExpression:
+navExpression:
+    (selfExpression | identifier)
     (
-        (
-            selfExpression
-        )
-        (
-            DOT
-            |
-            ARROW
-        )
-    )?
-    (
-    stepExpression
-        (
-        DOT
+        dotNavExpression
         |
-        ARROW
-        )
+        arrowNavExpression
     )*
-    stepExpression
 ;
 
 
 
-stepExpression :
-    directExpression
+dotNavExpression:
+    DOT
+    suffixNavExpression
+;
+
+arrowNavExpression:
+    ARROW
+    suffixNavExpression
+;
+
+
+suffixNavExpression:
+    operationNavigationExpression
     |
+    propertyNavigationExpression
+;
+
+
+propertyNavigationExpression:
+    identifier
+    filtersExpression
     atPreExpression
 ;
 
-
-directExpression :
-    featureExpression
-    (
-        filterExpression
-    )*
-    atPreExpression?
+filtersExpression:
+    filterExpression*
 ;
+
 
 
 atPreExpression:
-    directExpression
     AT
 ;
-
 
 //----------------------------------------------------------------------------//
 
@@ -312,16 +309,6 @@ selfExpression       : Self;
 
 variableReference : Identifier;
 
-featureExpression :
-    propertyNavigationExpression
-    |
-    operationNavigationExpression
-;
-
-
-propertyNavigationExpression:
-    identifier
-;
 
 operationNavigationExpression:
     identifier

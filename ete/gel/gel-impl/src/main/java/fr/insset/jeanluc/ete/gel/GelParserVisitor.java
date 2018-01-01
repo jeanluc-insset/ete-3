@@ -143,23 +143,41 @@ public interface GelParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitOperand(GelParser.OperandContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link GelParser#complexNavExpression}.
+	 * Visit a parse tree produced by {@link GelParser#navExpression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitComplexNavExpression(GelParser.ComplexNavExpressionContext ctx);
+	T visitNavExpression(GelParser.NavExpressionContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link GelParser#stepExpression}.
+	 * Visit a parse tree produced by {@link GelParser#dotNavExpression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitStepExpression(GelParser.StepExpressionContext ctx);
+	T visitDotNavExpression(GelParser.DotNavExpressionContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link GelParser#directExpression}.
+	 * Visit a parse tree produced by {@link GelParser#arrowNavExpression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitDirectExpression(GelParser.DirectExpressionContext ctx);
+	T visitArrowNavExpression(GelParser.ArrowNavExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link GelParser#suffixNavExpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSuffixNavExpression(GelParser.SuffixNavExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link GelParser#propertyNavigationExpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPropertyNavigationExpression(GelParser.PropertyNavigationExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link GelParser#filtersExpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFiltersExpression(GelParser.FiltersExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link GelParser#atPreExpression}.
 	 * @param ctx the parse tree
@@ -238,18 +256,6 @@ public interface GelParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitVariableReference(GelParser.VariableReferenceContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link GelParser#featureExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFeatureExpression(GelParser.FeatureExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link GelParser#propertyNavigationExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPropertyNavigationExpression(GelParser.PropertyNavigationExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link GelParser#operationNavigationExpression}.
 	 * @param ctx the parse tree
