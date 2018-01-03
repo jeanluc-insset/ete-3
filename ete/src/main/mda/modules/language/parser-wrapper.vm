@@ -5,11 +5,12 @@
 ################################################################################
 package fr.insset.jeanluc.ete.gel.impl;
 
+import fr.insset.jeanluc.ete.${projectName.toLowerCase()}.${dialect.i2uc($projectName)}Context;
 import fr.insset.jeanluc.ete.${projectName.toLowerCase()}.${dialect.i2uc($projectName)}Expression;
 import fr.insset.jeanluc.ete.${projectName.toLowerCase()}.${dialect.i2uc($projectName)}Lexer;
 import fr.insset.jeanluc.ete.${projectName.toLowerCase()}.${dialect.i2uc($projectName)}Parser;
-import fr.insset.jeanluc.ete.meta.model.mofpackage.MofPackage;
-import fr.insset.jeanluc.ete.meta.model.types.TypedElement;
+import fr.insset.jeanluc.ete.meta.model.core.NamedElement;
+import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
 import javax.annotation.Generated;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -19,7 +20,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
  *
  * @author jldeleage
  */
-@Generated("ete - jean-luc@insset.fr  modules/maven-project/gel-impl/java/parser-wrapper.vm")
+@Generated("ete - jean-luc@insset.fr  ete/src/main/mda/modules/language/parser-wrapper.vm")
 public class ${dialect.i2uc($projectName)}ParserWrapper {
     
     public static ${dialect.i2uc($projectName)}Parser newParser(String inExpression) {
@@ -31,14 +32,22 @@ public class ${dialect.i2uc($projectName)}ParserWrapper {
         return parser;
     }
 
-    public static ${dialect.i2uc($projectName)}Expression buildAbstractTree(String inExpression, MofPackage inModel, TypedElement inContext) {
+    public static ${dialect.i2uc($projectName)}Expression buildAbstractTree(String inExpression, EteModel inModel, NamedElement inContextElement) {
+        ${dialect.i2uc($projectName)}Context context = new ${dialect.i2uc($projectName)}ContextImpl();
+        
+        return buildAbstractTree(inExpression, context);
+    }
+
+    public static ${dialect.i2uc($projectName)}Expression buildAbstractTree(String inExpression, ${dialect.i2uc($projectName)}Context inContext) {
         ${dialect.i2uc($projectName)}Parser parser = ${dialect.i2uc($projectName)}ParserWrapper.newParser(inExpression);
         ${dialect.i2uc($projectName)}Parser.${dialect.i2uc($projectName)}ExpressionContext concreteExpression = parser.${dialect.i2lc($projectName)}Expression();
-        TreeBuilder builder = new TreeBuilder(inModel, inContext);
+        TreeBuilder builder = new TreeBuilder(inContext);
         ${dialect.i2uc($projectName)}Expression abstractExpression = builder.visit(concreteExpression);
         return abstractExpression;
     }
 
+    protected void addToContext(String inName, TypedElement inValue) {
+    }
 
 }
 

@@ -108,7 +108,7 @@ public interface Dialect {
     }
 
     /**
-     * Takes a camel-case string and returns that string with spaces a lower
+     * Takes a snake-case string and returns that string with spaces a lower
      * case characters instead of upper case characters.<br>
      * Does not modify the initial character.
      * 

@@ -12,9 +12,6 @@ import javax.annotation.Generated;
 public interface $current.name #if ($current.superClass && $current.superClass.size()>0) extends ${dialect.getQualifiedName($current.superClass.get(0))} #end {
 
 
-    //========================================================================//
-
-
 #foreach ($aProperty in $current.ownedAttribute)
 #if ($aProperty.qualifierName)
     public ${dialect.mt2lt($aProperty.type)} get${dialect.i2uc($aProperty.name)}(${dialect.mt2lt($aProperty.qualifierType)} inKey);
@@ -33,6 +30,12 @@ public interface $current.name #if ($current.superClass && $current.superClass.s
 #end
 #end        ## foreach property
 
+
+    //========================================================================//
+
+#foreach ($anOperation in$current.ownedOperation)
+    public ${dialect.mt2lt($anOperation.type)} ${dialect.i2lc($anOperation.name)}(#foreach($aParameter in $anOperation.ownedParameter)#if ($velocityCount > 1),#end $aParameter.type $aParameter.name#end);
+#end
 
 }
 

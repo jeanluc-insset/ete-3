@@ -1,0 +1,37 @@
+################################################################################
+##                                                                            ##
+## Generates a context for translating concrete syntax tree to abstract       ##
+## syntax tree                                                                ##
+##                                                                            ##
+################################################################################
+package fr.insset.jeanluc.ete.gel;
+
+import javax.annotation.Generated;
+
+
+/**
+ * A context manages variables in a hierarchic architecture.
+ *
+ * @author jldeleage
+ */
+@Generated("ete - jean-luc@insset.fr  ete/src/main/mda/modules/language/context.vm")
+public interface ${dialect.i2uc($projectName)}Context<T> {
+
+    /**
+     * Look for the value of 
+     */
+    public T        resolve(String inString);
+    public void     set${dialect.i2uc($projectName)}(String inString, T inValue);
+
+    public void     set(String inString, Object inValue);
+
+    /**
+     *
+     */
+    public void push();
+    public void pop() ;
+
+
+}
+
+

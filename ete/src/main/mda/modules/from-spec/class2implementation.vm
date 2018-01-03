@@ -10,7 +10,7 @@ import java.util.Map;
 
 
 
-public class ${current.name}Impl #if (${current.superClass.size()} > 0) extends ${current.superClass.get(0).owningPackage.name}.impl.${current.superClass.get(0)}Impl #end implements ${current.name} {
+public#if($current.abstract) abstract#end class ${current.name}Impl #if (${current.superClass.size()} > 0) extends ${current.superClass.get(0).owningPackage.name}.impl.${current.superClass.get(0)}Impl #end implements ${current.name} {
 
 
     //========================================================================//

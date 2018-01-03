@@ -70,6 +70,9 @@ public interface JavaDialect extends Dialect {
 
     @Override
     public default String mt2lt(MofType inType) {
+        if (inType == null) {
+            return "void";
+        }
         if (inType.isCollection()) {
             MofCollection coll = (MofCollection) inType;
             if (coll.isOrdered()) {

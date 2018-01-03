@@ -2,7 +2,8 @@
 package fr.insset.jeanluc.ete.gel.impl;
 
 import fr.insset.jeanluc.ete.gel.GelExpression;
-import fr.insset.jeanluc.ete.gel.GelParser;
+import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
+import fr.insset.jeanluc.ete.meta.model.types.TypedElement;
 import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -40,35 +41,59 @@ public class TreeBuilderTest {
 
     @Test
     public void testStringLiteral() {
-        String      helloWorld  = "hello world";
+        String      helloWorld  = "\"hello world\"";
         StringLiteralImpl stringLiteralImpl = new StringLiteralImpl();
-        stringLiteralImpl.setValue(helloWorld);
-//        testAny(stringLiteralImpl, helloWorld);
+        
+        stringLiteralImpl.setValueAsString(helloWorld);
+        testAny(stringLiteralImpl,  helloWorld, null, null);
     }
 
     @Test
     public void testIntegerLiteral() {
+        String      douze  = "12";
+        IntegerLiteralImpl integerLiteralImpl = new IntegerLiteralImpl();
         
+        integerLiteralImpl.setValueAsString(douze);
+        testAny(integerLiteralImpl, douze, null, null);
     }
 
     @Test
     public void testFloatLiteral() {
+        String      douze  = "12.0";
+        FloatingPointLiteralImpl floatingPointLiteralImpl = new FloatingPointLiteralImpl();
         
+        floatingPointLiteralImpl.setValueAsString(douze);
+        testAny(floatingPointLiteralImpl, douze, null, null);
     }
 
     @Test
     public void testBooleanLiteral() {
+        String      value  = "true";
+        BooleanLiteralImpl booleanLiteralImpl = new BooleanLiteralImpl();
+        booleanLiteralImpl.setValueAsString(value);
+        testAny(booleanLiteralImpl, value, null, null);
+    }
+
+
+    //========================================================================//
+
+    @Test
+    public void testAddition() {
+        
+    }
+
+
+    @Test
+    public void testComplexExpression() {
+        
     }
 
 
     //========================================================================//
 
 
-    protected void testAny(GelExpression expectedResult, String inExpression) {
-        GelParser parser = GelParserWrapper.newParser(inExpression);
-        GelParser.GelExpressionContext concreteGelExpression = parser.gelExpression();
-        TreeBuilder builder = new TreeBuilder(null, null);
-        GelExpression abstractGelExpression = builder.visit(concreteGelExpression);
+    protected void testAny(GelExpression expectedResult, String inExpression, EteModel inModel, TypedElement inContext) {
+        GelExpression abstractGelExpression = GelParserWrapper.buildAbstractTree(inExpression, inModel, inContext);
         compare(expectedResult, abstractGelExpression);
     }
 
@@ -87,6 +112,12 @@ public class TreeBuilderTest {
             for (int i=0 ; i<expectedOperand.size() ; i++) {
                 compare(expectedOperand.get(i), gottenOperand.get(i));
             }
+        }
+        if (expectedResult instanceof LiteralImpl) {
+            assertTrue(abstractGelExpression instanceof LiteralImpl);
+            LiteralImpl expectedLiteral = (LiteralImpl) expectedResult;
+            LiteralImpl gottenLiteral   = (LiteralImpl) abstractGelExpression;
+            assertEquals(expectedLiteral.getValueAsString(), gottenLiteral.getValueAsString());
         }
     }
 

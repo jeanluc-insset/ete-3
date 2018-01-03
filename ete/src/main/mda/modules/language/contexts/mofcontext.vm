@@ -1,0 +1,60 @@
+################################################################################
+##                                                                            ##
+## Generates a convenience class to instantiate a parser for a simple String  ##
+##                                                                            ##
+################################################################################
+package fr.insset.jeanluc.ete.gel.impl;
+
+import fr.insset.jeanluc.ete.${projectName.toLowerCase()}.${dialect.i2uc($projectName)}Expression;
+import fr.insset.jeanluc.ete.gel.VariableDefinition;
+import fr.insset.jeanluc.ete.meta.model.mofpackage.MofPackage;
+import fr.insset.jeanluc.ete.meta.model.types.TypedElement;
+import java.util.Iterator;
+import java.util.Map;
+import javax.annotation.Generated;
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CommonTokenStream;
+
+
+/**
+ *
+ * @author jldeleage
+ */
+@Generated("ete - jean-luc@insset.fr  ete/src/main/mda/modules/language/contexts/mofcontext.vm")
+public class ${dialect.i2uc($projectName)}ContextImpl implements ${dialect.i2uc($projectName)}Context<${dialect.i2uc($projectName)}Expression> {
+    
+    public ${dialect.i2uc($projectName)}Expression resolve(Object inString) {
+        Map<String, ${dialect.i2uc($projectName)}Expression>  map = stack.peekLast();
+        ${dialect.i2uc($projectName)}Expression result = map.get(inString);
+        if (result != null) {
+            return result;
+        }
+        if (inString != "root") {
+            VariableDefinition rootVariable = resolve("root");
+            if (rootVariable != null) {
+                MofClass    rootClass = rootVariable.getValue();
+                // TODO : does root have a member with "inString" as identifier ?
+            }
+        }
+        EteModel    model = resolve("model");
+        if (model != null) {
+            
+        }
+        return null;
+    }
+
+    public void push() {
+        Map<String, ${dialect.i2uc($projectName)}Expression> map = new HashMap<<String, ${dialect.i2uc($projectName)}Expression>>();
+        stack.addLast(map);
+    }
+
+    public void pop() {
+        stack.removeLast();
+    }
+
+
+    private Deque<Map<String, ${dialect.i2uc($projectName)}Expression>>     stack = new Stack<>();
+
+}
+
+

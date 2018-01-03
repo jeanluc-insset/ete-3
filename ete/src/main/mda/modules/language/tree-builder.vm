@@ -64,30 +64,13 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
 
 
 
-    public TreeBuilder(MofPackage inModel, TypedElement inContext) {
-        this(inModel, inContext, new HashMap<>());
-    }
-    
-    public TreeBuilder(MofPackage inModel, TypedElement inContext, Map<String, VariableDefinition> inVariables) {
-        variables = inVariables;
-        model = inModel;
-        context = inContext;
-        if (context instanceof fr.insset.jeanluc.ete.meta.model.emof.MofOperation) {
-            fr.insset.jeanluc.ete.meta.model.emof.MofOperation operation
-                    = (fr.insset.jeanluc.ete.meta.model.emof.MofOperation)context;
-            contextClass.push(operation.getOwningMofClass());
-            for (MofParameter aParameter : operation.getOwnedParameter()) {
-                // TODO : use a factory
-                VariableDefinition  parameterDefinition = new VariableDefinitionImpl();
-                parameterDefinition.setIdentifier(aParameter.getName());
-                parameterDefinition.setType(aParameter.getType());
-                variables.put(aParameter.getName(), parameterDefinition);
-            }
-        }
-        else {
-            contextClass.push((MofClass)context);
-        }
+//    public TreeBuilder(MofPackage inModel, TypedElement inContext) {
+//        this(inModel, inContext, new HashMap<>());
+//    }
 
+
+    public TreeBuilder(${dialect.i2uc($projectName)}Context inContext) {
+        context = inContext;
         FactoryRegistry registry = FactoryRegistry.getRegistry();
 #foreach($aClass in $current.classes)
 #if (${aClass.getValueOf("literalType")})
@@ -105,15 +88,30 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
 
     @Override
     public ${dialect.i2uc($projectName)}Expression visit${dialect.i2uc($projectName)}Expression(${dialect.i2uc($projectName)}Parser.${dialect.i2uc($projectName)}ExpressionContext ctx) {
-        navigable = new Stack<>();
-        return super.visit${dialect.i2uc($projectName)}Expression(ctx); //To change body of generated methods, choose Tools | Templates.
+//        navigable = new Stack<>();
+        context.push();
+        return super.visit${dialect.i2uc($projectName)}Expression(ctx);
     }
 
 
 #foreach ($aClass in $current.classes)
 #if ($aClass.getValueOf("literalType"))
-// LITERAL TYPE : ${aClass.getValueOf("literalType")}
+    // LITERAL TYPE : ${aClass.getValueOf("literalType")}
+    @Override
+    public ${dialect.i2uc($projectName)}Expression visit${dialect.i2uc($aClass.name)}(${dialect.i2uc($projectName)}Parser.${dialect.i2uc($aClass.name)}Context ctx) {
+        try {
+            String text = ctx.getText();
+            ${aClass.name} newInstance = (${aClass.name})FactoryRegistry.newInstance("${aClass.getValueOf("literalType")}");
+            newInstance.setValueAsString(text);
+            return newInstance;
+        } catch (InstantiationException | IllegalAccessException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
 #end
+#end
+#foreach ($aClass in $current.classes)
 #if ($aClass.getValueOf("symbol"))
 #set ($kind = $aClass.getValueOf("kind"))
 #if (! $kind)
@@ -146,27 +144,9 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
 
     //========================================================================//
 
-    private     MofPackage                              model;
 
-    /**
-     *  Should be an instance of MofClass or (Mof)Operation.
-     */
-    private     TypedElement                            context;
+    ${dialect.i2uc($projectName)}Context                  context;
 
-    /**
-     * An expression can contains sub-expressions. For example<br>
-     * <code>pilot[</code>
-     * The first item of the stack is defined by :<br><code>
-     * context instanceof MofClass ==&gt; context == contextClass<br>
-     * context instanceof Operation ==&gt; context.getOwningMofClass() == contextClass</code>
-     */
-    private     Stack<Classifier>                       contextClass = new Stack<>();
-
-    private     Stack<Navigable>                        navigable;
-
-    private     Map<String, VariableDefinition>         variables = new HashMap<>();
-
-    private     String                                  currentNavOperator;
 
 }
 
