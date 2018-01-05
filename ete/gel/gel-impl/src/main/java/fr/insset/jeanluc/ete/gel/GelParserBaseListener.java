@@ -280,6 +280,18 @@ public class GelParserBaseListener implements GelParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterParenthesisExpression(GelParser.ParenthesisExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitParenthesisExpression(GelParser.ParenthesisExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterNavExpression(GelParser.NavExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -287,6 +299,18 @@ public class GelParserBaseListener implements GelParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitNavExpression(GelParser.NavExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterVariableOrMember(GelParser.VariableOrMemberContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitVariableOrMember(GelParser.VariableOrMemberContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

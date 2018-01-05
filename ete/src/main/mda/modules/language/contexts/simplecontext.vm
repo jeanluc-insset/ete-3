@@ -28,6 +28,10 @@ import org.antlr.v4.runtime.CommonTokenStream;
 @Generated("ete - jean-luc@insset.fr  ete/src/main/mda/modules/language/contexts/simplecontext.vm")
 public class ${dialect.i2uc($projectName)}ContextImpl implements ${dialect.i2uc($projectName)}Context<${dialect.i2uc($projectName)}Expression> {
 
+    public ${dialect.i2uc($projectName)}ContextImpl() {
+        push();
+    }
+
     @Override
     public ${dialect.i2uc($projectName)}Expression resolve(String inString) {
         Iterator<Map<String, ${dialect.i2uc($projectName)}Expression>> iterator = stack.descendingIterator();
@@ -38,6 +42,7 @@ public class ${dialect.i2uc($projectName)}ContextImpl implements ${dialect.i2uc(
                 return expression;
             }
         }
+
         return null;
     }
 
@@ -51,7 +56,7 @@ public class ${dialect.i2uc($projectName)}ContextImpl implements ${dialect.i2uc(
 
 
     @Override
-    public void push() {
+    public final void push() {
         Map<String, ${dialect.i2uc($projectName)}Expression> map = new HashMap<>();
         stack.addLast(map);
     }

@@ -2,8 +2,10 @@
 package fr.insset.jeanluc.ete.gel.impl;
 
 import fr.insset.jeanluc.ete.gel.GelExpression;
+import static fr.insset.jeanluc.ete.gel.GelParser.IntegerLiteral;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
 import fr.insset.jeanluc.ete.meta.model.types.TypedElement;
+import java.util.LinkedList;
 import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -41,6 +43,7 @@ public class TreeBuilderTest {
 
     @Test
     public void testStringLiteral() {
+        System.out.println("string literal");
         String      helloWorld  = "\"hello world\"";
         StringLiteralImpl stringLiteralImpl = new StringLiteralImpl();
         
@@ -50,15 +53,16 @@ public class TreeBuilderTest {
 
     @Test
     public void testIntegerLiteral() {
+        System.out.println("integer literal");
         String      douze  = "12";
-        IntegerLiteralImpl integerLiteralImpl = new IntegerLiteralImpl();
-        
+        IntegerLiteralImpl integerLiteralImpl = new IntegerLiteralImpl();        
         integerLiteralImpl.setValueAsString(douze);
         testAny(integerLiteralImpl, douze, null, null);
     }
 
     @Test
     public void testFloatLiteral() {
+        System.out.println("float literal");
         String      douze  = "12.0";
         FloatingPointLiteralImpl floatingPointLiteralImpl = new FloatingPointLiteralImpl();
         
@@ -68,6 +72,7 @@ public class TreeBuilderTest {
 
     @Test
     public void testBooleanLiteral() {
+        System.out.println("boolean literal");
         String      value  = "true";
         BooleanLiteralImpl booleanLiteralImpl = new BooleanLiteralImpl();
         booleanLiteralImpl.setValueAsString(value);
@@ -79,14 +84,33 @@ public class TreeBuilderTest {
 
     @Test
     public void testAddition() {
-        
+        System.out.println("addition");
+        AddImpl add = buildAdd(buildInt("12"), buildInt("20"));
+        testAny(add, "12 + 20", null, null);
+    }
+
+    @Test
+    public void testAdditions() {
+        System.out.println("additions");
+        AddImpl add = buildAdd(buildAdd(buildInt("12"), buildInt("20")), buildInt("8"));
+        testAny(add, "12 + 20 + 8", null, null);
     }
 
 
     @Test
-    public void testComplexExpression() {
-        
+    public void testComplexExpression1() {
+        System.out.println("complex 1");
+        MultImpl    mult = buildMult(buildInt("12"), buildAdd(buildInt("20"), buildInt("7")));
+        testAny(mult, "12 * (20 + 7)", null, null);
     }
+
+    @Test
+    public void testComplexExpression2() {
+        System.out.println("complex 2");
+        AddImpl    add = buildAdd(buildInt("12"), buildMult(buildInt("20"), buildInt("7")));
+        testAny(add, "12 + 20 * 7", null, null);
+    }
+
 
 
     //========================================================================//
@@ -122,4 +146,35 @@ public class TreeBuilderTest {
     }
 
 
+    //========================================================================//
+
+
+    public IntegerLiteralImpl   buildInt(String value) {
+        IntegerLiteralImpl result = new IntegerLiteralImpl();
+        result.setValueAsString(value);
+        return result;
+    }
+
+
+    public AddImpl  buildAdd(GelExpression left, GelExpression right) {
+        AddImpl     add = new AddImpl();
+        List<GelExpression> operands = new LinkedList<>();
+        operands.add(left);
+        operands.add(right);
+        add.setOperand(operands);
+        return add;
+    }
+
+
+    public MultImpl buildMult(GelExpression left, GelExpression right) {
+        MultImpl     mult = new MultImpl();
+        List<GelExpression> operands = new LinkedList<>();
+        operands.add(left);
+        operands.add(right);
+        mult.setOperand(operands);
+        return mult;
+    }
+
+
 }
+

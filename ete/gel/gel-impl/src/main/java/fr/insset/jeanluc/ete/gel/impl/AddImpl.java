@@ -7,7 +7,7 @@ import java.util.Map;
 
 
 
-public class AddImpl  extends fr.insset.jeanluc.ete.gel.impl.NumberOperationImpl  implements Add {
+public class AddImpl  extends fr.insset.jeanluc.ete.gel.impl.AddOrSubImpl  implements Add {
 
 
     //========================================================================//

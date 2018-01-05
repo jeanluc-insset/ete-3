@@ -228,6 +228,16 @@ public interface GelParserListener extends ParseTreeListener {
 	 */
 	void exitOperand(GelParser.OperandContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link GelParser#parenthesisExpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterParenthesisExpression(GelParser.ParenthesisExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link GelParser#parenthesisExpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitParenthesisExpression(GelParser.ParenthesisExpressionContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link GelParser#navExpression}.
 	 * @param ctx the parse tree
 	 */
@@ -237,6 +247,16 @@ public interface GelParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitNavExpression(GelParser.NavExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link GelParser#variableOrMember}.
+	 * @param ctx the parse tree
+	 */
+	void enterVariableOrMember(GelParser.VariableOrMemberContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link GelParser#variableOrMember}.
+	 * @param ctx the parse tree
+	 */
+	void exitVariableOrMember(GelParser.VariableOrMemberContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link GelParser#dotNavExpression}.
 	 * @param ctx the parse tree

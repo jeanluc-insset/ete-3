@@ -48,7 +48,7 @@ import org.antlr.v4.runtime.tree.RuleNode;
 
 /**
  * Generates an abstract tree builder.
- * An instance of this class is a visitor for ${dialect.i2uc($projectName)}Expressions. It takes any
+ * An instance of this class is a visitor for ${dialect.i2uc($projectName)}Expressions. It takes a
  * ${dialect.i2uc($projectName)}Expression concrete tree and returns the matching abstract tree.
  *
  * Usage : <code><pre>
@@ -63,12 +63,6 @@ ${dialect.i2uc($projectName)}Expression        abstractExpression = treeBuilder.
 public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<${dialect.i2uc($projectName)}Expression> {
 
 
-
-//    public TreeBuilder(MofPackage inModel, TypedElement inContext) {
-//        this(inModel, inContext, new HashMap<>());
-//    }
-
-
     public TreeBuilder(${dialect.i2uc($projectName)}Context inContext) {
         context = inContext;
         FactoryRegistry registry = FactoryRegistry.getRegistry();
@@ -80,15 +74,14 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
 #end
 #end
         registry.registerDefaultFactory("self", SelfImpl.class);
-        registry.registerDefaultFactory("Navigation", NavigationImpl.class);
-        registry.registerDefaultFactory(CollectionOperationExpression.class, CollectionOperationExpressionImpl.class);
+//        registry.registerDefaultFactory(CollectionOperationExpression.class, CollectionOperationExpressionImpl.class);
         registry.registerDefaultFactory(VariableReference.class, VariableReferenceImpl.class);
     }
 
 
     @Override
     public ${dialect.i2uc($projectName)}Expression visit${dialect.i2uc($projectName)}Expression(${dialect.i2uc($projectName)}Parser.${dialect.i2uc($projectName)}ExpressionContext ctx) {
-//        navigable = new Stack<>();
+        // Create a fresh stack frame for local variables
         context.push();
         return super.visit${dialect.i2uc($projectName)}Expression(ctx);
     }
@@ -111,15 +104,14 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
 
 #end
 #end
+
+//============================================================================//
+
 #foreach ($aClass in $current.classes)
-#if ($aClass.getValueOf("symbol"))
+#if ($aClass.getValueOf("kind"))
 #set ($kind = $aClass.getValueOf("kind"))
-#if (! $kind)
-#set ($kind = "nokind")
-#end
 #set ($arity = $aClass.getValueOf("arity"))
     @Override
-    // The $aClass class contains the tag value "symbol" with the value of {$aClass.getValueOf("symbol")}
     public ${dialect.i2uc($projectName)}Expression visit${aClass.name}Expression(${dialect.i2uc($projectName)}Parser.${aClass.name}ExpressionContext ctx) {
         List<ParseTree> children = ctx.children;
         if (children.size() == 1) {
@@ -140,6 +132,18 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
 
 
     //========================================================================//
+
+
+    @Override
+    public GelExpression visitParenthesisExpression(GelParser.ParenthesisExpressionContext ctx) {
+        return ctx.children.get(1).accept(this);
+    }
+
+
+    @Override
+    public ${dialect.i2uc($projectName)}Expression visitVariableOrMember(GelParser.VariableOrMemberContext ctx) {
+        return (${dialect.i2uc($projectName)}Expression)context.resolve(ctx.getText());
+    }
 
 
     //========================================================================//

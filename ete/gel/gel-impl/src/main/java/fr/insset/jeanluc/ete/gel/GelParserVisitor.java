@@ -143,11 +143,23 @@ public interface GelParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitOperand(GelParser.OperandContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link GelParser#parenthesisExpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitParenthesisExpression(GelParser.ParenthesisExpressionContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link GelParser#navExpression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitNavExpression(GelParser.NavExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link GelParser#variableOrMember}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVariableOrMember(GelParser.VariableOrMemberContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link GelParser#dotNavExpression}.
 	 * @param ctx the parse tree

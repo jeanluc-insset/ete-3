@@ -7,7 +7,7 @@ import java.util.Map;
 
 
 
-public class DivImpl  extends fr.insset.jeanluc.ete.gel.impl.NumberOperationImpl  implements Div {
+public class DivImpl  extends fr.insset.jeanluc.ete.gel.impl.MultOrDivImpl  implements Div {
 
 
     //========================================================================//

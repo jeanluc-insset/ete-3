@@ -1,6 +1,6 @@
 package fr.insset.jeanluc.ete.gel.impl;
 
-import fr.insset.jeanluc.ete.gel.Navigation;
+import fr.insset.jeanluc.ete.gel.Nav;
 import fr.insset.jeanluc.ete.gel.*;
 import java.util.Collection;
 import java.util.List;
@@ -14,11 +14,11 @@ public class AtPreImpl  extends fr.insset.jeanluc.ete.gel.impl.NavigableImpl  im
     //========================================================================//
 
 
-    public Navigation getNavigation() {
+    public Nav getNavigation() {
         return navigation;
     }
 
-    public void setNavigation(Navigation inValue) {
+    public void setNavigation(Nav inValue) {
         navigation = inValue;
     }
 
@@ -26,7 +26,7 @@ public class AtPreImpl  extends fr.insset.jeanluc.ete.gel.impl.NavigableImpl  im
     //========================================================================//
 
 
-    private Navigation navigation;
+    private Nav navigation;
 
 
 }

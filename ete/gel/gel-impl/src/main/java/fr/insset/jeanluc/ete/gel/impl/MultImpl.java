@@ -7,7 +7,7 @@ import java.util.Map;
 
 
 
-public class MultImpl  extends fr.insset.jeanluc.ete.gel.impl.NumberOperationImpl  implements Mult {
+public class MultImpl  extends fr.insset.jeanluc.ete.gel.impl.MultOrDivImpl  implements Mult {
 
 
     //========================================================================//

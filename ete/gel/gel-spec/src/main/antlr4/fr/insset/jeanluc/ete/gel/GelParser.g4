@@ -120,13 +120,9 @@ differentExpression : addOrSubExpression NOTEQUAL addOrSubExpression;
 
 
 addOrSubExpression :
-    (
-        addExpression
-        |
-        minusExpression
-    )+
-    |
     multOrDivExpression
+    | addOrSubExpression ADD multOrDivExpression
+    | addOrSubExpression SUB  multOrDivExpression
 ;
 
 addExpression : multOrDivExpression ADD multOrDivExpression ;
@@ -162,12 +158,19 @@ operand :
     navExpression
     |
     literal
+    |
+    parenthesisExpression
 ;
 
 
 
+parenthesisExpression:
+    LPAREN gelExpression RPAREN
+;
+
+
 navExpression:
-    (selfExpression | identifier)
+    (selfExpression | variableOrMember)
     (
         dotNavExpression
         |
@@ -175,6 +178,10 @@ navExpression:
     )*
 ;
 
+
+variableOrMember:
+    identifier
+;
 
 
 dotNavExpression:

@@ -7,7 +7,7 @@ import java.util.Map;
 
 
 
-public class MinusImpl  extends fr.insset.jeanluc.ete.gel.impl.NumberOperationImpl  implements Minus {
+public class MinusImpl  extends fr.insset.jeanluc.ete.gel.impl.AddOrSubImpl  implements Minus {
 
 
     //========================================================================//

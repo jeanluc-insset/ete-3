@@ -9,12 +9,18 @@
         <!--<model  url="models/EssentialOCL.emof"/>-->
         <model  url="models/Gel.xml"/>
 
-        <transformation-set output_base="../../">
+        <!--
+          - The context parameter specifies which context to use when
+          - resolving an identifier
+        -->
+        <transformation-set output_base="../../"
+                            context="mof">
 
                     <!--API and default implementation generation--> 
             <module src="../../../../../src/main/mda/modules/language/ete-config.xml"
                     dialect="fr.insset.jeanluc.el.dialect.BasicJavaDialect"
                     projectName="gel"/>
+
         </transformation-set>
 
 

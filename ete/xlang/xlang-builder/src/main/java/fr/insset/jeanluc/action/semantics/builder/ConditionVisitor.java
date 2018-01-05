@@ -1,9 +1,11 @@
 package fr.insset.jeanluc.action.semantics.builder;
 
 
+import fr.insset.jeanluc.ete.gel.GelContext;
 import fr.insset.jeanluc.ete.gel.GelExpression;
 import fr.insset.jeanluc.ete.gel.GelParser;
 import fr.insset.jeanluc.ete.gel.VariableDefinition;
+import fr.insset.jeanluc.ete.gel.impl.GelContextImpl;
 import fr.insset.jeanluc.ete.gel.impl.GelParserWrapper;
 import fr.insset.jeanluc.ete.gel.impl.TreeBuilder;
 import fr.insset.jeanluc.ete.gel.impl.VariableDefinitionImpl;
@@ -112,7 +114,11 @@ public class ConditionVisitor extends DynamicVisitorSupport {
 
         // 2- build expression as an abstract tree
         // TODO : use an abstract factory
-        TreeBuilder     treeBuilder           = new TreeBuilder(model, context, variables);
+        GelContext      gelContext            = new GelContextImpl();
+        gelContext.set("model", model);
+        gelContext.set("context", context);
+        gelContext.set("contextualClass", parser);
+        TreeBuilder     treeBuilder           = new TreeBuilder(gelContext);
         GelExpression   expression            = treeBuilder.visitGelExpression(ctx);
 
         // 3- visit the GelExpression to build statements
@@ -122,12 +128,12 @@ public class ConditionVisitor extends DynamicVisitorSupport {
 
 //        // 4- wrap everything into a "container" and put it into the
 //        // the condition itself
-//        // TODO : we must share the same container between all conditions on
-//        // a single operation.
-//        StatementContainer  container         = new StatementContainer();
-//        container.setStatements(result);
-//        container.setAbstractTree(expression);
-//        inCondition.setSpecification(container);
+//        // TODO : we should share the same container between all conditions on
+//        // a single operation, should not we ?
+        StatementContainer  container         = new StatementContainer();
+        container.setStatements(result);
+        container.setAbstractTree(expression);
+        inCondition.setSpecification(container);
     }
 
 

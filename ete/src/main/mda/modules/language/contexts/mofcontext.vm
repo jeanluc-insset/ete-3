@@ -5,11 +5,20 @@
 ################################################################################
 package fr.insset.jeanluc.ete.gel.impl;
 
+
+
+import fr.insset.jeanluc.ete.gel.GelContext;
 import fr.insset.jeanluc.ete.${projectName.toLowerCase()}.${dialect.i2uc($projectName)}Expression;
 import fr.insset.jeanluc.ete.gel.VariableDefinition;
+import fr.insset.jeanluc.ete.meta.model.core.NamedElement;
+import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
+import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.MofPackage;
 import fr.insset.jeanluc.ete.meta.model.types.TypedElement;
+import java.util.Deque;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
 import javax.annotation.Generated;
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -22,29 +31,50 @@ import org.antlr.v4.runtime.CommonTokenStream;
  */
 @Generated("ete - jean-luc@insset.fr  ete/src/main/mda/modules/language/contexts/mofcontext.vm")
 public class ${dialect.i2uc($projectName)}ContextImpl implements ${dialect.i2uc($projectName)}Context<${dialect.i2uc($projectName)}Expression> {
-    
-    public ${dialect.i2uc($projectName)}Expression resolve(Object inString) {
-        Map<String, ${dialect.i2uc($projectName)}Expression>  map = stack.peekLast();
-        ${dialect.i2uc($projectName)}Expression result = map.get(inString);
-        if (result != null) {
-            return result;
+
+
+    public ${dialect.i2uc($projectName)}ContextImpl() {
+        // We must start with at least a stack frame
+        push();
+    }
+
+
+    public ${dialect.i2uc($projectName)}Expression resolve(String inString) {
+        Object  result = resolveLocalVariable(inString);
+        if (result == null) {
+            result = resolveRootProperty(inString);
         }
-        if (inString != "root") {
-            VariableDefinition rootVariable = resolve("root");
-            if (rootVariable != null) {
-                MofClass    rootClass = rootVariable.getValue();
-                // TODO : does root have a member with "inString" as identifier ?
-            }
+        if (result == null) {
+            result = resolveModelInstance(inString);
         }
-        EteModel    model = resolve("model");
-        if (model != null) {
-            
+        if (result instanceof ${dialect.i2uc($projectName)}Expression) {
+            return (${dialect.i2uc($projectName)}Expression)result;
+        }
+        if (result instanceof NamedElement) {
+
         }
         return null;
     }
 
-    public void push() {
-        Map<String, ${dialect.i2uc($projectName)}Expression> map = new HashMap<<String, ${dialect.i2uc($projectName)}Expression>>();
+
+    //========================================================================//
+
+
+    @Override
+    public void setGel(String inString, ${dialect.i2uc($projectName)}Expression inValue) {
+    }
+
+    @Override
+    public void set(String inString, Object inValue) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+
+    //========================================================================//
+
+
+    public final void push() {
+        Map<String, Object> map = new HashMap<>();
         stack.addLast(map);
     }
 
@@ -53,7 +83,51 @@ public class ${dialect.i2uc($projectName)}ContextImpl implements ${dialect.i2uc(
     }
 
 
-    private Deque<Map<String, ${dialect.i2uc($projectName)}Expression>>     stack = new Stack<>();
+    //========================================================================//
+
+
+
+    protected   Object resolveLocalVariable(String inString) {
+        Map<String, Object>  map = stack.peekLast();
+        return map.get(inString);
+    }
+
+
+    protected   Object resolveVariableInStack(String inString) {
+        Iterator<Map<String, Object>> iterator = stack.descendingIterator();
+        while (iterator.hasNext()) {
+            Map<String, Object> map = iterator.next();
+            Object expression = map.get(inString);
+            if (expression != null) {
+                return expression;
+            }
+        }        
+        return null;
+    }
+
+
+    protected   Object resolveRootProperty(String inString) {
+        MofClass    root = (MofClass)resolveVariableInStack("root");
+        if (root != null) {
+            
+        }
+        return null;
+    }
+
+
+    protected   Object resolveModelInstance(String inString) {
+        EteModel    root = (EteModel)resolveVariableInStack("root");
+        if (root != null) {
+            
+        }
+        return null;
+    }
+
+
+    //========================================================================//
+
+
+    private Deque<Map<String, Object>>     stack = new LinkedList<>();
 
 }
 

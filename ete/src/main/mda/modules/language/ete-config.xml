@@ -34,8 +34,8 @@
       -     - utility methods to wrap antlr parser and tree builder (class
       -       ParserWrapper)
       --> 
-    <transformation-set context="generic">
-        <!--<parameter name="context" defaultValue="simple"/>-->
+    <transformation-set>
+        <parameter name="context" defaultValue="generic"/>
         <!-- Class TreeBuilder, to translate a concrete syntax tree to an
              abstract syntax tree
           -->

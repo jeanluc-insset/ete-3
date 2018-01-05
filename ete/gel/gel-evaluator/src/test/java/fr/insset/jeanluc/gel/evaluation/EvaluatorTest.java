@@ -1,30 +1,5 @@
 package fr.insset.jeanluc.gel.evaluation;
 
-import fr.insset.jeanluc.ete.gel.Add;
-import fr.insset.jeanluc.ete.gel.And;
-import fr.insset.jeanluc.ete.gel.Arrow;
-import fr.insset.jeanluc.ete.gel.AtPre;
-import fr.insset.jeanluc.ete.gel.BooleanLiteral;
-import fr.insset.jeanluc.ete.gel.DateLiteral;
-import fr.insset.jeanluc.ete.gel.Different;
-import fr.insset.jeanluc.ete.gel.Div;
-import fr.insset.jeanluc.ete.gel.Dot;
-import fr.insset.jeanluc.ete.gel.Equal;
-import fr.insset.jeanluc.ete.gel.FloatingPointLiteral;
-import fr.insset.jeanluc.ete.gel.GreaterOrEqual;
-import fr.insset.jeanluc.ete.gel.GreaterThan;
-import fr.insset.jeanluc.ete.gel.IntegerLiteral;
-import fr.insset.jeanluc.ete.gel.Lambda;
-import fr.insset.jeanluc.ete.gel.LessOrEqual;
-import fr.insset.jeanluc.ete.gel.LessThan;
-import fr.insset.jeanluc.ete.gel.Minus;
-import fr.insset.jeanluc.ete.gel.Mult;
-import fr.insset.jeanluc.ete.gel.Opp;
-import fr.insset.jeanluc.ete.gel.Or;
-import fr.insset.jeanluc.ete.gel.Self;
-import fr.insset.jeanluc.ete.gel.StringLiteral;
-import fr.insset.jeanluc.ete.gel.VariableDefinition;
-import fr.insset.jeanluc.ete.gel.VariableReference;
 import fr.insset.jeanluc.ete.meta.model.core.NamedElement;
 import fr.insset.jeanluc.ete.meta.model.core.PrimitiveDataTypes;
 import static fr.insset.jeanluc.ete.meta.model.core.PrimitiveDataTypes.FLOAT_TYPE;
@@ -48,7 +23,6 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import static org.junit.Assert.*;
 
 /**
  *

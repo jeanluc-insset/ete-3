@@ -77,8 +77,8 @@ public class ActionSemanticsOperationBuilderTest {
         ConditionVisitor.enableActionSemantics(instance);
 
         // 3- read model. This will call the visitor
-//        EteModel parent = new EteModelImpl();
-//        PrimitiveDataTypes.init(parent);
+        EteModel parent = new EteModelImpl();
+        PrimitiveDataTypes.init(parent);
         EteModel result = instance.readModel(MODEL_PATH);
 
         // 4- check results

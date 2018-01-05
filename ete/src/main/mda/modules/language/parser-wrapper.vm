@@ -11,6 +11,7 @@ import fr.insset.jeanluc.ete.${projectName.toLowerCase()}.${dialect.i2uc($projec
 import fr.insset.jeanluc.ete.${projectName.toLowerCase()}.${dialect.i2uc($projectName)}Parser;
 import fr.insset.jeanluc.ete.meta.model.core.NamedElement;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
+import fr.insset.jeanluc.ete.meta.model.types.TypedElement;
 import javax.annotation.Generated;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;

@@ -7,7 +7,7 @@ import java.util.Map;
 
 
 
-public class CollectionOperationExpressionImpl  extends fr.insset.jeanluc.ete.gel.impl.NavigationImpl  implements CollectionOperationExpression {
+public class CollectionOperationExpressionImpl  extends fr.insset.jeanluc.ete.gel.impl.NavImpl  implements CollectionOperationExpression {
 
 
     //========================================================================//
