@@ -13,6 +13,8 @@ options {
 // It handles operator priority through hierarchical rules.                   //
 // Any parser which imports this one can override any rule to customize the   //
 // parser to its own needs.                                                   //
+// By convention, rules with "expression" as suffix are reflected by objects  //
+// in the abstract syntax and are visitable by the "abstract tree builder"    //
 //============================================================================//
 
 
@@ -125,9 +127,6 @@ addOrSubExpression :
     | addOrSubExpression SUB  multOrDivExpression
 ;
 
-addExpression : multOrDivExpression ADD multOrDivExpression ;
-minusExpression : multOrDivExpression SUB multOrDivExpression ;
-
 
 
 multOrDivExpression :
@@ -169,13 +168,49 @@ parenthesisExpression:
 ;
 
 
-navExpression:
-    (selfExpression | variableOrMember)
-    (
-        dotNavExpression
-        |
-        arrowNavExpression
-    )*
+
+navExpression
+    :   primitive
+    |   complexNavigation
+;
+
+
+complexNavigation:
+    primitive stepExpression+
+;
+
+primitive
+    :
+    selfExpression
+    | variableOrMember
+;
+
+
+stepExpression
+    : 
+    attributeNavAtPreOrNot
+    | methodNavExpression
+    | collectionMethodNavExpression
+;
+
+attributeNavAtPreOrNot
+    : attributeNavExpression
+    | atPreExpression
+;
+
+attributeNavExpression
+    : DOT identifier
+;
+
+atPreExpression
+    : attributeNavExpression AT
+;
+
+methodNavExpression
+    : DOT functionCall
+;
+collectionMethodNavExpression
+    : ARROW functionCall
 ;
 
 
@@ -184,39 +219,12 @@ variableOrMember:
 ;
 
 
-dotNavExpression:
-    DOT
-    suffixNavExpression
-;
-
-arrowNavExpression:
-    ARROW
-    suffixNavExpression
-;
-
-
-suffixNavExpression:
-    operationNavigationExpression
-    |
-    propertyNavigationExpression
-;
-
-
-propertyNavigationExpression:
-    identifier
-    filtersExpression
-    atPreExpression
-;
-
-filtersExpression:
-    filterExpression*
+functionCall :
+    identifier LPAREN parameterList RPAREN
 ;
 
 
 
-atPreExpression:
-    AT
-;
 
 //----------------------------------------------------------------------------//
 

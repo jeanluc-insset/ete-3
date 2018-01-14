@@ -6,13 +6,13 @@
 ## We could have turned this into a method instead of generating all this     ##
 ## stuff each time                                                            ##
 ################################################################################
-            GelExpression   result = children.get(0).accept(this);
+            ${dialect.i2uc($projectName)}Expression   result = children.get(0).accept(this);
             int     index = 1;
             while (index < children.size()) {
-                List<GelExpression>  operands = FactoryMethods.newList(GelExpression.class);
+                List<${dialect.i2uc($projectName)}Expression>  operands = FactoryMethods.newList(${dialect.i2uc($projectName)}Expression.class);
                 operands.add(result);
-                result = (GelExpression) FactoryRegistry.getRegistry().getFactory(children.get(index++).getText()).newInstance();
-                GelExpression right = children.get(index++).accept(this);
+                result = (${dialect.i2uc($projectName)}Expression) FactoryRegistry.getRegistry().getFactory(children.get(index++).getText()).newInstance();
+                ${dialect.i2uc($projectName)}Expression right = children.get(index++).accept(this);
                 operands.add(right);
                 result.setOperand(operands);
             }

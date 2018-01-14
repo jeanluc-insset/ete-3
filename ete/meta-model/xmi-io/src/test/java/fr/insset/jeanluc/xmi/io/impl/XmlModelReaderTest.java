@@ -77,13 +77,14 @@ public class XmlModelReaderTest {
         // 3- check result
         Map<String, Integer>    properties = new HashMap<>();
         properties.put("Question", 4);
-        properties.put("QCM", 3);
+        properties.put("MCQ", 3);
         Collection<MofClass> allClasses = result.getAllClasses();
         assertEquals(2, allClasses.size());
         Collection<MofClass> classes = result.getClasses();
         assertEquals(2, classes.size());
         Collection<Association> associations = new LinkedList<>();
         for (MofClass aClass : classes) {
+            System.out.println("Scanning : " + aClass);
             List<MofProperty> ownedAttribute = aClass.getOwnedAttribute();
             assertEquals((long)properties.get(aClass.getName()), (long)ownedAttribute.size());
             for (MofProperty aProperty : ownedAttribute) {
@@ -122,21 +123,21 @@ public class XmlModelReaderTest {
 
         // 3-a check the number of classes and some meta-properties
         Collection<MofClass> classes = result.getClasses();
-        assertEquals(9, classes.size());
+        assertEquals(10, classes.size());
 //        MofClass    createurQuestionClass = (MofClass)result.getElementByName("CreateurQuestion");
 //        assertTrue(createurQuestionClass.isAbstract());
 
         // 3-b check the number of properties of each class
         Map<String, Integer>    properties = new HashMap<>();
-        properties.put("CreateurQuestion", 0);
-        properties.put("QCM", 2);
+        properties.put("User", 2);
+        properties.put("MCQ", 2);
         properties.put("Question", 5);
-        properties.put("Etudiant", 2);
-        properties.put("Epreuve", 4);
-        properties.put("Passage", 5);
-        properties.put("Reponse", 2);
-        properties.put("QuestionPosee", 3);
-        properties.put("ReponseFournie", 1);
+        properties.put("User", 5);
+        properties.put("Test", 4);
+        properties.put("Session", 5);
+        properties.put("Answer", 2);
+        properties.put("EffectiveQuestion", 3);
+        properties.put("ProposedAnswer", 2);
         for (MofClass aClass : classes) {
             Integer get = properties.get(aClass.getName());
             if (get != null) {

@@ -4,6 +4,7 @@ package fr.insset.jeanluc.ete.meta.model.core;
 import fr.insset.jeanluc.ete.meta.model.constraint.Constraint;
 import fr.insset.jeanluc.ete.meta.model.emof.TagValueDeclaration;
 import fr.insset.jeanluc.ete.meta.model.emof.Stereotype;
+import fr.insset.jeanluc.util.factory.FactoryMethods;
 import java.util.Collection;
 import java.util.Map;
 import java.util.logging.Level;
@@ -94,7 +95,30 @@ public interface NamedElement extends MofElement {
     // Added by JLD 2017/08/18
     public Collection<Constraint>   getConstraints();
     public void                     setConstraints(Collection<Constraint> inConstraints);
-    public void                     addConstraint(Constraint inConstraint);
+    public default void             addConstraint(Constraint inConstraint) {
+        getConstraints().add(inConstraint);
+    }
+
+
+    // Added by JLD 2018/01/11
+    public Collection<NamedElement> getOwnedElements();
+    public void                     setOwnedElements(Collection<NamedElement> inSubElements);
+    public default void             addOwnedElement(NamedElement inSubElement) throws InstantiationException {
+        Collection<NamedElement> ownedElements = getOwnedElements();
+        if (ownedElements == null) {
+            ownedElements = FactoryMethods.newList(NamedElement.class);
+            setOwnedElements(ownedElements);
+        }
+        ownedElements.add(inSubElement);
+    }
+    public default void             removeOwnedElement(NamedElement inSubElement) {
+        Collection<NamedElement> ownedElements = getOwnedElements();
+        if (ownedElements == null) {
+            return;
+        }
+        ownedElements.remove(inSubElement);
+    }
+    
 
 
 }

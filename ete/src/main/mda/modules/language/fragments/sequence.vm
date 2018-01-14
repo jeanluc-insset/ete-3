@@ -1,0 +1,11 @@
+################################################################################
+##                                                                            ##
+## Fragment for TreeBuilder.vm                                                ##
+##                                                                            ##
+################################################################################
+## We could have turned this into a method instead of generating all this     ##
+## stuff each time                                                            ##
+################################################################################
+            String text = children.get(1).getText();
+            ${dialect.i2uc($projectName)}Expression result = (${dialect.i2uc($projectName)}Expression) context.resolve(text);
+            return result;

@@ -5,6 +5,7 @@ package ${current.owningPackage};
 import ${dialect.getQualifiedName($aDependance)};
 #end
 import java.util.List;
+import java.util.Set;
 import javax.annotation.Generated;
 
 

@@ -3,7 +3,7 @@
 ## Generates a convenience class to instantiate a parser for a simple String  ##
 ##                                                                            ##
 ################################################################################
-package fr.insset.jeanluc.ete.gel.impl;
+package fr.insset.jeanluc.ete.${dialect.i2lc($projectName)}.impl;
 
 import fr.insset.jeanluc.ete.${projectName.toLowerCase()}.${dialect.i2uc($projectName)}Expression;
 // import fr.insset.jeanluc.ete.${projectName.toLowerCase()}.${dialect.i2uc($projectName)}Lexer;

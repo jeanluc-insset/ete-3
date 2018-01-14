@@ -1,10 +1,21 @@
 
 package fr.insset.jeanluc.ete.gel.impl;
 
+import fr.insset.jeanluc.ete.gel.GelContext;
 import fr.insset.jeanluc.ete.gel.GelExpression;
 import static fr.insset.jeanluc.ete.gel.GelParser.IntegerLiteral;
+import fr.insset.jeanluc.ete.gel.VariableDefinition;
+import fr.insset.jeanluc.ete.meta.model.constraint.Postcondition;
+import fr.insset.jeanluc.ete.meta.model.core.PrimitiveDataTypes;
+import fr.insset.jeanluc.ete.meta.model.core.impl.Factories;
+import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
+import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
+import fr.insset.jeanluc.ete.meta.model.mofpackage.impl.EteModelImpl;
 import fr.insset.jeanluc.ete.meta.model.types.TypedElement;
+import fr.insset.jeanluc.meta.model.io.ModelReader;
+import fr.insset.jeanluc.xmi.io.impl.XmlModelReader;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import org.junit.After;
@@ -19,6 +30,26 @@ import static org.junit.Assert.*;
  * @author jldeleage
  */
 public class TreeBuilderTest {
+
+
+    public final String  url = "../../../src/test/mda/models/full_MCQ.xml";
+
+    /**
+     * Some tests but not all use a model. This variable is initialized by
+     * the readModel method.
+     */
+    public EteModel     model;
+    /**
+     * Some tests but not all use a model. This variable is initialized by
+     * the readModel method.
+     */
+    public MofClass     sessionClass;
+    /**
+     * Some tests but not all use a model. This variable is initialized by
+     * the readModel method.
+     */
+    public MofOperation computeMarkOperation;
+
 
     public TreeBuilderTest() {
     }
@@ -112,6 +143,20 @@ public class TreeBuilderTest {
     }
 
 
+    //========================================================================//
+
+    @Test
+    public void testSimpleNavigation() throws InstantiationException, IOException, IllegalAccessException {
+        System.out.println("simple navigation");
+        readModel();
+        List<Postcondition> allPostconditions = computeMarkOperation.getPostconditions();
+        Postcondition postCondition = allPostconditions.get(0);
+        String specificationAsString = postCondition.getSpecificationAsString();
+        testAny(null, specificationAsString, model, computeMarkOperation);
+    }
+
+
+
 
     //========================================================================//
 
@@ -173,6 +218,54 @@ public class TreeBuilderTest {
         operands.add(right);
         mult.setOperand(operands);
         return mult;
+    }
+
+    //========================================================================//
+
+
+    /**
+     * Reads the standard test model
+     */
+    protected void  readModel() throws InstantiationException, IOException, IllegalAccessException {
+        // 1- Initialize framework
+        Factories.init();
+
+        // 2- get the data
+        XmlModelReader instance = new XmlModelReader();
+        EteModel parent = new EteModelImpl();
+        PrimitiveDataTypes.init(parent);
+        model = instance.readModel(url, parent);
+        sessionClass = (MofClass) model.getElementByName("Session");
+        computeMarkOperation = sessionClass.getOwnedOperation("computeMark");
+    }
+    
+    /**
+     * Creates a simple context and adds variables "self" and "model".
+     * 
+     * @param inModel
+     * @return 
+     */
+    protected GelContext    createContext(EteModel inModel) {
+        GelContext  result = new GelContextImpl();
+        
+        MofClass    selfClass = (MofClass) inModel.getElementByName("MCQ");
+        VariableDefinition  self = new VariableDefinitionImpl();
+        self.setIdentifier("self");
+        self.setValue(selfClass);
+        result.set("self", self);
+
+        VariableDefinition  model = new VariableDefinitionImpl();
+        model.setIdentifier("model");
+        result.set("model", model);
+
+        return result;
+    }
+
+    protected void addVariable(GelContext inoutContext, String inName, Object inValue) {
+        VariableDefinition  variable = new VariableDefinitionImpl();
+        variable.setIdentifier(inName);
+        variable.setValue(inValue);
+        inoutContext.set(inName, variable);        
     }
 
 

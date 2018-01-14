@@ -5,12 +5,19 @@
 ## expression concrete tree and returns the matching abstract tree.           ##
 ##                                                                            ##
 ## Usage :                                                                    ##
-##  XxxParser             parser  = XxxParserFactory.newParser(inExpression); ##
+##                                                                            ##
+##  XxxParser             parser       = XxxParserFactory                     ##
+##                                          .newParser(inExpression);         ##
 ##  XxxExpressionContext  ctx          = parser.xxxExpression();              ##
+##  // a context "resolves" identifiers                                       ##
+##  XxxContext<XxxExpression> context  = new XxxContextImpl(                  ##
+##                                          theModel, theClass, theElement);  ##
 ##  TreeBuilder           treeBuilder  = new TreeBuilder(inContext);          ##
 ##  XxxExpression         expression   = treeBuilder.visitXxxExpression(ctx); ##
 ##                                                                            ##
-## A future release will be more generic to be usable with any language       ##
+##  All this stuff is encapsulated in the "buildAbstractTree" static method   ##
+##  of the "ParserWrapper" class                                              ##
+##                                                                            ##
 ##                                                                            ##
 ################################################################################
 package fr.insset.jeanluc.ete.${dialect.i2lc($projectName)}.impl;
@@ -29,6 +36,7 @@ import fr.insset.jeanluc.ete.meta.model.types.collections.MofCollection;
 import fr.insset.jeanluc.ete.${dialect.i2lc($projectName)}.${dialect.i2uc($projectName)}Parser;
 import fr.insset.jeanluc.ete.${dialect.i2lc($projectName)}.${dialect.i2uc($projectName)}ParserBaseVisitor;
 import fr.insset.jeanluc.ete.${dialect.i2lc($projectName)}.*;
+import static fr.insset.jeanluc.ete.${dialect.i2lc($projectName)}.${dialect.i2uc($projectName)}Context.CURRENT;
 import fr.insset.jeanluc.util.factory.FactoryMethods;
 import fr.insset.jeanluc.util.factory.FactoryRegistry;
 import java.time.LocalDate;
@@ -73,6 +81,10 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
         registry.registerDefaultFactory("${aClass.getValueOf("symbol")}", ${aClass.name}Impl.class);
 #end
 #end
+        registry.registerDefaultFactory(".", AttributeNavImpl.class);
+        registry.registerDefaultFactory(".att", AttributeNavImpl.class);
+        registry.registerDefaultFactory(".op", MethodNavImpl.class);
+        registry.registerDefaultFactory("->", SelfImpl.class);
         registry.registerDefaultFactory("self", SelfImpl.class);
 //        registry.registerDefaultFactory(CollectionOperationExpression.class, CollectionOperationExpressionImpl.class);
         registry.registerDefaultFactory(VariableReference.class, VariableReferenceImpl.class);
@@ -82,9 +94,14 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
     @Override
     public ${dialect.i2uc($projectName)}Expression visit${dialect.i2uc($projectName)}Expression(${dialect.i2uc($projectName)}Parser.${dialect.i2uc($projectName)}ExpressionContext ctx) {
         // Create a fresh stack frame for local variables
-        context.push();
+//        context.push();
         return super.visit${dialect.i2uc($projectName)}Expression(ctx);
     }
+
+
+//============================================================================//
+//                      G E N E R A T E D   M E T H O D S                     //
+//============================================================================//
 
 
 #foreach ($aClass in $current.classes)
@@ -109,8 +126,9 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
 
 #foreach ($aClass in $current.classes)
 #if ($aClass.getValueOf("kind"))
+#if ($aClass.getValueOf("noVisit"))
+#else
 #set ($kind = $aClass.getValueOf("kind"))
-#set ($arity = $aClass.getValueOf("arity"))
     @Override
     public ${dialect.i2uc($projectName)}Expression visit${aClass.name}Expression(${dialect.i2uc($projectName)}Parser.${aClass.name}ExpressionContext ctx) {
         List<ParseTree> children = ctx.children;
@@ -128,20 +146,63 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
 
 #end
 #end
+#end
 
 
 
     //========================================================================//
+    //                  H A R D   C O D E D   M E T H O D S                   //
+    //========================================================================//
 
 
     @Override
-    public GelExpression visitParenthesisExpression(GelParser.ParenthesisExpressionContext ctx) {
+    public ${dialect.i2uc($projectName)}Expression visitNavExpression(${dialect.i2uc($projectName)}Parser.NavExpressionContext ctx) {
+        context.remove(${dialect.i2uc($projectName)}Context.CURRENT);
+        List<ParseTree> children = ctx.children;
+        if (children.size() == 1) {
+            return children.get(0).accept(this);
+        }
+        try {
+            ${dialect.i2uc($projectName)}Expression   result = children.get(0).accept(this);
+//            context.set(${dialect.i2uc($projectName)}Context.CURRENT, result.getType().getRecType());
+            int     index = 1;
+            while (index < children.size()) {
+                context.remove(CURRENT);
+                List<${dialect.i2uc($projectName)}Expression>  operands = FactoryMethods.newList(${dialect.i2uc($projectName)}Expression.class);
+                operands.add(result);
+                result = (${dialect.i2uc($projectName)}Expression)FactoryRegistry.getRegistry()
+                                    .getFactory(children.get(index++).getText())
+                                    .newInstance();
+                ${dialect.i2uc($projectName)}Expression right = children.get(index++).accept(this);
+                operands.add(right);
+                result.setOperand(operands);
+                context.set(${dialect.i2uc($projectName)}Context.CURRENT, result);
+            }
+            return result;
+        }
+        catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+
+
+    @Override
+    public ${dialect.i2uc($projectName)}Expression visitIdentifier(${dialect.i2uc($projectName)}Parser.IdentifierContext ctx) {
+        String text = ctx.getText();
+        Object resolve = context.resolve(text);
+        return (${dialect.i2uc($projectName)}Expression)resolve;
+    }
+
+
+    @Override
+    public ${dialect.i2uc($projectName)}Expression visitParenthesisExpression(${dialect.i2uc($projectName)}Parser.ParenthesisExpressionContext ctx) {
         return ctx.children.get(1).accept(this);
     }
 
 
     @Override
-    public ${dialect.i2uc($projectName)}Expression visitVariableOrMember(GelParser.VariableOrMemberContext ctx) {
+    public ${dialect.i2uc($projectName)}Expression visitVariableOrMember(${dialect.i2uc($projectName)}Parser.VariableOrMemberContext ctx) {
         return (${dialect.i2uc($projectName)}Expression)context.resolve(ctx.getText());
     }
 

@@ -46,6 +46,27 @@ public abstract class MofCollectionImpl extends MofTypeImpl implements MofCollec
         return true;
     }
 
+    public boolean isDistinct() {
+        return distinct;
+    }
+
+    public void setDistinct(boolean distinct) {
+        this.distinct = distinct;
+    }
+
+    @Override
+    public boolean isOrdered() {
+        return ordered;
+    }
+
+    public void setOrdered(boolean ordered) {
+        this.ordered = ordered;
+    }
+
+
+
     private MofType baseType;
+    private boolean distinct;
+    private boolean ordered;
 
 }

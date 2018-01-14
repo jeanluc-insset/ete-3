@@ -4,7 +4,7 @@
 ## syntax tree                                                                ##
 ##                                                                            ##
 ################################################################################
-package fr.insset.jeanluc.ete.gel;
+package fr.insset.jeanluc.ete.${dialect.i2lc($projectName)};
 
 import javax.annotation.Generated;
 
@@ -17,13 +17,30 @@ import javax.annotation.Generated;
 @Generated("ete - jean-luc@insset.fr  ete/src/main/mda/modules/language/context.vm")
 public interface ${dialect.i2uc($projectName)}Context<T> {
 
+
+    public final static String      ROOT    = "root",
+                                    MODEL   = "model",
+                                    SELF    = "self",
+                                    CURRENT = "current",
+                                    CONTEXT = "context",
+                                    RESULT  = "result";
+
     /**
-     * Look for the value of 
+     * Looks for the value of <code>inString</code>
      */
     public T        resolve(String inString);
-    public void     set${dialect.i2uc($projectName)}(String inString, T inValue);
-
+    /**
+     * Adds a local variable
+     */
+//    public void     set${dialect.i2uc($projectName)}(String inString, T inValue);
+    /**
+     * Adds a local variable
+     */
     public void     set(String inString, Object inValue);
+    /**
+     *  Removes a local variable
+     */
+    public void     remove(String inString);
 
     /**
      *

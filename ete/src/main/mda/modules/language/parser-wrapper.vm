@@ -3,13 +3,15 @@
 ## Generates a convenience class to instantiate a parser for a simple String  ##
 ##                                                                            ##
 ################################################################################
-package fr.insset.jeanluc.ete.gel.impl;
+package fr.insset.jeanluc.ete.${dialect.i2lc($projectName)}.impl;
 
 import fr.insset.jeanluc.ete.${projectName.toLowerCase()}.${dialect.i2uc($projectName)}Context;
 import fr.insset.jeanluc.ete.${projectName.toLowerCase()}.${dialect.i2uc($projectName)}Expression;
 import fr.insset.jeanluc.ete.${projectName.toLowerCase()}.${dialect.i2uc($projectName)}Lexer;
 import fr.insset.jeanluc.ete.${projectName.toLowerCase()}.${dialect.i2uc($projectName)}Parser;
 import fr.insset.jeanluc.ete.meta.model.core.NamedElement;
+import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
+import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
 import fr.insset.jeanluc.ete.meta.model.types.TypedElement;
 import javax.annotation.Generated;
@@ -34,8 +36,14 @@ public class ${dialect.i2uc($projectName)}ParserWrapper {
     }
 
     public static ${dialect.i2uc($projectName)}Expression buildAbstractTree(String inExpression, EteModel inModel, NamedElement inContextElement) {
-        ${dialect.i2uc($projectName)}Context context = new ${dialect.i2uc($projectName)}ContextImpl();
-        
+        MofClass    contextualClass = null;
+        if (inContextElement instanceof MofClass) {
+            contextualClass = (MofClass)inContextElement;
+        }
+        else if (inContextElement != null) {
+            contextualClass = (MofClass) ((MofOperation)inContextElement).getOwningMofClass();
+        }
+        ${dialect.i2uc($projectName)}Context context = new ${dialect.i2uc($projectName)}ContextImpl(inModel, contextualClass, inContextElement);
         return buildAbstractTree(inExpression, context);
     }
 

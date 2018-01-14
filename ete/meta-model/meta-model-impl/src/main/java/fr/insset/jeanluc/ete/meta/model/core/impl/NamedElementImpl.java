@@ -7,6 +7,7 @@ import fr.insset.jeanluc.ete.meta.model.emof.TagValueDeclaration;
 import fr.insset.jeanluc.util.factory.FactoryMethods;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,7 +16,7 @@ import java.util.logging.Logger;
  *
  * @author jldeleage
  */
-public abstract class NamedElementImpl implements NamedElement {
+public class NamedElementImpl implements NamedElement {
 
 
     @Override
@@ -130,6 +131,21 @@ public abstract class NamedElementImpl implements NamedElement {
         constraints.add(inConstraint);
     }
 
+    @Override
+    public Collection<NamedElement> getOwnedElements() {
+        if (ownedElements == null) {
+            ownedElements = new LinkedList<>();
+        }
+        return ownedElements;
+    }
+
+    @Override
+    public void setOwnedElements(Collection<NamedElement> inSubElements) {
+        ownedElements = inSubElements;
+    }
+
+
+
 
     private String                              name;
     private String                              id;
@@ -137,5 +153,6 @@ public abstract class NamedElementImpl implements NamedElement {
     private Map<TagValueDeclaration, Object>    tagValues;
     private Collection<NamedElement>            dependances;
     private Collection<Constraint>              constraints;
+    private Collection<NamedElement>            ownedElements;
 
 }

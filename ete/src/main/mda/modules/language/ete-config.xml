@@ -59,19 +59,6 @@
                 dialect="fr.insset.jeanluc.el.dialect.BasicJavaDialect"
                 target="${projectName}-impl/src/main/java/fr/insset/jeanluc/ete/${projectName.toLowerCase()}/impl/${projectName.substring(0,1).toUpperCase()}${projectName.substring(1)}ContextImpl.java"/>
 
-<!--        <velocity template="contexts/genericcontext.vm"
-                dialect="fr.insset.jeanluc.el.dialect.BasicJavaDialect"
-                target="${projectName}-impl/src/main/java/fr/insset/jeanluc/ete/${projectName.toLowerCase()}/impl/Simple${projectName.substring(0,1).toUpperCase()}${projectName.substring(1)}Context.java"/>
-        <if test="$simple">
-                <velocity template="contexts/simplecontext.vm"
-                dialect="fr.insset.jeanluc.el.dialect.BasicJavaDialect"
-                target="${projectName}-impl/src/main/java/fr/insset/jeanluc/ete/${projectName.toLowerCase()}/impl/Simple${projectName.substring(0,1).toUpperCase()}${projectName.substring(1)}Context.java"/>
-        </if>
-        <if test="$mofBased">
-                <velocity template="contexts/mofcontext.vm"
-                dialect="fr.insset.jeanluc.el.dialect.BasicJavaDialect"
-                target="${projectName}-impl/src/main/java/fr/insset/jeanluc/ete/${projectName.toLowerCase()}/impl/Mof${projectName.substring(0,1).toUpperCase()}${projectName.substring(1)}Context.java"/>
-        </if>-->
 
     </transformation-set>
 

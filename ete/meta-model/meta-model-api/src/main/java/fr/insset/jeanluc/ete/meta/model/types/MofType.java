@@ -3,6 +3,7 @@ package fr.insset.jeanluc.ete.meta.model.types;
 
 import fr.insset.jeanluc.ete.meta.model.emof.TagValueDeclaration;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.PackageableElement;
+import fr.insset.jeanluc.ete.meta.model.types.collections.MofCollection;
 import java.util.Collection;
 import java.util.Map;
 
@@ -17,6 +18,14 @@ public interface MofType extends PackageableElement {
     public Collection<MofType>      getSuperTypes();
     public void                     setSuperTypes(Collection<MofType> inSuperTypes);
     public void                     addSuperType(MofType inSuperType);
+
+    public default MofType          getRecBaseType() {
+        if (isCollection()) {
+            MofCollection coll = (MofCollection)this;
+            return coll.getBaseType().getRecBaseType();
+        }
+        return this;
+    }
 
     public default boolean          isCollection() {
         return false;

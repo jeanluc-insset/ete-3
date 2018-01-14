@@ -37,4 +37,17 @@ public class MofSequenceImpl extends MofCollectionImpl implements MofSequence {
     public String getQualifiedName() {
         return "Sequence<" + getBaseType().getQualifiedName() + ">";
     }
+
+    @Override
+    public boolean isOrdered() {
+        return true;
+    }
+
+    @Override
+    public boolean isDistinct() {
+        return true;
+    }
+
+
+
 }

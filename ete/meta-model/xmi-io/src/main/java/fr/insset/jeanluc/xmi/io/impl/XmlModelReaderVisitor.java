@@ -215,6 +215,21 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
     public Object   visitProperty(MofProperty inProperty, Object... inParam) throws EteException, XPathExpressionException, IllegalAccessException {
         Logger  logger = Logger.getLogger(getClass().getName());
         logger.log(Level.FINE, "visiting " + inProperty.getName() + " property");
+        Element elt = (Element) inParam[2];
+        String attribute = elt.getAttribute("readOnly");
+        inProperty.setReadOnly("true".equals(attribute));
+        attribute = elt.getAttribute("static");
+        inProperty.setStatic("true".equals(attribute));
+        attribute = elt.getAttribute("aggregation");
+        if ("composite".equals(attribute)) {
+            inProperty.setAggregationKind(AggregationKind.COMPOSITION);
+        } else if (attribute.equals("aggregation")) {
+            inProperty.setAggregationKind(AggregationKind.AGGREGATION);
+        }
+        attribute = elt.getAttribute("isOrdered");
+        if ("true".equals(attribute)) {
+            inProperty.setOrdered(true);
+        }
         MofClass    parentClass = (MofClass) inParam[0];
         if (parentClass != null) {
             parentClass.addOwnedAttribute((MofProperty) inProperty);
@@ -225,17 +240,6 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
         }
         logger.log(Level.FINER, "Type of " + inProperty.getName() + " is " + inProperty.getType());
 
-        Element elt = (Element) inParam[2];
-        String attribute = elt.getAttribute("readOnly");
-        inProperty.setReadOnly("true".equals(attribute));
-        attribute = elt.getAttribute("static");
-        inProperty.setStatic("true".equals(attribute));
-        attribute = elt.getAttribute("aggregation");
-        if (attribute.equals("composite")) {
-            inProperty.setAggregationKind(AggregationKind.COMPOSITION);
-        } else if (attribute.equals("aggregation")) {
-            inProperty.setAggregationKind(AggregationKind.AGGREGATION);
-        }
         String stringValue = getStringValue("defaultValue/@value", elt);
         if (stringValue != null && ! "".equals(stringValue)) {
             logger.log(Level.FINE, "Setting " + inProperty.getName() + " to " + stringValue);
