@@ -9,12 +9,14 @@ options {
 
 
 //============================================================================//
-// This parser is the basis for OCL parser, UEL parser and MOF-QVTo parser    //
+// This parser is the basis for OCL, UEL, MOF-QVTo and Mof2Text parsers       //
 // It handles operator priority through hierarchical rules.                   //
 // Any parser which imports this one can override any rule to customize the   //
 // parser to its own needs.                                                   //
 // By convention, rules with "expression" as suffix are reflected by objects  //
-// in the abstract syntax and are visitable by the "abstract tree builder"    //
+// in the abstract syntax and are visitable by the abstract tree builder      //
+// The objects in the abstract syntax must have the "kind" tag value which    //
+// gives the template to use in the abstract tree builder                     // 
 //============================================================================//
 
 
