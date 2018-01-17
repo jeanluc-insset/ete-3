@@ -8,7 +8,7 @@ import java.util.Set;
 
 
 
-public class EqualImpl  extends fr.insset.jeanluc.ete.gel.impl.BooleanOperationImpl  implements Equal {
+public class EqualImpl  extends fr.insset.jeanluc.ete.gel.impl.OperationImpl  implements Equal {
 
 
     //========================================================================//

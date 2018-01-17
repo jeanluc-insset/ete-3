@@ -68,10 +68,11 @@ andExpression :
 notOrNotNotExpression:
     notExpression
     |
-    orderExpression
+    affirmativeExpression
 ;
 
-notExpression : NOT orderExpression;
+// The grammar does not allow "not not xxxx"
+notExpression : NOT affirmativeExpression;
 
 
 //============================================================================//
@@ -80,7 +81,7 @@ notExpression : NOT orderExpression;
 // In this grammar, comparisons are not associative. One cannot write
 // expressions such that
 //      a > b > c
-orderExpression :
+affirmativeExpression :
     greaterThanExpression
     |
     greaterOrEqualExpression

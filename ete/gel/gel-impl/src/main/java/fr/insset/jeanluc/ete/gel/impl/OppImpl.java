@@ -8,7 +8,7 @@ import java.util.Set;
 
 
 
-public class OppImpl  extends fr.insset.jeanluc.ete.gel.impl.UnaryOperationImpl  implements Opp {
+public class OppImpl  extends fr.insset.jeanluc.ete.gel.impl.OperationImpl  implements Opp {
 
 
     //========================================================================//

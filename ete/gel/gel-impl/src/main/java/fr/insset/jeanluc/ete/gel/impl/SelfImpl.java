@@ -8,7 +8,7 @@ import java.util.Set;
 
 
 
-public class SelfImpl  extends fr.insset.jeanluc.ete.gel.impl.VariableReferenceImpl  implements Self {
+public class SelfImpl  extends fr.insset.jeanluc.ete.gel.impl.VariableDefinitionImpl  implements Self {
 
 
     //========================================================================//

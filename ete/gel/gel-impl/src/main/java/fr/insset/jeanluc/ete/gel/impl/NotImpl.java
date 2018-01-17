@@ -8,7 +8,7 @@ import java.util.Set;
 
 
 
-public class NotImpl  extends fr.insset.jeanluc.ete.gel.impl.UnaryOperationImpl  implements Not {
+public class NotImpl  extends fr.insset.jeanluc.ete.gel.impl.OperationImpl  implements Not {
 
 
     //========================================================================//

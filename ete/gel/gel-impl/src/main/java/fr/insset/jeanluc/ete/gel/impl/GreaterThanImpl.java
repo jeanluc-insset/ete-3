@@ -8,7 +8,7 @@ import java.util.Set;
 
 
 
-public class GreaterThanImpl  extends fr.insset.jeanluc.ete.gel.impl.BooleanOperationImpl  implements GreaterThan {
+public class GreaterThanImpl  extends fr.insset.jeanluc.ete.gel.impl.OperationImpl  implements GreaterThan {
 
 
     //========================================================================//

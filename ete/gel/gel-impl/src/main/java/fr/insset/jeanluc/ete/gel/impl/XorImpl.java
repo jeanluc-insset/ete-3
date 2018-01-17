@@ -8,7 +8,7 @@ import java.util.Set;
 
 
 
-public class XorImpl  extends fr.insset.jeanluc.ete.gel.impl.BooleanOperationImpl  implements Xor {
+public class XorImpl  extends fr.insset.jeanluc.ete.gel.impl.OperationImpl  implements Xor {
 
 
     //========================================================================//

@@ -8,7 +8,7 @@ import java.util.Set;
 
 
 
-public class AndImpl  extends fr.insset.jeanluc.ete.gel.impl.BooleanOperationImpl  implements And {
+public class AndImpl  extends fr.insset.jeanluc.ete.gel.impl.OperationImpl  implements And {
 
 
     //========================================================================//

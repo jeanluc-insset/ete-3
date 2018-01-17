@@ -8,7 +8,7 @@ import java.util.Set;
 
 
 
-public class OrImpl  extends fr.insset.jeanluc.ete.gel.impl.BooleanOperationImpl  implements Or {
+public class OrImpl  extends fr.insset.jeanluc.ete.gel.impl.OperationImpl  implements Or {
 
 
     //========================================================================//

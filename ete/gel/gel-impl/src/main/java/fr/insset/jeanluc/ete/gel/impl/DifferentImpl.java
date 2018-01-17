@@ -8,7 +8,7 @@ import java.util.Set;
 
 
 
-public class DifferentImpl  extends fr.insset.jeanluc.ete.gel.impl.BooleanOperationImpl  implements Different {
+public class DifferentImpl  extends fr.insset.jeanluc.ete.gel.impl.OperationImpl  implements Different {
 
 
     //========================================================================//

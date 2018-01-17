@@ -8,7 +8,7 @@ import java.util.Set;
 
 
 
-public class LessOrEqualImpl  extends fr.insset.jeanluc.ete.gel.impl.BooleanOperationImpl  implements LessOrEqual {
+public class LessOrEqualImpl  extends fr.insset.jeanluc.ete.gel.impl.OperationImpl  implements LessOrEqual {
 
 
     //========================================================================//
