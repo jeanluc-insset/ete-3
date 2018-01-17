@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<mda>
+
+
+    <transformation-set >
+                              read the model
+        <!--<model  url="models/EssentialOCL.emof"/>-->
+        <model  url="HelloWorld.xml"/>
+
+        <!--
+          - The context parameter specifies which context to use when
+          - resolving an identifier
+        -->
+        <transformation-set>
+
+            <velocity items="${classes}"
+                      template="templates/class2pojo.vm"
+                      target='generated-sources/ete/${current.owningPackage.name.replace(".", "/")}/${current.name}.java'/>
+            <velocity template="templates/main.vm"
+                      target='generated-sources/ete/fr/insset/jeanluc/ete/samples/Main.java'/>
+
+        </transformation-set>
+
+
+    </transformation-set>
+
+</mda>
+
+
+

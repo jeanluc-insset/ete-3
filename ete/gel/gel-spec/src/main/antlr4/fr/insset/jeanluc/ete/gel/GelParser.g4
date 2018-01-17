@@ -126,27 +126,31 @@ differentExpression : addOrSubExpression NOTEQUAL addOrSubExpression;
 
 addOrSubExpression :
     multOrDivExpression
-    | addOrSubExpression ADD multOrDivExpression
-    | addOrSubExpression SUB  multOrDivExpression
+    (
+        addExpression 
+      | subExpression
+    )*
 ;
 
 
+addExpression : ADD multOrDivExpression;
+subExpression : SUB multOrDivExpression;
+
 
 multOrDivExpression :
+    operand
     (
         multExpression
         |
         divExpression
         |
         modExpression
-    )+
-    |
-    operand
+    )*
 ;
 
-multExpression : operand MUL operand;
-divExpression  : operand DIV operand;
-modExpression  : operand MOD operand;
+multExpression : MUL operand;
+divExpression  : DIV operand;
+modExpression  : MOD operand;
 
 
 //============================================================================//
@@ -178,13 +182,12 @@ navExpression
 ;
 
 
-complexNavigation:
-    primitive stepExpression+
+complexNavigation
+    : primitive stepExpression+
 ;
 
 primitive
-    :
-    selfExpression
+    : selfExpression
     | variableOrMember
 ;
 

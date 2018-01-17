@@ -4,6 +4,7 @@ package fr.insset.jeanluc.ete.gel.impl;
 import fr.insset.jeanluc.ete.gel.GelContext;
 import fr.insset.jeanluc.ete.gel.GelExpression;
 import static fr.insset.jeanluc.ete.gel.GelParser.IntegerLiteral;
+import fr.insset.jeanluc.ete.gel.Sub;
 import fr.insset.jeanluc.ete.gel.VariableDefinition;
 import fr.insset.jeanluc.ete.meta.model.constraint.Postcondition;
 import fr.insset.jeanluc.ete.meta.model.core.PrimitiveDataTypes;
@@ -127,6 +128,12 @@ public class TreeBuilderTest {
         testAny(add, "12 + 20 + 8", null, null);
     }
 
+    @Test
+    public void testAssociative() {
+        System.out.println("complex 1");
+        AddImpl    mult = buildAdd(buildSub(buildInt("12"), buildInt("20")), buildInt("7"));
+        testAny(mult, "12 - 20 + 7", null, null);
+    }
 
     @Test
     public void testComplexExpression1() {
@@ -209,6 +216,16 @@ public class TreeBuilderTest {
         add.setOperand(operands);
         return add;
     }
+
+    public Sub  buildSub(GelExpression left, GelExpression right) {
+        Sub     add = new SubImpl();
+        List<GelExpression> operands = new LinkedList<>();
+        operands.add(left);
+        operands.add(right);
+        add.setOperand(operands);
+        return add;
+    }
+
 
 
     public MultImpl buildMult(GelExpression left, GelExpression right) {
