@@ -3,6 +3,7 @@ package fr.insset.jeanluc.ete.xlang;
 
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 import java.util.List;
+import java.util.Set;
 import javax.annotation.Generated;
 
 
@@ -15,6 +16,7 @@ public interface Instanciation  extends fr.insset.jeanluc.ete.gel.GelExpression 
         
 
     //========================================================================//
+
 
 
 }

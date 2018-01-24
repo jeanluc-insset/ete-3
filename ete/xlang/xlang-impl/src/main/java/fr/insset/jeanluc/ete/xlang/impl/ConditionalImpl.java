@@ -6,6 +6,7 @@ import fr.insset.jeanluc.ete.xlang.*;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
 
@@ -36,6 +37,7 @@ public class ConditionalImpl  extends fr.insset.jeanluc.ete.xlang.impl.Statement
     public void setElsePart(Statement inValue) {
         elsePart = inValue;
     }
+
 
 
     //========================================================================//

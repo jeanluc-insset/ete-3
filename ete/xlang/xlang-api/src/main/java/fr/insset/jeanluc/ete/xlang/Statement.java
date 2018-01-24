@@ -2,6 +2,7 @@ package fr.insset.jeanluc.ete.xlang;
 
 
 import java.util.List;
+import java.util.Set;
 import javax.annotation.Generated;
 
 
@@ -12,6 +13,7 @@ public interface Statement  {
         
 
     //========================================================================//
+
 
 
 }

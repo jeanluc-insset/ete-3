@@ -5,6 +5,7 @@ import fr.insset.jeanluc.ete.xlang.*;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
 
@@ -21,6 +22,7 @@ public class InstanciationImpl  extends fr.insset.jeanluc.ete.gel.impl.GelExpres
     public void setMofClass(MofClass inValue) {
         mofClass = inValue;
     }
+
 
 
     //========================================================================//

@@ -3,6 +3,7 @@ package fr.insset.jeanluc.ete.xlang;
 
 import fr.insset.jeanluc.ete.xlang.Statement;
 import java.util.List;
+import java.util.Set;
 import javax.annotation.Generated;
 
 
@@ -17,6 +18,7 @@ public interface ForLoop  extends fr.insset.jeanluc.ete.xlang.Loop  {
         
 
     //========================================================================//
+
 
 
 }
