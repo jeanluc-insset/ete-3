@@ -3,6 +3,10 @@ package ${current.owningPackage.name}.impl;
 #foreach ($aDependance in $current.dependances)
 import ${dialect.getQualifiedName($aDependance)};
 #end
+#if ($current.hasStereotype("collection_operation"))
+import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
+import fr.insset.jeanluc.ete.meta.model.types.MofType;
+#end
 import ${current.owningPackage.name}.*;
 import java.util.Collection;
 import java.util.List;
@@ -51,6 +55,12 @@ public#if($current.abstract) abstract#end class ${current.name}Impl #if (${curre
 #end
 #end
 #end
+#end
+
+#if ($current.hasStereotype("collection_operation"))
+    public MofType  getType(EteModel inModel) {
+        return null;
+    }
 #end
 
 

@@ -9,14 +9,14 @@ options {
 
 
 //============================================================================//
-// This parser is the basis for OCL, UEL, MOF-QVTo and Mof2Text parsers       //
+// This grammar is the basis for OCL, UEL, MOF-QVTo and Mof2Text grammars     //
 // It handles operator priority through hierarchical rules.                   //
-// Any parser which imports this one can override any rule to customize the   //
-// parser to its own needs.                                                   //
+// Any grammar which imports this one can override any rule to customize it   //
+// to its own needs.                                                          //
 // By convention, rules with "expression" as suffix are reflected by objects  //
 // in the abstract syntax and are visitable by the abstract tree builder      //
 // The objects in the abstract syntax must have the "kind" tag value which    //
-// gives the template to use in the abstract tree builder                     // 
+// gives the template fragment to use in the abstract tree builder            // 
 //============================================================================//
 
 
@@ -103,17 +103,14 @@ lessOrEqualExpression : compareExpression LE compareExpression;
 // In this grammar, = and <> are not associative : one cannot write expressions
 // such that
 //      a = b = c
-compareExpression :
-    equalExpression
-    |
-    differentExpression
-    |
-    addOrSubExpression
+compareExpression
+    : equalExpression
+    | differentExpression
+    | addOrSubExpression
 ;
 
 
 equalExpression : addOrSubExpression EQUAL addOrSubExpression;
-
 
 differentExpression : addOrSubExpression NOTEQUAL addOrSubExpression;
 
@@ -140,11 +137,9 @@ subExpression : SUB multOrDivExpression;
 multOrDivExpression :
     operand
     (
-        multExpression
-        |
-        divExpression
-        |
-        modExpression
+          multExpression
+        | divExpression
+        | modExpression
     )*
 ;
 
@@ -158,14 +153,11 @@ modExpression  : MOD operand;
 //============================================================================//
 
 
-operand :
-    oppExpression
-    |
-    navExpression
-    |
-    literal
-    |
-    parenthesisExpression
+operand
+    : oppExpression
+    | navExpression
+    | literal
+    | parenthesisExpression
 ;
 
 
@@ -175,16 +167,14 @@ parenthesisExpression:
 ;
 
 
-
 navExpression
-    :   primitive
-    |   complexNavigation
+    : primitive
+      ( attributeNavAtPreOrNot
+      | methodNavExpression
+      | collectionMethodNavExpression
+      )*
 ;
 
-
-complexNavigation
-    : primitive stepExpression+
-;
 
 primitive
     : selfExpression
@@ -192,12 +182,14 @@ primitive
 ;
 
 
+/*
 stepExpression
-    : 
-    attributeNavAtPreOrNot
+    : attributeNavAtPreOrNot
     | methodNavExpression
     | collectionMethodNavExpression
 ;
+*/
+
 
 attributeNavAtPreOrNot
     : attributeNavExpression
@@ -215,6 +207,7 @@ atPreExpression
 methodNavExpression
     : DOT functionCall
 ;
+
 collectionMethodNavExpression
     : ARROW functionCall
 ;
@@ -230,52 +223,22 @@ functionCall :
 ;
 
 
-
-
 //----------------------------------------------------------------------------//
-
-
-
-filterExpression :
-    LBRACK
-    lambdaExpression
-    RBRACK
-;
-
-
-lambdaExpression :
-    (
-        variableDeclarationExpression
-        (
-            COMMA
-            variableDeclarationExpression
-        )*
-        PIPE
-    )?
-    gelExpression
-;
 
 
 
 variableDeclarationExpression :
     Identifier
-    (
-        COLON
-        typeExpression
-    )?
+    (   COLON typeExpression )?
 ;
 
 
-typeExpression :
-    atomicTypeExpression
-    |
-    sequenceTypeExpression
-    |
-    bagTypeExpression
-    |
-    setTypeExpression
-    |
-    orderedSetTypeExpression
+typeExpression
+    : atomicTypeExpression
+    | sequenceTypeExpression
+    | bagTypeExpression
+    | setTypeExpression
+    | orderedSetTypeExpression
 ;
 
 
@@ -283,32 +246,20 @@ atomicTypeExpression :
     Identifier
 ;
 
-sequenceTypeExpression :
-    SEQUENCE
-    LPAREN
-    typeExpression
-    RPAREN
+sequenceTypeExpression
+    : SEQUENCE LPAREN typeExpression RPAREN
 ;
 
-bagTypeExpression :
-    BAG
-    LPAREN
-    typeExpression
-    RPAREN
+bagTypeExpression
+    : BAG LPAREN typeExpression RPAREN
 ;
 
-setTypeExpression :
-    SET
-    LPAREN
-    typeExpression
-    RPAREN
+setTypeExpression
+    : SET LPAREN typeExpression RPAREN
 ;
 
-orderedSetTypeExpression :
-    ORDERED SET
-    LPAREN
-    typeExpression
-    RPAREN
+orderedSetTypeExpression
+    : ORDERED SET LPAREN typeExpression RPAREN
 ;
 
 
@@ -317,39 +268,26 @@ orderedSetTypeExpression :
 //============================================================================//
 
 
-
 oppExpression :
     SUB
     operand
 ;
 
 
-
-selfExpression       : Self;
+selfExpression : Self;
 
 
 variableReference : Identifier;
 
 
-operationNavigationExpression:
-    identifier
-    LPAREN
-    parameterList
-    RPAREN
-;
-
 
 parameterList:
     (
-        (
-        gelExpression
-            COMMA
-        )*
+        ( gelExpression COMMA )*
         gelExpression
     )
     |
-    (
-    )
+    ()
 ;
 
 
@@ -357,20 +295,15 @@ parameterList:
 //                                   LITERALS                                 //
 //----------------------------------------------------------------------------//
 
-literal :
-    integerLiteral
-    |
-    floatingPointLiteral
-    |
-    booleanLiteral
-    |
-    dateLiteral
-    |
-    characterLiteral
-    |
-    stringLiteral
-    |
-    nullLiteral
+
+literal
+    : integerLiteral
+    | floatingPointLiteral
+    | booleanLiteral
+    | dateLiteral
+    | characterLiteral
+    | stringLiteral
+    | nullLiteral
 ;
 
 

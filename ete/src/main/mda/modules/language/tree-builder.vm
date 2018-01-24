@@ -77,17 +77,21 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
 #foreach($aClass in $current.classes)
 #if (${aClass.getValueOf("literalType")})
         registry.registerDefaultFactory("${aClass.getValueOf("literalType")}", ${aClass.name}Impl.class);
-#elseif (${aClass.getValueOf("symbol")})
+#end
+#end
+#foreach($aClass in $current.classes)
+#if (${aClass.getValueOf("symbol")})
         registry.registerDefaultFactory("${aClass.getValueOf("symbol")}", ${aClass.name}Impl.class);
 #end
 #end
-        registry.registerDefaultFactory(".", AttributeNavImpl.class);
+#foreach($aClass in $current.classes)
+#if (${aClass.hasStereotype("collection_operation")})
+        registry.registerDefaultFactory("${dialect.i2lc($aClass.name)}", ${aClass.name}Impl.class);
+#end
+#end
+        registry.registerDefaultFactory(".",    AttributeNavImpl.class);
         registry.registerDefaultFactory(".att", AttributeNavImpl.class);
-        registry.registerDefaultFactory(".op", MethodNavImpl.class);
-        registry.registerDefaultFactory("->", SelfImpl.class);
-        registry.registerDefaultFactory("self", SelfImpl.class);
-//        registry.registerDefaultFactory(CollectionOperationExpression.class, CollectionOperationExpressionImpl.class);
-        registry.registerDefaultFactory(VariableReference.class, VariableReferenceImpl.class);
+        registry.registerDefaultFactory(".op",  MethodNavImpl.class);
     }
 
 
@@ -126,18 +130,23 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
 
 #foreach ($aClass in $current.classes)
 #if ($aClass.getValueOf("kind"))
-#if ($aClass.getValueOf("noVisit"))
+#if ("true" == $aClass.getValueOf("noVisit"))
 #else
 #set ($kind = $aClass.getValueOf("kind"))
     @Override
     public ${dialect.i2uc($projectName)}Expression visit${aClass.name}Expression(${dialect.i2uc($projectName)}Parser.${aClass.name}ExpressionContext ctx) {
         List<ParseTree> children = ctx.children;
         if (children.size() == 1) {
-            return children.get(0).accept(this);
+            ${dialect.i2uc($projectName)}Expression result = children.get(0).accept(this);
+#if ($kind == "navigation")
+            context.remove(CURRENT);
+#end
+            return result;
         }
         try {
 #set ($fragment = "fragments/" + $kind + ".vm")
 #parse ($fragment)
+
         }
         catch (Exception ex) {
             throw new RuntimeException(ex);
@@ -154,7 +163,7 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
     //                  H A R D   C O D E D   M E T H O D S                   //
     //========================================================================//
 
-
+/*
     @Override
     public ${dialect.i2uc($projectName)}Expression visitNavExpression(${dialect.i2uc($projectName)}Parser.NavExpressionContext ctx) {
         context.remove(${dialect.i2uc($projectName)}Context.CURRENT);
@@ -184,7 +193,7 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
             throw new RuntimeException(ex);
         }
     }
-
+*/
 
 
     @Override
@@ -207,10 +216,32 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
     }
 
 
+
+
+    @Override
+    public ${dialect.i2uc($projectName)}Expression visitCollectionMethodNavExpression(${dialect.i2uc($projectName)}Parser.CollectionMethodNavExpressionContext ctx) {
+        List<ParseTree> children = ctx.children;
+        if (children.size() == 1) {
+            return children.get(0).accept(this);
+        }
+        try {
+            ${dialect.i2uc($projectName)}Parser.FunctionCallContext functionCall = (${dialect.i2uc($projectName)}Parser.FunctionCallContext)children.get(1);
+            String functionIdentifier = functionCall.children.get(0).getText();
+            ${dialect.i2uc($projectName)}Expression result = context.resolveCollOp(functionIdentifier);
+            List<${dialect.i2uc($projectName)}Expression>  operands = FactoryMethods.newList(${dialect.i2uc($projectName)}Expression.class);
+            result.setOperand(operands);
+            // Parse the parameters of the call
+            return result;
+        }
+        catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
     //========================================================================//
 
 
-    ${dialect.i2uc($projectName)}Context                  context;
+    ${dialect.i2uc($projectName)}Context<${dialect.i2uc($projectName)}Expression>   context;
 
 
 }

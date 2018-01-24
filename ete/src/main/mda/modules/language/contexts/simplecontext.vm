@@ -32,6 +32,12 @@ public class ${dialect.i2uc($projectName)}ContextImpl implements ${dialect.i2uc(
         push();
     }
 
+    public ${dialect.i2uc($projectName)}ContextImpl(EteModel inModel, MofClass inContextualClass, NamedElement inContext) {
+        // We must start with at least a stack frame
+        push();
+    }
+
+
     @Override
     public ${dialect.i2uc($projectName)}Expression resolve(String inString) {
         Iterator<Map<String, ${dialect.i2uc($projectName)}Expression>> iterator = stack.descendingIterator();
@@ -66,8 +72,12 @@ public class ${dialect.i2uc($projectName)}ContextImpl implements ${dialect.i2uc(
         stack.removeLast();
     }
 
+    @Override
+    public void remove(String inKey) {
+        
+    }
 
-    private Deque<Map<String, ${dialect.i2uc($projectName)}Expression>>     stack = new Stack<>();
+    private Deque<Map<String, ${dialect.i2uc($projectName)}Expression>>     stack = new LinkedList<>();
 
 }
 

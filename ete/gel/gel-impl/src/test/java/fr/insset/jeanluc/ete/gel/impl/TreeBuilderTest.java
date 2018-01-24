@@ -1,9 +1,11 @@
 
 package fr.insset.jeanluc.ete.gel.impl;
 
+import fr.insset.jeanluc.ete.gel.AttributeNav;
 import fr.insset.jeanluc.ete.gel.GelContext;
 import fr.insset.jeanluc.ete.gel.GelExpression;
 import static fr.insset.jeanluc.ete.gel.GelParser.IntegerLiteral;
+import fr.insset.jeanluc.ete.gel.Step;
 import fr.insset.jeanluc.ete.gel.Sub;
 import fr.insset.jeanluc.ete.gel.VariableDefinition;
 import fr.insset.jeanluc.ete.meta.model.constraint.Postcondition;
@@ -11,10 +13,12 @@ import fr.insset.jeanluc.ete.meta.model.core.PrimitiveDataTypes;
 import fr.insset.jeanluc.ete.meta.model.core.impl.Factories;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
+import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.impl.EteModelImpl;
 import fr.insset.jeanluc.ete.meta.model.types.TypedElement;
 import fr.insset.jeanluc.meta.model.io.ModelReader;
+import fr.insset.jeanluc.util.factory.FactoryMethods;
 import fr.insset.jeanluc.xmi.io.impl.XmlModelReader;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -153,8 +157,36 @@ public class TreeBuilderTest {
     //========================================================================//
 
     @Test
+    public void testSimpleAttribute() throws InstantiationException, IOException, IllegalAccessException {
+        System.out.println("simple attribute");
+        readModel();
+        String specificationAsString = "startTime";
+        AttributeNav    expectedResult = new AttributeNavImpl();
+        expectedResult.setToFeature(sessionClass.getOwnedAttribute("startTime"));
+        testAny(expectedResult, specificationAsString, model, sessionClass);
+    }
+
+    @Test
     public void testSimpleNavigation() throws InstantiationException, IOException, IllegalAccessException {
         System.out.println("simple navigation");
+        readModel();
+        String specificationAsString = "test.qcm";
+        AttributeNav toTest = new AttributeNavImpl();
+        MofProperty testAttribute = sessionClass.getOwnedAttribute("test");
+        toTest.setToFeature(testAttribute);                                                      
+        AttributeNav toQcm = new AttributeNavImpl();
+        toQcm.setToFeature(((MofClass)testAttribute.getType()).getOwnedAttribute("qcm"));
+        List<GelExpression> operands = FactoryMethods.newList(GelExpression.class);
+        operands.add(toTest);
+        toQcm.setOperand(operands);
+        testAny(toQcm, specificationAsString, model, sessionClass);
+    }
+
+
+    // The expected result is not built yet so the test is not available
+//    @Test
+    public void testNotSoSimpleNavigation() throws InstantiationException, IOException, IllegalAccessException {
+        System.out.println("not so simple navigation");
         readModel();
         List<Postcondition> allPostconditions = computeMarkOperation.getPostconditions();
         Postcondition postCondition = allPostconditions.get(0);
@@ -172,6 +204,7 @@ public class TreeBuilderTest {
         GelExpression abstractGelExpression = GelParserWrapper.buildAbstractTree(inExpression, inModel, inContext);
         compare(expectedResult, abstractGelExpression);
     }
+
 
     private void compare(GelExpression expectedResult, GelExpression abstractGelExpression) {
         Class   expectedClass = expectedResult.getClass();
@@ -194,10 +227,14 @@ public class TreeBuilderTest {
             LiteralImpl expectedLiteral = (LiteralImpl) expectedResult;
             LiteralImpl gottenLiteral   = (LiteralImpl) abstractGelExpression;
             assertEquals(expectedLiteral.getValueAsString(), gottenLiteral.getValueAsString());
+        } else if (expectedResult instanceof Step) {
+            assertTrue(abstractGelExpression instanceof Step);
         }
     }
 
 
+    //========================================================================//
+    //                    S E T   U P   U T I L I T I E S                     //
     //========================================================================//
 
 
@@ -216,6 +253,7 @@ public class TreeBuilderTest {
         add.setOperand(operands);
         return add;
     }
+
 
     public Sub  buildSub(GelExpression left, GelExpression right) {
         Sub     add = new SubImpl();
@@ -262,29 +300,31 @@ public class TreeBuilderTest {
      * @param inModel
      * @return 
      */
+/*
     protected GelContext    createContext(EteModel inModel) {
-        GelContext  result = new GelContextImpl();
-        
         MofClass    selfClass = (MofClass) inModel.getElementByName("MCQ");
         VariableDefinition  self = new VariableDefinitionImpl();
         self.setIdentifier("self");
         self.setValue(selfClass);
-        result.set("self", self);
 
         VariableDefinition  model = new VariableDefinitionImpl();
         model.setIdentifier("model");
+        GelContext  result = new GelContextImpl(inModel, sessionClass, sessionClass);
+        result.set("self", self);
         result.set("model", model);
 
         return result;
     }
+*/
 
+/*
     protected void addVariable(GelContext inoutContext, String inName, Object inValue) {
         VariableDefinition  variable = new VariableDefinitionImpl();
         variable.setIdentifier(inName);
         variable.setValue(inValue);
         inoutContext.set(inName, variable);        
     }
-
+*/
 
 }
 

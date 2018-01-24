@@ -6,6 +6,7 @@
 ################################################################################
 package fr.insset.jeanluc.ete.${dialect.i2lc($projectName)};
 
+
 import javax.annotation.Generated;
 
 
@@ -30,9 +31,11 @@ public interface ${dialect.i2uc($projectName)}Context<T> {
      */
     public T        resolve(String inString);
     /**
-     * Adds a local variable
+     * Looks for a collection operation whose identifier is the value of
+     * <code>inString</code>
      */
-//    public void     set${dialect.i2uc($projectName)}(String inString, T inValue);
+    public T        resolveCollOp(String inString);
+
     /**
      * Adds a local variable
      */
@@ -43,7 +46,7 @@ public interface ${dialect.i2uc($projectName)}Context<T> {
     public void     remove(String inString);
 
     /**
-     *
+     * Local variables sets management
      */
     public void push();
     public void pop() ;
