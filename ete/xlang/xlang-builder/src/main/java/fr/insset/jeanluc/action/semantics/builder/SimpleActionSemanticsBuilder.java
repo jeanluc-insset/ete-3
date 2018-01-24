@@ -1,7 +1,6 @@
 package fr.insset.jeanluc.action.semantics.builder;
 
 
-import fr.insset.jeanluc.ete.gel.BinaryOperation;
 import fr.insset.jeanluc.ete.gel.Equal;
 import fr.insset.jeanluc.ete.gel.GelExpression;
 import fr.insset.jeanluc.ete.gel.VariableDefinition;
@@ -71,15 +70,6 @@ public class SimpleActionSemanticsBuilder extends DynamicVisitorSupport {
     //========================================================================//
 
 
-    /**
-     * 
-     * @param inBinaryOperation
-     * @param inParameters
-     * @return 
-     */
-    public BinaryOperation visitBinaryOperation(BinaryOperation inBinaryOperation, Object... inParameters) {
-        return inBinaryOperation;
-    }
 
 
 

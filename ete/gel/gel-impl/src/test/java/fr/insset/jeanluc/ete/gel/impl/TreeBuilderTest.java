@@ -1,5 +1,5 @@
-
 package fr.insset.jeanluc.ete.gel.impl;
+
 
 import fr.insset.jeanluc.ete.gel.AttributeNav;
 import fr.insset.jeanluc.ete.gel.GelContext;

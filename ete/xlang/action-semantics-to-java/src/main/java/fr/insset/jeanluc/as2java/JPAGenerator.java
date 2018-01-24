@@ -6,6 +6,12 @@ package fr.insset.jeanluc.as2java;
 import fr.insset.jeanluc.action.semantics.builder.EnhancedMofOperationImpl;
 import fr.insset.jeanluc.action.semantics.builder.StatementContainer;
 import fr.insset.jeanluc.el.dialect.JavaDialect;
+import fr.insset.jeanluc.ete.gel.GelExpression;
+import fr.insset.jeanluc.ete.gel.Nav;
+import fr.insset.jeanluc.ete.gel.Self;
+import fr.insset.jeanluc.ete.gel.Step;
+import fr.insset.jeanluc.ete.gel.StringLiteral;
+import fr.insset.jeanluc.ete.gel.VariableDefinition;
 import fr.insset.jeanluc.ete.meta.model.constraint.Condition;
 import static fr.insset.jeanluc.ete.meta.model.core.PrimitiveDataTypes.FLOAT_TYPE;
 import static fr.insset.jeanluc.ete.meta.model.core.PrimitiveDataTypes.INT_TYPE;
@@ -25,14 +31,6 @@ import fr.insset.jeanluc.ete.xlang.Statement;
 import fr.insset.jeanluc.ete.xlang.VariableDeclaration;
 import fr.insset.jeanluc.ete.xlang.WhileDoLoop;
 import fr.insset.jeanluc.ete.xlang.generator.Generator;
-import fr.insset.jeanluc.gel.CollectionOperationExpression;
-import fr.insset.jeanluc.gel.GelExpression;
-import fr.insset.jeanluc.gel.Navigable;
-import fr.insset.jeanluc.gel.Navigation;
-import fr.insset.jeanluc.gel.Self;
-import fr.insset.jeanluc.gel.StringLiteral;
-import fr.insset.jeanluc.gel.VariableDefinition;
-import fr.insset.jeanluc.gel.VariableReference;
 import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -178,9 +176,10 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
         GenerationInformation info = new GenerationInformation();
         output.print(indent);
         GelExpression leftValue = inAssignment.getLeftValue();
-        if (leftValue instanceof VariableReference) {
-            VariableReference   variable = (VariableReference) leftValue;
-            VariableDefinition declaration = variable.getDeclaration();
+        if (leftValue instanceof VariableDefinition) {
+//            VariableDefinitino   variable = (VariableReference) leftValue;
+//            VariableDefinition declaration = variable.getDeclaration();
+            VariableDefinition declaration = (VariableDefinition)leftValue;
             String identifier = declaration.getIdentifier();
             if ("result".equals(identifier)) {
                 output.print("return ");
@@ -191,7 +190,7 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
             }
             genericVisit(inAssignment.getValue(), parameters);
         }
-        else if (leftValue instanceof Navigation) {
+        else if (leftValue instanceof Nav) {
             info.leftRight = LEFT_RIGHT.LEFT;
             genericVisit(leftValue, output, indent, info);
             output.print("(");
@@ -348,9 +347,10 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
     //========================================================================//
 
 
-    public Object gelVisitVariableReference(VariableReference inReference, Object... inParameters) {
+    public Object gelVisitVariableReference(VariableDefinition inReference, Object... inParameters) {
+//    public Object gelVisitVariableReference(VariableReference inReference, Object... inParameters) {
         PrintWriter output = (PrintWriter) inParameters[0];
-        output.print(inReference.getDeclaration().getIdentifier());
+        output.print(inReference/*.getDeclaration()*/.getIdentifier());
         return inReference;
     }
 
@@ -384,7 +384,7 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
  * When the navigation is 1 -> * and is not terminale we use stream
  * When the navigation is * -> * we use flatmap
  */
-    public Navigation gelVisitNavigation(Navigation inNavigation, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    public Nav gelVisitNav(Nav inNavigation, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         PrintWriter output      = (PrintWriter)inParameters[0];
         String      indent      = (String)inParameters[1];
         GenerationInformation info;
@@ -397,14 +397,15 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
         }
         LEFT_RIGHT  leftRight   = info.leftRight;
         info.leftRight= LEFT_RIGHT.RIGHT;
-        Navigable from = inNavigation.getFrom();
+        Step from = (Step) inNavigation.getOperand().get(0);
         genericVisit(from, output, indent, info);
-        if (from instanceof Navigation) {
+        if (from instanceof Step) {
             output.print("\n");
             output.print(indent);
             output.print("        ");
         }
         MofType fromType = from.getType();
+/*
         Feature toFeature = inNavigation.getToFeature();
         info.leftRight = leftRight;
         if (fromType instanceof MofCollection) {
@@ -438,10 +439,12 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
                 output.print(".stream()");
             }
         }
-        
+*/
         return inNavigation;
     }
 
+
+/*
     public CollectionOperationExpression gelVisitCollectionOperationExpression(CollectionOperationExpression inCollectionOperation, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         PrintWriter output      = (PrintWriter)inParameters[0];
         // TODO : look for the right accumulator ; its syntax is not the
@@ -456,7 +459,7 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
         output.print(')');        
         return inCollectionOperation;
     }
-
+*/
     public Self     gelVisitSelf(Self inSelf, Object... inParameters) {
         PrintWriter output      = (PrintWriter)inParameters[0];
         output.print("this");
@@ -485,6 +488,7 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
     }
 
 
+/*
     public MofOperation mofVisitMofOperation(MofOperation inOperation, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         PrintWriter output = (PrintWriter)inParameters[0];
         output.print(inOperation.getName());
@@ -503,7 +507,7 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
         output.print(')');
         return inOperation;
     }
-
+*/
 
     //========================================================================//
     //                            U T I L I T I E S                           //
@@ -542,7 +546,7 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
         public String       indentation;
         public MofOperation operation;
         public LEFT_RIGHT   leftRight;
-        public Navigation   caller;
+        public Nav          caller;
         public boolean      top;
     }       // GenerationInformation
 

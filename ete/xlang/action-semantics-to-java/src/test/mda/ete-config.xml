@@ -17,7 +17,7 @@
         <transformation-set
                 dialect="fr.insset.jeanluc.as2java.JavaGenerator">
             <!-- reads the model -->
-            <model url="../../../../../../src/test/mda/models/QCM_complet.xml"/>
+            <model url="../../../../../../src/test/mda/models/full_MCQ.xml"/>
 
 <!--            <velocity template="templates/pojo-with-operations.vm"
                     items="${classes}"

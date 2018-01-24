@@ -10,7 +10,6 @@ import fr.insset.jeanluc.ete.meta.model.core.PrimitiveDataTypes;
 import fr.insset.jeanluc.ete.meta.model.core.impl.Factories;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.impl.EteModelImpl;
-import fr.insset.jeanluc.ete.xlang.util.ActionSemanticsUtil;
 import fr.insset.jeanluc.xmi.io.impl.XmlModelReader;
 import fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor;
 import java.io.File;
@@ -85,14 +84,14 @@ public class JavaGeneratorTest {
      * Test of the full process on a "real" model.
      */
     @Test
-    public void testJavaGeneration() throws InstantiationException, IllegalAccessException, IOException, EteException {
+    public void testJavaGeneration() throws InstantiationException, IllegalAccessException, IOException, EteException, ClassNotFoundException {
         System.out.println("Java generation");
 
         // 1- initialize frameworks
         // 1-a basic factories
         Factories.init();
         // 1-b xlang factories
-        ActionSemanticsUtil.init();
+        Class.forName("fr.insset.jeanluc.action.semantics.builder.ActionSemanticsAction");
 
         // 2- read a model
         // 2-a prepare a reader
@@ -108,7 +107,6 @@ public class JavaGeneratorTest {
         VelocityAction    action = new VelocityAction();
         action.setModel(model);
         action.addParameter(BASE_DIR, "src/test/mda/");
-        JavaGenerator generator;
         action.addParameter("dialect", "fr.insset.jeanluc.as2java.JavaGenerator");
 //        action.addParameter("output_base", "target/test/generated-sources/ete/");
         action.addParameter("output_base", "target/generated-test-sources/ete/");
@@ -116,6 +114,8 @@ public class JavaGeneratorTest {
         action.addParameter("target", "${current.owningPackage.getQualifiedName().replace('::', '/').replace('.', '/')}/${current.name}.java");
         action.addParameter("template", "templates/pojo-with-operations.vm");
         action.process(model);
+
+        JavaGenerator generator;
 
         // 4- check the result
         // 4-1 compile generated files
@@ -134,8 +134,8 @@ public class JavaGeneratorTest {
 //                    optionList, 
 //                    null, 
 //                    compilationUnit);
-//        // 5-2 instantiate some classes
-//        // 5-3 run an operation
+//        // 4-2 instantiate some classes
+//        // 4-3 run an operation
 //        if (task.call()) {
 //            // Load and execute
 //            System.out.println("Yipe");

@@ -12,6 +12,7 @@ import fr.insset.jeanluc.ete.gel.impl.VariableDefinitionImpl;
 import fr.insset.jeanluc.ete.meta.model.constraint.Condition;
 import fr.insset.jeanluc.ete.meta.model.constraint.Postcondition;
 import fr.insset.jeanluc.ete.meta.model.constraint.Precondition;
+import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
 import fr.insset.jeanluc.ete.meta.model.types.MofType;
@@ -114,7 +115,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
 
         // 2- build expression as an abstract tree
         // TODO : use an abstract factory
-        GelContext      gelContext            = new GelContextImpl();
+        GelContext      gelContext            = new GelContextImpl(model, (MofClass)context.getOwningMofClass(), context);
         gelContext.set("model", model);
         gelContext.set("context", context);
         gelContext.set("contextualClass", parser);

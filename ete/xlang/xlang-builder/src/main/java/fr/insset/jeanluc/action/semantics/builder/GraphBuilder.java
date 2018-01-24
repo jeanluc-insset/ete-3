@@ -5,8 +5,9 @@ import fr.insset.jeanluc.ete.gel.And;
 import fr.insset.jeanluc.ete.gel.AtPre;
 import fr.insset.jeanluc.ete.gel.Equal;
 import fr.insset.jeanluc.ete.gel.GelExpression;
-import fr.insset.jeanluc.ete.gel.Navigation;
+import fr.insset.jeanluc.ete.gel.Nav;
 import fr.insset.jeanluc.ete.gel.Operation;
+import fr.insset.jeanluc.ete.gel.Step;
 import fr.insset.jeanluc.ete.meta.model.constraint.Postcondition;
 import fr.insset.jeanluc.ete.meta.model.emof.Feature;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
@@ -135,24 +136,9 @@ public class GraphBuilder extends DynamicVisitorSupport {
     //========================================================================//
 
 
-    public Navigation       visitNavigation(Navigation inNavigation, Object... inParameters) {
-        Feature toFeature = inNavigation.getToFeature();
-        if (toFeature instanceof MofProperty) {
-            MofType currentType = toFeature.getType();
-            while (currentType instanceof MofCollection) {
-                MofCollection coll = (MofCollection) currentType;
-                currentType = coll.getBaseType();
-            }
-            if (currentType instanceof MofClass) {
-                MofClass mofClass = (MofClass) currentType;
-                
-            }
-        }
-        return inNavigation;
-    }       // visitNavigation
 
     public AtPre visitAtPre(AtPre inAtPre, Object... inParameters) {
-        Navigation navigation = inAtPre.getNavigation();
+        Step navigation = (Step) inAtPre.getOperand();
         navigation.getToFeature();
         return inAtPre;
     }

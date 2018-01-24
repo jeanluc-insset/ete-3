@@ -20,6 +20,10 @@ import fr.insset.jeanluc.xmi.io.impl.XmlModelReader;
 public class ActionSemanticsAction extends ActionSupport {
 
 
+    /**
+     * Registers some classes in the local factory registry.
+     * When registering the action, the class is loaded and this block is run.
+     */
     static {
         FactoryRegistry registry = FactoryRegistry.getRegistry();
         registry.registerFactory(MOF_CLASS, EnhancedMofClassImpl.class);
