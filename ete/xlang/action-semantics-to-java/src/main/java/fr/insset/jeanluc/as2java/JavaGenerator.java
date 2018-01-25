@@ -1,8 +1,6 @@
 package fr.insset.jeanluc.as2java;
 
 
-
-
 import fr.insset.jeanluc.action.semantics.builder.EnhancedMofOperationImpl;
 import fr.insset.jeanluc.action.semantics.builder.StatementContainer;
 import fr.insset.jeanluc.el.dialect.JavaDialect;
@@ -49,17 +47,18 @@ import java.util.logging.Logger;
  * It overrides the getOperationBody method with the cross compilation of
  * all the statements associated to the method.
  * 
- * In the QCM example, the Passage.calculeNote should lead to the following
+ * In the QCM example, the Session.computeMark should lead to the following
  * code&nbsp;:
  <code><pre>
-    return this.getQuestionsPosees()
+    return this.getAskedQuestions()
         .stream()
-        .flatMap(q -> q.getReponsesFournies().stream())
-        .map(r -> r.getReponse())
-        .mapToDouble(r -> r.getValeur())
+        .flatMap(q -> q.getCheckedAnswers().stream())
+        .map(r -> r.getAnswer())
+        .mapToDouble(r -> r.getValue())
         .sum();
 </pre></code>
  * We generate that code visiting each navigation.
+ * When the post-assertion is "return = ..." we 
  * When the navigation is * -> 1 we use map
  * When the navigation is 1 -> * and is "terminal" we use the accessor
  * When the navigation is 1 -> * and is not terminale we use stream
@@ -113,7 +112,7 @@ public class JavaGenerator extends DynamicVisitorSupport implements Generator, J
         StringBuilder    buffer = new StringBuilder();
         String[] name = inCondition.getName().split(" ");
         for (String aPiece : name) {
-            buffer.append(aPiece.substring(0, 1).toUpperCase() + aPiece.substring(1));
+            buffer.append(i2uc(aPiece));
         }
         return buffer.toString();
     }
@@ -225,7 +224,7 @@ public class JavaGenerator extends DynamicVisitorSupport implements Generator, J
         output.println(") {");
         output.print(indent);
         output.print("}");
-        Statement elsePart = inConditional.getElsePart();
+        Statement elsePart = (Statement) inConditional.getOperand().get(0);
         if (elsePart != null) {
             output.println(" else {");
             output.print(indent);
@@ -243,32 +242,32 @@ public class JavaGenerator extends DynamicVisitorSupport implements Generator, J
         String      indent = (String) inParameters[1];
         output.print(indent);
         output.print("for (");
-        List<Statement> initialization = inForLoop.getInitialization();
+        Statement initialization = (Statement) inForLoop.getOperand().get(0);
         boolean     notTheFirstOne = false;
-        for (Statement anInitializationStatement : initialization) {
-            if (notTheFirstOne) {
-                output.print(", ");
-            }
-            else {
-                notTheFirstOne = true;
-            }
-            genericVisit(anInitializationStatement, inParameters);
-        }
+//        for (Statement anInitializationStatement : initialization) {
+//            if (notTheFirstOne) {
+//                output.print(", ");
+//            }
+//            else {
+//                notTheFirstOne = true;
+//            }
+//            genericVisit(anInitializationStatement, inParameters);
+//        }
         output.print(" ; ");
         GelExpression condition = inForLoop.getCondition();
         genericVisit(condition, inParameters);
         output.print(" ; ");
-        List<Statement> incrementation = inForLoop.getIncrementation();
+        Statement incrementation = (Statement) inForLoop.getOperand().get(0);
         notTheFirstOne = false;
-        for (Statement anIncrementationStatement : incrementation) {
-            if (notTheFirstOne) {
-                output.print(", ");
-            }
-            else {
-                notTheFirstOne = true;
-            }
-            genericVisit(anIncrementationStatement, inParameters);
-        }
+//        for (Statement anIncrementationStatement : incrementation) {
+//            if (notTheFirstOne) {
+//                output.print(", ");
+//            }
+//            else {
+//                notTheFirstOne = true;
+//            }
+//            genericVisit(anIncrementationStatement, inParameters);
+//        }
         return inForLoop;
     }
 
@@ -281,7 +280,7 @@ public class JavaGenerator extends DynamicVisitorSupport implements Generator, J
         GelExpression condition = inLoop.getCondition();
         genericVisit(condition, output);
         output.println(") {");
-        asVisitBlock(inLoop.getBody(), output, indent + indentation);
+        asVisitBlock(inLoop.getOperand(), output, indent + indentation);
         output.print(indent);
         output.println("}");
         return inLoop;
@@ -293,7 +292,7 @@ public class JavaGenerator extends DynamicVisitorSupport implements Generator, J
         String      indent = (String) inParameters[1];
         output.print(indent);
         output.print("do {");
-        asVisitBlock(inLoop.getBody(), output, indent + indentation);
+        asVisitBlock(inLoop.getOperand(), output, indent + indentation);
         output.print(indent);
         output.print("} while (");
         GelExpression condition = inLoop.getCondition();
@@ -303,8 +302,8 @@ public class JavaGenerator extends DynamicVisitorSupport implements Generator, J
     }
 
 
-    protected List<Statement> asVisitBlock(List<Statement> inBlock, PrintWriter inOutput, String inIndent) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        for (Statement aStatement : inBlock) {
+    protected List<? super Statement> asVisitBlock(List<? super Statement> inBlock, PrintWriter inOutput, String inIndent) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        for (Object aStatement : inBlock) {
             genericVisit(aStatement, inOutput, inIndent);
         }
         return inBlock;

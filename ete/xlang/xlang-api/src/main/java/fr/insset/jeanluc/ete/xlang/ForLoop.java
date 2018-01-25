@@ -1,7 +1,6 @@
 package fr.insset.jeanluc.ete.xlang;
 
 
-import fr.insset.jeanluc.ete.xlang.Statement;
 import java.util.List;
 import java.util.Set;
 import javax.annotation.Generated;
@@ -11,10 +10,6 @@ import javax.annotation.Generated;
 public interface ForLoop  extends fr.insset.jeanluc.ete.xlang.Loop  {
 
 
-    public List<Statement> getInitialization();
-    public void setInitialization(List<Statement> inValue);
-    public List<Statement> getIncrementation();
-    public void setIncrementation(List<Statement> inValue);
         
 
     //========================================================================//

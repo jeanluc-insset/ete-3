@@ -64,6 +64,11 @@
             <artifactId>xlang-builder</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>el-evaluator</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -78,6 +83,11 @@
                         <artifactId>util</artifactId>
                         <version>1.1</version>
                     </dependency>
+                    <dependency>
+                        <groupId>${project.groupId}</groupId>
+                        <artifactId>el-evaluator</artifactId>
+                        <version>${project.version}</version>
+                    </dependency>
                 </dependencies>
                 <executions>
                     <execution>
@@ -91,8 +101,9 @@
                                 <additionalClasspathElement>target/classes</additionalClasspathElement>
                                 <additionalClasspathElement>../xlang-api/target/classes</additionalClasspathElement>
                                 <additionalClasspathElement>../../../../util/target/classes</additionalClasspathElement>
-                                <additionalClasspathElement>../../el-evaluator/target/classes</additionalClasspathElement>
-                                <additionalClasspathElement>../../meta-model/target/classes</additionalClasspathElement>
+                                <additionalClasspathElement>../../el/el-evaluator/target/classes</additionalClasspathElement>
+                                <additionalClasspathElement>../../meta-model/meta-model-api/target/classes</additionalClasspathElement>
+                                <additionalClasspathElement>../../meta-model/xmi-io/target/classes</additionalClasspathElement>
                                 <additionalClasspathElement>../../gel/gel-api/target/classes</additionalClasspathElement>
                             </additionalClasspathElements>
                         </configuration>

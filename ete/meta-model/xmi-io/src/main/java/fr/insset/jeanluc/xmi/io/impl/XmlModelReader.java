@@ -286,9 +286,9 @@ public class XmlModelReader implements ModelReader {
                 newInstance.setId(id);
                 inModel.addElement(newInstance);
                 Node parentNode = domElement.getParentNode();
-                String parentName = parentNode instanceof Element ? ((Element)parentNode).getAttribute("name"):"";
                 String parentId   = parentNode instanceof Element ? ((Element)parentNode).getAttribute("xmi:id"):"";
                 NamedElement parentNamedElement = inModel.getElementById(parentId);
+//                String parentName = parentNode instanceof Element ? ((Element)parentNode).getAttribute("name"):"";
 //                PackageableElement parentElement = inModel.getElementByName(parentName);
                 visitors : for (DynamicVisitorSupport visitor : getVisitors()) {
                     try {

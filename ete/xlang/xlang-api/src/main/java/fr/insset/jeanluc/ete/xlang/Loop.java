@@ -2,7 +2,6 @@ package fr.insset.jeanluc.ete.xlang;
 
 
 import fr.insset.jeanluc.ete.gel.GelExpression;
-import fr.insset.jeanluc.ete.xlang.Statement;
 import java.util.List;
 import java.util.Set;
 import javax.annotation.Generated;
@@ -12,8 +11,6 @@ import javax.annotation.Generated;
 public interface Loop  extends fr.insset.jeanluc.ete.xlang.Statement  {
 
 
-    public List<Statement> getBody();
-    public void setBody(List<Statement> inValue);
     public GelExpression getCondition();
     public void setCondition(GelExpression inValue);
         

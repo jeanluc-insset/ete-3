@@ -1,3 +1,4 @@
+
 package fr.insset.jeanluc.as2java;
 
 
@@ -17,6 +18,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -56,6 +58,7 @@ public class JavaGeneratorTest {
     public final static String      FOLDER  = "fr/insset/jeanluc/ete";
     public final static String      PACKAGE = FOLDER.replace("/", ".");
     public final static String      INDENT  = "    ";
+    public final static String      TARGET_DIR = "target/generated/ete/";  // "target/generated-test-sources/ete/"
 
 
     public final String     MODEL_PATH = "../../../src/test/mda/models/full_MCQ.xml";
@@ -84,7 +87,7 @@ public class JavaGeneratorTest {
      * Test of the full process on a "real" model.
      */
     @Test
-    public void testJavaGeneration() throws InstantiationException, IllegalAccessException, IOException, EteException, ClassNotFoundException {
+    public void testJavaGeneration() throws InstantiationException, IllegalAccessException, IOException, EteException, ClassNotFoundException, NoSuchMethodException, IllegalArgumentException, InvocationTargetException {
         System.out.println("Java generation");
 
         // 1- initialize frameworks
@@ -109,7 +112,7 @@ public class JavaGeneratorTest {
         action.addParameter(BASE_DIR, "src/test/mda/");
         action.addParameter("dialect", "fr.insset.jeanluc.as2java.JavaGenerator");
 //        action.addParameter("output_base", "target/test/generated-sources/ete/");
-        action.addParameter("output_base", "target/generated-test-sources/ete/");
+        action.addParameter("output_base", TARGET_DIR);
         action.addParameter("items", "${classes}");
         action.addParameter("target", "${current.owningPackage.getQualifiedName().replace('::', '/').replace('.', '/')}/${current.name}.java");
         action.addParameter("template", "templates/pojo-with-operations.vm");
@@ -118,51 +121,51 @@ public class JavaGeneratorTest {
         JavaGenerator generator;
 
         // 4- check the result
+        // We cannot wait for maven to compile the generated sources since
         // 4-1 compile generated files
-//        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-//        StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
-//        List<String> optionList = new ArrayList<String>();
-//        optionList.add("-classpath");
-//        optionList.add(System.getProperty("java.class.path") + ":dist/InlineCompiler.jar");
+        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+        StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
+        List<String> optionList = new ArrayList<String>();
+        optionList.add("-classpath");
+        optionList.add(System.getProperty("java.class.path") + ":dist/InlineCompiler.jar");
+        
+        File        helloWorldJava = new File(TARGET_DIR + "fr/insset/jeanluc/mda/qcm/modele/Session.java");
 
-//        Iterable<? extends JavaFileObject> compilationUnit
-//                        = fileManager.getJavaFileObjectsFromFiles(Arrays.asList(helloWorldJava));
-//                JavaCompiler.CompilationTask task = compiler.getTask(
-//                    null, 
-//                    fileManager, 
-//                    diagnostics, 
-//                    optionList, 
-//                    null, 
-//                    compilationUnit);
-//        // 4-2 instantiate some classes
-//        // 4-3 run an operation
-//        if (task.call()) {
-//            // Load and execute
-//            System.out.println("Yipe");
-//            // Create a new custom class loader, pointing to the directory that contains the compiled
-//            // classes, this should point to the top of the package structure!
-//            URLClassLoader classLoader = new URLClassLoader(new URL[]{new File("./").toURI().toURL()});
-//            // Load the class from the classloader by name....
-//            Class<?> loadedClass = classLoader.loadClass("testcompile.HelloWorld");
-//            // Create a new instance...
-//            Object obj = loadedClass.newInstance();
-//            // Santity check
-//            if (obj instanceof DoStuff) {
-//                // Cast to the DoStuff interface
-//                DoStuff stuffToDo = (DoStuff)obj;
-//                // Run it baby
-//                stuffToDo.doStuff();
-//            }
-//            //************************************************************************************************* Load and execute ** /
-//        } else {
+        Iterable<? extends JavaFileObject> compilationUnit
+                        = fileManager.getJavaFileObjectsFromFiles(Arrays.asList(helloWorldJava));
+                JavaCompiler.CompilationTask task = compiler.getTask(
+                    null, 
+                    fileManager, 
+                    null, // diagnostics, 
+                    optionList, 
+                    null, 
+                    compilationUnit);
+        // 4-2 instantiate some classes
+        // 4-3 run an operation
+        if (task.call()) {
+            // Load and execute
+            System.out.println("Yipe");
+            // Create a new custom class loader, pointing to the directory that contains the compiled
+            // classes, this should point to the top of the package structure!
+            URLClassLoader classLoader = new URLClassLoader(new URL[]{new File("./target/generated-test-sources/ete/").toURI().toURL()});
+            // Load the class from the classloader by name....
+            Class sessionClass = classLoader.loadClass("fr.insset.jeanluc.mda.qcm.modele.Session");
+            // Create a new instance...
+            Object session = sessionClass.newInstance();
+            Method method = sessionClass.getMethod("computeMark", new Class[0]);
+            double computeMark = (double) method.invoke(session, new Object[0]);
+            System.out.println("computeMark() -> " + computeMark);
+            
+            //************************************************************************************************* Load and execute ** /
+        } else {
 //            for (Diagnostic<? extends JavaFileObject> diagnostic : diagnostics.getDiagnostics()) {
 //                System.out.format("Error on line %d in %s%n",
 //                        diagnostic.getLineNumber(),
 //                        diagnostic.getSource().toUri());
 //            }
-//        }       // task.call() not OK
+        }       // task.call() not OK
 
-//        fileManager.close();
+        fileManager.close();
     }       // testJavaGeneration method
 
 

@@ -15,7 +15,7 @@
     <transformation-set output_base="../../as-target/target/generated-sources/ete/">
 
         <transformation-set
-                dialect="fr.insset.jeanluc.as2java.JavaGenerator">
+                >
             <!-- reads the model -->
             <model url="../../../../../../src/test/mda/models/full_MCQ.xml"/>
 
@@ -23,10 +23,11 @@
                     items="${classes}"
                     var="current"
                     target='ete/${current.name}.java'/>-->
-            <velocity template="templates/pojo-with-operations.vm"
+<!--            <velocity template="templates/pojo-with-operations.vm"
                     items="${classes}"
                     var="current"
-                    target='${dialect.getQualifiedName(current.owningPackage)}/${current.name}.java'/>
+                    dialect="fr.insset.jeanluc.as2java.JavaGenerator"
+                    target='${dialect.getQualifiedName(current.owningPackage)}/${current.name}.java'/>-->
             <!-- generates an annotation for each precondition -->
 <!--            <velocity template="templates/parameter-constraint-annotation.vm"
                     items="${classes}"

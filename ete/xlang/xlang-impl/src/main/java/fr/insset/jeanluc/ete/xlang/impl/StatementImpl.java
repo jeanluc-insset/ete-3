@@ -8,7 +8,7 @@ import java.util.Set;
 
 
 
-public class StatementImpl  implements Statement {
+public class StatementImpl  extends fr.insset.jeanluc.ete.gel.impl.GelExpressionImpl  implements Statement {
 
 
     //========================================================================//

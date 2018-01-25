@@ -114,7 +114,8 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
         StringBuilder    buffer = new StringBuilder();
         String[] name = inCondition.getName().split(" ");
         for (String aPiece : name) {
-            buffer.append(aPiece.substring(0, 1).toUpperCase() + aPiece.substring(1));
+            buffer.append(i2uc(aPiece));
+//            buffer.append(aPiece.substring(0, 1).toUpperCase() + aPiece.substring(1));
         }
         return buffer.toString();
     }
@@ -226,7 +227,7 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
         output.println(") {");
         output.print(indent);
         output.print("}");
-        Statement elsePart = inConditional.getElsePart();
+        Statement elsePart = (Statement) inConditional.getOperand().get(1);
         if (elsePart != null) {
             output.println(" else {");
             output.print(indent);
@@ -244,9 +245,10 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
         String      indent = (String) inParameters[1];
         output.print(indent);
         output.print("for (");
-        List<Statement> initialization = inForLoop.getInitialization();
+        Statement initialization = (Statement) inForLoop.getOperand().get(0);
         boolean     notTheFirstOne = false;
-        for (Statement anInitializationStatement : initialization) {
+        for (Object aStatement : initialization.getOperand()) {
+            Assignment anInitializationStatement = (Assignment) aStatement;
             if (notTheFirstOne) {
                 output.print(", ");
             }
@@ -259,17 +261,17 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
         GelExpression condition = inForLoop.getCondition();
         genericVisit(condition, inParameters);
         output.print(" ; ");
-        List<Statement> incrementation = inForLoop.getIncrementation();
-        notTheFirstOne = false;
-        for (Statement anIncrementationStatement : incrementation) {
-            if (notTheFirstOne) {
-                output.print(", ");
-            }
-            else {
-                notTheFirstOne = true;
-            }
-            genericVisit(anIncrementationStatement, inParameters);
-        }
+        Statement incrementation = (Statement) inForLoop.getOperand().get(2);
+//        notTheFirstOne = false;
+//        for (Statement anIncrementationStatement : incrementation) {
+//            if (notTheFirstOne) {
+//                output.print(", ");
+//            }
+//            else {
+//                notTheFirstOne = true;
+//            }
+//            genericVisit(anIncrementationStatement, inParameters);
+//        }
         return inForLoop;
     }
 
@@ -282,7 +284,7 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
         GelExpression condition = inLoop.getCondition();
         genericVisit(condition, output);
         output.println(") {");
-        asVisitBlock(inLoop.getBody(), output, indent + indentation);
+        asVisitBlock(inLoop.getOperand(), output, indent + indentation);
         output.print(indent);
         output.println("}");
         return inLoop;
@@ -294,7 +296,7 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
         String      indent = (String) inParameters[1];
         output.print(indent);
         output.print("do {");
-        asVisitBlock(inLoop.getBody(), output, indent + indentation);
+        asVisitBlock(inLoop.getOperand(), output, indent + indentation);
         output.print(indent);
         output.print("} while (");
         GelExpression condition = inLoop.getCondition();
@@ -304,8 +306,8 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
     }
 
 
-    protected List<Statement> asVisitBlock(List<Statement> inBlock, PrintWriter inOutput, String inIndent) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        for (Statement aStatement : inBlock) {
+    protected List<? super Statement> asVisitBlock(List<? super Statement> inBlock, PrintWriter inOutput, String inIndent) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        for (Object aStatement : inBlock) {
             genericVisit(aStatement, inOutput, inIndent);
         }
         return inBlock;
@@ -477,11 +479,11 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
         GenerationInformation info = (GenerationInformation)inParameters[2];
         if (info.leftRight == LEFT_RIGHT.LEFT) {
             output.print("set");
-            output.print(upperCaseInit(inProperty.getName()));
+            output.print(i2uc(inProperty.getName()));
         }
         else {
             output.print("get");
-            output.print(upperCaseInit(inProperty.getName()));
+            output.print(i2uc(inProperty.getName()));
             output.print("()");
         }
         return inProperty;
@@ -523,9 +525,7 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
     }
 
 
-    protected String upperCaseInit(String inString) {
-        return inString.substring(0, 1).toUpperCase() + inString.substring(1);
-    }
+
 
 
     //========================================================================//

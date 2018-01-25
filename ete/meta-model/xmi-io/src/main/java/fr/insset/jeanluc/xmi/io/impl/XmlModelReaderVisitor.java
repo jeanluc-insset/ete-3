@@ -49,6 +49,7 @@ import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
 import static fr.insset.jeanluc.ete.meta.model.emof.MofParameter.MOF_PARAMETER;
 import fr.insset.jeanluc.ete.meta.model.emof.instance.InstanceSpecification;
 import fr.insset.jeanluc.ete.meta.model.emof.instance.Slot;
+import fr.insset.jeanluc.ete.meta.model.types.Classifier;
 import fr.insset.jeanluc.ete.meta.model.types.TypedElement;
 import static fr.insset.jeanluc.xmi.io.impl.XmlUtilities.getElements;
 import static fr.insset.jeanluc.xmi.io.impl.XmlUtilities.getStringValue;
@@ -320,6 +321,12 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
         }
         properties[0].setOpposite(properties[1]);
         properties[1].setOpposite(properties[0]);
+        Classifier firstClass = properties[0].getOwningMofClass();
+        Classifier secondClass = properties[1].getOwningMofClass();
+        if (null != secondClass.getName() && ! "void".equals(secondClass.getName()))
+            firstClass.addDependance(secondClass);
+        if (null != firstClass.getName() && ! "void".equals(firstClass.getName()))
+            secondClass.addDependance(firstClass);
 
         memberEnds = getNamedElements("ownedEnd", "xmi:id", (Element)inParam[2], (EteModel) inParam[1]);
         for (NamedElement aNamedElement : memberEnds) {

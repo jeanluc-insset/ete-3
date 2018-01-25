@@ -75,8 +75,6 @@ public interface JavaDialect extends Dialect {
         }
         if (inType.isCollection()) {
             MofCollection coll = (MofCollection) inType;
-            System.out.println("Type of the coll : " + coll.getName());
-            System.out.println("The type is ordered : " + coll.isOrdered());
             if (coll.isOrdered()) {
                 return "List<" + mt2lt(coll.getBaseType()) + ">";
             }
