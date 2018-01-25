@@ -81,14 +81,31 @@ public class JavaGeneratorTest {
     public void tearDown() {
     }
 
+    /**
+     * This test runs the generators on the model but does not check the result.
+     * It ensures there is no exception during the process.
+     */
+    @Test
+    public void testJavaGeneration() {
+        
+    }
 
 
     /**
-     * Test of the full process on a "real" model.
+     * Test of the full process on a "real" model :<ol>
+     * <li>reads a model</li>
+     * <li>generates classes from the model</li>
+     * <li>compiles the classes</li>
+     * <li>loads some classes by names</li>
+     * <li>instantiates them, connecting the objects through associations</li>
+     * <li>sets some values to properties</li>
+     * <li>runs a method which returns a computed value from these properties</li>
+     * </ol>
+     * Currently, points 1 to 4 are done.
      */
     @Test
-    public void testJavaGeneration() throws InstantiationException, IllegalAccessException, IOException, EteException, ClassNotFoundException, NoSuchMethodException, IllegalArgumentException, InvocationTargetException {
-        System.out.println("Java generation");
+    public void testFullJavaGeneration() throws InstantiationException, IllegalAccessException, IOException, EteException, ClassNotFoundException, NoSuchMethodException, IllegalArgumentException, InvocationTargetException {
+        System.out.println("Full Java generation");
 
         // 1- initialize frameworks
         // 1-a basic factories
@@ -127,12 +144,13 @@ public class JavaGeneratorTest {
         StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
         List<String> optionList = new ArrayList<String>();
         optionList.add("-classpath");
-        optionList.add(System.getProperty("java.class.path") + ":dist/InlineCompiler.jar");
+//        optionList.add(System.getProperty("java.class.path") + ":dist/InlineCompiler.jar");
+        optionList.add(System.getProperty("java.class.path") + ":" + TARGET_DIR);
         
-        File        helloWorldJava = new File(TARGET_DIR + "fr/insset/jeanluc/mda/qcm/modele/Session.java");
+        File        sessionJava = new File(TARGET_DIR + "fr/insset/jeanluc/mda/qcm/modele/Session.java");
 
         Iterable<? extends JavaFileObject> compilationUnit
-                        = fileManager.getJavaFileObjectsFromFiles(Arrays.asList(helloWorldJava));
+                        = fileManager.getJavaFileObjectsFromFiles(Arrays.asList(sessionJava));
                 JavaCompiler.CompilationTask task = compiler.getTask(
                     null, 
                     fileManager, 
@@ -144,10 +162,10 @@ public class JavaGeneratorTest {
         // 4-3 run an operation
         if (task.call()) {
             // Load and execute
-            System.out.println("Yipe");
+            System.out.println("Loading and compiling the files");
             // Create a new custom class loader, pointing to the directory that contains the compiled
             // classes, this should point to the top of the package structure!
-            URLClassLoader classLoader = new URLClassLoader(new URL[]{new File("./target/generated-test-sources/ete/").toURI().toURL()});
+            URLClassLoader classLoader = new URLClassLoader(new URL[]{new File(TARGET_DIR).toURI().toURL()});
             // Load the class from the classloader by name....
             Class sessionClass = classLoader.loadClass("fr.insset.jeanluc.mda.qcm.modele.Session");
             // Create a new instance...
