@@ -50,6 +50,9 @@ import java.util.logging.Logger;
 
 
 /**
+ * 
+ * <br>
+ * 
  * This class is a dialect so it can be used in velocity templates.<br>
  * It overrides the getOperationBody method with the cross compilation of
  * all the statements associated to the method.
@@ -196,13 +199,10 @@ public class JavaGenerator extends DynamicVisitorSupport implements Generator, J
     public Object xlangVisitAssignment(Assignment inAssignment, Object... parameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         PrintWriter output = (PrintWriter) parameters[0];
         String      indent = (String) parameters[1];
-//        GenerationInformation info = new GenerationInformation();
         output.print(indent);
         System.out.println("Indentation in assignment : [" + indent + "]" );
         GelExpression leftValue = inAssignment.getLeftValue();
         if (leftValue instanceof VariableDefinition) {
-//            VariableReference   variable = (VariableReference) leftValue;
-//            VariableDefinition declaration = variable.getDeclaration();
             VariableDefinition declaration = (VariableDefinition) leftValue;
             String identifier = declaration.getName();
             if ("result".equals(identifier)) {
@@ -215,7 +215,6 @@ public class JavaGenerator extends DynamicVisitorSupport implements Generator, J
             genericVisit(inAssignment.getValue(), parameters);
         }
         else if (leftValue instanceof Nav) {
-//            info.leftRight = LEFT_RIGHT.LEFT;
             genericVisit(leftValue, output, indent /*, info*/);
             output.print("(");
             genericVisit(inAssignment.getValue(), parameters);
@@ -412,7 +411,6 @@ public class JavaGenerator extends DynamicVisitorSupport implements Generator, J
     public Flatten gelVisitFlatten(Flatten inFlatten, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         Step left = (Step) inFlatten.getOperand().get(0);
         genericVisit(left.getOperand().get(0), inParameters);
-//        genericVisit(left, inParameters);
         PrintWriter output      = (PrintWriter)inParameters[0];
         String      indent = (String) inParameters[1];
         output.print("\n");
@@ -421,21 +419,11 @@ public class JavaGenerator extends DynamicVisitorSupport implements Generator, J
         output.print(".flatMap(x -> x.get");
         Feature feature = left.getToFeature();
         String  featureName = feature.getName();
-        output.print(featureName.substring(0, 1).toUpperCase());
-        output.print(featureName.substring(1));
+        output.print(i2uc(featureName));
         output.print("().stream())");
         return inFlatten;
     }
 
-//      Source
-//            askedQuestions.checkedAnswers.flatten.answer.value.sum
-
-//      Target
-//            getAskedQuestions().stream().flatMap(x -> x.getCheckedAnswers().stream()).map(x -> x.getAnswer()).mapToDouble(x -> x.getValue()).sum();
-
-//      Realized
-//        getAskedQuestions()
-//            .flatMap(x -> x.getCheckedAnswers)).map(x -> x.getAnswer()).mapToDouble(x -> x.getValue()).sum();
 
     public Collect gelVisitCollect(Collect inCollect, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         PrintWriter output      = (PrintWriter)inParameters[0];
@@ -466,8 +454,7 @@ public class JavaGenerator extends DynamicVisitorSupport implements Generator, J
         }
 
         String  name = inCollect.getToFeature().getName();
-        output.print(name.substring(0,1).toUpperCase());
-        output.print(name.substring(1));
+        output.print(i2uc(name));
         output.print("())");
         return inCollect;
     }
@@ -504,8 +491,7 @@ public class JavaGenerator extends DynamicVisitorSupport implements Generator, J
         output.print("get");
         Feature feature     = inAttributeNav.getToFeature();
         String  featureName = feature.getName();
-        output.print(featureName.substring(0,1).toUpperCase());
-        output.print(featureName.substring(1));
+        output.print(i2uc(featureName));
         output.print("()");
         if (feature.getType().isCollection()) {
             output.print(".stream()");
@@ -522,18 +508,6 @@ public class JavaGenerator extends DynamicVisitorSupport implements Generator, J
 
     public MofProperty mofVisitMofProperty(MofProperty inProperty, Object... inParameters) {
         PrintWriter output = (PrintWriter)inParameters[0];
-//        GenerationInformation info = (GenerationInformation)inParameters[2];
-/*
-        if (info.leftRight == LEFT_RIGHT.LEFT) {
-            output.print("set");
-            output.print(upperCaseInit(inProperty.getName()));
-        }
-        else {
-            output.print("get");
-            output.print(upperCaseInit(inProperty.getName()));
-            output.print("()");
-        }
-*/
         return inProperty;
     }
 
@@ -544,18 +518,6 @@ public class JavaGenerator extends DynamicVisitorSupport implements Generator, J
     //========================================================================//
 
 
-    protected void printSemicolumn(Object... inParameters) {
-        if (inParameters.length < 2) {
-            return;
-        }
-        PrintWriter output = (PrintWriter) inParameters[0];
-        output.println(";");
-    }
-
-
-    protected String upperCaseInit(String inString) {
-        return inString.substring(0, 1).toUpperCase() + inString.substring(1);
-    }
 
 
     //========================================================================//
@@ -568,16 +530,5 @@ public class JavaGenerator extends DynamicVisitorSupport implements Generator, J
 
 
 
-    /**
-     * An instance of this class is used as a parameter across the visits.
-     */
-/*
-    private class GenerationInformation {
-        public String       indentation;
-        public MofOperation operation;
-        public LEFT_RIGHT   leftRight;
-        public Nav          caller;
-        public boolean      top;
-    }       // GenerationInformation
-*/
+
 }       // JavaGenerator
