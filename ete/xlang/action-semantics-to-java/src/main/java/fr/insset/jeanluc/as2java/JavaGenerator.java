@@ -136,7 +136,7 @@ public class JavaGenerator extends DynamicVisitorSupport implements Generator, J
                 return "";
             }
             List<Statement> statementList = statementMap.get("body");
-            this.operation = inOperation;
+//            this.operation = inOperation;
             StringWriter    stringWriter = new StringWriter();
             PrintWriter     printWriter = new PrintWriter(stringWriter);
             printWriter.append(inIndentation);
@@ -196,8 +196,9 @@ public class JavaGenerator extends DynamicVisitorSupport implements Generator, J
     public Object xlangVisitAssignment(Assignment inAssignment, Object... parameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         PrintWriter output = (PrintWriter) parameters[0];
         String      indent = (String) parameters[1];
-        GenerationInformation info = new GenerationInformation();
+//        GenerationInformation info = new GenerationInformation();
         output.print(indent);
+        System.out.println("Indentation in assignment : [" + indent + "]" );
         GelExpression leftValue = inAssignment.getLeftValue();
         if (leftValue instanceof VariableDefinition) {
 //            VariableReference   variable = (VariableReference) leftValue;
@@ -214,8 +215,8 @@ public class JavaGenerator extends DynamicVisitorSupport implements Generator, J
             genericVisit(inAssignment.getValue(), parameters);
         }
         else if (leftValue instanceof Nav) {
-            info.leftRight = LEFT_RIGHT.LEFT;
-            genericVisit(leftValue, output, indent, info);
+//            info.leftRight = LEFT_RIGHT.LEFT;
+            genericVisit(leftValue, output, indent /*, info*/);
             output.print("(");
             genericVisit(inAssignment.getValue(), parameters);
             output.print(")");
@@ -407,69 +408,109 @@ public class JavaGenerator extends DynamicVisitorSupport implements Generator, J
         return inSum;
     }
 
-    
-    public Flatten gelVisitFlatten(Flatten inFlatten, Object... inParameters) {
+
+    public Flatten gelVisitFlatten(Flatten inFlatten, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        Step left = (Step) inFlatten.getOperand().get(0);
+        genericVisit(left.getOperand().get(0), inParameters);
+//        genericVisit(left, inParameters);
         PrintWriter output      = (PrintWriter)inParameters[0];
-        output.print(".map(x -> x)");
+        String      indent = (String) inParameters[1];
+        output.print("\n");
+        output.print(indent);
+        output.print(indentation);
+        output.print(".flatMap(x -> x.get");
+        Feature feature = left.getToFeature();
+        String  featureName = feature.getName();
+        output.print(featureName.substring(0, 1).toUpperCase());
+        output.print(featureName.substring(1));
+        output.print("().stream())");
         return inFlatten;
     }
 
+//      Source
+//            askedQuestions.checkedAnswers.flatten.answer.value.sum
 
-    public Collect gelVisitCollect(Collect inCollect, Object... inParameters) {
+//      Target
+//            getAskedQuestions().stream().flatMap(x -> x.getCheckedAnswers().stream()).map(x -> x.getAnswer()).mapToDouble(x -> x.getValue()).sum();
+
+//      Realized
+//        getAskedQuestions()
+//            .flatMap(x -> x.getCheckedAnswers)).map(x -> x.getAnswer()).mapToDouble(x -> x.getValue()).sum();
+
+    public Collect gelVisitCollect(Collect inCollect, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         PrintWriter output      = (PrintWriter)inParameters[0];
-        output.print(".map(x -> x)");
+        String      indent = (String) inParameters[1];
+        output.print("\n");
+        output.print(indent);
+        output.print(indentation);
+
+        List<GelExpression> operand = inCollect.getOperand();
+        if (operand != null && operand.size() > 0) {
+            genericVisit(operand.get(0), inParameters);
+        }
+
+        MofType     resultType      = inCollect.getType().getRecBaseType();
+        String      resultTypeName  = resultType.getName();
+
+        switch (resultTypeName) {
+            case "double":
+            case "float" :
+                output.print(".mapToDouble(x -> x.get");
+                break;
+            case "long":
+            case "int" :
+                output.print(".mapToLong(x -> x.get");
+                break;
+            default:
+                output.print(".map(x -> x.get");
+        }
+
+        String  name = inCollect.getToFeature().getName();
+        output.print(name.substring(0,1).toUpperCase());
+        output.print(name.substring(1));
+        output.print("())");
         return inCollect;
     }
 
+
     
 /**
- *         return this.getQuestionsPosees().stream()
-                .flatMap(q -> q.getReponsesFournies().stream())
-                .map(r -> r.getReponse())
-                .mapToDouble(r -> r.getValeur())
+ *          The expression
+ * 
+ *          askedQuestions.checkedAnswers.flatten.answer.value.sum
+ * 
+ *          is translated to
+ * 
+ *         return this.getAskedQuestions().stream()
+                .flatMap(q -> q.getCheckedAnswsers().stream())
+                .map(r -> r.getAnswer())
+                .mapToDouble(r -> r.getValue())
                 .sum();
  * 
  * When the navigation is * -> 1 we use map
  * When the navigation is 1 -> * and is "terminal" we use the accessor
- * When the navigation is 1 -> * and is not terminale we use stream
+ * When the navigation is 1 -> * and is not terminal we use stream
  * When the navigation is * -> * we use flatmap
  */
     public AttributeNav gelVisitAttributeNav(AttributeNav inAttributeNav, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        PrintWriter output      = (PrintWriter)inParameters[0];
-        GelExpression left = null;
+        PrintWriter output          = (PrintWriter)inParameters[0];
+
         List<GelExpression> operand = inAttributeNav.getOperand();
-        MofType       leftType, rightType;
-        if (operand == null || (left=operand.get(0)) == null) {
-//            output.print("this");
-            leftType = inAttributeNav.getToFeature().getOwningMofClass();
+        if (operand != null && operand.size() > 0) {
+            genericVisit(operand.get(0), inParameters);
+            output.print(".");
         }
-        else {
-            leftType = left.getType();
-            this.genericVisit(left, inParameters);
-            output.print('.');
-        }
-        rightType = inAttributeNav.getType();
-        System.out.println("Navigating from " + leftType + " to " + rightType);
+
         output.print("get");
-        String  name = inAttributeNav.getToFeature().getName();
-        output.append(name.substring(0, 1).toUpperCase());
-        output.append(name.substring(1));
-        output.append("()");
-        if (!leftType.isCollection()) {
-            if (rightType.isCollection()) {
-                output.append(".stream()");
-            }
+        Feature feature     = inAttributeNav.getToFeature();
+        String  featureName = feature.getName();
+        output.print(featureName.substring(0,1).toUpperCase());
+        output.print(featureName.substring(1));
+        output.print("()");
+        if (feature.getType().isCollection()) {
+            output.print(".stream()");
         }
-        else {
-            // leftType.isCollection()
-            if (rightType.isCollection()) {
-                MofCollection rightTypeColl = (MofCollection) rightType;
-                MofType rightBaseType = rightTypeColl.getBaseType();
-                if (rightBaseType.isCollection()) {
-                    
-                }
-            }
-        }
+
         return inAttributeNav;
     }
 
@@ -481,7 +522,8 @@ public class JavaGenerator extends DynamicVisitorSupport implements Generator, J
 
     public MofProperty mofVisitMofProperty(MofProperty inProperty, Object... inParameters) {
         PrintWriter output = (PrintWriter)inParameters[0];
-        GenerationInformation info = (GenerationInformation)inParameters[2];
+//        GenerationInformation info = (GenerationInformation)inParameters[2];
+/*
         if (info.leftRight == LEFT_RIGHT.LEFT) {
             output.print("set");
             output.print(upperCaseInit(inProperty.getName()));
@@ -491,29 +533,11 @@ public class JavaGenerator extends DynamicVisitorSupport implements Generator, J
             output.print(upperCaseInit(inProperty.getName()));
             output.print("()");
         }
+*/
         return inProperty;
     }
 
-/*
-    public MofOperation mofVisitMofOperation(MofOperation inOperation, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        PrintWriter output = (PrintWriter)inParameters[0];
-        output.print(inOperation.getName());
-        output.print('(');
-        Navigation  navigation      = (Navigation) inParameters[3];
-        boolean     pasLaPremiere   = false;
-        for (GelExpression exp : navigation.getParameter()) {
-            if (pasLaPremiere) {
-                output.print(", ");
-            }
-            else {
-                pasLaPremiere = true;
-            }
-            genericVisit(exp, inParameters);
-        }
-        output.print(')');
-        return inOperation;
-    }
-*/
+
 
     //========================================================================//
     //                            U T I L I T I E S                           //
@@ -540,7 +564,6 @@ public class JavaGenerator extends DynamicVisitorSupport implements Generator, J
 
 
     private     String                          indentation;
-    private     MofOperation                    operation;
     private     Map<String, List<Statement>>    statements = new HashMap<>();
 
 
@@ -548,6 +571,7 @@ public class JavaGenerator extends DynamicVisitorSupport implements Generator, J
     /**
      * An instance of this class is used as a parameter across the visits.
      */
+/*
     private class GenerationInformation {
         public String       indentation;
         public MofOperation operation;
@@ -555,5 +579,5 @@ public class JavaGenerator extends DynamicVisitorSupport implements Generator, J
         public Nav          caller;
         public boolean      top;
     }       // GenerationInformation
-
+*/
 }       // JavaGenerator

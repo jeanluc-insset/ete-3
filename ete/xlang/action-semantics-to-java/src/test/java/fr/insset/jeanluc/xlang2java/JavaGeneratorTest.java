@@ -1,5 +1,5 @@
 
-package fr.insset.jeanluc.as2java;
+package fr.insset.jeanluc.xlang2java;
 
 
 // import fr.insset.jeanluc.action.semantics.builder.ActionSemanticsUtil;
@@ -188,7 +188,7 @@ public class JavaGeneratorTest {
             setAnswer.invoke(proposedAnswer1, answer1);
             Object proposedAnswer2 = proposedAnswerClass.newInstance();
             Object answer2 = answerClass.newInstance();
-            setValue.invoke(answer1, -1D);
+            setValue.invoke(answer2, -1D);
             setAnswer.invoke(proposedAnswer2, answer2);
             Object effectiveQuestion = effectiveQuestionClass.newInstance();
             Method addCheckedAnswers = effectiveQuestionClass.getMethod("addCheckedAnswers", proposedAnswerClass);
