@@ -28,4 +28,9 @@ public class MofSetImpl extends MofCollectionImpl implements MofSet {
         return true;
     }
 
+    @Override
+    public String getSymbol() {
+        return MOF_SET;
+    }
+
 }

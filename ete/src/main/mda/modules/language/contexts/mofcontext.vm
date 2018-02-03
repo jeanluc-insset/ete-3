@@ -19,6 +19,9 @@ import fr.insset.jeanluc.ete.meta.model.emof.MofParameter;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
 import fr.insset.jeanluc.ete.meta.model.types.MofType;
+import fr.insset.jeanluc.ete.meta.model.types.collections.MofCollection;
+import fr.insset.jeanluc.ete.meta.model.types.collections.MofSequence;
+import static fr.insset.jeanluc.ete.meta.model.types.collections.MofSequence.MOF_SEQUENCE;
 import fr.insset.jeanluc.util.factory.FactoryRegistry;
 import java.util.Collection;
 import java.util.Deque;
@@ -26,9 +29,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Generated;
-// import org.antlr.v4.runtime.ANTLRInputStream;
-// import org.antlr.v4.runtime.CommonTokenStream;
 
 
 /**
@@ -90,10 +93,29 @@ public class ${dialect.i2uc($projectName)}ContextImpl implements ${dialect.i2uc(
         }   //inContext is a MofOperation
     }
 
+
+    /**
+     * When the TreeBuilder has to handle an identifier, it can end with the
+     * following results&nbsp;:<ul>
+     * <li>a variable identifier</li>
+     * <li>a property identifier</li>
+     * <li>a method identifier</li>
+     * <li>a collection method identifier</li>
+     * </ul>
+     * The first two cases are handled by the resolve method since the grammar
+     * has only one rule for both.<br>
+     * The third case is handled by the resolveOperation method.<br>
+     * The last case is handled by the resolveCollOp method.
+     */
     @Override
     public ${dialect.i2uc($projectName)}Expression resolve(String inString) {
-        ${dialect.i2uc($projectName)}Expression obj = __resolve(inString);
-        return obj;
+        try {
+            ${dialect.i2uc($projectName)}Expression obj = __resolve(inString);
+            return obj;
+        } catch (InstantiationException | IllegalAccessException ex) {
+            Logger.getLogger(GelContextImpl.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException(ex);
+        }
     }
 
 
@@ -102,27 +124,66 @@ public class ${dialect.i2uc($projectName)}ContextImpl implements ${dialect.i2uc(
         try {
             // TODO : we should have the allowed selectors (the collection API
             // should be checked without being hard coded)
-            CollectionMethodNav obj = (CollectionMethodNav)FactoryRegistry.newInstance("->");
-//            obj.setSelector(inString);
-            return obj;
+            CollectionMethodNav result = (CollectionMethodNav)FactoryRegistry.newInstance(inString);
+            MofCollection   current = (MofCollection)resolveVariable(CURRENT);
+            MofType         baseType = current.getRecBaseType();
+            switch (inString) {
+                case "flatten": {
+                        MofSequence sequence = (MofSequence)FactoryRegistry.newInstance(MOF_SEQUENCE);
+                        sequence.setBaseType(baseType);
+                        result.setType(sequence);
+                        break;
+                    }
+                case "average":
+                case "sum":
+                case "max":
+                case "min":
+                    result.setType(baseType);
+                    break;
+                case "collect":
+                    // TODO : explicit collect is not handled
+                    break;
+                default:
+                    result.setType(current);
+                    break;
+            }
+            set(CURRENT, result.getType());
+            return result;
         } catch (InstantiationException | IllegalAccessException ex) {
 //            Logger.getLogger(GelContextImpl.class.getName()).log(Level.SEVERE, null, ex);
             throw new RuntimeException(ex);
         }
     }
 
-    protected ${dialect.i2uc($projectName)}Expression __resolve(String inString) {
+    /**
+     * TODO : works with collections of depth 2 max :<br>
+     * does not handle a collection of collections of collections of Xxx.
+     * We should add a clone method to MofCollections
+     */
+    protected ${dialect.i2uc($projectName)}Expression __resolve(String inString) throws InstantiationException, IllegalAccessException {
         ${dialect.i2uc($projectName)}Expression   result = null;
         MofType   current = (MofType)resolveVariable(CURRENT);
         if (current == null) {
-            result = resolveProperty(inString, (MofClass)resolveVariable(ROOT));
+            result = resolveProperty(inString, (MofClass)resolveVariable(ROOT), false);
             if (result != null) {
                 return result;
             }
         }
         else {
-            result = resolveProperty(inString, (MofClass)current);
-            return result;
+            MofType baseType = current.getRecBaseType();
+            ${dialect.i2uc($projectName)}Expression property = resolveProperty(inString, (MofClass)baseType, baseType.isCollection());
+            if (property instanceof Step) {
+                Step    step = (Step) property;
+                if (current.isCollection()) {
+                    MofSequence sequence = (MofSequence) FactoryRegistry.newInstance(MOF_SEQUENCE);
+                    sequence.setBaseType(step.getToFeature().getType());
+                    step.setType(sequence);
+                }
+                return step;
+            }
+            else {
+                return property;
+            }
         }
         Object variable = resolveVariable(inString);
         if (variable == null) {
@@ -136,6 +197,7 @@ public class ${dialect.i2uc($projectName)}ContextImpl implements ${dialect.i2uc(
         }
         return null;
     }
+
 
 
     //========================================================================//
@@ -186,16 +248,42 @@ public class ${dialect.i2uc($projectName)}ContextImpl implements ${dialect.i2uc(
     //========================================================================//
 
 
-    public   ${dialect.i2uc($projectName)}Expression resolveProperty(String inString, MofClass from) {
+    public   ${dialect.i2uc($projectName)}Expression resolveProperty(String inString, MofClass from, boolean fromCollection) {
         Feature feature = from.getOwnedAttribute(inString);
-        String  symbol  = ".att";
-        if (feature == null) {
-            feature = from.getOwnedOperation(inString);
-            symbol = ".op";
-        }
         if (feature != null) {
             try {
-                Step nav = (Step) FactoryRegistry.newInstance(symbol);
+                Step nav;
+                MofType current = (MofType) resolveVariable(CURRENT);
+                if (current == null) current = from;
+                if (current.isCollection()) {
+                    nav = (Step)FactoryRegistry.newInstance("collect");
+                }
+                else {
+                    nav = (Step) FactoryRegistry.newInstance(".att");
+                }
+                MofType navType = clone(current, feature.getType());
+                nav.setType(navType);
+                nav.setToFeature(feature);
+                set(CURRENT, navType);
+                return nav;
+            } catch (InstantiationException | IllegalAccessException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+        return null;
+    }
+
+
+    public   ${dialect.i2uc($projectName)}Expression resolveOperation(String inString, MofType from) {
+        // TODO : we should allow methods on predefined types (at least on
+        // String and date types)
+        if (! (from instanceof MofClass)) {
+            return null;
+        }
+        Feature feature = ((MofClass)from).getOwnedOperation(inString);
+        if (feature != null) {
+            try {
+                Step nav = (Step) FactoryRegistry.newInstance(".meth");
                 nav.setToFeature(feature);
                 nav.setType(feature.getType());
                 set(CURRENT, feature.getType());
@@ -207,10 +295,8 @@ public class ${dialect.i2uc($projectName)}ContextImpl implements ${dialect.i2uc(
         return null;
     }
 
-
-
-
-    protected   Object resolveVariable(String inString) {
+    @Override
+    public   Object resolveVariable(String inString) {
         Iterator<Map<String, Object>> iterator = stack.iterator();
         while (iterator.hasNext()) {
             Map<String, Object> map = iterator.next();
@@ -235,6 +321,59 @@ public class ${dialect.i2uc($projectName)}ContextImpl implements ${dialect.i2uc(
 
 
     //========================================================================//
+    //               C O L L E C T I O N   O P E R A T I O N S                //
+    //========================================================================//
+
+
+
+    public ${dialect.i2uc($projectName)}Expression flatten() {
+        try {
+            MofType current = (MofType) resolveVariable(CURRENT);
+            MofType baseType = current.getRecBaseType();
+            MofCollection resultType = (MofCollection) FactoryRegistry.newInstance(MOF_SEQUENCE);
+            resultType.setBaseType(baseType);
+            Flatten     result = (Flatten) FactoryRegistry.newInstance("flatten");
+            result.setType(resultType);
+            return result;
+        } catch (InstantiationException | IllegalAccessException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+
+
+    //========================================================================//
+    //                           U T I L I T I E S                            //
+    //========================================================================//
+
+
+    /**
+     * When collecting a property (i.e. navigating from a collection), the
+     * result is a collection of the target type elements, so the type is
+     * collection&lt;target type&gt;.<br>
+     * Unfortunately, this can be recursive in case the source is a collection
+     * of collections of&nbsp;...<br>
+     * As a consequence we need to clone the source type.
+     */
+    protected MofType clone(MofType inSrc, MofType inBaseType) {
+        if (inSrc.isCollection()) {
+            try {
+                MofCollection   srcColl = (MofCollection)inSrc;
+                MofCollection   result = (MofCollection)FactoryRegistry.newInstance(srcColl.getSymbol());
+                result.setBaseType(clone(srcColl.getBaseType(), inBaseType));
+                return result;
+            } catch (InstantiationException | IllegalAccessException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+        else {
+            return inBaseType;
+        }
+    }
+
+
+    //========================================================================//
+
 
 
     private Deque<Map<String, Object>>     stack = new LinkedList<>();

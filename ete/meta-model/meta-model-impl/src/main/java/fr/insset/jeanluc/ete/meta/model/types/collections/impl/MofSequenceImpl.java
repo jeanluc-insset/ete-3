@@ -48,6 +48,11 @@ public class MofSequenceImpl extends MofCollectionImpl implements MofSequence {
         return true;
     }
 
+    @Override
+    public String getSymbol() {
+        return MOF_SEQUENCE;
+    }
+
 
 
 }

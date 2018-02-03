@@ -28,4 +28,11 @@ public class MofOrderedSetImpl extends MofCollectionImpl implements MofOrderedSe
         return true;
     }
 
+    @Override
+    public String getSymbol() {
+        return MOF_ORDERED_SET;
+    }
+
+
+
 }

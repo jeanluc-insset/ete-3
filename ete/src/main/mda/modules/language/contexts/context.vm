@@ -7,6 +7,8 @@
 package fr.insset.jeanluc.ete.${dialect.i2lc($projectName)};
 
 
+import fr.insset.jeanluc.ete.meta.model.types.MofType;
+// import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 import javax.annotation.Generated;
 
 
@@ -19,17 +21,27 @@ import javax.annotation.Generated;
 public interface ${dialect.i2uc($projectName)}Context<T> {
 
 
-    public final static String      ROOT    = "root",
-                                    MODEL   = "model",
-                                    SELF    = "self",
-                                    CURRENT = "current",
-                                    CONTEXT = "context",
-                                    RESULT  = "result";
+    public final static String      ROOT         = "root",
+                                    MODEL        = "model",
+                                    SELF         = "self",
+                                    CURRENT      = "current",
+                                    CONTEXT      = "context",
+                                    RESULT       = "result",
+                                    CURRENT_TYPE = "current_type";
+
 
     /**
      * Looks for the value of <code>inString</code>
      */
     public T        resolve(String inString);
+    /**
+     *
+     */
+    public Object   resolveVariable(String inString);
+    /**
+     * Looks for an operation with <code>inString</code> as identifier
+     */
+    public T        resolveOperation(String inString, MofType inType);
     /**
      * Looks for a collection operation whose identifier is the value of
      * <code>inString</code>

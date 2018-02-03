@@ -28,7 +28,7 @@ public class SimpleActionSemanticsBuilder extends DynamicVisitorSupport {
 
 
     public SimpleActionSemanticsBuilder() throws InstantiationException {
-        register("visit", "fr.insset.jeanluc.gel");
+        register("visit", "fr.insset.jeanluc.ete.gel");
         FactoryRegistry.getRegistry().registerDefaultFactory(Assignment.class, AssignmentImpl.class);
     }
 
@@ -38,7 +38,13 @@ public class SimpleActionSemanticsBuilder extends DynamicVisitorSupport {
 
     public void buildStatements(GelExpression inExpression, List<Statement> inoutStatements) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         variables = new HashMap<>();
-        genericVisit(inExpression, inoutStatements);
+        // if the expression is an equality we must build an affectation
+//        if (inExpression instanceof Equal) {
+//            
+//        }
+//        else {
+            genericVisit(inExpression, inoutStatements);
+//        }
     }
 
 

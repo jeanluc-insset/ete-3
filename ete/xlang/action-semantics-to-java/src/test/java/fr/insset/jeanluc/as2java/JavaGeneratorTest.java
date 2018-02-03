@@ -34,6 +34,8 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -58,10 +60,14 @@ public class JavaGeneratorTest {
     public final static String      FOLDER  = "fr/insset/jeanluc/ete";
     public final static String      PACKAGE = FOLDER.replace("/", ".");
     public final static String      INDENT  = "    ";
-    public final static String      TARGET_DIR = "target/generated/ete/";  // "target/generated-test-sources/ete/"
+    /**
+     * WARNING : if we use another directory than target/generated-test-sources/ete/ we need
+     * to add our other classes to the classpath
+     */
+    public final static String      TARGET_DIR = "target/generated-test-sources/ete/";  // "target/generated-test-sources/ete/"
 
 
-    public final String     MODEL_PATH = "../../../src/test/mda/models/full_MCQ.xml";
+    public final String     MODEL_PATH = "../../../src/test/mda/models/mini_MCQ.xml";
 
 
     
@@ -114,6 +120,8 @@ public class JavaGeneratorTest {
         Class.forName("fr.insset.jeanluc.action.semantics.builder.ActionSemanticsAction");
 
         // 2- read a model
+        //    This operation invokes the SimpleActionSemanticsBuilder which
+        //    builds statements along the post-conditions of operations.
         // 2-a prepare a reader
         XmlModelReader instance = new XmlModelReader();
         instance.addVisitors(new XmlModelReaderVisitor());
@@ -135,8 +143,6 @@ public class JavaGeneratorTest {
         action.addParameter("template", "templates/pojo-with-operations.vm");
         action.process(model);
 
-        JavaGenerator generator;
-
         // 4- check the result
         // We cannot wait for maven to compile the generated sources since
         // 4-1 compile generated files
@@ -145,7 +151,10 @@ public class JavaGeneratorTest {
         List<String> optionList = new ArrayList<String>();
         optionList.add("-classpath");
 //        optionList.add(System.getProperty("java.class.path") + ":dist/InlineCompiler.jar");
-        optionList.add(System.getProperty("java.class.path") + ":" + TARGET_DIR);
+        optionList.add(System.getProperty("java.class.path")
+                + ":" + TARGET_DIR
+                + ":" + "target/classes/"
+                + ":" + "../../gel/gel-impl/target/gel-impl-3.1.jar");
         
         File        sessionJava = new File(TARGET_DIR + "fr/insset/jeanluc/mda/qcm/modele/Session.java");
 
@@ -158,9 +167,8 @@ public class JavaGeneratorTest {
                     optionList, 
                     null, 
                     compilationUnit);
-        // 4-2 instantiate some classes
-        // 4-3 run an operation
         if (task.call()) {
+            // 4-2 instantiate some classes
             // Load and execute
             System.out.println("Loading and compiling the files");
             // Create a new custom class loader, pointing to the directory that contains the compiled
@@ -168,11 +176,32 @@ public class JavaGeneratorTest {
             URLClassLoader classLoader = new URLClassLoader(new URL[]{new File(TARGET_DIR).toURI().toURL()});
             // Load the class from the classloader by name....
             Class sessionClass = classLoader.loadClass("fr.insset.jeanluc.mda.qcm.modele.Session");
-            // Create a new instance...
+            Class effectiveQuestionClass = classLoader.loadClass("fr.insset.jeanluc.mda.qcm.modele.EffectiveQuestion");
+            Class proposedAnswerClass = classLoader.loadClass("fr.insset.jeanluc.mda.qcm.modele.ProposedAnswer");
+            Class answerClass = classLoader.loadClass("fr.insset.jeanluc.mda.qcm.modele.Answer");
+            // Create some instances...
+            Method setAnswer = proposedAnswerClass.getMethod("setAnswer", answerClass);
+            Method setValue  = answerClass.getMethod("setValue", Double.TYPE);
+            Object proposedAnswer1 = proposedAnswerClass.newInstance();
+            Object answer1 = answerClass.newInstance();
+            setValue.invoke(answer1, 2D);
+            setAnswer.invoke(proposedAnswer1, answer1);
+            Object proposedAnswer2 = proposedAnswerClass.newInstance();
+            Object answer2 = answerClass.newInstance();
+            setValue.invoke(answer1, -1D);
+            setAnswer.invoke(proposedAnswer2, answer2);
+            Object effectiveQuestion = effectiveQuestionClass.newInstance();
+            Method addCheckedAnswers = effectiveQuestionClass.getMethod("addCheckedAnswers", proposedAnswerClass);
+            addCheckedAnswers.invoke(effectiveQuestion, proposedAnswer1);
+            addCheckedAnswers.invoke(effectiveQuestion, proposedAnswer2);
             Object session = sessionClass.newInstance();
-            Method method = sessionClass.getMethod("computeMark", new Class[0]);
-            double computeMark = (double) method.invoke(session, new Object[0]);
-            System.out.println("computeMark() -> " + computeMark);
+            Method addAskedQuestions = sessionClass.getMethod("addAskedQuestions", effectiveQuestionClass);
+            addAskedQuestions.invoke(session, effectiveQuestion);
+
+            // 4-3 run an operation
+            Method method = sessionClass.getMethod("computeMark");
+            double result = (double) method.invoke(session, new Object[0]);
+            assertEquals(1.0, result, 0.01);
             
             //************************************************************************************************* Load and execute ** /
         } else {
@@ -181,6 +210,7 @@ public class JavaGeneratorTest {
 //                        diagnostic.getLineNumber(),
 //                        diagnostic.getSource().toUri());
 //            }
+//            Assert.fail("The generated files could not be compiled");
         }       // task.call() not OK
 
         fileManager.close();

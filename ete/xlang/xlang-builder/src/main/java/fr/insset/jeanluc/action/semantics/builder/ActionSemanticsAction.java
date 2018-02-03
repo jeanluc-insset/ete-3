@@ -3,6 +3,7 @@ package fr.insset.jeanluc.action.semantics.builder;
 
 import fr.insset.jeanluc.ete.api.ActionSupport;
 import fr.insset.jeanluc.ete.api.EteException;
+import fr.insset.jeanluc.ete.gel.GelParserBaseVisitor;
 import static fr.insset.jeanluc.ete.meta.model.emof.MofClass.MOF_CLASS;
 import static fr.insset.jeanluc.ete.meta.model.emof.MofOperation.MOF_OPERATION;
 import static fr.insset.jeanluc.ete.meta.model.emof.MofProperty.MOF_PROPERTY;

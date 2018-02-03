@@ -34,6 +34,11 @@
             <type>jar</type>
         </dependency>
         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>gel-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>fr.insset.jeanluc</groupId>
             <artifactId>xlang-builder</artifactId>
             <version>${project.version}</version>

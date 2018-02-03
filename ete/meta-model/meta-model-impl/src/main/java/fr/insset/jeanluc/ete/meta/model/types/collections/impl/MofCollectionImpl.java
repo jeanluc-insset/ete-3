@@ -1,8 +1,10 @@
 package fr.insset.jeanluc.ete.meta.model.types.collections.impl;
 
 import fr.insset.jeanluc.ete.meta.model.types.MofType;
+import static fr.insset.jeanluc.ete.meta.model.types.collections.MofBag.MOF_BAG;
 import fr.insset.jeanluc.ete.meta.model.types.collections.MofCollection;
 import fr.insset.jeanluc.ete.meta.model.types.impl.MofTypeImpl;
+import fr.insset.jeanluc.util.factory.FactoryRegistry;
 import java.util.Objects;
 
 /**

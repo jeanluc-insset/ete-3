@@ -2,22 +2,27 @@ package fr.insset.jeanluc.ete.gel.impl;
 
 
 import fr.insset.jeanluc.ete.gel.AttributeNav;
-import fr.insset.jeanluc.ete.gel.GelContext;
+import fr.insset.jeanluc.ete.gel.Collect;
+import fr.insset.jeanluc.ete.gel.Equal;
 import fr.insset.jeanluc.ete.gel.GelExpression;
-import static fr.insset.jeanluc.ete.gel.GelParser.IntegerLiteral;
+import fr.insset.jeanluc.ete.gel.Nav;
 import fr.insset.jeanluc.ete.gel.Step;
 import fr.insset.jeanluc.ete.gel.Sub;
 import fr.insset.jeanluc.ete.gel.VariableDefinition;
 import fr.insset.jeanluc.ete.meta.model.constraint.Postcondition;
 import fr.insset.jeanluc.ete.meta.model.core.PrimitiveDataTypes;
 import fr.insset.jeanluc.ete.meta.model.core.impl.Factories;
+import fr.insset.jeanluc.ete.meta.model.emof.Feature;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
+import fr.insset.jeanluc.ete.meta.model.mofpackage.PackageableElement;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.impl.EteModelImpl;
+import fr.insset.jeanluc.ete.meta.model.types.MofType;
 import fr.insset.jeanluc.ete.meta.model.types.TypedElement;
-import fr.insset.jeanluc.meta.model.io.ModelReader;
+import fr.insset.jeanluc.ete.meta.model.types.collections.MofSequence;
+import fr.insset.jeanluc.ete.meta.model.types.collections.impl.MofSequenceImpl;
 import fr.insset.jeanluc.util.factory.FactoryMethods;
 import fr.insset.jeanluc.xmi.io.impl.XmlModelReader;
 import java.io.IOException;
@@ -37,7 +42,7 @@ import static org.junit.Assert.*;
 public class TreeBuilderTest {
 
 
-    public final String  url = "../../../src/test/mda/models/full_MCQ.xml";
+    public final String  url = "../../../src/test/mda/models/mini_MCQ.xml";
 
     /**
      * Some tests but not all use a model. This variable is initialized by
@@ -167,34 +172,78 @@ public class TreeBuilderTest {
     }
 
     @Test
+    public void testVerySimpleNavigation() throws InstantiationException, IOException, IllegalAccessException {
+        System.out.println("very simple navigation");
+        readModel();
+        String specificationAsString = "answer";
+        MofClass     proposedAnswerClass = (MofClass) model.getElementByName("ProposedAnswer");
+
+        Step    toAnswer = new NavHelper().startFrom(model, "ProposedAnswer")
+                    .navigateTo("answer")
+                    .getNavigation();
+
+        testAny(toAnswer, specificationAsString, model, proposedAnswerClass);
+    }
+
+    @Test
     public void testSimpleNavigation() throws InstantiationException, IOException, IllegalAccessException {
         System.out.println("simple navigation");
         readModel();
-        String specificationAsString = "test.qcm";
-        AttributeNav toTest = new AttributeNavImpl();
-        MofProperty testAttribute = sessionClass.getOwnedAttribute("test");
-        toTest.setToFeature(testAttribute);                                                      
-        AttributeNav toQcm = new AttributeNavImpl();
-        toQcm.setToFeature(((MofClass)testAttribute.getType()).getOwnedAttribute("qcm"));
-        List<GelExpression> operands = FactoryMethods.newList(GelExpression.class);
-        operands.add(toTest);
-        toQcm.setOperand(operands);
-        testAny(toQcm, specificationAsString, model, sessionClass);
+        String specificationAsString = "answer.value";
+        MofClass     proposedAnswerClass = (MofClass) model.getElementByName("ProposedAnswer");
+
+        Step    toValue = new NavHelper()
+                .startFrom(model, "ProposedAnswer")
+                .navigateTo("answer")
+                .navigateTo("value")
+                .getNavigation();
+
+        testAny(toValue, specificationAsString, model, proposedAnswerClass);
+    }
+
+
+    @Test
+    public void testNotSoSimpleNavigation() throws InstantiationException, IOException, IllegalAccessException {
+        System.out.println("not so simple navigation");
+        readModel();
+        String specificationAsString = "askedQuestions.checkedAnswers";
+
+        Step    toCheckedAnswers = new NavHelper().startFrom(model, computeMarkOperation)
+                            .navigateTo("askedQuestions")
+                            .navigateTo("checkedAnswers")
+                            .getNavigation();
+
+        testAny(toCheckedAnswers, specificationAsString, model, computeMarkOperation);
     }
 
 
     // The expected result is not built yet so the test is not available
-//    @Test
-    public void testNotSoSimpleNavigation() throws InstantiationException, IOException, IllegalAccessException {
-        System.out.println("not so simple navigation");
+    @Test
+    public void testNavigationWithCollectionOperation() throws InstantiationException, IOException, IllegalAccessException {
+        System.out.println("navigation with collection operation");
         readModel();
         List<Postcondition> allPostconditions = computeMarkOperation.getPostconditions();
         Postcondition postCondition = allPostconditions.get(0);
         String specificationAsString = postCondition.getSpecificationAsString();
-        testAny(null, specificationAsString, model, computeMarkOperation);
+        System.out.println(specificationAsString);
+
+        Step    sum = new NavHelper().startFrom(model, "Session")
+                        .navigateTo("askedQuestions")
+                        .navigateTo("checkedAnswers")
+                        .flatten()
+                        .navigateTo("answer")
+                        .navigateTo("value")
+                        .sum()
+                        .getNavigation();
+        Equal   equal = new EqualImpl();
+        VariableDefinition  variable = new VariableDefinitionImpl();
+        List    operands = new LinkedList();
+        operands.add(variable);
+        operands.add(sum);
+        equal.setOperand(operands);
+
+        testAny(equal, specificationAsString, model, computeMarkOperation);
     }
-
-
 
 
     //========================================================================//
@@ -236,6 +285,24 @@ public class TreeBuilderTest {
     //========================================================================//
     //                    S E T   U P   U T I L I T I E S                     //
     //========================================================================//
+
+
+    // startFrom("Session").navigateTo("askedQuestions").navigate("checkedAnswers")
+
+    public AttributeNav  buildNav(Step inSource, String inToFeature) {
+        AttributeNav    result   = new AttributeNavImpl();
+        Feature         feature  = (Feature) model.getElementByName(inToFeature);
+        if (inSource != null) {
+            MofType type = inSource.getType();
+            List<GelExpression>     operands = new LinkedList<>();
+            result.setOperand(operands);
+            operands.add(inSource);
+        }
+        else {
+            result = new AttributeNavImpl();
+        }
+        return null;
+    }
 
 
     public IntegerLiteralImpl   buildInt(String value) {
@@ -293,38 +360,8 @@ public class TreeBuilderTest {
         sessionClass = (MofClass) model.getElementByName("Session");
         computeMarkOperation = sessionClass.getOwnedOperation("computeMark");
     }
-    
-    /**
-     * Creates a simple context and adds variables "self" and "model".
-     * 
-     * @param inModel
-     * @return 
-     */
-/*
-    protected GelContext    createContext(EteModel inModel) {
-        MofClass    selfClass = (MofClass) inModel.getElementByName("MCQ");
-        VariableDefinition  self = new VariableDefinitionImpl();
-        self.setIdentifier("self");
-        self.setValue(selfClass);
 
-        VariableDefinition  model = new VariableDefinitionImpl();
-        model.setIdentifier("model");
-        GelContext  result = new GelContextImpl(inModel, sessionClass, sessionClass);
-        result.set("self", self);
-        result.set("model", model);
 
-        return result;
-    }
-*/
 
-/*
-    protected void addVariable(GelContext inoutContext, String inName, Object inValue) {
-        VariableDefinition  variable = new VariableDefinitionImpl();
-        variable.setIdentifier(inName);
-        variable.setValue(inValue);
-        inoutContext.set(inName, variable);        
-    }
-*/
-
-}
+}       // TreeBuilderTest
 

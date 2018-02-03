@@ -4,6 +4,7 @@ package fr.insset.jeanluc.action.semantics.builder;
 import fr.insset.jeanluc.ete.gel.GelContext;
 import fr.insset.jeanluc.ete.gel.GelExpression;
 import fr.insset.jeanluc.ete.gel.GelParser;
+import fr.insset.jeanluc.ete.gel.GelParserBaseVisitor;
 import fr.insset.jeanluc.ete.gel.VariableDefinition;
 import fr.insset.jeanluc.ete.gel.impl.GelContextImpl;
 import fr.insset.jeanluc.ete.gel.impl.GelParserWrapper;
@@ -22,6 +23,7 @@ import fr.insset.jeanluc.util.factory.FactoryMethods;
 import fr.insset.jeanluc.util.factory.FactoryRegistry;
 import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -105,7 +107,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
 
     protected void visitACondition(Condition inCondition, EteModel model,
             MofOperation context, Map<String, VariableDefinition> variables,
-            List<Statement> result) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+            List<Statement> inoutResult) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         Logger.getLogger("fr.insset.jeanluc.oclanalyzer.ReaderVisitor").log(Level.FINE, "Visit of " + inCondition.getSpecificationAsString());
 
         // 1- parse the condition
@@ -125,16 +127,28 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         // 3- visit the GelExpression to build statements
         //    The statements are added to the preexisting list
         SimpleActionSemanticsBuilder builder = new SimpleActionSemanticsBuilder();
-        builder.buildStatements(expression, result);
+        builder.buildStatements(expression, inoutResult);
 
 //        // 4- wrap everything into a "container" and put it into the
 //        // the condition itself
 //        // TODO : we should share the same container between all conditions on
 //        // a single operation, should not we ?
         StatementContainer  container         = new StatementContainer();
-        container.setStatements(result);
+        container.setStatements(inoutResult);
         container.setAbstractTree(expression);
         inCondition.setSpecification(container);
+        Map<String, List<Statement>> statements = ((EnhancedMofOperationImpl)context).getStatements();
+        if (statements == null) {
+            statements = new HashMap<>();
+            ((EnhancedMofOperationImpl)context).setStatements(statements);
+        }
+//        List<Statement> get = statements.get("body");
+//        if (get == null) {
+//            statements.put("body", inoutResult);
+//        }
+//        else {
+//            get.addAll(inoutResult);
+//        }
     }
 
 
