@@ -25,10 +25,15 @@ public class RegisterAction extends ActionSupport {
 
     public static void  register(String inActionName, String inClassName) {
         try {
-            FactoryRegistry.register(inActionName, Class.forName(inClassName));
+            FactoryRegistry registry = FactoryRegistry.getRegistry();
+            FactoryRegistry parent = registry.getParent();
+            if (parent == null) {
+                parent = registry;
+            }
+            parent.registerFactory(inActionName, Class.forName(inClassName));
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(RegisterAction.class.getName())
-                    .log(Level.SEVERE, "Impossible de trouver la classe " + inClassName, ex);
+                    .log(Level.SEVERE, "Unable to find the class " + inClassName, ex);
         }
     }
 

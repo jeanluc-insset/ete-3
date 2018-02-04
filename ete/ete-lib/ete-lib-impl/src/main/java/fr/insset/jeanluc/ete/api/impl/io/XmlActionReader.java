@@ -65,7 +65,7 @@ public class XmlActionReader implements ActionReader {
             global.log(Level.FINER, "Reading an action of type {0}", elementName);
             try {
                 AbstractFactory factory = registry.getFactory(elementName + "-action");
-                global.log(Level.ALL, "factory : {0}", factory);
+                global.log(Level.INFO, "factory : {0}", factory);
                 Action childAction = (Action)factory.newInstance();
                 global.log(Level.FINE, "Instanciation de l'action OK");
                 inoutAction.addChild(childAction);

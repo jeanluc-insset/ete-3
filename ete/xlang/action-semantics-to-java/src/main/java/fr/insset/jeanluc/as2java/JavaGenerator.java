@@ -51,12 +51,14 @@ import java.util.logging.Logger;
 
 /**
  * 
- * <br>
  * 
+ * <div>
  * This class is a dialect so it can be used in velocity templates.<br>
  * It overrides the getOperationBody method with the cross compilation of
  * all the statements associated to the method.
+ * </div>
  * 
+ * <div>
  * In the QCM example, the Session.computeMark should lead to the following
  * code&nbsp;:
  <code><pre>
@@ -75,6 +77,21 @@ import java.util.logging.Logger;
  * When the navigation is * -> * we use flatmap
  * When the navigation is xxx -> double we use mapToDouble
  * When the navigation is xxx -> double* we use flatMapToDouble
+ * </div>
+ * 
+ * <div>
+ * In the bank example, the Account.deposit method should lead to the
+ * following code&nbsp;:<br>
+ * <pre><code>
+ * setBalance(getBalance() + inAmount);
+ * </code></pre>
+ * The withdraw method should lead to the code&nbsp;:<br>
+ * <pre><code>
+ * if (getBalance() - inAmount &lt; minBalance)
+ *      throw new ExcessiveOverdraftException();
+ * setBalance(getBalance() - inAmount);
+ * </code></pre>
+ * </div>
  *
  * @author jldeleage
  */
@@ -214,8 +231,16 @@ public class JavaGenerator extends DynamicVisitorSupport implements Generator, J
             }
             genericVisit(inAssignment.getValue(), parameters);
         }
-        else if (leftValue instanceof Nav) {
-            genericVisit(leftValue, output, indent /*, info*/);
+        else if (leftValue instanceof Step) {
+            Step    leftStep = (Step) leftValue;
+            List<GelExpression> operand = leftStep.getOperand();
+            if (operand != null && operand.size() > 0) {
+                genericVisit(operand.get(0), parameters);
+                output.print(".");
+            }
+            output.print("set");
+            Feature feature = leftStep.getToFeature();
+            output.print(i2uc(feature.getName()));
             output.print("(");
             genericVisit(inAssignment.getValue(), parameters);
             output.print(")");

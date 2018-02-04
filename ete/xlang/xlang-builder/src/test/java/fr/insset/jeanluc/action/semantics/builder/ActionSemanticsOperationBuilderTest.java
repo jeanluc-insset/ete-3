@@ -69,7 +69,7 @@ public class ActionSemanticsOperationBuilderTest {
         // 1-a basic factories
         Factories.init();
         // 1-b custom factories
-        Class.forName("fr.insset.jeanluc.action.semantics.builder.ActionSemanticsAction");
+//        Class.forName("fr.insset.jeanluc.action.semantics.builder.ActionSemanticsAction");
 
         // 2- prepare reader and its visitors
         XmlModelReader instance = new XmlModelReader();

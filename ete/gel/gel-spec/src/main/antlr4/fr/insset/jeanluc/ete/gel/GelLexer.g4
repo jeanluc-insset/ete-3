@@ -412,7 +412,8 @@ JavaLetterOrDigit
 // Additional symbols not defined in the lexical specification
 //
 
-AT       : '@';
+// AT       : '@';
+ATPRE    : '@pre';
 ELLIPSIS : '...';
 
 //

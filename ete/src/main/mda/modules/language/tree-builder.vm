@@ -166,6 +166,46 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
     //========================================================================//
 
 
+
+    @Override
+    public GelExpression visitAtPreExpression(GelParser.AtPreExpressionContext ctx) {
+        try {
+            AtPre   result = (AtPre) FactoryRegistry.newInstance("@pre");
+            Step accept = (Step)ctx.children.get(0).accept(this);
+            List<GelExpression> operands = new LinkedList<>();
+            operands.add(accept);
+            result.setOperand(operands);
+            Feature feature = accept.getToFeature();
+            result.setToFeature(feature);
+            result.setType(feature.getType());
+            return result;
+        } catch (InstantiationException | IllegalAccessException ex) {
+            Logger.getLogger(TreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException("Exception visiting atPreExpression", ex);
+        }
+    }
+
+    @Override
+    public GelExpression visitVariableOrMemberAtPre(GelParser.VariableOrMemberAtPreContext ctx) {
+        try {
+            AtPre   result = (AtPre) FactoryRegistry.newInstance("@pre");
+            Step accept = (Step)ctx.children.get(0).accept(this);
+            List<GelExpression> operands = new LinkedList<>();
+            operands.add(accept);
+            result.setOperand(operands);
+            Feature feature = accept.getToFeature();
+            result.setToFeature(feature);
+            result.setType(feature.getType());
+            return result;
+        } catch (InstantiationException | IllegalAccessException ex) {
+            Logger.getLogger(TreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException("Exception visiting atPreExpression", ex);
+        }
+    }
+
+
+
+
     @Override
     public ${dialect.i2uc($projectName)}Expression visitIdentifier(${dialect.i2uc($projectName)}Parser.IdentifierContext ctx) {
         String text = ctx.getText();

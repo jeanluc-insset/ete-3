@@ -1,0 +1,72 @@
+package fr.insset.jeanluc.airways.jpa;
+
+
+import java.util.List;
+import javax.persistence.EntityManager;
+
+
+/**
+ *
+ * @author jldeleage
+ */
+public abstract class AbstractJpa<T> {
+
+    private Class<T> entityClass;
+
+    public AbstractJpa(Class<T> entityClass) {
+        this.entityClass = entityClass;
+    }
+
+    /**
+     * 
+     */
+   protected abstract EntityManager getEntityManager();
+
+    public void create(T entity) {
+        EntityManager em = getEntityManager();
+        em.persist(entity);
+    }
+
+    public void edit(T entity) {
+        EntityManager em = getEntityManager();
+        em.merge(entity);
+    }
+
+    public void remove(T entity) {
+        EntityManager em = getEntityManager();
+        em.remove(getEntityManager().merge(entity));
+    }
+
+    public T find(Object id) {
+        EntityManager em = getEntityManager();
+        return em.find(entityClass, id);
+    }
+
+    public List<T> findAll() {
+        EntityManager em = getEntityManager();
+        javax.persistence.criteria.CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+        cq.select(cq.from(entityClass));
+        return em.createQuery(cq).getResultList();
+    }
+
+    public List<T> findRange(int[] range) {
+        EntityManager em = getEntityManager();
+        javax.persistence.criteria.CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+        cq.select(cq.from(entityClass));
+        javax.persistence.Query q = em.createQuery(cq);
+        q.setMaxResults(range[1] - range[0] + 1);
+        q.setFirstResult(range[0]);
+        return q.getResultList();
+    }
+
+    public int count() {
+        EntityManager em = getEntityManager();
+        javax.persistence.criteria.CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+        javax.persistence.criteria.Root<T> rt = cq.from(entityClass);
+        cq.select(em.getCriteriaBuilder().count(rt));
+        javax.persistence.Query q = em.createQuery(cq);
+        return ((Long) q.getSingleResult()).intValue();
+    }
+    
+}
+

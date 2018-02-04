@@ -304,6 +304,9 @@ public interface Dialect {
      * @return 
      */
     public default boolean isEntity(MofClass inClass) {
+        System.out.print("Looking for \"isEntity\" for ");
+        System.out.println(inClass);
+        System.out.println("(" +inClass.getName() + ")");
         if (inClass.hasStereotype("Entity")) {
             return true;
         }

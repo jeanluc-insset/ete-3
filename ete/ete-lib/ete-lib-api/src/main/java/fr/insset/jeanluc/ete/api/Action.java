@@ -84,10 +84,16 @@ public interface Action {
 
 
     public  default MofPackage doProcess(MofPackage inPackage) throws EteException {
-        inPackage = preProcess(inPackage);
-        inPackage = processChildren(inPackage);
-        inPackage = postProcess(inPackage);
-        return inPackage;
+        try {
+            inPackage = preProcess(inPackage);
+            inPackage = processChildren(inPackage);
+            inPackage = postProcess(inPackage);
+            return inPackage;
+        }
+        catch (Exception ex) {
+            Logger.getGlobal().severe("The action encountered a problem while running : " + ex);
+            throw new EteException(ex);
+        }
     }
 
 

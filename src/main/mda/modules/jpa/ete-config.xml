@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  This module generates all JPA stuff. It first calls a template to generate
+  entities, then generate the DAOs and the persistence unit.
+  -->
+
+<mda>
+
+    <transformation-set>
+        <parameter name="javase"     default="false"/>
+        <parameter name="datasource" default="jdbc/sample"/>
+        <parameter name="pu"         default="fr.insset.jeanluc.ete_1.2PU"/>
+        <parameter name="url"        default="jdbc:derby://localhost:1527/ete"/>
+        <parameter name="user"       default="ete"/>
+        <parameter name="password"   default="ete"/>
+        <parameter name="driver"     default="org.apache.derby.jdbc.ClientDriver"/>
+
+
+        <transformation-set output_base="generated-sources/ete">
+
+            <!-- JPA -->
+            <velocity   template="abstract_jpa.vm"
+                        target="fr/insset/jeanluc/airways/jpa/AbstractJpa.java"/>
+            <velocity items="${classes}"
+                        var="aClass"
+                        dialect="fr.insset.jeanluc.as2java.JavaGenerator"
+                        template="class2entity.vm"
+                        target="${aClass.owningPackage.name.replace('.', '/')}/model/${aClass.name}.java"/>
+            <velocity items="${classes}"
+                        var="aClass"
+                        dialect="fr.insset.jeanluc.as2java.JavaGenerator"
+                        template="class2jpa.vm"
+                        target="${aClass.owningPackage.name.replace('.', '/')}/jpa/${aClass.name}Jpa.java"/>
+        </transformation-set>
+
+        <velocity   template="pu.vm"
+                        target="generated-resources/ete/META-INF/persistence.xml"/>
+    </transformation-set>
+
+</mda>
+
+
+

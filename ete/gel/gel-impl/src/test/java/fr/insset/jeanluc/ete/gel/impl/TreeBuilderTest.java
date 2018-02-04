@@ -287,22 +287,20 @@ public class TreeBuilderTest {
     //========================================================================//
 
 
-    // startFrom("Session").navigateTo("askedQuestions").navigate("checkedAnswers")
-
-    public AttributeNav  buildNav(Step inSource, String inToFeature) {
-        AttributeNav    result   = new AttributeNavImpl();
-        Feature         feature  = (Feature) model.getElementByName(inToFeature);
-        if (inSource != null) {
-            MofType type = inSource.getType();
-            List<GelExpression>     operands = new LinkedList<>();
-            result.setOperand(operands);
-            operands.add(inSource);
-        }
-        else {
-            result = new AttributeNavImpl();
-        }
-        return null;
-    }
+//    public AttributeNav  buildNav(Step inSource, String inToFeature) {
+//        AttributeNav    result   = new AttributeNavImpl();
+//        Feature         feature  = (Feature) model.getElementByName(inToFeature);
+//        if (inSource != null) {
+//            MofType type = inSource.getType();
+//            List<GelExpression>     operands = new LinkedList<>();
+//            result.setOperand(operands);
+//            operands.add(inSource);
+//        }
+//        else {
+//            result = new AttributeNavImpl();
+//        }
+//        return null;
+//    }
 
 
     public IntegerLiteralImpl   buildInt(String value) {

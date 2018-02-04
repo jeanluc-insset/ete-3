@@ -179,6 +179,7 @@ navExpression
 primitive
     : selfExpression
     | variableOrMember
+    | variableOrMemberAtPre
 ;
 
 
@@ -192,8 +193,8 @@ stepExpression
 
 
 attributeNavAtPreOrNot
-    : attributeNavExpression
-    | atPreExpression
+    : atPreExpression
+    | attributeNavExpression
 ;
 
 attributeNavExpression
@@ -201,7 +202,7 @@ attributeNavExpression
 ;
 
 atPreExpression
-    : attributeNavExpression AT
+    : attributeNavExpression ATPRE
 ;
 
 methodNavExpression
@@ -213,9 +214,9 @@ collectionMethodNavExpression
 ;
 
 
-variableOrMember:
-    identifier
-;
+variableOrMember: identifier;
+
+variableOrMemberAtPre: identifier ATPRE;
 
 
 functionCall :

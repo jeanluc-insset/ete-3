@@ -2,6 +2,7 @@
 
 package fr.insset.jeanluc.ete.gel.impl;
 
+import fr.insset.jeanluc.ete.gel.AtPre;
 import fr.insset.jeanluc.ete.gel.Step;
 import fr.insset.jeanluc.ete.meta.model.core.NamedElement;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
@@ -34,7 +35,6 @@ public class NavHelper {
     public NavHelper startFrom(EteModel inModel, String inContext) {
         model = inModel;
         current = (MofType)model.getElementByName(inContext);
-        
         return this;
     }
 
@@ -67,6 +67,14 @@ public class NavHelper {
             nextStep.setToFeature(attribute);
         }
         current    = attribute.getType();
+        navigation = nextStep;
+        return this;
+    }
+
+
+    public NavHelper atPre() {
+        AtPre   nextStep = new AtPreImpl();
+        addOp(nextStep);
         navigation = nextStep;
         return this;
     }

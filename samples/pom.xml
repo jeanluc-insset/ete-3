@@ -10,5 +10,6 @@
     <packaging>pom</packaging>
     <modules>
         <module>helloworld</module>
+        <module>web-ete-bank</module>
     </modules>
 </project>

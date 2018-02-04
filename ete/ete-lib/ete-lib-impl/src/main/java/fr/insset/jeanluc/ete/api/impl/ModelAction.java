@@ -2,14 +2,18 @@ package fr.insset.jeanluc.ete.api.impl;
 
 
 
+import fr.insset.jeanluc.ete.api.Action;
 import fr.insset.jeanluc.ete.api.ActionSupport;
 import fr.insset.jeanluc.ete.api.EteException;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.MofPackage;
 import fr.insset.jeanluc.meta.model.io.ModelReader;
 import fr.insset.jeanluc.util.factory.FactoryRegistry;
+import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,6 +27,10 @@ import java.util.logging.Logger;
  * @author jldeleage
  */
 public class ModelAction extends ActionSupport {
+
+
+    public final static String  ADD_VISITOR      = "add-visitor";
+
 
     /**
      * Name of factory. This value must be used as a key with the
@@ -39,7 +47,7 @@ public class ModelAction extends ActionSupport {
      * @return the result of the preprocessing (maybe inModel)
      */
     @Override
-    public MofPackage preProcess(MofPackage inModel) throws EteException {
+    public MofPackage postProcess(MofPackage inModel) throws EteException {
         MofPackage    result = inModel;
         String parameter = (String) getParameter("url");
         Logger.getGlobal().log(Level.INFO, "Reading model... {0}", parameter);
@@ -48,6 +56,9 @@ public class ModelAction extends ActionSupport {
         ModelReader   reader;
         try {
             reader = (ModelReader) FactoryRegistry.newInstance(MODEL_READER);
+            for (DynamicVisitorSupport aVisitor : visitors) {
+                reader.addVisitors(aVisitor);
+            }
             result = reader.readModel(resource, (EteModel) inModel);
         } catch (InstantiationException ex) {
             Logger.getLogger(ModelAction.class.getName()).log(Level.SEVERE, null, ex);
@@ -61,8 +72,21 @@ public class ModelAction extends ActionSupport {
         return result;
     }
 
+
     public String   getUrl() {
         return (String) getParameter("url");
     }
+
+    @Override
+    public void addParameter(String inName, Object inValue) {
+        if (inName.equals(ADD_VISITOR)) {
+            visitors.add((DynamicVisitorSupport) inValue);
+        }
+        else {
+            super.addParameter(inName, inValue);
+        }
+    }
+
+    List<DynamicVisitorSupport>        visitors = new LinkedList<>();
 
 }

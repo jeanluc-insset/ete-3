@@ -14,7 +14,9 @@ import fr.insset.jeanluc.ete.meta.model.constraint.Condition;
 import fr.insset.jeanluc.ete.meta.model.constraint.Postcondition;
 import fr.insset.jeanluc.ete.meta.model.constraint.Precondition;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
+import static fr.insset.jeanluc.ete.meta.model.emof.MofClass.MOF_CLASS;
 import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
+import static fr.insset.jeanluc.ete.meta.model.emof.MofOperation.MOF_OPERATION;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
 import fr.insset.jeanluc.ete.meta.model.types.MofType;
 import fr.insset.jeanluc.ete.xlang.Statement;
@@ -36,6 +38,8 @@ import java.util.logging.Logger;
 public class ConditionVisitor extends DynamicVisitorSupport {
 
     public ConditionVisitor() {
+        FactoryRegistry.register(MOF_CLASS, fr.insset.jeanluc.action.semantics.builder.EnhancedMofClassImpl.class);
+        FactoryRegistry.register(MOF_OPERATION, fr.insset.jeanluc.action.semantics.builder.EnhancedMofOperationImpl.class);
         register(Precondition.class, "visitPrecondition");
         register(Postcondition.class, "visitPostcondition");
     }
@@ -182,7 +186,8 @@ public class ConditionVisitor extends DynamicVisitorSupport {
     //========================================================================//
 
 
-    public static void  enableActionSemantics(ModelReader inReader) {
+    public static void  enableActionSemantics(ModelReader inReader) throws ClassNotFoundException {
+        Class.forName("fr.insset.jeanluc.action.semantics.builder.ActionSemanticsAction");
         FactoryRegistry registry = FactoryRegistry.getRegistry();
         inReader.addVisitors(new ConditionVisitor());
     }

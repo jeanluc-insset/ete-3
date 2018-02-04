@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<mda>
+
+
+    <transformation-set >
+
+        <register name="add-visitor-action" action="fr.insset.jeanluc.ete.api.impl.AddVisitorAction"/>
+
+        <model  url="Bank.xml">
+            <add-visitor class="fr.insset.jeanluc.action.semantics.builder.ConditionVisitor"/>
+        </model>
+
+        <!--
+          - The context parameter specifies which context to use when
+          - resolving an identifier
+        -->
+        <transformation-set>
+
+            <!--
+                from
+                ete-toolchain/samples/web-ete-bank/src/main/mda
+                to
+                ete-toolchain/src/main/mda/modules/jpa/ete-config.xml
+              -->
+            <module src="../../../../../src/main/mda/modules/jpa/ete-config.xml"/>
+
+        </transformation-set>
+
+
+    </transformation-set>
+
+</mda>
+
+
+
