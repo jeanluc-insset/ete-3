@@ -4,16 +4,19 @@ package fr.insset.jeanluc.as2java;
 import fr.insset.jeanluc.action.semantics.builder.EnhancedMofOperationImpl;
 import fr.insset.jeanluc.action.semantics.builder.StatementContainer;
 import fr.insset.jeanluc.el.dialect.JavaDialect;
+import fr.insset.jeanluc.ete.gel.AtPre;
 import fr.insset.jeanluc.ete.gel.AttributeNav;
 import fr.insset.jeanluc.ete.gel.Collect;
 import fr.insset.jeanluc.ete.gel.Flatten;
 import fr.insset.jeanluc.ete.gel.GelExpression;
 import fr.insset.jeanluc.ete.gel.Nav;
+import fr.insset.jeanluc.ete.gel.Operation;
 import fr.insset.jeanluc.ete.gel.Self;
 import fr.insset.jeanluc.ete.gel.Step;
 import fr.insset.jeanluc.ete.gel.StringLiteral;
 import fr.insset.jeanluc.ete.gel.Sum;
 import fr.insset.jeanluc.ete.gel.VariableDefinition;
+import fr.insset.jeanluc.ete.gel.VariableReference;
 import fr.insset.jeanluc.ete.meta.model.constraint.Condition;
 import fr.insset.jeanluc.ete.meta.model.constraint.Postcondition;
 import fr.insset.jeanluc.ete.meta.model.constraint.Precondition;
@@ -24,6 +27,7 @@ import fr.insset.jeanluc.ete.meta.model.emof.Feature;
 import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
 import fr.insset.jeanluc.ete.meta.model.types.MofType;
+import fr.insset.jeanluc.ete.meta.model.types.TypedElement;
 import fr.insset.jeanluc.ete.meta.model.types.collections.MofCollection;
 import fr.insset.jeanluc.ete.xlang.Assignment;
 import fr.insset.jeanluc.ete.xlang.Conditional;
@@ -41,6 +45,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -199,7 +204,6 @@ public class JavaGenerator extends DynamicVisitorSupport implements Generator, J
     //========================================================================//
 
 
-
     public Object xlangVisitVariableDeclaration(VariableDeclaration inDeclaration, Object... parameters) {
         PrintWriter output = (PrintWriter) parameters[0];
         String      indent = (String) parameters[1];
@@ -213,11 +217,20 @@ public class JavaGenerator extends DynamicVisitorSupport implements Generator, J
     }
 
 
+    /**
+     * The expression <code>self.address.town.country</code> must be compiled as
+     * <code>getAddress().getTown().setCountry(...)</code> or as
+     * <code>getAddress().getTown().getCountry()</code> depending on whether
+     * it is used on the left part of an assignment or not.<br>
+     * When starting visiting the left part of an assignment, the visitor sets
+     * the third parameter to true. Any visit should set back to false that
+     * parameter 
+     * 
+     */
     public Object xlangVisitAssignment(Assignment inAssignment, Object... parameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         PrintWriter output = (PrintWriter) parameters[0];
         String      indent = (String) parameters[1];
         output.print(indent);
-        System.out.println("Indentation in assignment : [" + indent + "]" );
         GelExpression leftValue = inAssignment.getLeftValue();
         if (leftValue instanceof VariableDefinition) {
             VariableDefinition declaration = (VariableDefinition) leftValue;
@@ -387,9 +400,9 @@ public class JavaGenerator extends DynamicVisitorSupport implements Generator, J
     //========================================================================//
 
 
-    public Object gelVisitVariableReference(VariableDefinition inReference, Object... inParameters) {
+    public Object gelVisitVariableReference(VariableReference inReference, Object... inParameters) {
         PrintWriter output = (PrintWriter) inParameters[0];
-        output.print(inReference.getIdentifier());
+        output.print(inReference.getDefinition().getName());
         return inReference;
     }
 
@@ -422,7 +435,36 @@ public class JavaGenerator extends DynamicVisitorSupport implements Generator, J
     }
 
 
+//    public Object gelVisitVariableReference(VariableReference inVariable, Object... inParameters) {
+//        PrintWriter output      = (PrintWriter)inParameters[0];
+//        TypedElement definition = inVariable.getDefinition();
+//        output.print(definition.getName());
+//        return inVariable;
+//    }
+
+
     //------------------------------------------------------------------------//
+
+
+    public Operation gelVisitOperation(Operation inOperation, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        List<GelExpression> operand = inOperation.getOperand();
+        genericVisit(operand.get(0), inParameters);
+        PrintWriter output      = (PrintWriter)inParameters[0];
+        output.print(inOperation.getSymbol());
+        genericVisit(operand.get(1), inParameters);
+        return inOperation;
+    }
+
+    //------------------------------------------------------------------------//
+
+    public AtPre gelVisitAtPre(AtPre inAtPre, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        genericVisit(inAtPre.getOperand().get(0), inParameters);
+        return inAtPre;
+    }
+
+
+    //------------------------------------------------------------------------//
+
 
 
     public Sum gelVisitSum(Sum inSum, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
@@ -552,8 +594,7 @@ public class JavaGenerator extends DynamicVisitorSupport implements Generator, J
 
     private     String                          indentation;
     private     Map<String, List<Statement>>    statements = new HashMap<>();
-
-
+    private     List<GelExpression>             expressionsAtPre = new LinkedList<>();
 
 
 }       // JavaGenerator

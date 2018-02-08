@@ -16,6 +16,11 @@ public interface DoWhileLoop  extends fr.insset.jeanluc.ete.xlang.Loop  {
 
 
 
+    public default String getSymbol() {
+        return "do_while_statement";
+    }
+
+
 }
 
 

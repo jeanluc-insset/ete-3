@@ -19,6 +19,11 @@ public interface Conditional  extends fr.insset.jeanluc.ete.xlang.Statement  {
 
 
 
+    public default String getSymbol() {
+        return "if_statement";
+    }
+
+
 }
 
 

@@ -39,6 +39,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Currently, the only test reads a model and generate classes from that
@@ -54,7 +55,7 @@ import org.junit.Test;
  *
  * @author jldeleage
  */
-public class JavaGeneratorTest {
+public class JavaGeneratorPostAssertion {
     
 
     public final static String      FOLDER  = "fr/insset/jeanluc/ete";
@@ -67,7 +68,7 @@ public class JavaGeneratorTest {
     public final static String      TARGET_DIR = "target/generated-test-sources/ete/";  // "target/generated-test-sources/ete/"
 
 
-    public final String     MODEL_PATH = "../../../src/test/mda/models/mini_MCQ.xml";
+    public final String     MODEL_PATH = "../../../samples/web-ete-bank/src/main/mda/Bank.xml";
 
 
     
@@ -110,8 +111,8 @@ public class JavaGeneratorTest {
      * Currently, points 1 to 4 are done.
      */
     @Test
-    public void testFullJavaGeneration() throws InstantiationException, IllegalAccessException, IOException, EteException, ClassNotFoundException, NoSuchMethodException, IllegalArgumentException, InvocationTargetException {
-        System.out.println("Full Java generation");
+    public void testWithdraw() throws InstantiationException, IllegalAccessException, IOException, EteException, ClassNotFoundException, NoSuchMethodException, IllegalArgumentException, InvocationTargetException {
+        System.out.println("withdraw");
 
         // 1- initialize frameworks
         // 1-a basic factories
@@ -144,7 +145,8 @@ public class JavaGeneratorTest {
         action.process(model);
 
         // 4- check the result
-        // We cannot wait for maven to compile the generated sources since
+        // In order to get the result during the test we cannot wait for maven to
+        // compile the generated sources.
         // 4-1 compile generated files
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
@@ -174,34 +176,21 @@ public class JavaGeneratorTest {
             // Create a new custom class loader, pointing to the directory that contains the compiled
             // classes, this should point to the top of the package structure!
             URLClassLoader classLoader = new URLClassLoader(new URL[]{new File(TARGET_DIR).toURI().toURL()});
+            System.out.println("Classloader : " + classLoader);
             // Load the class from the classloader by name....
-            Class sessionClass = classLoader.loadClass("fr.insset.jeanluc.mda.qcm.modele.Session");
-            Class effectiveQuestionClass = classLoader.loadClass("fr.insset.jeanluc.mda.qcm.modele.EffectiveQuestion");
-            Class proposedAnswerClass = classLoader.loadClass("fr.insset.jeanluc.mda.qcm.modele.ProposedAnswer");
-            Class answerClass = classLoader.loadClass("fr.insset.jeanluc.mda.qcm.modele.Answer");
+            Class accountClass = classLoader.loadClass("fr.insset.jeanluc.ete.example.bank.Account");
             // Create some instances...
-            Method setAnswer = proposedAnswerClass.getMethod("setAnswer", answerClass);
-            Method setValue  = answerClass.getMethod("setValue", Double.TYPE);
-            Object proposedAnswer1 = proposedAnswerClass.newInstance();
-            Object answer1 = answerClass.newInstance();
-            setValue.invoke(answer1, 2D);
-            setAnswer.invoke(proposedAnswer1, answer1);
-            Object proposedAnswer2 = proposedAnswerClass.newInstance();
-            Object answer2 = answerClass.newInstance();
-            setValue.invoke(answer2, -1D);
-            setAnswer.invoke(proposedAnswer2, answer2);
-            Object effectiveQuestion = effectiveQuestionClass.newInstance();
-            Method addCheckedAnswers = effectiveQuestionClass.getMethod("addCheckedAnswers", proposedAnswerClass);
-            addCheckedAnswers.invoke(effectiveQuestion, proposedAnswer1);
-            addCheckedAnswers.invoke(effectiveQuestion, proposedAnswer2);
-            Object session = sessionClass.newInstance();
-            Method addAskedQuestions = sessionClass.getMethod("addAskedQuestions", effectiveQuestionClass);
-            addAskedQuestions.invoke(session, effectiveQuestion);
+            Object  account     = accountClass.newInstance();
+            Method  setBalance  = accountClass.getMethod("setBalance", Double.TYPE);
+            Method  getBalance  = accountClass.getMethod("getBalance");
+            Method  deposit     = accountClass.getMethod("deposit", Double.TYPE);
 
             // 4-3 run an operation
-            Method method = sessionClass.getMethod("computeMark");
-            double result = (double) method.invoke(session, new Object[0]);
-            assertEquals(1.0, result, 0.01);
+            setBalance.invoke(account, 2000D);
+            deposit.invoke(account, 300D);
+            double result = (double) getBalance.invoke(account, new Object[0]);
+            System.out.println("The result is " + result);
+            assertEquals(2300.0, result, 0.01);
             
             //************************************************************************************************* Load and execute ** /
         } else {

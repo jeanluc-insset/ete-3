@@ -35,6 +35,7 @@ public class ActionSemanticsOperationBuilderTest {
 
 
     public final String     MODEL_PATH = "../../../src/test/mda/models/full_MCQ.xml";
+//    public final String     MODEL_PATH = "../../../samples/web-ete-bank/src/main/mda/Bank.xml";
 
 
     public ActionSemanticsOperationBuilderTest() {

@@ -60,6 +60,7 @@ public class TreeBuilderWithBankTest {
      * the readModel method.
      */
     public MofOperation withdraw;
+    public MofOperation deposit;
 
 
     public TreeBuilderWithBankTest() {
@@ -110,6 +111,27 @@ public class TreeBuilderWithBankTest {
     }
 
 
+    @Test
+    public void depositTest() throws InstantiationException, IOException, IllegalAccessException {
+        System.out.println("deposit");
+        String expressionAsString = "balance = balance@pre + inAmount";
+        readModel();
+
+        Step rightNavigation = new NavHelper().startFrom(model, withdraw).navigateTo("balance").atPre().getNavigation();
+        MofProperty balanceAttribute = accountClass.getOwnedAttribute("balance");
+        rightNavigation.setToFeature(accountClass.getOwnedAttribute("balance"));
+        rightNavigation.setType(balanceAttribute.getType());
+        Step    inAmount = new NavHelper().startFrom(model, deposit).navigateTo("inAmount").getNavigation();
+        AddImpl rightMember = buildAdd(rightNavigation, inAmount);
+        Step leftMember = new NavHelper().startFrom(model, deposit).navigateTo("balance").getNavigation();
+        Equal   result = new EqualImpl();
+        List<GelExpression> operands = new LinkedList<>();
+        operands.add(leftMember);
+        operands.add(rightMember);
+        result.setOperand(operands);
+        
+        testAny(result, expressionAsString,model, deposit);
+    }
 
 
     //========================================================================//
@@ -224,6 +246,7 @@ public class TreeBuilderWithBankTest {
         PrimitiveDataTypes.init(parent);
         model = instance.readModel(url, parent);
         accountClass = (MofClass) model.getElementByName("Account");
+        deposit = accountClass.getOwnedOperation("deposit");
         withdraw = accountClass.getOwnedOperation("withdraw");
     }
 

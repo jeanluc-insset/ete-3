@@ -16,6 +16,11 @@ public interface WhileDoLoop  extends fr.insset.jeanluc.ete.xlang.Loop  {
 
 
 
+    public default String getSymbol() {
+        return "while_statement";
+    }
+
+
 }
 
 

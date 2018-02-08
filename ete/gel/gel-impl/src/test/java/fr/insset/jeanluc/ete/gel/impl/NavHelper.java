@@ -4,14 +4,17 @@ package fr.insset.jeanluc.ete.gel.impl;
 
 import fr.insset.jeanluc.ete.gel.AtPre;
 import fr.insset.jeanluc.ete.gel.Step;
+import fr.insset.jeanluc.ete.gel.VariableReference;
 import fr.insset.jeanluc.ete.meta.model.core.NamedElement;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
+import fr.insset.jeanluc.ete.meta.model.emof.MofParameter;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
 import fr.insset.jeanluc.ete.meta.model.types.MofType;
 import fr.insset.jeanluc.ete.meta.model.types.collections.MofSequence;
 import fr.insset.jeanluc.ete.meta.model.types.collections.impl.MofSequenceImpl;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,19 +38,33 @@ public class NavHelper {
     public NavHelper startFrom(EteModel inModel, String inContext) {
         model = inModel;
         current = (MofType)model.getElementByName(inContext);
+        context = current;
         return this;
     }
 
     public NavHelper startFrom(EteModel inModel, MofOperation inContext) {
         model = inModel;
         current = inContext.getOwningMofClass();
+        context = inContext;
         return this;
     }
 
     public NavHelper  navigateTo(String inName) {
         MofClass    currentClass = (MofClass)current.getRecBaseType();
-        MofProperty attribute = currentClass.getOwnedAttribute(inName);
         Step        nextStep;
+        if (context instanceof MofOperation) {
+            MofOperation    operation = (MofOperation) context;
+            for (MofParameter aParameter : operation.getOwnedParameter()) {
+                if (inName.equals(aParameter.getName())) {
+                    VariableReference   variable = new VariableReferenceImpl();
+                    variable.setDefinition(aParameter);
+                    variable.setType(aParameter.getType());
+                    navigation = variable;
+                    return this;
+                }
+            }
+        }
+        MofProperty attribute = currentClass.getOwnedAttribute(inName);
         if (navigation != null) {
             MofType     sourceType = navigation.getType();
             if (sourceType.isCollection()) {

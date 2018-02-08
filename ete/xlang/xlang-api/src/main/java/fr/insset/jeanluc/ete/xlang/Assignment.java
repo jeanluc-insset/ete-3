@@ -21,6 +21,11 @@ public interface Assignment  extends fr.insset.jeanluc.ete.xlang.Statement  {
 
 
 
+    public default String getSymbol() {
+        return "assignment_statement";
+    }
+
+
 }
 
 

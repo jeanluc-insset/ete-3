@@ -37,12 +37,14 @@ import fr.insset.jeanluc.ete.${dialect.i2lc($projectName)}.${dialect.i2uc($proje
 import fr.insset.jeanluc.ete.${dialect.i2lc($projectName)}.${dialect.i2uc($projectName)}ParserBaseVisitor;
 import fr.insset.jeanluc.ete.${dialect.i2lc($projectName)}.*;
 import static fr.insset.jeanluc.ete.${dialect.i2lc($projectName)}.${dialect.i2uc($projectName)}Context.CURRENT;
+import fr.insset.jeanluc.ete.meta.model.emof.Feature;
 import fr.insset.jeanluc.util.factory.FactoryMethods;
 import fr.insset.jeanluc.util.factory.FactoryRegistry;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Stack;
 import java.util.logging.Level;

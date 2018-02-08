@@ -48,22 +48,6 @@ import java.util.logging.Logger;
  * This class is a dialect so it can be used in velocity templates.<br>
  * It overrides the getOperationBody method with the cross compilation of
  * all the statements associated to the method.
- * 
- * In the QCM example, the Passage.calculeNote should lead to the following
- * code&nbsp;:
- <code><pre>
-    return this.getQuestionsPosees()
-        .stream()
-        .flatMap(q -> q.getReponsesFournies().stream())
-        .map(r -> r.getReponse())
-        .mapToDouble(r -> r.getValeur())
-        .sum();
-</pre></code>
- * We generate that code visiting each navigation.
- * When the navigation is * -> 1 we use map
- * When the navigation is 1 -> * and is "terminal" we use the accessor
- * When the navigation is 1 -> * and is not terminal we use stream
- * When the navigation is * -> * we use flatmap
  *
  * @author jldeleage
  */

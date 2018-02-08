@@ -185,6 +185,13 @@ public class ${dialect.i2uc($projectName)}ContextImpl implements ${dialect.i2uc(
                 return property;
             }
         }
+        Object context = resolveVariable(CONTEXT);
+        if (context instanceof MofOperation) {
+            result = resolveParameter(inString, (MofOperation)context);
+            if (result != null) {
+                return result;
+            }
+        }
         Object variable = resolveVariable(inString);
         if (variable == null) {
             variable = resolveModelInstance(inString);
@@ -246,6 +253,18 @@ public class ${dialect.i2uc($projectName)}ContextImpl implements ${dialect.i2uc(
 
 
     //========================================================================//
+
+    public ${dialect.i2uc($projectName)}Expression resolveParameter(String inString, MofOperation inOperation) throws InstantiationException, IllegalAccessException {
+        Collection<MofParameter> ownedParameter = inOperation.getOwnedParameter();
+        for (MofParameter aParameter : ownedParameter) {
+            if (inString.equals(aParameter.getName())) {
+                VariableReference   result = (VariableReference) FactoryRegistry.newInstance("var");
+                result.setDefinition(aParameter);
+                return result;
+            }
+        }
+        return null;
+    }
 
 
     public   ${dialect.i2uc($projectName)}Expression resolveProperty(String inString, MofClass from, boolean fromCollection) {

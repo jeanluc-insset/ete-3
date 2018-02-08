@@ -91,7 +91,7 @@ public interface Action {
             return inPackage;
         }
         catch (Exception ex) {
-            Logger.getGlobal().severe("The action encountered a problem while running : " + ex);
+            Logger.getGlobal().severe("The action " + this.getClass().getName() + " encountered a problem while running : " + ex);
             throw new EteException(ex);
         }
     }

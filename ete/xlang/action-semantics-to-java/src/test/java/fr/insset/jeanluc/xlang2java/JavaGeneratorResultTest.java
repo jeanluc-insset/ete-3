@@ -2,7 +2,6 @@
 package fr.insset.jeanluc.xlang2java;
 
 
-// import fr.insset.jeanluc.action.semantics.builder.ActionSemanticsUtil;
 import fr.insset.jeanluc.action.semantics.builder.ConditionVisitor;
 import static fr.insset.jeanluc.ete.api.Action.BASE_DIR;
 import fr.insset.jeanluc.ete.api.EteException;
@@ -39,6 +38,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Currently, the only test reads a model and generate classes from that
@@ -54,7 +54,7 @@ import org.junit.Test;
  *
  * @author jldeleage
  */
-public class JavaGeneratorTest1 {
+public class JavaGeneratorResultTest {
     
 
     public final static String      FOLDER  = "fr/insset/jeanluc/ete";
@@ -144,7 +144,8 @@ public class JavaGeneratorTest1 {
         action.process(model);
 
         // 4- check the result
-        // We cannot wait for maven to compile the generated sources since
+        // In order to get the result during the test we cannot wait for maven to
+        // compile the generated sources.
         // 4-1 compile generated files
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
@@ -201,6 +202,7 @@ public class JavaGeneratorTest1 {
             // 4-3 run an operation
             Method method = sessionClass.getMethod("computeMark");
             double result = (double) method.invoke(session, new Object[0]);
+            System.out.println("The result is " + result);
             assertEquals(1.0, result, 0.01);
             
             //************************************************************************************************* Load and execute ** /

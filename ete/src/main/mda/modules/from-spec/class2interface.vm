@@ -48,6 +48,13 @@ public interface $current.name #if ($current.superClass && $current.superClass.s
     public MofType  getType(EteModel inModel);
 #end
 
+#if ($current.getValueOf("symbol"))
+    public default String getSymbol() {
+        return "${current.getValueOf("symbol")}";
+    }
+#end
+
+
 }
 
 

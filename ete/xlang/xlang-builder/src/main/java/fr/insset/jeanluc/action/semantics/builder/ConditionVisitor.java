@@ -100,7 +100,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
 
         EnhancedMofOperationImpl    context = (EnhancedMofOperationImpl)inParameters[0];
         List<Statement>             statements    = getStatements(context, "body");
-        
+
         EteModel        model               = (EteModel)inParameters[1];
         Map<String, VariableDefinition> variables  = FactoryMethods.newMap(String.class, VariableDefinition.class);
         addVariable("result", context.getType(), variables);

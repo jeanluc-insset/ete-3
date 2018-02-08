@@ -24,6 +24,11 @@ public interface VariableDeclaration  extends fr.insset.jeanluc.ete.xlang.Statem
 
 
 
+    public default String getSymbol() {
+        return "variable_declaration_statement";
+    }
+
+
 }
 
 

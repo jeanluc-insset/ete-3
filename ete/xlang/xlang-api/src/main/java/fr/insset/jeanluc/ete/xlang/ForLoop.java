@@ -16,6 +16,11 @@ public interface ForLoop  extends fr.insset.jeanluc.ete.xlang.Loop  {
 
 
 
+    public default String getSymbol() {
+        return "for_statement";
+    }
+
+
 }
 
 
