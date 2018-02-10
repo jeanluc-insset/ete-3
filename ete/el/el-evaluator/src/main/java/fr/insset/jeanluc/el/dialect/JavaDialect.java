@@ -17,6 +17,7 @@ import fr.insset.jeanluc.ete.meta.model.types.collections.MofCollection;
 import fr.insset.jeanluc.ete.meta.model.types.collections.MofOrderedSet;
 import fr.insset.jeanluc.ete.meta.model.types.collections.MofSequence;
 import fr.insset.jeanluc.ete.meta.model.types.collections.MofSet;
+import fr.insset.jeanluc.ete.util.XList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -171,7 +172,7 @@ public interface JavaDialect extends Dialect {
         stereotypedProperties = allProperties
                 .stream()
                 .filter(p -> p.hasStereotype("tostring"))
-                .collect(Collectors.toList());
+                .collect(Collectors.toCollection(XList::new));
         switch (stereotypedProperties.size()) {
             case 0:
                 return "return super.toString();";

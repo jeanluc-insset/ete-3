@@ -4,6 +4,7 @@ package fr.insset.jeanluc.ete.meta.model.emof.instance.impl;
 import fr.insset.jeanluc.ete.meta.model.emof.instance.InstanceSpecification;
 import fr.insset.jeanluc.ete.meta.model.emof.instance.Slot;
 import fr.insset.jeanluc.ete.meta.model.types.impl.TypedElementImpl;
+import fr.insset.jeanluc.ete.util.XList;
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -36,6 +37,6 @@ public class InstanceSpecificationImpl extends TypedElementImpl implements Insta
 
 
 
-    private Collection<Slot>        slots = new LinkedList<>();
+    private Collection<Slot>        slots = new XList<>();
 
 }

@@ -4,6 +4,7 @@ import fr.insset.jeanluc.ete.meta.model.constraint.Constraint;
 import fr.insset.jeanluc.ete.meta.model.core.NamedElement;
 import fr.insset.jeanluc.ete.meta.model.emof.Stereotype;
 import fr.insset.jeanluc.ete.meta.model.emof.TagValueDeclaration;
+import fr.insset.jeanluc.ete.util.XList;
 import fr.insset.jeanluc.util.factory.FactoryMethods;
 import java.util.Collection;
 import java.util.HashSet;
@@ -134,7 +135,7 @@ public class NamedElementImpl implements NamedElement {
     @Override
     public Collection<NamedElement> getOwnedElements() {
         if (ownedElements == null) {
-            ownedElements = new LinkedList<>();
+            ownedElements = new XList<>();
         }
         return ownedElements;
     }

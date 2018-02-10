@@ -4,6 +4,7 @@ package fr.insset.jeanluc.ete.meta.model.emof;
 
 import fr.insset.jeanluc.ete.meta.model.constraint.Invariant;
 import fr.insset.jeanluc.ete.meta.model.types.Classifier;
+import fr.insset.jeanluc.ete.util.XList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,7 +23,7 @@ public interface MofClass extends Classifier {
 
 
     public  default Collection<MofClass>    getSuperClass() {
-        return getSuperClassAsStream().collect(Collectors.toList());
+        return getSuperClassAsStream().collect(Collectors.toCollection(XList::new));
     }
     public  default void                    addSuperClass(MofClass inMofClass) {
         addSuperType(inMofClass);

@@ -18,6 +18,7 @@ import javax.el.ELProcessor;
 import javax.el.ELResolver;
 import javax.el.ExpressionFactory;
 import javax.el.FunctionMapper;
+import javax.el.LambdaExpression;
 import javax.el.StandardELContext;
 import javax.el.ValueExpression;
 import javax.el.VariableMapper;
@@ -149,7 +150,13 @@ public class JSR341Evaluator implements Evaluator {
                 return result;
             }
             builder.append(inExpression.substring(previousEnd, start));
-            builder.append(result.toString());
+            try {
+                builder.append(result.toString());
+            }
+            catch (RuntimeException ex) {
+                Logger.getGlobal().log(Level.INFO, "Exception while evaluating of {0}", group);
+                throw ex;
+            }
             previousEnd = end;
         }
         builder.append(inExpression.substring(previousEnd, inExpression.length()));

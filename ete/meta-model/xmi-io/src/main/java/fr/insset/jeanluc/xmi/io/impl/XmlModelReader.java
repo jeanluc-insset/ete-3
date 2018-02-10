@@ -2,6 +2,7 @@ package fr.insset.jeanluc.xmi.io.impl;
 
 
 
+import fr.insset.jeanluc.ete.util.XList;
 import static fr.insset.jeanluc.ete.meta.model.constraint.Constraint.CONSTRAINT;
 import static fr.insset.jeanluc.ete.meta.model.constraint.Invariant.INVARIANT;
 import static fr.insset.jeanluc.ete.meta.model.constraint.Precondition.PRECONDITION;
@@ -75,12 +76,14 @@ public class XmlModelReader implements ModelReader {
     public final static String     STEREOTYPE_PATH         = "uml:Stereotype";
     public final static String     APPLIED_STEREOTYPE_PATH = ".//*[@base_Class]";
     public final static String     READER_VISITOR          = "reader_visitor";
+    public final static String     XLIST                   = "xlist";
 
 
 
 
     public XmlModelReader() {
         FactoryRegistry.register(READER_VISITOR, XmlModelReaderVisitor.class);
+        FactoryRegistry.register(XLIST, XList.class);
     }
 
 
@@ -171,11 +174,11 @@ public class XmlModelReader implements ModelReader {
 
     @Override
     public Collection<NamedElement> readSpecifications(Object inDocument, EteModel inoutModel) throws IOException {
-        Collection<NamedElement> result = readElementsByPath((Document) inDocument, inoutModel, POSTCONDITION_PATH, POSTCONDITION);
-        Collection<NamedElement> pre = readElementsByPath((Document) inDocument, inoutModel, PRECONDITION_PATH, PRECONDITION);
-        result.addAll(pre);
+        Collection<NamedElement> result = readElementsByPath((Document) inDocument, inoutModel, PRECONDITION_PATH, PRECONDITION);
         Collection<NamedElement> others = readElementsByPath((Document) inDocument, inoutModel, CONSTRAINT_PATH, CONSTRAINT);
         result.addAll(others);
+        Collection<NamedElement> post = readElementsByPath((Document) inDocument, inoutModel, POSTCONDITION_PATH, POSTCONDITION);
+        result.addAll(post);
         return result;
     }
 
@@ -271,7 +274,7 @@ public class XmlModelReader implements ModelReader {
     protected List<NamedElement> _doReadElements(NodeList elements, Node inNode, EteModel inModel,
             String inPath, String inType) throws IOException {
         try {
-            List<NamedElement> result = FactoryMethods.newList(NamedElement.class);
+            List<NamedElement> result = (List<NamedElement>) FactoryRegistry.getRegistry().getFactory(XLIST).newInstance();
             AbstractFactory factory = FactoryRegistry.getRegistry().getFactory(inType);
             elements : for (int i=0 ; i<elements.getLength() ; i++) {
                 Element domElement = (Element)elements.item(i);

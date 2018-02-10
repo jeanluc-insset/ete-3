@@ -30,6 +30,7 @@ import static org.junit.Assert.*;
 import static fr.insset.jeanluc.ete.meta.model.types.collections.MofSequence.MOF_SEQUENCE;
 import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
+import fr.insset.jeanluc.ete.util.XList;
 
 
 
@@ -80,7 +81,7 @@ public class XmlModelReaderTest {
         assertEquals(2, allClasses.size());
         Collection<MofClass> classes = result.getClasses();
         assertEquals(2, classes.size());
-        Collection<Association> associations = new LinkedList<>();
+        Collection<Association> associations = new XList<>();
         for (MofClass aClass : classes) {
             System.out.println("Scanning : " + aClass);
             List<MofProperty> ownedAttribute = aClass.getOwnedAttribute();
@@ -157,7 +158,6 @@ public class XmlModelReaderTest {
         assertEquals(1, invariants.size());
 
         // 3-d check some operations
-        // 3-d-1 Passage::calculeNote
         List<MofOperation> ownedOperations = passageClass.getOwnedOperation();
         assertEquals(1, ownedOperations.size());
         MofOperation calculeNote = ownedOperations.get(0);
@@ -167,25 +167,6 @@ public class XmlModelReaderTest {
         assertEquals(floatType, calculeNoteType);
         Collection<Postcondition> postconditions = calculeNote.getPostconditions();
         assertEquals(1, postconditions.size());
-        // 3-d-2 CreateurQuestion::nouvelleReponse
-//        Operation ownedOperation = createurQuestionClass.getOwnedOperation("nouvelleReponse");
-//        MofType type = ownedOperation.getType();
-//        MofClass reponseClass = (MofClass)result.getElementByName("Reponse");
-//        assertEquals(reponseClass, type);
-//        Collection<Parameter> ownedParameters = ownedOperation.getOwnedParameter();
-//        assertEquals(2, ownedParameters.size());
-//        for (Parameter aParameter : ownedParameters) {
-//            String      parameterName = aParameter.getName();
-//            if ("inQuestion".equals(parameterName)) {
-//                MofClass questionClass = (MofClass) result.getElementByName("Question");
-//                assertEquals(questionClass, aParameter.getType());
-//            } else if ("inLibelle".equals(parameterName)) {
-//                MofType  stringType = (MofType) result.getElementByName(STRING_TYPE);
-//                assertEquals(stringType, aParameter.getType());
-//            } else {
-//                fail("Unknown parameter : " + parameterName + " in " + ownedOperation.getName());
-//            }
-//        }
 
         // 3-e check some stereotypes
         assertEquals(Boolean.TRUE, passageClass.hasStereotype("Entity"));

@@ -6,6 +6,7 @@ import fr.insset.jeanluc.ete.meta.model.constraint.Constraint;
 import java.util.LinkedList;
 import java.util.List;
 
+
 /**
  *
  * @author jldeleage

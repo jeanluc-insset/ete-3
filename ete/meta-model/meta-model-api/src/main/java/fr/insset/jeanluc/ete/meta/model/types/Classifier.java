@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
+import fr.insset.jeanluc.ete.util.XList;
 
 /**
  *
@@ -14,7 +15,7 @@ import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
 public interface Classifier extends MofType {
     
     public  default List<MofProperty>          getOwnedAttribute() {
-        return getOwnedAttributeAsStream().collect(Collectors.toList());
+        return getOwnedAttributeAsStream().collect(Collectors.toCollection(XList::new));
     }
     public  void                            addOwnedAttribute(MofProperty inProperty);
     public  void                            removeOwnedAttribute(MofProperty inProperty);
@@ -22,7 +23,7 @@ public interface Classifier extends MofType {
     public  Stream<MofProperty>                getOwnedAttributeAsStream();
 
     public  default List<MofOperation>         getOwnedOperation() {
-        return getOwnedOperationAsStream().collect(Collectors.toList());
+        return getOwnedOperationAsStream().collect(Collectors.toCollection(XList::new));
     }
     public  void                            addOwnedOperation(MofOperation inOperation);
     public  void                            removeOwnedOperation(MofOperation inOperation);
@@ -30,3 +31,4 @@ public interface Classifier extends MofType {
     public  Stream<MofOperation>               getOwnedOperationAsStream();
 
 }
+

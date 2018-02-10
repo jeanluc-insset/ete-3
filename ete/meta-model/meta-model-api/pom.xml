@@ -12,12 +12,24 @@
     <artifactId>meta-model-api</artifactId>
 
     <packaging>jar</packaging>
+
     <dependencies>
+
         <dependency>
             <groupId>fr.insset.jeanluc</groupId>
             <artifactId>util</artifactId>
             <version>1.1</version>
             <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>javax.el</groupId>
+            <artifactId>javax.el-api</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>javax.el</artifactId>
+            <version>3.0.0</version>
         </dependency>
 
         <dependency>
@@ -32,7 +44,9 @@
             <version>1.3</version>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
+
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>

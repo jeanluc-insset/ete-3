@@ -51,6 +51,7 @@ import fr.insset.jeanluc.ete.meta.model.emof.instance.InstanceSpecification;
 import fr.insset.jeanluc.ete.meta.model.emof.instance.Slot;
 import fr.insset.jeanluc.ete.meta.model.types.Classifier;
 import fr.insset.jeanluc.ete.meta.model.types.TypedElement;
+import fr.insset.jeanluc.ete.util.XList;
 import static fr.insset.jeanluc.xmi.io.impl.XmlUtilities.getElements;
 import static fr.insset.jeanluc.xmi.io.impl.XmlUtilities.getStringValue;
 import javax.lang.model.element.PackageElement;
@@ -433,7 +434,7 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
 
 
     protected Collection<NamedElement> getNamedElements(String inName, String inAttributeName, Element inElement, EteModel inModel) {
-        Collection<NamedElement> result = new LinkedList<>();
+        Collection<NamedElement> result = new XList<>();
         NodeList childNodes = inElement.getChildNodes();
         for (int i=0 ; i<childNodes.getLength() ; i++) {
             Node n = childNodes.item(i);

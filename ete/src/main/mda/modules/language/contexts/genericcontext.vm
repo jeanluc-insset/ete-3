@@ -17,6 +17,7 @@ import java.util.Map;
 import javax.annotation.Generated;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
+import fr.insset.jeanluc.ete.util.XList;
 
 
 /**
@@ -65,7 +66,7 @@ public class ${dialect.i2uc($projectName)}ContextImpl implements ${dialect.i2uc(
     }
 
 
-    private Deque<Map<String, Object>>     stack = new LinkedList<>();
+    private Deque<Map<String, Object>>     stack = new XList<>();
 
 }
 

@@ -6,7 +6,9 @@ import fr.insset.jeanluc.ete.meta.model.core.NamedElement;
 import fr.insset.jeanluc.ete.meta.model.core.PrimitiveDataTypes;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
 import static fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel.MODEL;
+import fr.insset.jeanluc.ete.util.XList;
 import fr.insset.jeanluc.util.factory.AbstractFactory;
+import static fr.insset.jeanluc.util.factory.FactoryMethods.LIST;
 import fr.insset.jeanluc.util.factory.FactoryRegistry;
 import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
 import java.io.File;
@@ -36,6 +38,7 @@ public interface ModelReader {
     public default EteModel readModel(String inUrl) throws IOException, InstantiationException, IllegalAccessException {
         EteModel model = (EteModel) FactoryRegistry.newInstance(MODEL);
         PrimitiveDataTypes.init(model);
+        FactoryRegistry.getRegistry().registerFactory(LIST, XList.class);
         return readModel(inUrl, model);
     }
 

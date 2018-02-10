@@ -48,7 +48,6 @@
             <groupId>fr.insset.jeanluc</groupId>
             <artifactId>xlang-impl</artifactId>
             <version>${project.version}</version>
-            <type>jar</type>
         </dependency>
     </dependencies>
     <name>xlang-builder</name>

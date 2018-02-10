@@ -22,12 +22,12 @@
             <!-- JPA -->
             <velocity   template="abstract_jpa.vm"
                         target="fr/insset/jeanluc/airways/jpa/AbstractJpa.java"/>
-            <velocity items="${classes}"
+            <velocity items="${classes.filter(c -> c.hasStereotype(&quot;Entity&quot;))}"
                         var="aClass"
                         dialect="fr.insset.jeanluc.as2java.JavaGenerator"
                         template="class2entity.vm"
                         target="${aClass.owningPackage.name.replace('.', '/')}/model/${aClass.name}.java"/>
-            <velocity items="${classes}"
+            <velocity items="${classes.filter(c -> c.hasStereotype(&quot;Entity&quot;))}"
                         var="aClass"
                         dialect="fr.insset.jeanluc.as2java.JavaGenerator"
                         template="class2jpa.vm"

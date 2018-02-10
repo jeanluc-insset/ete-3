@@ -5,6 +5,7 @@ package fr.insset.jeanluc.ete.meta.model.mofpackage;
 import fr.insset.jeanluc.ete.meta.model.core.NamedElement;
 import fr.insset.jeanluc.ete.meta.model.emof.Enumeration;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
+import fr.insset.jeanluc.ete.util.XList;
 import fr.insset.jeanluc.util.coll.CompositeCollection;
 import java.util.Collection;
 import java.util.stream.Collector;
@@ -36,10 +37,10 @@ public interface MofPackage extends PackageableElement {
     }
 
     public  default Collection<MofPackage>          getPackages() {
-        return getPackagesAsStream().collect(Collectors.toList());
+        return getPackagesAsStream().collect(Collectors.toCollection(XList::new));
     }
     public  default Collection<MofClass>            getClasses() {
-        return getClassesAsStream().collect(Collectors.toList());
+        return getClassesAsStream().collect(Collectors.toCollection(XList::new));
     }
     public  default Collection<MofClass>            getAllClasses() {
         Collection<MofClass>    result = new CompositeCollection<>(getClasses());
@@ -47,7 +48,7 @@ public interface MofPackage extends PackageableElement {
     }
 
     public default Collection<Enumeration>          getEnumerations() {
-        return getEnumerationsAsStream().collect(Collectors.toList());
+        return getEnumerationsAsStream().collect(Collectors.toCollection(XList::new));
     }
 
 
