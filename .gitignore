@@ -51,3 +51,28 @@
 /ete/gel/target/
 /samples/web-ete-bank/target/
 /ete/xlang/xlang-to-xxx/target/
+/ete copie/el/el-evaluator/nbproject/
+/ete copie/el/el-evaluator/target/
+/ete copie/ete-lib/ete-lib-api/target/
+/ete copie/ete-lib/ete-lib-impl/target/
+/ete copie/ete-maven-plugin/target/
+/ete copie/gel/gel-api/target/
+/ete copie/gel/gel-evaluator/target/
+/ete copie/gel/gel-impl/target/
+/ete copie/meta-model/meta-model-api/target/
+/ete copie/meta-model/meta-model-impl/target/
+/ete copie/meta-model/meta-model-io/target/
+/ete copie/meta-model/plain-text-io/target/
+/ete copie/meta-model/xmi-io/target/
+/ete copie/xlang/action-semantics-to-java/target/
+/ete copie/xlang/xlang-api/target/
+/ete copie/xlang/xlang-builder/target/
+/ete copie/xlang/xlang-impl/target/
+/ete copie/xlang/xlang-to-xxx/target/
+/ete copie/ete-lib/ete-lib-impl/nbproject/
+/ete copie/gel/gel-api/nbproject/
+/ete copie/gel/gel-impl/nbproject/
+/ete copie/gel/gel-spec/nbproject/
+/ete copie/meta-model/meta-model-api/nbproject/
+/ete copie/xlang/action-semantics-to-java/nbproject/
+/ete copie/xlang/xlang-builder/nbproject/

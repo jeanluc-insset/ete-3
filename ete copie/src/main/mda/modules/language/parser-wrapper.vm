@@ -1,0 +1,63 @@
+################################################################################
+##                                                                            ##
+## Generates a convenience class to instantiate a parser for a simple String  ##
+##                                                                            ##
+################################################################################
+package fr.insset.jeanluc.ete.${dialect.i2lc($projectName)}.impl;
+
+import fr.insset.jeanluc.ete.${projectName.toLowerCase()}.${dialect.i2uc($projectName)}Context;
+import fr.insset.jeanluc.ete.${projectName.toLowerCase()}.${dialect.i2uc($projectName)}Expression;
+import fr.insset.jeanluc.ete.${projectName.toLowerCase()}.${dialect.i2uc($projectName)}Lexer;
+import fr.insset.jeanluc.ete.${projectName.toLowerCase()}.${dialect.i2uc($projectName)}Parser;
+import fr.insset.jeanluc.ete.meta.model.core.NamedElement;
+import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
+import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
+import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
+import fr.insset.jeanluc.ete.meta.model.types.TypedElement;
+import javax.annotation.Generated;
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CommonTokenStream;
+
+
+/**
+ *
+ * @author jldeleage
+ */
+@Generated("ete - jean-luc@insset.fr  ete/src/main/mda/modules/language/parser-wrapper.vm")
+public class ${dialect.i2uc($projectName)}ParserWrapper {
+    
+    public static ${dialect.i2uc($projectName)}Parser newParser(String inExpression) {
+        ${dialect.i2uc($projectName)}Lexer lexer = null;
+        ANTLRInputStream input = new ANTLRInputStream(inExpression);
+        lexer = new ${dialect.i2uc($projectName)}Lexer(input);
+        CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
+        ${dialect.i2uc($projectName)}Parser parser = new ${dialect.i2uc($projectName)}Parser(commonTokenStream);
+        return parser;
+    }
+
+    public static ${dialect.i2uc($projectName)}Expression buildAbstractTree(String inExpression, EteModel inModel, NamedElement inContextElement) {
+        MofClass    contextualClass = null;
+        if (inContextElement instanceof MofClass) {
+            contextualClass = (MofClass)inContextElement;
+        }
+        else if (inContextElement != null) {
+            contextualClass = (MofClass) ((MofOperation)inContextElement).getOwningMofClass();
+        }
+        ${dialect.i2uc($projectName)}Context context = new ${dialect.i2uc($projectName)}ContextImpl(inModel, contextualClass, inContextElement);
+        return buildAbstractTree(inExpression, context);
+    }
+
+    public static ${dialect.i2uc($projectName)}Expression buildAbstractTree(String inExpression, ${dialect.i2uc($projectName)}Context inContext) {
+        ${dialect.i2uc($projectName)}Parser parser = ${dialect.i2uc($projectName)}ParserWrapper.newParser(inExpression);
+        ${dialect.i2uc($projectName)}Parser.${dialect.i2uc($projectName)}ExpressionContext concreteExpression = parser.${dialect.i2lc($projectName)}Expression();
+        TreeBuilder builder = new TreeBuilder(inContext);
+        ${dialect.i2uc($projectName)}Expression abstractExpression = builder.visit(concreteExpression);
+        return abstractExpression;
+    }
+
+    protected void addToContext(String inName, TypedElement inValue) {
+    }
+
+}
+
+

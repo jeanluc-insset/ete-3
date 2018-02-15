@@ -22,16 +22,18 @@
             <!-- JPA -->
             <velocity   template="abstract_jpa.vm"
                         target="fr/insset/jeanluc/airways/jpa/AbstractJpa.java"/>
-            <velocity items="${classes.filter(c -> c.hasStereotype(&quot;Entity&quot;))}"
-                        var="aClass"
+            <velocity items="${classes}"
                         dialect="fr.insset.jeanluc.as2java.JavaGenerator"
                         template="class2entity.vm"
-                        target="${aClass.owningPackage.name.replace('.', '/')}/model/${aClass.name}.java"/>
+                        target="${current.owningPackage.name.replace('.', '/')}/model/${current.name}.java"/>
             <velocity items="${classes.filter(c -> c.hasStereotype(&quot;Entity&quot;))}"
-                        var="aClass"
+                        dialect="fr.insset.jeanluc.as2java.JavaGenerator"
+                        template="class2entity.vm"
+                        target="${current.owningPackage.name.replace('.', '/')}/model/${current.name}.java"/>
+            <velocity items="${classes.filter(c -> c.hasStereotype(&quot;Entity&quot;))}"
                         dialect="fr.insset.jeanluc.as2java.JavaGenerator"
                         template="class2jpa.vm"
-                        target="${aClass.owningPackage.name.replace('.', '/')}/jpa/${aClass.name}Jpa.java"/>
+                        target="${current.owningPackage.name.replace('.', '/')}/jpa/${current.name}Jpa.java"/>
         </transformation-set>
 
         <velocity   template="pu.vm"

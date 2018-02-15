@@ -81,9 +81,10 @@ public class XmlModelReader implements ModelReader {
 
 
 
-    public XmlModelReader() {
-        FactoryRegistry.register(READER_VISITOR, XmlModelReaderVisitor.class);
-        FactoryRegistry.register(XLIST, XList.class);
+    public XmlModelReader() throws InstantiationException {
+        FactoryRegistry registry = FactoryRegistry.getRegistry();
+        registry.registerDefaultFactory(READER_VISITOR, XmlModelReaderVisitor.class);
+        registry.registerFactory(XLIST, XList.class);
     }
 
 
@@ -96,6 +97,11 @@ public class XmlModelReader implements ModelReader {
 
     @Override
     public Collection<NamedElement> readClasses(Object inDocument, EteModel inoutModel) throws IOException {
+        FactoryRegistry registry = FactoryRegistry.getRegistry();
+        AbstractFactory factory = registry.getFactory(MOF_CLASS);
+        Class builtClass = factory.getBuiltClass();
+        System.out.println("The implementation class for MofClass is " + builtClass);
+        System.out.println("The registry is : " + registry);
         Collection<NamedElement> result = readElementsByPath((Document) inDocument, inoutModel, CLASS_PATH, MOF_CLASS);
         return result;
     }
@@ -285,20 +291,26 @@ public class XmlModelReader implements ModelReader {
                 if (null != name && !"".equals(name)) {
                     newInstance.setName(name);
                 }
+                System.out.println("ELEMENT LU : " + newInstance + " (" + newInstance.getClass() + ")");
                 String id = domElement.getAttribute("xmi:id");
                 newInstance.setId(id);
+                System.out.println("Id ajoute : " + id);
                 inModel.addElement(newInstance);
+                System.out.println("Element ajoute au modele");
                 Node parentNode = domElement.getParentNode();
                 String parentId   = parentNode instanceof Element ? ((Element)parentNode).getAttribute("xmi:id"):"";
+                System.out.println("ParentId : [" + parentId + "]");
                 NamedElement parentNamedElement = inModel.getElementById(parentId);
 //                String parentName = parentNode instanceof Element ? ((Element)parentNode).getAttribute("name"):"";
 //                PackageableElement parentElement = inModel.getElementByName(parentName);
+                System.out.println("DEBUT DES VISITES");
                 visitors : for (DynamicVisitorSupport visitor : getVisitors()) {
                     try {
+                        System.out.println("   VISITEUR : " + visitor);
                         visitor.genericVisit(newInstance, parentNamedElement, inModel, domElement);
                     } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                         Logger.getLogger(XmlModelReader.class.getName()).log(Level.FINE, null, ex);
-                        Logger.getGlobal().log(Level.WARNING, "Error when visiting {0} : {1}", new Object[]{newInstance.getName(), ex.getLocalizedMessage()});
+                        Logger.getGlobal().log(Level.WARNING, "Error when visiting {0} : {1}", new Object[]{newInstance.getName(), ex});
                         continue elements;
                     }
                 }

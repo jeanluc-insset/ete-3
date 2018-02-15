@@ -1,0 +1,60 @@
+package ${current.owningPackage};
+
+
+#foreach ($aDependance in $current.dependances)
+import ${dialect.getQualifiedName($aDependance)};
+#end
+#if ($current.hasStereotype("collection_operation"))
+import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
+import fr.insset.jeanluc.ete.meta.model.types.MofType;
+#end
+import java.util.List;
+import java.util.Set;
+import javax.annotation.Generated;
+
+
+@Generated("jean-luc@insset.fr template : ete/src/main/mda/modules/from-spec/class2interface.vm")
+public interface $current.name #if ($current.superClass && $current.superClass.size()>0) extends ${dialect.getQualifiedName($current.superClass.get(0))} #end {
+
+
+#foreach ($aProperty in $current.ownedAttribute)
+#if ($aProperty.qualifierName)
+    public ${dialect.mt2lt($aProperty.type)} get${dialect.i2uc($aProperty.name)}(${dialect.mt2lt($aProperty.qualifierType)} inKey);
+    public void set${dialect.i2uc($aProperty.name)}(${dialect.mt2lt($aProperty.qualifierType)} inKey, ${dialect.mt2lt($aProperty.type)} inValue);
+#if ($aProperty.isCollection())
+    public void add${dialect.i2uc($aProperty.name)}(${dialect.mt2lt($aProperty.qualifierType)} inKey, ${dialect.mt2lt($aProperty.type)} inValue);
+#end        ## isCollection
+#else
+#if($aProperty.name && $aProperty.type.name)
+    public ${dialect.mt2lt($aProperty.type)} get${dialect.i2uc($aProperty.name)}();
+    public void set${dialect.i2uc($aProperty.name)}(${dialect.mt2lt($aProperty.type)} inValue);
+#if ($aProperty.isCollection())
+    public void add${dialect.i2uc($aProperty.name)}(${dialect.mt2lt($aProperty.type)} inValue);
+#end        
+#end
+#end
+#end        ## foreach property
+
+
+    //========================================================================//
+
+#foreach ($anOperation in $current.ownedOperation)
+    public ${dialect.mt2lt($anOperation.type)} ${dialect.i2lc($anOperation.name)}(#foreach($aParameter in $anOperation.ownedParameter)#if ($velocityCount > 1),#end $aParameter.type $aParameter.name#end);
+#end
+
+## This operation is used in the parsing of Gel expressions, in order to build
+## an abstract tree containing an operation on a collection
+#if ($current.hasStereotype("collection_operation"))
+    public MofType  getType(EteModel inModel);
+#end
+
+#if ($current.getValueOf("symbol"))
+    public default String getSymbol() {
+        return "${current.getValueOf("symbol")}";
+    }
+#end
+
+
+}
+
+

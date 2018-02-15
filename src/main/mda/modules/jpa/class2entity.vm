@@ -1,6 +1,4 @@
-package ${aClass.package.name}.model;
-
-
+package ${current.owningPackage}.model;
 
 
 
@@ -22,7 +20,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Entity
 @XmlRootElement
-public class ${aClass.name} implements Serializable {
+public class ${current.name} implements Serializable {
 
 
     public Long getId() {
@@ -47,10 +45,10 @@ public class ${aClass.name} implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ${aClass.name})) {
+        if (!(object instanceof ${current.name})) {
             return false;
         }
-        ${aClass.name} other = (${aClass.name}) object;
+        ${current.name} other = (${current.name}) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -61,30 +59,30 @@ public class ${aClass.name} implements Serializable {
     //========================================================================//
 
 
-#foreach ($tagValue in ${aClass.getTagValues().keySet()})
-    public default String get${tagValue.name.substring(0,1).toUpperCase()}${tagValue.name.substring(1)}() {
-        return "${aClass.getValueOf($tagValue.name)}";
+#foreach ($tagValue in ${current.getTagValues().keySet()})
+    public default String get${dialect.i2uc($tagValue.name)}() {
+        return "${current.getValueOf($tagValue.name)}";
     }
 #end
 
 
     //========================================================================//
 
-#foreach ($aProperty in $aClass.ownedAttribute)
-    public $dialect.moft2lt($aProperty.type.name) get${aProperty.name.substring(0,1).toUpperCase()}${aProperty.name.substring(1)}() {
+#foreach ($aProperty in $current.ownedAttribute)
+    public $dialect.mt2lt($aProperty.type) get${dialect.i2uc($aProperty.name)}() {
         return ${aProperty.name};
     }
 
-    public void set${aProperty.name.substring(0,1).toUpperCase()}${aProperty.name.substring(1)}($dialect.moft2lt($aProperty.type.name) inValue) {
+    public void set${dialect.i2uc($aProperty.name)}(${dialect.mt2lt($aProperty.type)} inValue) {
         ${aProperty.name} = inValue;
     }
 
 #if ($aProperty.type.collection)
-    public void add${aProperty.name.substring(0,1).toUpperCase()}${aProperty.name.substring(1)}(${aProperty.type.baseType.name} inValue) {
+    public void add${dialect.i2uc($aProperty.name)}(${dialect.mt2lt($aProperty.type.baseType)} inValue) {
         ${aProperty.name}.add(inValue);
     }
 
-    public void remove${aProperty.name.substring(0,1).toUpperCase()}${aProperty.name.substring(1)}(${aProperty.type.baseType.name} inValue) {
+    public void remove${dialect.i2uc($aProperty.name)}(${dialect.mt2lt($aProperty.type.baseType)} inValue) {
         ${aProperty.name}.remove(inValue);
     }
 #end
@@ -94,7 +92,7 @@ public class ${aClass.name} implements Serializable {
     //========================================================================//
 
 
-#foreach ($aMethod in $aClass.ownedOperation)
+#foreach ($aMethod in $current.ownedOperation)
     public $dialect.moft2lt($aMethod.type.name) ${aMethod.name}(#foreach($aParam in ${aMethod.parameters})${aParam.type} ${aParam.name} #end) {
 ${dialect.getOperationBody($aMethod, "    ")}
     }
@@ -103,8 +101,8 @@ ${dialect.getOperationBody($aMethod, "    ")}
 
     @Override
     public String toString() {
-#if ($aClass.ownedAttribute.size() > 0)
-        return "" + ${aClass.ownedAttribute.get(0)};
+#if ($current.ownedAttribute.size() > 0)
+        return "" + ${current.ownedAttribute.get(0)};
 #else
         return super.toString();
 #end
@@ -112,7 +110,7 @@ ${dialect.getOperationBody($aMethod, "    ")}
 
     //========================================================================//
 
-#foreach ($aProperty in $aClass.ownedAttribute)
+#foreach ($aProperty in $current.ownedAttribute)
     #if ($aProperty.type.hasStereotype("Entity"))
     @ManyToOne 
     #end
@@ -123,7 +121,7 @@ ${dialect.getOperationBody($aMethod, "    ")}
     #elseif ($aProperty.type.name == "date")
     @javax.persistence.Temporal(javax.persistence.TemporalType.DATE)
     #end
-    $dialect.moft2lt($aProperty.type.name)      ${aProperty.name};
+    $dialect.mt2lt($aProperty.type)      ${aProperty.name};
 #end
 
     private static final long serialVersionUID = 1L;

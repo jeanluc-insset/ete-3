@@ -1,4 +1,4 @@
-package ${aClass.package.name}.jpa;
+package ${aClass.owningPackage.name}.jpa;
 
 
 import fr.insset.jeanluc.airways.jpa.AbstractJpa;

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<mda>
+
+    <!--
+        
+      -->
+
+    <transformation-set>
+        <velocity template="class2pojo.vm"
+                  items="${classes}"
+                  target='${current.owningPackage.name.replace(".", "/")}/${current.name}.java'
+                  />
+    </transformation-set>
+
+</mda>
+

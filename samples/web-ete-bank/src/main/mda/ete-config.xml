@@ -19,13 +19,16 @@
         <transformation-set>
 
             <!--
-                from
+                current dir :
                 ete-toolchain/samples/web-ete-bank/src/main/mda
-                to
+                target dir :
                 ete-toolchain/src/main/mda/modules/jpa/ete-config.xml
               -->
             <module src="../../../../../src/main/mda/modules/jpa/ete-config.xml"/>
-
+<!--            <velocity template="pojo-with-operations.vm"
+                    items="${classes}"
+                    target="generated-sources/ete/${current.owningPackage.name.replace('.', '/')}/${current.name}.java"
+                    />-->
         </transformation-set>
 
 
