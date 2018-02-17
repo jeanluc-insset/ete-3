@@ -165,7 +165,7 @@ public class XmlModelReaderTest {
         PackageableElement floatType = result.getElementByName(FLOAT_TYPE + TYPE_SUFFIX);
         assertNotNull(floatType);
         assertEquals(floatType, calculeNoteType);
-        Collection<Postcondition> postconditions = calculeNote.getPostconditions();
+        Collection<? extends Postcondition> postconditions = calculeNote.getPostconditions();
         assertEquals(1, postconditions.size());
 
         // 3-e check some stereotypes

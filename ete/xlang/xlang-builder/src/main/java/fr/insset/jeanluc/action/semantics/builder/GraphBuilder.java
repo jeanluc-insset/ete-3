@@ -32,7 +32,7 @@ import java.util.logging.Logger;
  *  <code>a = b@pre and b=a@pre</code><br>
  * We must create an auxiliary variable in order to create the
  * statements&nbsp;:<br>
- * <code><pre>var aux : typeA
+ * <code><pre>let aux : typeA
  * aux = a
  * a  = b
  * b = aux
@@ -42,7 +42,7 @@ import java.util.logging.Logger;
  * is an equality in the assertion of the form
  * <code>y = f(x@pre)</code>.<br>
  * A simple solution would be to store any expression marked @pre in a
- * fresh local variable, but it would less elegant.
+ * fresh local variable, but it would be less elegant.
  * </div>
  * <div>
  * <b>Dependance graph</b>
@@ -50,7 +50,10 @@ import java.util.logging.Logger;
  * in a condition of the form <code>y = f(x)</code><br>
  * This graph should not contain any cycle and gives a precedence for the
  * instructions.<br>
- * At the then of the method, postconditions are sorted following the order
+ * For example in&nbsp;:<br>
+ * <pre><code>a = f(b) and b = g()</code></pre><br>
+ * we must compute b first.<br>
+ * At the end of the method, postconditions are sorted following the order
  * defined by that graph.
  * </div>
  *
@@ -70,7 +73,7 @@ public class GraphBuilder extends DynamicVisitorSupport {
 
 
     public void buildGraphs(fr.insset.jeanluc.ete.meta.model.emof.MofOperation inOperation) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        List<Postcondition> conditions = inOperation.getPostconditions();
+        List<? extends Postcondition> conditions = inOperation.getPostconditions();
         for (Postcondition aCondition : conditions) {
             genericVisit(aCondition);
         }

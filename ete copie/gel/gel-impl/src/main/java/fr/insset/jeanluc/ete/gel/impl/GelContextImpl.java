@@ -252,9 +252,7 @@ public class GelContextImpl implements GelContext<GelExpression> {
 
     public GelExpression resolveParameter(String inString, MofOperation inOperation) throws InstantiationException, IllegalAccessException {
         Collection<MofParameter> ownedParameter = inOperation.getOwnedParameter();
-        System.out.println("Looking for a parameter named : " + inString + " in " + ownedParameter);
         for (MofParameter aParameter : ownedParameter) {
-            System.out.println("Examining " + aParameter.getName());
             if (inString.equals(aParameter.getName())) {
                 VariableReference   result = (VariableReference) FactoryRegistry.newInstance("var");
                 result.setDefinition(aParameter);

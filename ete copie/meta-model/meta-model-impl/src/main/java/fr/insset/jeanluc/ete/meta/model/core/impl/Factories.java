@@ -60,7 +60,6 @@ import java.util.logging.Logger;
 public abstract class Factories {
 
     public static void init() {
-        System.out.println("Registration of default factories");
         FactoryRegistry registry = FactoryRegistry.getRegistry();
         registry.registerDefaultFactory(MOF_TYPE, MofTypeImpl.class);
         registry.registerDefaultFactory(MODEL, EteModelImpl.class);
@@ -86,16 +85,6 @@ public abstract class Factories {
         registry.registerDefaultFactory(CONSTRAINT, ConstraintImpl.class);
         registry.registerDefaultFactory(STEREOTYPE, StereotypeImpl.class);
         registry.registerDefaultFactory(TAG_VALUE_DECLARATION, TagValueDeclarationImpl.class);
-        try {
-            AbstractFactory factory = registry.getFactory(MOF_PARAMETER);
-            System.out.println("Factory : " + factory);
-            Object newInstance = FactoryRegistry.newInstance(MOF_PARAMETER);
-            System.out.println("Nouvelle instance : " + newInstance + " (" + newInstance.getClass() + ")");
-        } catch (InstantiationException ex) {
-            Logger.getLogger(Factories.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(Factories.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
 }

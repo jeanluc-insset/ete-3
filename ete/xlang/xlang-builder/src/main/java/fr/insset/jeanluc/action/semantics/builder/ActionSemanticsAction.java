@@ -4,6 +4,8 @@ package fr.insset.jeanluc.action.semantics.builder;
 import fr.insset.jeanluc.ete.api.ActionSupport;
 import fr.insset.jeanluc.ete.api.EteException;
 import fr.insset.jeanluc.ete.gel.GelParserBaseVisitor;
+import static fr.insset.jeanluc.ete.meta.model.constraint.Invariant.INVARIANT;
+import static fr.insset.jeanluc.ete.meta.model.constraint.Postcondition.POSTCONDITION;
 import static fr.insset.jeanluc.ete.meta.model.emof.MofClass.MOF_CLASS;
 import static fr.insset.jeanluc.ete.meta.model.emof.MofOperation.MOF_OPERATION;
 import static fr.insset.jeanluc.ete.meta.model.emof.MofProperty.MOF_PROPERTY;
@@ -33,6 +35,8 @@ public class ActionSemanticsAction extends ActionSupport {
         FactoryRegistry registry = FactoryRegistry.getRegistry();
         registry.registerFactory(MOF_CLASS, EnhancedMofClassImpl.class);
         registry.registerFactory(MOF_OPERATION, EnhancedMofOperationImpl.class);
+        registry.registerFactory(INVARIANT, EnhancedInvariant.class);
+        registry.registerFactory(POSTCONDITION, EnhancedPostCondition.class);
 //        registry.registerFactory(XmlModelReader.READER_VISITOR, ConditionVisitor.class);
     }
 

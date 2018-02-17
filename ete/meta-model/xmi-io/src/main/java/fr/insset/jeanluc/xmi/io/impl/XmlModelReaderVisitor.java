@@ -142,20 +142,16 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
 
 
     public Object   visitMofClass(MofClass inElement, Object... inParam) {
-        System.out.println("    JE VISITE " + inElement);
         PackageableElement packageable = (PackageableElement) inElement;
         NamedElement       parentElement = (NamedElement) inParam[0];
-        System.out.println("    ELEMENT PARENT " + parentElement);
         Logger             logger = Logger.getGlobal();
         if (parentElement instanceof MofPackage) {
-            System.out.println("    LE PARENT EST UN PACKAGE");
             MofPackage parentPackage = (MofPackage) parentElement;
             parentPackage.addPackagedElement(packageable);
             packageable.setOwningPackage(parentPackage);
             logger.log(Level.INFO, "the item {0} is put into package {1}", new Object[]{packageable, parentPackage});
         }
         else {
-            System.out.println("    LE PARENT N'EST PAS UN PACKAGE");
             logger.log(Level.WARNING, "the item " + packageable + " is not put into any package");
         }
         EteModel    inoutModel = (EteModel) inParam[1];
@@ -278,53 +274,25 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
         EteModel    model = (EteModel)inParam[1];
         Element     element = (Element)inParam[2];
         NodeList    paramElements = element.getElementsByTagName("ownedParameter");
-        global.info("Visiting operation " + inOperation.getName() + " with " + paramElements + " parameter(s)");
+        global.fine("Visiting operation " + inOperation.getName() + " with " + paramElements + " parameter(s)");
         for (int i=0 ; i<paramElements.getLength() ; i++) {
             Element aParamElement = (Element)paramElements.item(i);
-            System.out.println("    Reading a parameter");
             String  direction = aParamElement.getAttribute("direction");
             if ("return".equals(direction)) {
-                System.out.println("    return");
                 MofType type = readType(aParamElement, model);
                 inOperation.setType(type);
             }
             else {
                 try {
-                    global.info("    \"true\" parameter");
+                    global.finest("    \"true\" parameter");
                     MofParameter   parameter = (MofParameter)FactoryRegistry.newInstance(MOF_PARAMETER);
-                    global.info("    Instanciated : " + parameter + " (" + parameter.getClass() + ")");
+                    global.finer("    Instanciated : " + parameter + " (" + parameter.getClass() + ")");
                     String      parameterName = aParamElement.getAttribute("name");
-                    global.info("    name : " + parameterName);
-                    global.info(" to be stored into " + parameter.getClass());
-                    System.out.println("by " + this);
-                    try {
-//                        System.out.println("Trying to set the name of the " + parameter.getClass().getName() + " instance");
-//                        System.out.println("This ClassLoader" + this.getClass().getClassLoader());
-//                        System.out.println("MofParameter ClassLoader " + MofParameter.class.getClassLoader());
-//                        System.out.println("parameter ClassLoader " + parameter.getClass().getClassLoader());
-//                        System.out.println("this.classLoader == MofParameter.classLoader : "
-//                                + (this.getClass().getClassLoader() == MofParameter.class.getClassLoader()));
-//                        System.out.println("parameter.classLoader == MofParameter.classLoader : "
-//                                + (parameter.getClass().getClassLoader() == MofParameter.class.getClassLoader()));
-//                        Method setName = parameter.getClass().getMethod("setName", String.class);
-//                        System.out.println("setName : " + setName);
-//                        setName.invoke(parameter, parameterName);
-//                        System.out.println("setName.invoke OK");
                         parameter.setName(parameterName);
-//                        System.out.println("parameter.setName OK");
-                        System.out.println(" .   NAME OK : " + parameter.getName());
                         global.finer("Parameter : " + parameterName);
                         MofType     type = readType(aParamElement, model);
-//                        Method setType = parameter.getClass().getMethod("setType", MofType.class);
-//                        setType.invoke(parameter, type);
                         parameter.setType(type);
                         inOperation.addOwnedParameter(parameter);
-                        System.out.print("The operation : " + inOperation.getName());
-                        System.out.println(" has " + inOperation.getOwnedParameter().size() + " parameters");
-                    }
-                    catch (Throwable ex) {
-                        ex.printStackTrace();
-                    }
                 } catch (InstantiationException ex) {
                     Logger.getLogger(XmlModelReaderVisitor.class.getName()).log(Level.SEVERE, null, ex);
                     throw new EteException(ex);

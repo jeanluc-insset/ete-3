@@ -12,7 +12,6 @@ public class PackageableElementImpl extends TypedElementImpl implements Packagea
 
     @Override
     public void setOwningPackage(MofPackage inPackage) {
-        System.out.println("Setting the owning package for " + this + " to " + inPackage);
         MofPackage currentOwningPackage = getOwningPackage();
         if (currentOwningPackage == inPackage) {
             return;

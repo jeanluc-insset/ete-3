@@ -256,12 +256,9 @@ public class ${dialect.i2uc($projectName)}ContextImpl implements ${dialect.i2uc(
     //========================================================================//
 
     public ${dialect.i2uc($projectName)}Expression resolveParameter(String inString, MofOperation inOperation) throws InstantiationException, IllegalAccessException {
-        System.out.println("Recherche d'un parametre " + inString + " dans " + inOperation.getName() + " param : " + inOperation.getOwnedParameter());
         Collection<MofParameter> ownedParameter = inOperation.getOwnedParameter();
         for (MofParameter aParameter : ownedParameter) {
-            System.out.println("Examen de " + aParameter.getName());
             if (inString.equals(aParameter.getName())) {
-                System.out.println("BINGO !!!");
                 VariableReference   result = (VariableReference) FactoryRegistry.newInstance("var");
                 result.setName(inString);
                 result.setDefinition(aParameter);

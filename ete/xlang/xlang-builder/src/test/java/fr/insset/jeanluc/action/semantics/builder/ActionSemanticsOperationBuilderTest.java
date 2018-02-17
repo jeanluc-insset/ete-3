@@ -64,7 +64,6 @@ public class ActionSemanticsOperationBuilderTest {
      */
     @Test
     public void testEnableActionSemantics() throws EteException, InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
-        System.out.println("EnableActionSemantics");
 
         // 1- initialize framework
         // 1-a basic factories

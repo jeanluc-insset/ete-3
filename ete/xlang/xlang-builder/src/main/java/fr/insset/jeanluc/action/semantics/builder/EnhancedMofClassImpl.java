@@ -2,9 +2,11 @@ package fr.insset.jeanluc.action.semantics.builder;
 
 
 import fr.insset.jeanluc.ete.api.EteException;
+import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
 import fr.insset.jeanluc.ete.meta.model.emof.impl.MofClassImpl;
 import fr.insset.jeanluc.ete.xlang.Statement;
 import fr.insset.jeanluc.util.factory.FactoryMethods;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,7 +41,14 @@ public class EnhancedMofClassImpl extends MofClassImpl {
      * instructions retrieving objects able to fulfill the role of xxxx
      * regarding to this.
      */
-    private Map<String, List<Statement>>       statements;
+    private Map<String, List<Statement>>                statements;
 
+    /**
+     * Any invariant of the class is scanned.<br>
+     * It is added to the list associated with any property it contains.<br>
+     * That list helps to build requests to find out matching value for
+     * an in work entity.
+     */
+    private Map<MofProperty, List<EnhancedInvariant>>   support = new HashMap<>();
 
 }

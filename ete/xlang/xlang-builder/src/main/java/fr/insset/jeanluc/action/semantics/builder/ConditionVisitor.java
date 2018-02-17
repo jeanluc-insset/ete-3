@@ -11,7 +11,9 @@ import fr.insset.jeanluc.ete.gel.impl.GelParserWrapper;
 import fr.insset.jeanluc.ete.gel.impl.TreeBuilder;
 import fr.insset.jeanluc.ete.gel.impl.VariableDefinitionImpl;
 import fr.insset.jeanluc.ete.meta.model.constraint.Condition;
+import static fr.insset.jeanluc.ete.meta.model.constraint.Invariant.INVARIANT;
 import fr.insset.jeanluc.ete.meta.model.constraint.Postcondition;
+import static fr.insset.jeanluc.ete.meta.model.constraint.Postcondition.POSTCONDITION;
 import fr.insset.jeanluc.ete.meta.model.constraint.Precondition;
 import fr.insset.jeanluc.ete.meta.model.core.NamedElement;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
@@ -46,18 +48,26 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         if (parent == null) {
             // Test conditions : the visitor creation is hard coded instead of
             // declared with an action
-            registry.registerFactory(MOF_CLASS, fr.insset.jeanluc.action.semantics.builder.EnhancedMofClassImpl.class);
-            registry.registerFactory(MOF_OPERATION, fr.insset.jeanluc.action.semantics.builder.EnhancedMofOperationImpl.class);
+            registerFactories(registry);
         }
         else {
             // "Normal" conditions : the visitor is created by an action
-            parent.registerFactory(MOF_CLASS, fr.insset.jeanluc.action.semantics.builder.EnhancedMofClassImpl.class);
-            parent.registerFactory(MOF_OPERATION, fr.insset.jeanluc.action.semantics.builder.EnhancedMofOperationImpl.class);
+            registerFactories(parent);
         }
         // Visiting methods registration
         register(Precondition.class, "visitPrecondition");
         register(Postcondition.class, "visitPostcondition");
     }
+
+
+    private void registerFactories(FactoryRegistry inoutRegistry) {
+        inoutRegistry.registerFactory(MOF_CLASS, fr.insset.jeanluc.action.semantics.builder.EnhancedMofClassImpl.class);
+        inoutRegistry.registerFactory(MOF_OPERATION, fr.insset.jeanluc.action.semantics.builder.EnhancedMofOperationImpl.class);
+        inoutRegistry.registerFactory(INVARIANT, EnhancedInvariant.class);
+        inoutRegistry.registerFactory(POSTCONDITION, EnhancedPostCondition.class);
+    }
+
+
 
 //    public MofClass visitEnhancedMofClass(MofClass inElement, Object... inParam) {
 ////        NamedElement       parentElement = (NamedElement) inParam[0];
@@ -135,6 +145,23 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         visitACondition(inCondition, model, context, variables, statements);
         return inCondition;
     }
+
+
+    public EnhancedPostCondition    visitEnhancedPostCondition(EnhancedPostCondition inCondition, Object... inParameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        Logger.getLogger("fr.insset.jeanluc.oclanalyzer.ReaderVisitor").log(Level.FINE, "Visit of " + inCondition.getSpecificationAsString());
+
+        System.out.println("PARSING AN ENHANCED POST-CONDITION");
+
+        EnhancedMofOperationImpl    context = (EnhancedMofOperationImpl)inParameters[0];
+        List<Statement>             statements    = getStatements(context, "body");
+
+        EteModel        model               = (EteModel)inParameters[1];
+        Map<String, VariableDefinition> variables  = FactoryMethods.newMap(String.class, VariableDefinition.class);
+        addVariable("result", context.getType(), variables);
+        visitACondition(inCondition, model, context, variables, statements);
+        return inCondition;
+    }
+
 
 
     protected void visitACondition(Condition inCondition, EteModel model,
