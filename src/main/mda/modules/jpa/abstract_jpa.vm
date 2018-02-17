@@ -1,4 +1,4 @@
-package fr.insset.jeanluc.airways.jpa;
+package fr.insset.jeanluc.ete.jpa;
 
 
 import java.util.List;

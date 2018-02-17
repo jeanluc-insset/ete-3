@@ -54,6 +54,7 @@ import fr.insset.jeanluc.ete.meta.model.types.TypedElement;
 import fr.insset.jeanluc.ete.util.XList;
 import static fr.insset.jeanluc.xmi.io.impl.XmlUtilities.getElements;
 import static fr.insset.jeanluc.xmi.io.impl.XmlUtilities.getStringValue;
+import java.lang.reflect.Method;
 import javax.lang.model.element.PackageElement;
 
 
@@ -297,19 +298,33 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
                     global.info(" to be stored into " + parameter.getClass());
                     System.out.println("by " + this);
                     try {
-                        System.out.println("Trying to set the name");
+//                        System.out.println("Trying to set the name of the " + parameter.getClass().getName() + " instance");
+//                        System.out.println("This ClassLoader" + this.getClass().getClassLoader());
+//                        System.out.println("MofParameter ClassLoader " + MofParameter.class.getClassLoader());
+//                        System.out.println("parameter ClassLoader " + parameter.getClass().getClassLoader());
+//                        System.out.println("this.classLoader == MofParameter.classLoader : "
+//                                + (this.getClass().getClassLoader() == MofParameter.class.getClassLoader()));
+//                        System.out.println("parameter.classLoader == MofParameter.classLoader : "
+//                                + (parameter.getClass().getClassLoader() == MofParameter.class.getClassLoader()));
+//                        Method setName = parameter.getClass().getMethod("setName", String.class);
+//                        System.out.println("setName : " + setName);
+//                        setName.invoke(parameter, parameterName);
+//                        System.out.println("setName.invoke OK");
                         parameter.setName(parameterName);
+//                        System.out.println("parameter.setName OK");
+                        System.out.println(" .   NAME OK : " + parameter.getName());
+                        global.finer("Parameter : " + parameterName);
+                        MofType     type = readType(aParamElement, model);
+//                        Method setType = parameter.getClass().getMethod("setType", MofType.class);
+//                        setType.invoke(parameter, type);
+                        parameter.setType(type);
+                        inOperation.addOwnedParameter(parameter);
+                        System.out.print("The operation : " + inOperation.getName());
+                        System.out.println(" has " + inOperation.getOwnedParameter().size() + " parameters");
                     }
                     catch (Throwable ex) {
                         ex.printStackTrace();
                     }
-                    System.out.println(" .   NAME OK : " + parameter.getName());
-                    global.info("Parameter : " + parameterName);
-                    MofType     type = readType(aParamElement, model);
-                    parameter.setType(type);
-                    inOperation.addOwnedParameter(parameter);
-                    System.out.println("The operation : " + inOperation.getName());
-                    System.out.println("    has " + inOperation.getOwnedParameter().size() + " elements");
                 } catch (InstantiationException ex) {
                     Logger.getLogger(XmlModelReaderVisitor.class.getName()).log(Level.SEVERE, null, ex);
                     throw new EteException(ex);

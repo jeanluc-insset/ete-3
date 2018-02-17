@@ -21,7 +21,7 @@
 
             <!-- JPA -->
             <velocity   template="abstract_jpa.vm"
-                        target="fr/insset/jeanluc/airways/jpa/AbstractJpa.java"/>
+                        target="fr/insset/jeanluc/ete/jpa/AbstractJpa.java"/>
             <velocity items="${classes}"
                         dialect="fr.insset.jeanluc.as2java.JavaGenerator"
                         template="class2entity.vm"

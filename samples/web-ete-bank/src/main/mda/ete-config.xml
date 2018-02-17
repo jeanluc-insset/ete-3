@@ -4,7 +4,7 @@
 <mda>
 
 
-    <transformation-set >
+    <transformation-set outputBase="../../web-ete-bank/target" >
 
         <register name="add-visitor-action" action="fr.insset.jeanluc.ete.api.impl.AddVisitorAction"/>
 

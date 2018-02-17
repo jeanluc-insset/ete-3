@@ -17,12 +17,19 @@ import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 /**
+ * <div>
  * Lists of statements contain statements and are comparable to each other.<br>
  * The purpose is to generate parts of methods from constraints. Each constraint
  * is translated to a list of statements.<br>
  * The preconditions must be executed before other conditions and a "result"
  * postcondition must be executed finally.<br>
  * So the lists of statements are sorted before generating actual ALF code.
+ * </div>
+ * <div>
+ * Finally, we must avoid cycles in the affectations, for instance with
+ * <code>a = b@pre ;  b = a@pre ;</code><br>
+ * When a cycle occurs, it must be broken with an additive assignment.
+ * </div>
  *
  * @author jldeleage
  */

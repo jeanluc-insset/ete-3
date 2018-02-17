@@ -20,7 +20,7 @@ import org.codehaus.plexus.configuration.PlexusConfiguration;
 
 /**
  * A custom ComponentConfigurator which adds the project's runtime classpath elements
- * to the
+ * to the classpath
  *
  * @author Brian Jackson
  * @since Aug 1, 2008 3:04:17 PM

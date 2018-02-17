@@ -10,7 +10,7 @@
     <groupId>fr.insset.jeanluc</groupId>
     <artifactId>web-ete-bank</artifactId>
     <version>3.1</version>
-    <packaging>war</packaging>
+    <packaging>pom</packaging>
 
     <name>web-ete-bank</name>
 
@@ -19,25 +19,33 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     
-    <dependencies>
-        <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-web-api</artifactId>
-            <version>7.0</version>
-            <scope>provided</scope>
-        </dependency>
-    </dependencies>
-
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.build.directory}/generated-sources/ete</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                     <compilerArguments>
                         <endorseddirs>${endorsed.dir}</endorseddirs>
                     </compilerArguments>
@@ -86,6 +94,56 @@
                 <dependencies>
                     <dependency>
                         <groupId>fr.insset.jeanluc</groupId>
+                        <artifactId>util</artifactId>
+                        <version>1.1</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>fr.insset.jeanluc</groupId>
+                        <artifactId>meta-model-api</artifactId>
+                        <version>3.1</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>fr.insset.jeanluc</groupId>
+                        <artifactId>meta-model-impl</artifactId>
+                        <version>3.1</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>fr.insset.jeanluc</groupId>
+                        <artifactId>ete-lib-api</artifactId>
+                        <version>3.1</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>fr.insset.jeanluc</groupId>
+                        <artifactId>ete-lib-impl</artifactId>
+                        <version>3.1</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>fr.insset.jeanluc</groupId>
+                        <artifactId>gel-api</artifactId>
+                        <version>3.1</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>fr.insset.jeanluc</groupId>
+                        <artifactId>gel-impl</artifactId>
+                        <version>3.1</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>fr.insset.jeanluc</groupId>
+                        <artifactId>xlang-api</artifactId>
+                        <version>3.1</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>fr.insset.jeanluc</groupId>
+                        <artifactId>xlang-impl</artifactId>
+                        <version>3.1</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>fr.insset.jeanluc</groupId>
+                        <artifactId>xlang-builder</artifactId>
+                        <version>3.1</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>fr.insset.jeanluc</groupId>
                         <artifactId>xlang-to-java</artifactId>
                         <version>3.1</version>
                     </dependency>
@@ -100,7 +158,15 @@
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
     </build>
-
+    <dependencies>
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+            <version>7.0</version>
+            <type>jar</type>
+        </dependency>
+    </dependencies>
 </project>

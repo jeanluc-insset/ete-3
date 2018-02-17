@@ -190,6 +190,7 @@ public class PostAssertionJavaGeneratorTest {
                         new File(TARGET_DIR).toURI().toURL()
                     });
             System.out.println("Classloader : " + classLoader);
+            System.out.println("URLS : " + classLoader.getURLs());
             // Load the class from the classloader by name....
             Class accountClass = classLoader.loadClass("fr.insset.jeanluc.ete.example.bank.Account");
             // Create some instances...

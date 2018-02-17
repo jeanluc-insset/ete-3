@@ -93,7 +93,7 @@ public class ${current.name} implements Serializable {
 
 
 #foreach ($aMethod in $current.ownedOperation)
-    public $dialect.moft2lt($aMethod.type.name) ${aMethod.name}(#foreach($aParam in ${aMethod.parameters})${aParam.type} ${aParam.name} #end) {
+    public $dialect.moft2lt($aMethod.type.name) ${aMethod.name}(#foreach($aParam in ${aMethod.ownedParameter})${aParam.type} ${aParam.name} #end) {
 ${dialect.getOperationBody($aMethod, "    ")}
     }
 #end

@@ -303,7 +303,6 @@ public class XmlModelReader implements ModelReader {
                 NamedElement parentNamedElement = inModel.getElementById(parentId);
 //                String parentName = parentNode instanceof Element ? ((Element)parentNode).getAttribute("name"):"";
 //                PackageableElement parentElement = inModel.getElementByName(parentName);
-                System.out.println("DEBUT DES VISITES");
                 visitors : for (DynamicVisitorSupport visitor : getVisitors()) {
                     try {
                         System.out.println("   VISITEUR : " + visitor);
