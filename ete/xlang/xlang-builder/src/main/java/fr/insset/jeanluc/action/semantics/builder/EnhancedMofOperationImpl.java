@@ -19,7 +19,7 @@ import java.util.Map;
  */
 public class EnhancedMofOperationImpl extends MofOperationImpl {
 
-
+    
     public EnhancedMofOperationImpl() throws InstantiationException {
         Map plainMap = FactoryMethods.newMap(String.class, List.class);
         statements = plainMap;
