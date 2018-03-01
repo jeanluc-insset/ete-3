@@ -18,45 +18,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author jldeleage
  */
-@Entity
-@XmlRootElement
 public class ${current.name} implements Serializable {
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-
-    //========================================================================//
-
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ${current.name})) {
-            return false;
-        }
-        ${current.name} other = (${current.name}) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
-
-
-    //========================================================================//
 
 
 #foreach ($tagValue in ${current.getTagValues().keySet()})
@@ -93,7 +55,7 @@ public class ${current.name} implements Serializable {
 
 
 #foreach ($aMethod in $current.ownedOperation)
-    public $dialect.moft2lt($aMethod.type.name) ${aMethod.name}(#foreach($aParam in ${aMethod.ownedParameter})${dialect.mt2lt($aParam.type)} ${aParam.name}#if( $foreach.hasNext ), #end #end) {
+    public $dialect.moft2lt($aMethod.type.name) ${aMethod.name}(#foreach($aParam in ${aMethod.ownedParameter})${aParam.type} ${aParam.name} #end) {
 ${dialect.getOperationBody($aMethod, "    ")}
     }
 #end
@@ -111,24 +73,9 @@ ${dialect.getOperationBody($aMethod, "    ")}
     //========================================================================//
 
 #foreach ($aProperty in $current.ownedAttribute)
-    #if ($aProperty.type.hasStereotype("Entity"))
-    @ManyToOne 
-    #end
-    #if ($aProperty.type.isCollection())
-    #if ($aProperty.type.baseType.hasStereotype("Entity"))
-    @OneToMany 
-    #end
-    #elseif ($aProperty.type.name == "date")
-    @javax.persistence.Temporal(javax.persistence.TemporalType.DATE)
-    #end
     $dialect.mt2lt($aProperty.type)      ${aProperty.name};
 #end
 
-    private static final long serialVersionUID = 1L;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
 
 
 }

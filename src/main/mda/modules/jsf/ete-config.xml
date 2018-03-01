@@ -10,12 +10,20 @@
     <transformation-set>
 
             <!-- JPA -->
-            <module href="../jpa/ete-config.xml"/>
+            <module src="../jpa/ete-config.xml"/>
 
-        <!--<velocity items="${classes}"
-                        dialect="fr.insset.jeanluc.as2java.JavaGenerator"
-                        template="xxx.vm"
-                        target="admin/${current.name}.xhtml"/> -->
+            <!-- CRUD pages -->
+            <module src="pages/ete-config.xml"/>
+
+            <!-- JSF controllers and utilities -->
+            <module src="java/ete-config.xml"/>
+
+            <!-- Configuration -->
+            <velocity template="config/faces_config_xml.vm"
+                      target="generated-web-pages/ete/WEB-INF/faces-config.xml"/> 
+            
+            <velocity template="config/bundle.vm"
+                      target="generated-resources/ete/Bundle.properties"/>
 
     </transformation-set>
 

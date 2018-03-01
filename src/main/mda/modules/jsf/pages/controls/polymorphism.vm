@@ -1,0 +1,3 @@
+                    <h:outputLabel value="#{bundle.${title}Label_${var.name}}" for="${var.name}" />
+#set ($control = "controls/input.vm")
+#parse($control)

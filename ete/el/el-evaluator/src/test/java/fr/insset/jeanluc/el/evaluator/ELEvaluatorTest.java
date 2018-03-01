@@ -6,9 +6,11 @@ import fr.insset.jeanluc.el.dialect.BasicJavaDialect;
 import fr.insset.jeanluc.ete.api.EteException;
 import fr.insset.jeanluc.ete.meta.model.core.impl.Factories;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
+import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
 import fr.insset.jeanluc.ete.meta.model.emof.Stereotype;
 import static fr.insset.jeanluc.ete.meta.model.emof.Stereotype.STEREOTYPE;
 import fr.insset.jeanluc.ete.meta.model.emof.impl.MofClassImpl;
+import fr.insset.jeanluc.ete.meta.model.emof.impl.MofOperationImpl;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
 import static fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel.MODEL;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.MofPackage;
@@ -51,11 +53,11 @@ public class ELEvaluatorTest {
     private     MofPackage          sub1;           // in model
     private     MofPackage          sub2;           // in sub1
     private     MofPackage          sub3;           // in sub1
-    private     MofClass            qcm;            // in model
+    private     MofClass            mcq;            // in model
     private     MofClass            question;       // in sub1
-    private     MofClass            reponse;        // in sub1
-    private     MofClass            choix;          // in sub2
-    private     MofClass            etudiant;       // in sub3
+    private     MofClass            answer;        // in sub1
+    private     MofClass            choice;          // in sub2
+    private     MofClass            student;       // in sub3
     private     Map<String, Object> parameters;
     private     Stereotype          entity;
 
@@ -93,18 +95,18 @@ public class ELEvaluatorTest {
         sub1     = addPackage("sub1", model);
         sub2     = addPackage("sub2", sub1);
         sub3     = addPackage("sub3", sub1);
-        qcm      = addClass("QCM", model);
-        qcm.addStereotype(entity);
+        mcq      = addClass("MCQ", model);
+        mcq.addStereotype(entity);
         question = addClass("Question", sub1);
-        reponse  = addClass("Reponse", sub1);
-        choix    = addClass("Choix", sub2);
-        etudiant = addClass("Etudiant", sub3);
-        etudiant.addStereotype(entity);
+        answer  = addClass("Answer", sub1);
+        choice    = addClass("Choice", sub2);
+        student = addClass("Student", sub3);
+        student.addStereotype(entity);
 
         parameters = new HashMap<>();
-        parameters.put("qcmClass", qcm);
+        parameters.put("mcqClass", mcq);
         parameters.put("questionClass", question);
-        parameters.put("choix", choix);
+        parameters.put("choice", choice);
 
         instance = new JSR341Evaluator(model, parameters);
     }
@@ -203,9 +205,9 @@ public class ELEvaluatorTest {
     @Test
     public void testEvaluateVariable() {
         System.out.println("evaluateVariable");
-        String inExpression = "${qcmClass}";
+        String inExpression = "${mcqClass}";
         Object result = instance.evaluate(inExpression);
-        assertEquals(qcm, result);
+        assertEquals(mcq, result);
     }
 
     @Test
@@ -223,9 +225,9 @@ public class ELEvaluatorTest {
     @Test
     public void testEvaluateNavigation() {
         System.out.println("evaluateNavigation");
-        String inExpression = "${qcmClass.name}";
+        String inExpression = "${mcqClass.name}";
         Object result = instance.evaluate(inExpression);
-        assertEquals("QCM", result);
+        assertEquals("MCQ", result);
     }
 
 
@@ -264,8 +266,8 @@ public class ELEvaluatorTest {
         System.out.println("dialect");
         Object      dialect = new BasicJavaDialect();
         instance.addParameter("dialect", dialect);
-        Object result = instance.evaluate("${choix.getQualifiedName()}");
-        assertEquals("model::sub1::sub2::Choix", result);        
+        Object result = instance.evaluate("${choice.getQualifiedName()}");
+        assertEquals("model::sub1::sub2::Choice", result);        
     }
 
     @Test
@@ -273,8 +275,8 @@ public class ELEvaluatorTest {
         System.out.println("dialect");
         Object      dialect = new BasicJavaDialect();
         instance.addParameter("dialect", dialect);
-        Object result = instance.evaluate("${dialect.getQualifiedName(choix)}");
-        assertEquals("model.sub1.sub2.Choix", result);        
+        Object result = instance.evaluate("${dialect.getQualifiedName(choice)}");
+        assertEquals("model.sub1.sub2.Choice", result);        
     }
 
     @Test
@@ -284,35 +286,55 @@ public class ELEvaluatorTest {
         instance.addParameter("dialect", dialect);
 
         List<MofClass>  classes = new XList();
-        classes.add(choix);
-        classes.add(qcm);
-        classes.add(etudiant);
+        classes.add(choice);
+        classes.add(mcq);
+        classes.add(student);
         classes.add(question);
-        classes.add(reponse);
+        classes.add(answer);
         instance.addParameter("classes", classes);
         XList result = (XList) instance.evaluate("${classes.filter(c -> c.name.startsWith(\"Q\"))}");
-        assertEquals(2, result.size());        
+        assertEquals(1, result.size());        
     }
 
     @Test
     public void testFilter2() throws InstantiationException, IOException, IllegalAccessException {
         System.out.println("filter 2");
-        // 1- Initialize framework
-//        Factories.init();
-//
-//        // 2- call the operation
-//        XmlModelReader reader = new XmlModelReader();
-//        String  url = "../../../src/test/mda/models/MCQ.xml";
-//        EteModel parent = new EteModelImpl();
-//        EteModel result = reader.readModel(url, parent);
-
         Object      dialect = new BasicJavaDialect();
         instance.addParameter("dialect", dialect);
-
         XList result = (XList) instance.evaluate("${classes.filter(c -> c.hasStereotype(\"Entity\"))}");
         assertEquals(2, result.size());        
+    }
 
 
+    @Test
+    public void testMap() {
+        System.out.println("map");
+        Object      dialect = new BasicJavaDialect();
+        instance.addParameter("dialect", dialect);
+        List<String>    expectedResult = new LinkedList<>();
+        expectedResult.add("Question");
+        expectedResult.add("MCQ");
+        expectedResult.add("Student");
+        expectedResult.add("Answer");
+        expectedResult.add("Choice");
+        XList result = (XList) instance.evaluate("${classes.map(c -> c.getName())}");
+        assertEquals(5, result.size());        
+        for (Object o : result) {
+            assertTrue(expectedResult.contains(o));
+        }
+    }
+
+
+    @Test
+    public void testFlatmap() throws InstantiationException {
+        System.out.println("flatmap");
+        List<MofOperation> ownedOperation = mcq.getOwnedOperation();
+        MofOperation        computeMark = new MofOperationImpl();
+        computeMark.setName("computeMark");
+        ownedOperation.add(computeMark);
+        List result = (List) instance.evaluate("${classes.flatmap(c -> c.getOwnedOperation())}");
+        assertEquals(1, result.size());
+        assertTrue(result.contains(computeMark));
     }
 
 

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  This module generates all JSF stuff. It first calls a module to generate
+  JPA material.
+  Then it runs templates for controllers, forms, lists...
+  -->
+
+<mda>
+
+    <transformation-set>
+
+        <transformation-set output_base="/generated-web-pages/ete/">
+            <velocity items='${classes.filter(c -> c.hasStereotype("Entity"))}'
+                      template="list.vm"
+                      target="admin/${current.name.toLowerCase()}/list.xhtml"/>
+            <velocity items='${classes.filter(c -> c.hasStereotype("Entity"))}'
+                      template="view.vm"
+                      target="admin/${current.name.toLowerCase()}/view.xhtml"/>
+            <velocity items='${classes.filter(c -> c.hasStereotype("Entity"))}'
+                      template="create.vm"
+                      target="admin/${current.name.toLowerCase()}/create.xhtml"/>
+            <velocity items='${classes.filter(c -> c.hasStereotype("Entity"))}'
+                      template="edit.vm"
+                      target="admin/${current.name.toLowerCase()}/edit.xhtml"/>
+            <velocity items='${classes.filter(c -> c.hasStereotype("Entity"))}'
+                      template="form.vm"
+                      target="resources/ete/${current.name}_form.xhtml"/>
+            <velocity template="index_xhtml.vm"
+                      target="index.xhtml"/>
+            <velocity items='${classes.filter(c -> c.hasStereotype("Entity")).flatmap(c -> c.ownedOperation)}'
+                      template="operation.vm"
+                      target="resources/ete/${current.owningMofClass.name}_${current.name}_form.xhtml"/>
+
+        </transformation-set>
+
+    </transformation-set>
+
+</mda>
+
+
+

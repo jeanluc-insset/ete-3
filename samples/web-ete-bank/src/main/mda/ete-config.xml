@@ -4,7 +4,7 @@
 <mda>
 
 
-    <transformation-set outputBase="../../web-ete-bank/target" >
+    <transformation-set>
 
         <register name="add-visitor-action" action="fr.insset.jeanluc.ete.api.impl.AddVisitorAction"/>
 
@@ -16,7 +16,7 @@
           - The context parameter specifies which context to use when
           - resolving an identifier
         -->
-        <transformation-set>
+        <transformation-set jsf="true" jaxrs="true">
 
             <!--
                 current dir :
@@ -24,7 +24,7 @@
                 target dir :
                 ete-toolchain/src/main/mda/modules/jpa/ete-config.xml
               -->
-            <module src="../../../../../src/main/mda/modules/jpa/ete-config.xml"/>
+            <module src="../../../../../src/main/mda/modules/web/ete-config.xml"/>
 <!--            <velocity template="pojo-with-operations.vm"
                     items="${classes}"
                     target="generated-sources/ete/${current.owningPackage.name.replace('.', '/')}/${current.name}.java"

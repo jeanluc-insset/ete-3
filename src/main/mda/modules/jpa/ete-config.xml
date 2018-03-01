@@ -10,7 +10,7 @@
     <transformation-set>
         <parameter name="javase"     default="false"/>
         <parameter name="datasource" default="jdbc/sample"/>
-        <parameter name="pu"         default="fr.insset.jeanluc.ete_1.2PU"/>
+        <parameter name="pu"         default="fr.insset.jeanluc.ete_PU"/>
         <parameter name="url"        default="jdbc:derby://localhost:1527/ete"/>
         <parameter name="user"       default="ete"/>
         <parameter name="password"   default="ete"/>
@@ -26,11 +26,14 @@
                         dialect="fr.insset.jeanluc.as2java.JavaGenerator"
                         template="class2entity.vm"
                         target="${current.owningPackage.name.replace('.', '/')}/model/${current.name}.java"/>
-            <velocity items="${classes.filter(c -> c.hasStereotype(&quot;Entity&quot;))}"
+            <velocity items='${classes.filter(c -> c.hasStereotype("Entity"))}'
                         dialect="fr.insset.jeanluc.as2java.JavaGenerator"
                         template="class2entity.vm"
                         target="${current.owningPackage.name.replace('.', '/')}/model/${current.name}.java"/>
-            <velocity items="${classes.filter(c -> c.hasStereotype(&quot;Entity&quot;))}"
+<!--            <module src="../pojo/ete-config.xml"
+                        target="${current.owningPackage.name.replace('.', '/')}/model/${current.name}.java"/>-->
+            
+                <velocity items='${classes.filter(c -> c.hasStereotype("Entity"))}'
                         dialect="fr.insset.jeanluc.as2java.JavaGenerator"
                         template="class2jpa.vm"
                         target="${current.owningPackage.name.replace('.', '/')}/jpa/${current.name}Jpa.java"/>

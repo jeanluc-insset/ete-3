@@ -26,11 +26,11 @@ public class MofPackageImplTest {
     private MofPackage sub1;           // in instance
     private MofPackage sub2;           // in sub1
     private MofPackage sub3;           // in sub1
-    private MofClass qcm;            // in instance
-    private MofClass question;       // in sub1
-    private MofClass reponse;        // in sub1
-    private MofClass choix;          // in sub2
-    private MofClass etudiant;       // in sub3
+    private MofClass   qcm;            // in instance
+    private MofClass   question;       // in sub1
+    private MofClass   reponse;        // in sub1
+    private MofClass   choix;          // in sub2
+    private MofClass   etudiant;       // in sub3
 
     public MofPackageImplTest() {
     }
@@ -103,6 +103,7 @@ public class MofPackageImplTest {
         assertEquals(1, result.count());
     }
 
+
     /**
      * Test of getPackagedElementAsStream method, of class MofPackageImpl.
      */
@@ -113,6 +114,7 @@ public class MofPackageImplTest {
         assertEquals(1, result.count());
     }
 
+
     /**
      * Test of getPackagedElementAsStream method, of class MofPackageImpl.
      */
@@ -122,5 +124,6 @@ public class MofPackageImplTest {
         Stream<MofClass> result = instance.getAllClassesAsStream();
         assertEquals(1, result.count());
     }
+
 
 }

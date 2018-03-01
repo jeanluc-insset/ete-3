@@ -199,6 +199,23 @@ public class XList<T> implements List<T> {
         return result;
     }
 
+    public      List    map(LambdaExpression inExpression) {
+        List result = new XList();
+        for (T t : this) {
+            result.add(inExpression.invoke(t));
+        }
+        return result;
+    }
+
+    public      List    flatmap(LambdaExpression inExpression) {
+        List result = new XList();
+        for (T t : this) {
+            Iterable    it = (Iterable) inExpression.invoke(t);
+            for (Object x : it)
+                result.add(x);
+        }
+        return result;
+    }
 
     private     List<T>     delegate = new LinkedList<>();
 

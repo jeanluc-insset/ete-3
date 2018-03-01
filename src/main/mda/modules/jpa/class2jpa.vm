@@ -29,7 +29,7 @@ import javax.persistence.criteria.Root;
 @Stateless
 public class ${current.name}Jpa extends AbstractJpa<${current.name}> {
 
-#if ($javase)
+#if (true == $javase)
     private EntityManagerFactory factory;
 #else
     @PersistenceContext(unitName = "${pu}")
@@ -38,7 +38,7 @@ public class ${current.name}Jpa extends AbstractJpa<${current.name}> {
 
     @Override
     protected EntityManager getEntityManager() {
-#if ($javase)
+#if (true == $javase)
         if (factory == null) {
             factory = Persistence.createEntityManagerFactory("${pu}");
         }
@@ -55,6 +55,7 @@ public class ${current.name}Jpa extends AbstractJpa<${current.name}> {
 
 #foreach ($aProperty in $current.ownedAttribute)
 #if ($dialect.isEntity($aProperty.type))
+
     public List<$aProperty.type> findAll${dialect.i2uc($aProperty.name)}For($current.name item) {
         javax.persistence.criteria.CriteriaQuery cq = getEntityManager().getCriteriaBuilder().createQuery();
         cq.select(cq.from(${aProperty.type.name}.class));
@@ -65,6 +66,20 @@ public class ${current.name}Jpa extends AbstractJpa<${current.name}> {
         // finally we can fetch the data and return the result
         return query.getResultList();
     }
+
+
+
+    public List<${current.name}> findBy(${dialect.mt2lt($aProperty.type)} inValue) {
+        EntityManager em = getEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<${current.name}> cq = cb.createQuery(${current.name}.class);
+        Root<${current.name}> from = cq.from(${current.name}.class);
+        from.join(${current.name}_.${aProperty.name});
+        cq.where(cb.equal(from.get(${current.name}_.${aProperty.name}), inValue));
+        TypedQuery<${current.name}> query = em.createQuery(cq);
+        return query.getResultList();
+    }
+
 #end
 #end
 
