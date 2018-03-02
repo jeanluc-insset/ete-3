@@ -173,10 +173,10 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         SimpleActionSemanticsBuilder builder = new SimpleActionSemanticsBuilder();
         builder.buildStatements(expression, inoutResult);
 
-//        // 4- wrap everything into a "container" and put it into the
-//        // the condition itself
-//        // TODO : we should share the same container between all conditions on
-//        // a single operation, should not we ?
+        // 4- wrap everything into a "container" and put it into the
+        // the condition itself
+        // TODO : we should share the same container between all conditions on
+        // a single operation, should not we ?
         StatementContainer  container         = new StatementContainer();
         container.setStatements(inoutResult);
         container.setAbstractTree(expression);

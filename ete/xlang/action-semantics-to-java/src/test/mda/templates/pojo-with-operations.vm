@@ -69,7 +69,7 @@ public class ${current.name} #if (${current.superClass.size()} > 0) extends ${cu
 #foreach ($aPrecondition in ${aMethod.preconditions})
 //    @${dialect.getConditionName($aPrecondition)}
 #end
-    public ${dialect.mt2lt($aMethod.type)} ${aMethod.name}(#foreach($aParam in ${aMethod.ownedParameter})${dialect.mt2lt($aParam.type)} ${aParam.name} #end) {
+    public ${dialect.mt2lt($aMethod.type)} ${aMethod.name}(#foreach($aParam in ${aMethod.ownedParameter})${dialect.mt2lt($aParam.type)} ${aParam.name}#if( $foreach.hasNext ), #end #end) {
 #if ($dialect.getOperationBody($aMethod).length() > 0)
 ${dialect.getOperationBody($aMethod)}
 ##elseif ($dialect.mt2lt($aMethod.type) == "double")

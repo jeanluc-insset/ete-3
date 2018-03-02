@@ -1,8 +1,8 @@
 package fr.insset.jeanluc.ete.xlang;
 
 
-import fr.insset.jeanluc.ete.gel.GelExpression;
 import fr.insset.jeanluc.ete.gel.VariableDefinition;
+import fr.insset.jeanluc.ete.gel.GelExpression;
 import java.util.List;
 import java.util.Set;
 import javax.annotation.Generated;

@@ -1,6 +1,191 @@
-a.b->c(x,y).d
 
-On visite a -> Ta
-On visite b -> Tb. Ta doit être mis en premier opérande de Tb
-On visite c -> Tc qui contient comme opérandes Tx et Ty. Tb doit être mis en premier opérande de Tc
-On visite d -> Td. Tc doit être mis en premier opérande de Td
+
+
+
+================================================================================
+                T R A I T E M E N T   D E S   I N V A R I A N T S
+================================================================================
+
+
+Un invariant donne lieu à plusieurs types de traitement.
+- validation a posteriori
+- recherche de valeurs compatibles avec les valeurs des autres attributs
+
+La validation a posteriori peut dans certains langages être effectuée par une
+annotation ou l'équivalent. Dans ce cas, le traducteur utilise son propre
+visiteur
+
+La recherche de valeurs compatibles avec les valeurs des autres attributs sera
+éventuellement traduite par des streams.filter ou en SQL, JPA...
+
+Pour chaque variable intervenant dans l'invariant il faut construire une
+méthode de filtre.
+
+
+1er exemple (bien connu) :
+
+context Vol
+inv equipage : self.commandant <> self.second
+
+Cet invariant donne trois méthodes :
+- check_equipage
+    return (self.commandant <> self.second)
+- selectEquipageCommandant(for : Vol, from : Pilote[*]) : Pilote[*]
+    return from->filter(c -> c <> for.second)
+- selectEquipageSecond(for : Vol, from : Pilote[*])
+    return from->filter(c -> c <> for.commandant)
+
+
+
+2e exemple :
+
+context Account
+inv minBalance : self.balance >= -1000
+
+Cet invariant ne donne que la méthode :
+- check_minBalance
+    return (self.balance >= -1000)
+
+
+
+3e exemple :
+
+context Classe
+inv pp : self.professeurs -> includes(self.profPrincipal)
+
+Cet invariant donne deux méthodes
+- check_pp
+    return (self.professeurs.includes(self.profPrincipal))
+- selectPpProfPrincipal(for : Classe, from : Professeurs[*]) : Professeur[*]
+    return from->filter(p -> self.professeurs.contains(p))
+
+    
+
+
+Attention : une même propriété peut être impliquée dans plusieurs invariants ;
+c'est pourquoi les méthodes select précédentes prennent un deuxième paramètre
+afin de chaîner ces méthodes.
+
+
+
+Résumé du traitement des invariants de la classe C :
+- pour chaque invariant, extraire les propriétés et construire la map
+        (propriété, List<Invariant>)
+- pour chaque couple (propriété, Invariant), construire la méthode
+    selectInvariantPropriete(for : C, from : P[*]) : P[*]
+
+
+- pour chaque propriété, un générateur ajoute la méthode
+    selectPropriete(for : C) : P[*]
+    dont le code est (l'équivalent de)
+        resultat = P.allInstances()
+        resultat = selectInv1Propriete(for, resultat)
+        resultat = selectInv2Propriete(for, resultat)
+        return resultat
+
+
+
+================================================================================
+                T R A I T E M E N T   D E S   C O N D I T I O N S               
+                       S U R   L E S   O P E R A T I O N S
+================================================================================
+
+
+Une opération a un certain nombre de préconditions et de postconditions.
+
+Une fois que chaque condition a été analysée et qu'elle est disponible sous
+forme d'un arbre abstrait, il faut générer des instructions.
+
+On génère des instructions de plusieurs types, chacun identifié par une chaîne
+de caractères.
+Les types sont
+    - body
+    - select
+
+
+--------------------------------------------------------------------------------
+
+
+Type body
+
+Avant de générer le code, il faut trier les conditions pour gérer les
+dépendances entre variables.
+Les préconditions doivent toujours être calculées avant les postconditions.
+
+Une précondition est traduite par des instructions qui calculent une valeur
+booléenne. Si cette valeur est false, une exception est levée.
+
+Une postcondition calcule une variable. Il faut vérifier que l'expression
+peut être traduite en une expression.
+
+Les postconditions peuvent posséder des dépendances circulaires.
+x = f(x@pre, y, y@pre)
+y = g(x@pre, y@pre)
+
+(une dépendance circulaire sur les valeurs finales entraine une erreur)
+On a donc un préordre sur les valeurs finales.
+Ici on a x >> y
+Donc il faudra évaluer y avant x.
+
+D'autre part il y a une dépendance de x sur la valeur initiale de y.
+On introduit z :
+z = y@pre
+
+On obtient alors :
+z = y@pre
+y = g(x@pre, z)
+x = f(x@pre, y, z)
+
+
+Résumé :
+
+- pour chaque postcondition
+    - déterminer la valeur calculée
+    - déterminer le "support", i.e. les variables utilisées
+    - si dans le support on a l'utilisation d'une même variable a et et de sa
+        valeur initiale a@pre, il faut ajouter une variable auxiliaire auxa
+- ordonner les postconditions selon les dépendances
+
+
+--------------------------------------------------------------------------------
+
+Type select
+
+Une précondition donne une méthode "select" par association impliquée. Cette
+méthode doit retourner les valeurs compatibles avec la précondition et les
+valeurs des autres propriétés de l'objet.
+
+
+1er exemple :
+
+context Customer::withdraw
+pre withdrawAmount : balance - amount >= -1000
+
+Cette précondition donne une méthode
+
+- check_withdrawAmount
+    return (self.balance - amount >= -1000)
+
+
+
+
+2e exemple
+
+context Customer::transfer
+pre transferFrom : self.accounts -> includes (fromAccount)
+
+Cette précondition donne deux méthodes :
+
+- check_transferFrom
+    return (self.accounts.contains(fromAccount))
+
+- getAccountForTransferFrom(for : Customer) : Account[*]
+    return (Accounts.allInstances.filter(c -> for.accounts.contains(c)))
+
+
+
+
+Comme on le voit sur les exemples, les méthodes et instructions générées
+dépendent de la nature de la propriété (scalaire ou objet) et de la nature de
+l'opération qui la fait intervenir
+
