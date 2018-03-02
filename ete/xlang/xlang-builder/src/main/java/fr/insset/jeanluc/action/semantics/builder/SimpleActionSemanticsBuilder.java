@@ -3,6 +3,7 @@ package fr.insset.jeanluc.action.semantics.builder;
 
 import fr.insset.jeanluc.ete.gel.Equal;
 import fr.insset.jeanluc.ete.gel.GelExpression;
+import fr.insset.jeanluc.ete.gel.Includes;
 import fr.insset.jeanluc.ete.gel.VariableDefinition;
 import fr.insset.jeanluc.ete.gel.impl.VariableDefinitionImpl;
 import fr.insset.jeanluc.ete.meta.model.types.MofType;
@@ -60,6 +61,11 @@ public class SimpleActionSemanticsBuilder extends DynamicVisitorSupport {
         List<Statement> statements = (List<Statement>) inParameters[0];
         statements.add(assignment);
         return inEqual;
+    }
+
+
+    public Includes visitIncludes(Includes inIncludes, Object... inParameters) {
+        return inIncludes;
     }
 
 

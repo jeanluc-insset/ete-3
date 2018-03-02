@@ -68,21 +68,6 @@ public class ConditionVisitor extends DynamicVisitorSupport {
     }
 
 
-
-//    public MofClass visitEnhancedMofClass(MofClass inElement, Object... inParam) {
-////        NamedElement       parentElement = (NamedElement) inParam[0];
-////        Logger             logger = Logger.getGlobal();
-////        if (parentElement instanceof MofPackage) {
-////            MofPackage parentPackage = (MofPackage) parentElement;
-////            parentPackage.addPackagedElement(inElement);
-////            inElement.setOwningPackage(parentPackage);
-////            logger.log(Level.INFO, "The XVisitor puts the item {0} into the package {1}", new Object[]{inElement, parentPackage});
-////        }
-////        else {
-////            logger.log(Level.INFO, "The XVisitor could not find any package for ", new Object[]{inElement});
-////        }
-//        return inElement;
-//    }
     
     /**
      * This method is called for each and every precondition when the model is

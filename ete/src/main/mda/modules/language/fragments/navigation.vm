@@ -6,8 +6,9 @@
             ${dialect.i2uc($projectName)}Expression result = children.get(0).accept(this);
             for (int i=1 ; i<children.size() ; i++) {
                 ${dialect.i2uc($projectName)}Expression next = children.get(i).accept(this);
-                List<${dialect.i2uc($projectName)}Expression> operands = FactoryMethods.newList(${dialect.i2uc($projectName)}Expression.class);
-                next.setOperand(operands);
+                List<${dialect.i2uc($projectName)}Expression> operands = next.getOperand();
+//              FactoryMethods.newList(${dialect.i2uc($projectName)}Expression.class);
+//                next.setOperand(operands);
                 operands.add(0, result);
                 result = next;
             }

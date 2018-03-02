@@ -1,0 +1,6 @@
+a.b->c(x,y).d
+
+On visite a -> Ta
+On visite b -> Tb. Ta doit être mis en premier opérande de Tb
+On visite c -> Tc qui contient comme opérandes Tx et Ty. Tb doit être mis en premier opérande de Tc
+On visite d -> Td. Tc doit être mis en premier opérande de Td

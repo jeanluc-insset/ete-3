@@ -20,6 +20,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
+import fr.insset.jeanluc.ete.meta.model.mofpackage.PackageableElement;
+import fr.insset.jeanluc.ete.xlang.Statement;
 import fr.insset.jeanluc.util.factory.FactoryMethods;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -31,14 +33,14 @@ import java.util.Map;
  *
  * @author jldeleage
  */
-public class ActionSemanticsOperationBuilderTest {
+public class ActionSemanticsOperationBuilder2Test {
 
 
-    public final String     MODEL_PATH = "../../../src/test/mda/models/full_MCQ.xml";
-//    public final String     MODEL_PATH = "../../../samples/web-ete-bank/src/main/mda/Bank.xml";
+//    public final String     MODEL_PATH = "../../../src/test/mda/models/full_MCQ.xml";
+    public final String     MODEL_PATH = "../../../samples/web-ete-bank/src/main/mda/Bank.xml";
 
 
-    public ActionSemanticsOperationBuilderTest() {
+    public ActionSemanticsOperationBuilder2Test() {
     }
     
     @BeforeClass
@@ -63,13 +65,12 @@ public class ActionSemanticsOperationBuilderTest {
      * Test of EnableActionSemantics method, of class ActionSemanticsOperationBuilder.
      */
     @Test
-    public void testEnableActionSemantics() throws EteException, InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
+    public void testAnalysePostConditions() throws EteException, InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
 
         // 1- initialize framework
         // 1-a basic factories
         Factories.init();
         // 1-b custom factories
-//        Class.forName("fr.insset.jeanluc.action.semantics.builder.ActionSemanticsAction");
 
         // 2- prepare reader and its visitors
         XmlModelReader instance = new XmlModelReader();
@@ -82,16 +83,13 @@ public class ActionSemanticsOperationBuilderTest {
         EteModel result = instance.readModel(MODEL_PATH);
 
         // 4- check results
-        MofClass passageClass = (MofClass) result.getElementByName("Session");
-        MofOperation calculeNote = passageClass.getOwnedOperation("computeMark");
-        Collection<Postcondition> postconditions = calculeNote.getPostconditions();
-        assertEquals(1, postconditions.size());
-        Iterator<Postcondition> iterator = postconditions.iterator();
-        Postcondition postcondition = iterator.next();
-        Object specification = postcondition.getSpecification();
+        MofClass accountClass                 = (MofClass)result.getElementByName("Account");
+        MofClass customerClass                = (MofClass)result.getElementByName("Customer");
+        List<MofOperation> ownedOperation     = customerClass.getOwnedOperation();
+        EnhancedMofOperationImpl        transferOperation = (EnhancedMofOperationImpl) ownedOperation.get(0);
+        Map<String, List<Statement>> statements = transferOperation.getStatements();
+        System.out.println(transferOperation);
     }       // testEnableActionSemantics method
-
-
 
 
 }       // ActionSemanticsOperationBuilder class

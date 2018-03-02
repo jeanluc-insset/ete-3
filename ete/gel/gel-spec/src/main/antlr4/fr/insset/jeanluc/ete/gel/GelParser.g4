@@ -284,8 +284,7 @@ variableReference : Identifier;
 
 parameterList:
     (
-        ( gelExpression COMMA )*
-        gelExpression
+        ( gelExpression COMMA )* gelExpression
     )
     |
     ()

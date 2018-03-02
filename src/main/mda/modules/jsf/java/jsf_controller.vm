@@ -6,6 +6,10 @@ import fr.insset.jeanluc.ete.jsf.util.JsfUtil;
 import fr.insset.jeanluc.ete.jsf.util.PaginationHelper;
 import ${current.owningPackage.name}.jpa.${current.name}Jpa;
 
+#foreach ($aDependance in $current.dependances)
+import ${aDependance.owningPackage.name}.model.${aDependance.name};
+#end
+
 import java.io.Serializable;
 import java.util.ResourceBundle;
 import javax.ejb.EJB;

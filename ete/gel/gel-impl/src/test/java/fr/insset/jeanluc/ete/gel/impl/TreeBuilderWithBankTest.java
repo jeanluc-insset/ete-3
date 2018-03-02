@@ -36,6 +36,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+
+
 /**
  *
  * @author jldeleage
@@ -54,14 +56,17 @@ public class TreeBuilderWithBankTest {
      * Some tests but not all use a model. This variable is initialized by
      * the readModel method.
      */
-    public MofClass     accountClass;
+    private MofClass     accountClass;
+    private MofClass     customerClass;
     /**
      * Some tests but not all use a model. This variable is initialized by
      * the readModel method.
      */
-    public MofOperation withdraw;
-    public MofOperation deposit;
+    private MofOperation withdraw;
+    private MofOperation deposit;
+    private MofOperation transfer;
 
+    private MofProperty  accounts;
 
     public TreeBuilderWithBankTest() {
     }
@@ -97,7 +102,6 @@ public class TreeBuilderWithBankTest {
     }
 
 
-
     @Test
     public void atPreTest() throws InstantiationException, IOException, IllegalAccessException {
         System.out.println("@pre");
@@ -130,7 +134,28 @@ public class TreeBuilderWithBankTest {
         operands.add(rightMember);
         result.setOperand(operands);
         
-        testAny(result, expressionAsString,model, deposit);
+        testAny(result, expressionAsString, model, deposit);
+    }
+
+
+    @Test
+    public void testIncludes() throws InstantiationException, IOException, IllegalAccessException {
+        System.out.println("includes");
+        String expressionAsString = "accounts->includes(fromAccount)";
+        readModel();
+
+        Step    fromAccountNavigation = new NavHelper()
+                            .startFrom(model, transfer)
+                            .navigateTo("fromAccount")
+                            .getNavigation();
+        Step    includesNavigation = new NavHelper()
+                            .startFrom(model, transfer)
+                            .navigateTo("accounts")
+                            .includes()
+                            .addAnOperand(fromAccountNavigation)
+                            .getNavigation();
+
+        testAny(includesNavigation, expressionAsString, model, transfer);
     }
 
 
@@ -240,14 +265,20 @@ public class TreeBuilderWithBankTest {
         // 1- Initialize framework
         Factories.init();
 
-        // 2- get the data
+        // 2- read the model
         XmlModelReader instance = new XmlModelReader();
         EteModel parent = new EteModelImpl();
         PrimitiveDataTypes.init(parent);
         model = instance.readModel(url, parent);
+
+        // 3- set the data
         accountClass = (MofClass) model.getElementByName("Account");
         deposit = accountClass.getOwnedOperation("deposit");
         withdraw = accountClass.getOwnedOperation("withdraw");
+        customerClass = (MofClass)model.getElementByName("Customer");
+        transfer = customerClass.getOwnedOperation("transfer");
+        accounts = customerClass.getOwnedAttribute("accounts");
+        
     }
 
 

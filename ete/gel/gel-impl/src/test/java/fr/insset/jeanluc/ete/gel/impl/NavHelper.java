@@ -3,6 +3,7 @@
 package fr.insset.jeanluc.ete.gel.impl;
 
 import fr.insset.jeanluc.ete.gel.AtPre;
+import fr.insset.jeanluc.ete.gel.GelExpression;
 import fr.insset.jeanluc.ete.gel.Step;
 import fr.insset.jeanluc.ete.gel.VariableReference;
 import fr.insset.jeanluc.ete.meta.model.core.NamedElement;
@@ -39,6 +40,13 @@ public class NavHelper {
         model = inModel;
         current = (MofType)model.getElementByName(inContext);
         context = current;
+        return this;
+    }
+
+    public NavHelper startFrom(EteModel inModel, MofClass inClass) {
+        model = inModel;
+        current = inClass;
+        context = inClass;
         return this;
     }
 
@@ -107,6 +115,21 @@ public class NavHelper {
         return this;
     }
 
+    public NavHelper includes() {
+        Step    nextStep = new IncludesImpl();
+        addOp(nextStep);
+        MofType resultType = (MofType) model.getElementByName("boolean");
+        nextStep.setType(resultType);
+        navigation = nextStep;
+        return this;
+    }
+
+
+    public NavHelper addAnOperand(GelExpression aStep) {
+        navigation.getOperand().add(aStep);
+        return this;
+    }
+
     public NavHelper sum() {
         Step    nextStep = new SumImpl();
         addOp(nextStep);
@@ -125,6 +148,7 @@ public class NavHelper {
         operands.add(navigation);
         nextStep.setOperand(operands);        
     }
+
 
     //========================================================================//
 

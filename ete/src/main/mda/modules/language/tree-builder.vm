@@ -171,11 +171,11 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
 
 
     @Override
-    public GelExpression visitAtPreExpression(GelParser.AtPreExpressionContext ctx) {
+    public ${dialect.i2uc($projectName)}Expression visitAtPreExpression(${dialect.i2uc($projectName)}Parser.AtPreExpressionContext ctx) {
         try {
             AtPre   result = (AtPre) FactoryRegistry.newInstance("@pre");
             Step accept = (Step)ctx.children.get(0).accept(this);
-            List<GelExpression> operands = new XList<>();
+            List<${dialect.i2uc($projectName)}Expression> operands = new XList<>();
             operands.add(accept);
             result.setOperand(operands);
             Feature feature = accept.getToFeature();
@@ -189,11 +189,11 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
     }
 
     @Override
-    public GelExpression visitVariableOrMemberAtPre(GelParser.VariableOrMemberAtPreContext ctx) {
+    public ${dialect.i2uc($projectName)}Expression visitVariableOrMemberAtPre(${dialect.i2uc($projectName)}Parser.VariableOrMemberAtPreContext ctx) {
         try {
             AtPre   result = (AtPre) FactoryRegistry.newInstance("@pre");
             Step accept = (Step)ctx.children.get(0).accept(this);
-            List<GelExpression> operands = new XList<>();
+            List<${dialect.i2uc($projectName)}Expression> operands = new XList<>();
             operands.add(accept);
             result.setOperand(operands);
             Feature feature = accept.getToFeature();
@@ -238,7 +238,17 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
             ${dialect.i2uc($projectName)}Expression result = context.resolve(identifier);
             List<${dialect.i2uc($projectName)}Expression>  operands = FactoryMethods.newList(${dialect.i2uc($projectName)}Expression.class);
             result.setOperand(operands);
-            // Parse the parameters of the call
+            // Parse the parameters of the call 
+            // Warning : there are commas between parameters
+            List<ParseTree>     functionChildren = functionCall.children;
+            if (functionChildren.size() > 2) {
+                ${dialect.i2uc($projectName)}Parser.ParameterListContext parameterList = (${dialect.i2uc($projectName)}Parser.ParameterListContext) functionChildren.get(2);
+                List<ParseTree> parameters = parameterList.children;
+                for (int i=0 ; i<parameters.size() ; i += 2) {
+                    ${dialect.i2uc($projectName)}Expression aParameter = parameters.get(i).accept(this);
+                    operands.add(aParameter);
+                }
+            }
             return result;
         }
         catch (Exception ex) {
@@ -274,6 +284,8 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
     public ${dialect.i2uc($projectName)}Expression visitCollectionMethodNavExpression(${dialect.i2uc($projectName)}Parser.CollectionMethodNavExpressionContext ctx) {
         List<ParseTree> children = ctx.children;
         if (children.size() == 1) {
+            // With the current version of the grammar this should never
+            // happend
             return children.get(0).accept(this);
         }
         try {
@@ -283,6 +295,19 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
             List<${dialect.i2uc($projectName)}Expression>  operands = FactoryMethods.newList(${dialect.i2uc($projectName)}Expression.class);
             result.setOperand(operands);
             // Parse the parameters of the call
+            List<ParseTree>     functionChildren = functionCall.children;
+            if (functionChildren.size() > 2) {
+                // In the current grammar a function call has always 4 children
+                // The third one is the parameter list
+                ${dialect.i2uc($projectName)}Parser.ParameterListContext parameterList = (${dialect.i2uc($projectName)}Parser.ParameterListContext) functionChildren.get(2);
+                List<ParseTree> parameters = parameterList.children;
+                if (parameters != null) {
+                    for (int i=0 ; i<parameters.size() ; i += 2) {
+                        ${dialect.i2uc($projectName)}Expression aParameter = parameters.get(i).accept(this);
+                        operands.add(aParameter);
+                    }
+                }
+            }
             return result;
         }
         catch (Exception ex) {

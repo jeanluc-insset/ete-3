@@ -144,6 +144,14 @@ public class ${dialect.i2uc($projectName)}ContextImpl implements ${dialect.i2uc(
                 case "collect":
                     // TODO : explicit collect is not handled
                     break;
+                case "includes":
+                case "excludes":
+                case "includesAll":
+                case "excludesAll":
+                    EteModel model = (EteModel)resolveVariable(MODEL);
+                    MofType booleanType = (MofType) model.getElementByName("Boolean");
+                    result.setType(booleanType);
+                    break;
                 default:
                     result.setType(current);
                     break;
