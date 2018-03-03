@@ -41,5 +41,6 @@ public class EnhancedMofOperationImpl extends MofOperationImpl {
 
     private     Map<String, List<Statement>>    statements;
 
+
 }
 

@@ -5,13 +5,12 @@ import fr.insset.jeanluc.ete.gel.GelExpression;
 import fr.insset.jeanluc.ete.xlang.Statement;
 import java.util.List;
 
+
 /**
  *
  * @author jldeleage
  */
 public class StatementContainer {
-
-
 
 
 

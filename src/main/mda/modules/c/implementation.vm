@@ -1,0 +1,7 @@
+\#include   ${current.name.toUpperCase()}_H
+
+#foreach ($anOperation in $current.ownedOperation)
+#parse("result_type.vm") ${anOperation.name}(#foreach ($aParameter in $anOperation.ownedParameter)#parse("parameter.vm"),#end t_${current.name} *self) {
+}
+
+#end

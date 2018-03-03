@@ -1,0 +1,16 @@
+
+#foreach ($aClass in $current.classes)
+##if ($aClass.hasStereotype("Entity"))
+\#include "${aClass.name.toUpperCase()}_H"
+##end
+#end
+
+
+int main(int nbArgs, char **args) {
+    int     choice;
+    do {
+        scanf("%d"; &choice);
+    } while (choice != 0);
+    return 0;
+}
+

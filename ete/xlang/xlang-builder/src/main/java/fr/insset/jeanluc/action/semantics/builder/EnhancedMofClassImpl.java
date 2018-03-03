@@ -43,6 +43,7 @@ public class EnhancedMofClassImpl extends MofClassImpl {
      */
     private Map<String, List<Statement>>                statements;
 
+
     /**
      * Any invariant of the class is scanned.<br>
      * It is added to the list associated with any property it contains.<br>

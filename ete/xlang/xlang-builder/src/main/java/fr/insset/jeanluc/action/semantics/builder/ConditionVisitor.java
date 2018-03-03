@@ -37,6 +37,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * 
  *
  * @author jldeleage
  */
@@ -148,8 +149,21 @@ public class ConditionVisitor extends DynamicVisitorSupport {
     }
 
 
+    //========================================================================//
 
-    protected void visitACondition(Condition inCondition, EteModel model,
+
+    
+    protected void generateSelectsFromPrecondition(Precondition inCondition) {
+        
+    }
+
+
+
+
+    //========================================================================//
+
+
+    protected GelExpression visitACondition(Condition inCondition, EteModel model,
             MofOperation context, Map<String, VariableDefinition> variables,
             List<Statement> inoutResult) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         Logger.getLogger("fr.insset.jeanluc.oclanalyzer.ReaderVisitor").log(Level.FINE, "Visit of " + inCondition.getSpecificationAsString());
@@ -186,13 +200,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
             statements = new HashMap<>();
             ((EnhancedMofOperationImpl)context).setStatements(statements);
         }
-//        List<Statement> get = statements.get("body");
-//        if (get == null) {
-//            statements.put("body", inoutResult);
-//        }
-//        else {
-//            get.addAll(inoutResult);
-//        }
+        return expression;
     }
 
 

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  This module generates all JPA stuff. It first calls a template to generate
+  entities, then generate the DAOs and the persistence unit.
+  -->
+
+<mda>
+
+    <transformation-set>
+
+        <velocity   template="header.vm"
+                    items='${classes.filter(c->c.hasStereotype("Entity"))}'
+                    target="${current.name}.h"/>
+
+        <velocity   template="implementation.vm"
+                    items='${classes.filter(c->c.hasStereotype("Entity"))}'
+                    target="${current.name}.c"/>
+
+        <velocity   template="make.vm"
+                    target="Makefile"/>
+
+    </transformation-set>
+
+</mda>
+
+
+
