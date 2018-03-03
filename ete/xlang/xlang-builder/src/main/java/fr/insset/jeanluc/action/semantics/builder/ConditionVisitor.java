@@ -1,11 +1,13 @@
 package fr.insset.jeanluc.action.semantics.builder;
 
 
+import fr.insset.jeanluc.ete.gel.AtPre;
 import fr.insset.jeanluc.ete.gel.GelContext;
 import fr.insset.jeanluc.ete.gel.GelExpression;
 import fr.insset.jeanluc.ete.gel.GelParser;
 import fr.insset.jeanluc.ete.gel.GelParserBaseVisitor;
 import fr.insset.jeanluc.ete.gel.VariableDefinition;
+import fr.insset.jeanluc.ete.gel.VariableReference;
 import fr.insset.jeanluc.ete.gel.impl.GelContextImpl;
 import fr.insset.jeanluc.ete.gel.impl.GelParserWrapper;
 import fr.insset.jeanluc.ete.gel.impl.TreeBuilder;
@@ -43,6 +45,19 @@ import java.util.logging.Logger;
  */
 public class ConditionVisitor extends DynamicVisitorSupport {
 
+
+
+    public static void  enableActionSemantics(ModelReader inReader) throws ClassNotFoundException {
+        Class.forName("fr.insset.jeanluc.action.semantics.builder.ActionSemanticsAction");
+        FactoryRegistry registry = FactoryRegistry.getRegistry();
+        inReader.addVisitors(new ConditionVisitor());
+    }
+
+
+    //========================================================================//
+
+   
+    
     public ConditionVisitor() {
         FactoryRegistry registry = FactoryRegistry.getRegistry();
         FactoryRegistry parent = registry.getParent();
@@ -58,6 +73,9 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         // Visiting methods registration
         register(Precondition.class, "visitPrecondition");
         register(Postcondition.class, "visitPostcondition");
+        // Registration of the methods to visit gel expression
+        register("gelVisit", "fr.insset.jeanluc.ete.gel");
+        
     }
 
 
@@ -68,6 +86,9 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         inoutRegistry.registerFactory(POSTCONDITION, EnhancedPostCondition.class);
     }
 
+
+
+    //========================================================================//
 
     
     /**
@@ -103,8 +124,10 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         return inCondition;
     }
 
-    
-    
+
+    //========================================================================//
+
+
     /**
      * This method is called for each and every postcondition when the model is
      * read.<br>
@@ -144,8 +167,32 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         EteModel        model               = (EteModel)inParameters[1];
         Map<String, VariableDefinition> variables  = FactoryMethods.newMap(String.class, VariableDefinition.class);
         addVariable("result", context.getType(), variables);
-        visitACondition(inCondition, model, context, variables, statements);
+        GelExpression expression = visitACondition(inCondition, model, context, variables, statements);
+
+        extractVariables(expression);
+
         return inCondition;
+    }
+
+
+
+    //========================================================================//
+    //      G E L   E X P R E S S I O N   V I S I T O R   M E T H O D S       //
+    //========================================================================//
+
+
+    protected void extractVariables(GelExpression expression) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        this.genericVisit(expression);
+    }
+
+
+    public AtPre gelVisitAtPre(AtPre inAtPre, Object... parameters) {
+        return inAtPre;
+    }
+
+
+    public VariableReference getVisitVariableReference(VariableReference inVariable, Object... parameters) {
+        return inVariable;
     }
 
 
@@ -163,7 +210,32 @@ public class ConditionVisitor extends DynamicVisitorSupport {
     //========================================================================//
 
 
+
     protected GelExpression visitACondition(Condition inCondition, EteModel model,
+            MofOperation context, Map<String, VariableDefinition> variables,
+            List<Statement> inoutResult) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        Logger.getLogger("fr.insset.jeanluc.oclanalyzer.ReaderVisitor").log(Level.FINE, "Visit of " + inCondition.getSpecificationAsString());
+
+        // 1- parse the condition
+        String          specificationAsString = inCondition.getSpecificationAsString();
+        GelParser       parser                = GelParserWrapper.newParser(specificationAsString);
+        GelParser.GelExpressionContext   ctx  = parser.gelExpression();
+
+        // 2- build expression as an abstract tree
+        // TODO : use an abstract factory
+        GelContext      gelContext            = new GelContextImpl(model, (MofClass)context.getOwningMofClass(), context);
+        gelContext.set("model", model);
+        gelContext.set("context", context);
+        gelContext.set("contextualClass", parser);
+        TreeBuilder     treeBuilder           = new TreeBuilder(gelContext);
+        GelExpression   expression            = treeBuilder.visitGelExpression(ctx);
+
+        return expression;
+    }
+
+
+
+    protected GelExpression visitAConditionOld(Condition inCondition, EteModel model,
             MofOperation context, Map<String, VariableDefinition> variables,
             List<Statement> inoutResult) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         Logger.getLogger("fr.insset.jeanluc.oclanalyzer.ReaderVisitor").log(Level.FINE, "Visit of " + inCondition.getSpecificationAsString());
@@ -234,16 +306,10 @@ public class ConditionVisitor extends DynamicVisitorSupport {
     //========================================================================//
 
 
-    public static void  enableActionSemantics(ModelReader inReader) throws ClassNotFoundException {
-        Class.forName("fr.insset.jeanluc.action.semantics.builder.ActionSemanticsAction");
-        FactoryRegistry registry = FactoryRegistry.getRegistry();
-        inReader.addVisitors(new ConditionVisitor());
-    }
-
     
+
     //========================================================================//
 
-    
     private     int numCheck = 0;
 
 

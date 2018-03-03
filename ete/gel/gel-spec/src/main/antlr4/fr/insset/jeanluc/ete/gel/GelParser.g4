@@ -156,6 +156,7 @@ modExpression  : MOD operand;
 operand
     : oppExpression
     | navExpression
+    | navExpressionWithFinalStep
     | literal
     | parenthesisExpression
 ;
@@ -175,6 +176,21 @@ navExpression
       )*
 ;
 
+navExpressionWithFinalStep :
+    navExpression
+    finalStep
+;
+
+
+finalStep :
+    oclIsNew | oclIsTypeOf | oclIsKindOf
+;
+
+
+oclIsNew    :   OCL_IS_NEW;
+oclIsTypeOf :   OCL_IS_TYPE_OF;
+oclIsKindOf :   OCL_IS_KIND_OF;
+
 
 primitive
     : selfExpression
@@ -183,13 +199,6 @@ primitive
 ;
 
 
-/*
-stepExpression
-    : attributeNavAtPreOrNot
-    | methodNavExpression
-    | collectionMethodNavExpression
-;
-*/
 
 
 attributeNavAtPreOrNot
