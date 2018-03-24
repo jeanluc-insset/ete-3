@@ -188,8 +188,8 @@ finalStep :
 
 
 oclIsNew    :   OCL_IS_NEW;
-oclIsTypeOf :   OCL_IS_TYPE_OF;
-oclIsKindOf :   OCL_IS_KIND_OF;
+oclIsTypeOf :   OCL_IS_TYPE_OF LPAREN gelExpression RPAREN;
+oclIsKindOf :   OCL_IS_KIND_OF LPAREN gelExpression RPAREN;
 
 
 primitive
@@ -204,6 +204,7 @@ primitive
 attributeNavAtPreOrNot
     : atPreExpression
     | attributeNavExpression
+    | asTypeExpression
 ;
 
 attributeNavExpression
@@ -212,6 +213,10 @@ attributeNavExpression
 
 atPreExpression
     : attributeNavExpression ATPRE
+;
+
+asTypeExpression
+    : DOT OCL_AS_TYPE LPAREN gelExpression RPAREN
 ;
 
 methodNavExpression

@@ -68,7 +68,7 @@ public class ${current.name}Jpa extends AbstractJpa<${current.name}> {
     }
 
 
-
+/*
     public List<${current.name}> findBy(${dialect.mt2lt($aProperty.type)} inValue) {
         EntityManager em = getEntityManager();
         CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -79,6 +79,7 @@ public class ${current.name}Jpa extends AbstractJpa<${current.name}> {
         TypedQuery<${current.name}> query = em.createQuery(cq);
         return query.getResultList();
     }
+*/
 
 #end
 #end

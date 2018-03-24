@@ -375,6 +375,7 @@ ORDERED         : 'ordered';
 OCL_IS_NEW      : 'oclIsNew';
 OCL_IS_TYPE_OF  : 'oclIsTypeOf';
 OCL_IS_KIND_OF  : 'oclIsKindOf';
+OCL_AS_TYPE     : 'oclAsType';
 
 
 

@@ -14,7 +14,7 @@
     <!-- IMPLEMENTATION -->
     <cc:implementation>
         <h:panelGrid columns="2">
-#foreach ($aProperty in $current.ownedAttribute)
+#foreach ($aProperty in $current.allAttributes)
 #set ($var = $aProperty)
 #set ($varName = $aProperty.name)
 #set ($scope = "cc.attrs.selection.")

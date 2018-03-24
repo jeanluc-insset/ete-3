@@ -20,7 +20,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Entity
 @XmlRootElement
-public class ${current.name} implements Serializable {
+public class ${current.name} #if (${current.superClass.size()}>0)extends ${current.superClass.get(0).owningPackage.name}.model.${current.superClass.get(0).name} #end implements Serializable {
 
 
     public Long getId() {

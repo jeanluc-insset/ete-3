@@ -5,7 +5,6 @@ import fr.insset.jeanluc.ete.gel.AtPre;
 import fr.insset.jeanluc.ete.gel.GelContext;
 import fr.insset.jeanluc.ete.gel.GelExpression;
 import fr.insset.jeanluc.ete.gel.GelParser;
-import fr.insset.jeanluc.ete.gel.GelParserBaseVisitor;
 import fr.insset.jeanluc.ete.gel.VariableDefinition;
 import fr.insset.jeanluc.ete.gel.VariableReference;
 import fr.insset.jeanluc.ete.gel.impl.GelContextImpl;
@@ -17,14 +16,11 @@ import static fr.insset.jeanluc.ete.meta.model.constraint.Invariant.INVARIANT;
 import fr.insset.jeanluc.ete.meta.model.constraint.Postcondition;
 import static fr.insset.jeanluc.ete.meta.model.constraint.Postcondition.POSTCONDITION;
 import fr.insset.jeanluc.ete.meta.model.constraint.Precondition;
-import fr.insset.jeanluc.ete.meta.model.core.NamedElement;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 import static fr.insset.jeanluc.ete.meta.model.emof.MofClass.MOF_CLASS;
 import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
 import static fr.insset.jeanluc.ete.meta.model.emof.MofOperation.MOF_OPERATION;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
-import fr.insset.jeanluc.ete.meta.model.mofpackage.MofPackage;
-import fr.insset.jeanluc.ete.meta.model.mofpackage.PackageableElement;
 import fr.insset.jeanluc.ete.meta.model.types.MofType;
 import fr.insset.jeanluc.ete.xlang.Statement;
 import fr.insset.jeanluc.meta.model.io.ModelReader;
@@ -33,6 +29,7 @@ import fr.insset.jeanluc.util.factory.FactoryRegistry;
 import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -151,7 +148,10 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         EteModel        model               = (EteModel)inParameters[1];
         Map<String, VariableDefinition> variables  = FactoryMethods.newMap(String.class, VariableDefinition.class);
         addVariable("result", context.getType(), variables);
-        visitACondition(inCondition, model, context, variables, statements);
+        GelExpression expression = visitACondition(inCondition, model, context, variables, statements);
+        SimpleActionSemanticsBuilder builder = new SimpleActionSemanticsBuilder();
+        List<Statement> inoutResult = new LinkedList<>();
+        builder.buildStatements(expression, inoutResult);
         return inCondition;
     }
 
@@ -309,6 +309,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
     
 
     //========================================================================//
+
 
     private     int numCheck = 0;
 

@@ -21,6 +21,9 @@ public interface MofClass extends Classifier {
 
     public final static String              MOF_CLASS = "mof-class";
 
+    public  default boolean                 hasSuperClasses() {
+        return getSuperTypes().size() > 0;
+    }
 
     public  default Collection<MofClass>    getSuperClass() {
         return getSuperClassAsStream().collect(Collectors.toCollection(XList::new));

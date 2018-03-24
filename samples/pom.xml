@@ -12,5 +12,6 @@
         <module>helloworld</module>
         <module>web-ete-bank</module>
         <module>linked_list</module>
-    </modules>
+    <module>modeleur</module>
+  </modules>
 </project>
