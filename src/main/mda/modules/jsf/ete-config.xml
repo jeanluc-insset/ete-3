@@ -12,6 +12,11 @@
             <!-- JPA -->
             <module src="../jpa/ete-config.xml"/>
 
+            <!-- Other Java stuff : Pojos and enumerations -->
+            <module src="../pojo/ete-config.xml"
+                    items='${classes.filter(c -> not c.hasStereotype("Entity"))}'
+                    target="${current.owningPackage.name.replace('.', '/')}/${current.name}.java"/>
+
             <!-- CRUD pages -->
             <module src="pages/ete-config.xml"/>
 

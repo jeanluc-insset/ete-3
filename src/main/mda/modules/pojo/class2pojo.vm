@@ -1,4 +1,4 @@
-package ${current.owningPackage}.model;
+package ${current.owningPackage};
 
 
 
@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author jldeleage
  */
-public class ${current.name} implements Serializable {
+public class ${current.name} #if (${current.superClass.size()} > 0) extends ${current.superClass.get(0).owningPackage.name}.${current.superClass.get(0)} #end  implements Serializable {
 
 
 #foreach ($tagValue in ${current.getTagValues().keySet()})

@@ -22,18 +22,16 @@
             <!-- JPA -->
             <velocity   template="abstract_jpa.vm"
                         target="fr/insset/jeanluc/ete/jpa/AbstractJpa.java"/>
-            <velocity items="${classes}"
+<!--            <velocity items="${classes}"
                         dialect="fr.insset.jeanluc.as2java.JavaGenerator"
                         template="class2entity.vm"
-                        target="${current.owningPackage.name.replace('.', '/')}/model/${current.name}.java"/>
+                        target="${current.owningPackage.name.replace('.', '/')}/model/${current.name}.java"/>-->
             <velocity items='${classes.filter(c -> c.hasStereotype("Entity"))}'
                         dialect="fr.insset.jeanluc.as2java.JavaGenerator"
                         template="class2entity.vm"
                         target="${current.owningPackage.name.replace('.', '/')}/model/${current.name}.java"/>
-<!--            <module src="../pojo/ete-config.xml"
-                        target="${current.owningPackage.name.replace('.', '/')}/model/${current.name}.java"/>-->
             
-                <velocity items='${classes.filter(c -> c.hasStereotype("Entity"))}'
+            <velocity items='${classes.filter(c -> c.hasStereotype("Entity"))}'
                         dialect="fr.insset.jeanluc.as2java.JavaGenerator"
                         template="class2jpa.vm"
                         target="${current.owningPackage.name.replace('.', '/')}/jpa/${current.name}Jpa.java"/>

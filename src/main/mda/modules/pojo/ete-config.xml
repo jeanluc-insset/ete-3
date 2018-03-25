@@ -13,7 +13,7 @@
             <velocity items='${classes.filter(c -> !c.hasStereotype("Entity"))}'
                         dialect="fr.insset.jeanluc.as2java.JavaGenerator"
                         template="class2pojo.vm"
-                        target="${current.owningPackage.name.replace('.', '/')}/model/${current.name}.java"/>
+                        target="${current.owningPackage.name.replace('.', '/')}/${current.name}.java"/>
         </transformation-set>
 
     </transformation-set>

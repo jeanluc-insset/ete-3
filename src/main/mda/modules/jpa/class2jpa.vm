@@ -19,6 +19,9 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
+import javax.persistence.metamodel.EntityType;
+import javax.persistence.metamodel.Metamodel;
+import javax.persistence.metamodel.SingularAttribute;
 
 
 
@@ -68,18 +71,23 @@ public class ${current.name}Jpa extends AbstractJpa<${current.name}> {
     }
 
 
-/*
+
     public List<${current.name}> findBy(${dialect.mt2lt($aProperty.type)} inValue) {
         EntityManager em = getEntityManager();
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<${current.name}> cq = cb.createQuery(${current.name}.class);
         Root<${current.name}> from = cq.from(${current.name}.class);
-        from.join(${current.name}_.${aProperty.name});
-        cq.where(cb.equal(from.get(${current.name}_.${aProperty.name}), inValue));
+        // There is an "unkown compilation error" if we try to use the metamodel
+        // generator processor so we use the metamodel on runtime only
+        Metamodel metamodel = em.getMetamodel();
+        EntityType<${current.name}> entity = metamodel.entity(${current.name}.class);
+        SingularAttribute<? super ${current.name}, ?> singularAttribute = entity.getSingularAttribute("${dialect.i2lc($aProperty.type.name)}");
+        from.join(singularAttribute);
+        cq.where(cb.equal(from.get(singularAttribute), inValue));
         TypedQuery<${current.name}> query = em.createQuery(cq);
         return query.getResultList();
     }
-*/
+
 
 #end
 #end

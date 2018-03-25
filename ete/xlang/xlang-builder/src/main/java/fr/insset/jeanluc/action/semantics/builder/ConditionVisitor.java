@@ -70,6 +70,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         // Visiting methods registration
         register(Precondition.class, "visitPrecondition");
         register(Postcondition.class, "visitPostcondition");
+        register(EnhancedPostCondition.class, "visitEnhancedPostCondition");
         // Registration of the methods to visit gel expression
         register("gelVisit", "fr.insset.jeanluc.ete.gel");
         
@@ -142,6 +143,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
     public Postcondition    visitPostcondition(Postcondition inCondition, Object... inParameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         Logger.getLogger("fr.insset.jeanluc.oclanalyzer.ReaderVisitor").log(Level.FINE, "Visit of " + inCondition.getSpecificationAsString());
 
+        System.out.println("Parsing a standard postcondition : " + inCondition + " (" + inCondition.getClass().getName() + ")");
         EnhancedMofOperationImpl    context = (EnhancedMofOperationImpl)inParameters[0];
         List<Statement>             statements    = getStatements(context, "body");
 
@@ -214,7 +216,8 @@ public class ConditionVisitor extends DynamicVisitorSupport {
     protected GelExpression visitACondition(Condition inCondition, EteModel model,
             MofOperation context, Map<String, VariableDefinition> variables,
             List<Statement> inoutResult) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        Logger.getLogger("fr.insset.jeanluc.oclanalyzer.ReaderVisitor").log(Level.FINE, "Visit of " + inCondition.getSpecificationAsString());
+        Logger logger = Logger.getLogger("fr.insset.jeanluc.oclanalyzer.ReaderVisitor");
+        logger.log(Level.INFO, "Visit of " + inCondition.getSpecificationAsString());
 
         // 1- parse the condition
         String          specificationAsString = inCondition.getSpecificationAsString();
@@ -229,6 +232,13 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         gelContext.set("contextualClass", parser);
         TreeBuilder     treeBuilder           = new TreeBuilder(gelContext);
         GelExpression   expression            = treeBuilder.visitGelExpression(ctx);
+        logger.log(Level.FINER, "GelExpression : " + expression);
+
+        // 3- visit the GelExpression to build statements
+        //    The statements are added to the preexisting list
+        SimpleActionSemanticsBuilder builder = new SimpleActionSemanticsBuilder();
+        builder.buildStatements(expression, inoutResult);
+        logger.log(Level.INFO, "Statements : " + inoutResult + " (" + inoutResult.size() + ")");
 
         return expression;
     }
