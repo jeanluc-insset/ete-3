@@ -1,18 +1,25 @@
-
-
 package fr.insset.jeanluc.action.semantics.builder;
 
 import fr.insset.jeanluc.ete.meta.model.constraint.Postcondition;
 import fr.insset.jeanluc.ete.meta.model.constraint.impl.PostconditionImpl;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
+import fr.insset.jeanluc.ete.xlang.Statement;
+import fr.insset.jeanluc.util.factory.FactoryMethods;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
  * @author jldeleage
  */
-public class EnhancedPostCondition extends PostconditionImpl implements Comparable<EnhancedPostCondition>, Postcondition {
+public class EnhancedPostcondition extends PostconditionImpl implements Comparable<EnhancedPostcondition>, Postcondition {
+
+
+    public EnhancedPostcondition() throws InstantiationException {
+        statements = FactoryMethods.newList(Statement.class);
+    }
+
 
 
     public MofProperty getDefinedProperty() {
@@ -41,9 +48,13 @@ public class EnhancedPostCondition extends PostconditionImpl implements Comparab
 
 
     @Override
-    public int compareTo(EnhancedPostCondition o) {
-        // TODO : if the defined property is "result" then this is greater than
-        // any other condition
+    public int compareTo(EnhancedPostcondition o) {
+        if (isResult()) {
+            return 1;
+        }
+        else if (o.isResult()) {
+            return -1;
+        }
         if (o.getFinalUsedValues().contains(definedProperty)) {
             if (finalUsedValues.contains(o.getDefinedProperty())) {
                 throw new RuntimeException("Circular definition in " + this.getSpecificationAsString()
@@ -67,11 +78,30 @@ public class EnhancedPostCondition extends PostconditionImpl implements Comparab
         return 0;
     }
 
+    public List<Statement> getStatements() {
+        return statements;
+    }
+
+    public void setStatements(List<Statement> statements) {
+        this.statements = statements;
+    }
+
+    public boolean isResult() {
+        return result;
+    }
+
+    public void setResult(boolean inResult) {
+        this.result = inResult;
+    }
 
 
-    private     MofProperty             definedProperty;
-    private     List<MofProperty>       finalUsedValues = new LinkedList<>();
-    private     List<MofProperty>       initialUsedValues = new LinkedList<>();
+
+
+    private     List<Statement>     statements;
+    private     MofProperty         definedProperty;
+    private     boolean             result;
+    private     List<MofProperty>   finalUsedValues = new LinkedList<>();
+    private     List<MofProperty>   initialUsedValues = new LinkedList<>();
 
 
 }

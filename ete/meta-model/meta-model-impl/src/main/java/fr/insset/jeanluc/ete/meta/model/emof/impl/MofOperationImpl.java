@@ -142,7 +142,7 @@ public class MofOperationImpl extends FeatureImpl implements MofOperation {
     }
 
 
-    private List<MofParameter>             ownedParameter;
+    private List<MofParameter>          ownedParameter;
     private Collection<MofType>         raisedException;
     private boolean                     ordered;
     private boolean                     unique;

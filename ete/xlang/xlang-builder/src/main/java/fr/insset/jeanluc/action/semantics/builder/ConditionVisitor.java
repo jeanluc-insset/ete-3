@@ -36,7 +36,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * 
+ * The ConditionVisitor builds statements for an "enhanced" condition and stores
+ * these statements into the condition itself.
  *
  * @author jldeleage
  */
@@ -70,7 +71,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         // Visiting methods registration
         register(Precondition.class, "visitPrecondition");
         register(Postcondition.class, "visitPostcondition");
-        register(EnhancedPostCondition.class, "visitEnhancedPostCondition");
+        register(EnhancedPostcondition.class, "visitEnhancedPostcondition");
         // Registration of the methods to visit gel expression
         register("gelVisit", "fr.insset.jeanluc.ete.gel");
         
@@ -81,7 +82,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         inoutRegistry.registerFactory(MOF_CLASS, fr.insset.jeanluc.action.semantics.builder.EnhancedMofClassImpl.class);
         inoutRegistry.registerFactory(MOF_OPERATION, fr.insset.jeanluc.action.semantics.builder.EnhancedMofOperationImpl.class);
         inoutRegistry.registerFactory(INVARIANT, EnhancedInvariant.class);
-        inoutRegistry.registerFactory(POSTCONDITION, EnhancedPostCondition.class);
+        inoutRegistry.registerFactory(POSTCONDITION, EnhancedPostcondition.class);
     }
 
 
@@ -158,10 +159,32 @@ public class ConditionVisitor extends DynamicVisitorSupport {
     }
 
 
-    public EnhancedPostCondition    visitEnhancedPostCondition(EnhancedPostCondition inCondition, Object... inParameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    public EnhancedPrecondition    visitEnhancedPrecondition(EnhancedPrecondition inCondition, Object... inParameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         Logger.getLogger("fr.insset.jeanluc.oclanalyzer.ReaderVisitor").log(Level.FINE, "Visit of " + inCondition.getSpecificationAsString());
 
-        System.out.println("PARSING AN ENHANCED POST-CONDITION");
+        System.out.println("PARSING AN ENHANCED PRECONDITION");
+        
+
+        EnhancedMofOperationImpl    context = (EnhancedMofOperationImpl)inParameters[0];
+        List<Statement>             statements    = getStatements(context, "body");
+
+        EteModel        model               = (EteModel)inParameters[1];
+        Map<String, VariableDefinition> variables  = FactoryMethods.newMap(String.class, VariableDefinition.class);
+        addVariable("result", context.getType(), variables);
+        GelExpression expression = visitACondition(inCondition, model, context, variables, statements);
+
+        extractVariables(expression);
+
+        return inCondition;
+    }
+
+
+
+    public EnhancedPostcondition    visitEnhancedPostcondition(EnhancedPostcondition inCondition, Object... inParameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        Logger.getLogger("fr.insset.jeanluc.oclanalyzer.ReaderVisitor").log(Level.FINE, "Visit of " + inCondition.getSpecificationAsString());
+
+        System.out.println("PARSING AN ENHANCED POSTCONDITION");
+        
 
         EnhancedMofOperationImpl    context = (EnhancedMofOperationImpl)inParameters[0];
         List<Statement>             statements    = getStatements(context, "body");
@@ -266,22 +289,22 @@ public class ConditionVisitor extends DynamicVisitorSupport {
 
         // 3- visit the GelExpression to build statements
         //    The statements are added to the preexisting list
-        SimpleActionSemanticsBuilder builder = new SimpleActionSemanticsBuilder();
-        builder.buildStatements(expression, inoutResult);
+//        SimpleActionSemanticsBuilder builder = new SimpleActionSemanticsBuilder();
+//        builder.buildStatements(expression, inoutResult);
 
         // 4- wrap everything into a "container" and put it into the
         // the condition itself
         // TODO : we should share the same container between all conditions on
         // a single operation, should not we ?
-        StatementContainer  container         = new StatementContainer();
-        container.setStatements(inoutResult);
-        container.setAbstractTree(expression);
-        inCondition.setSpecification(container);
-        Map<String, List<Statement>> statements = ((EnhancedMofOperationImpl)context).getStatements();
-        if (statements == null) {
-            statements = new HashMap<>();
-            ((EnhancedMofOperationImpl)context).setStatements(statements);
-        }
+//        StatementContainer  container         = new StatementContainer();
+//        container.setStatements(inoutResult);
+//        container.setAbstractTree(expression);
+//        inCondition.setSpecification(container);
+//        List<Statement> statements = ((EnhancedMofOperationImpl)context).getBody();
+//        if (statements == null) {
+//            statements = FactoryMethods.newList(Statement.class);
+//            ((EnhancedMofOperationImpl)context).setStatements(statements);
+//        }
         return expression;
     }
 
@@ -298,18 +321,8 @@ public class ConditionVisitor extends DynamicVisitorSupport {
 
 
     protected List<Statement> getStatements(EnhancedMofOperationImpl inOperation, String inKey) throws InstantiationException {
-        Map<String, List<Statement>> statementMap = inOperation.getStatements();
-        if (statementMap == null) {
-            Map plainMap = FactoryMethods.newMap(String.class, List.class);
-            statementMap = plainMap;
-            inOperation.setStatements(statementMap);
-        }
-        List<Statement> statementList = statementMap.get(inKey);
-        if (statementList == null) {
-            statementList = FactoryMethods.newList(Statement.class);
-            statementMap.put(inKey, statementList);
-        }
-        return statementList;
+        List<Statement> statements = inOperation.getBody();
+        return statements;
     }
 
 

@@ -108,11 +108,7 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
     @Override
     public String getOperationBody(MofOperation inOperation, String inIndentation) {
         EnhancedMofOperationImpl operation = (EnhancedMofOperationImpl) inOperation;
-        Map<String, List<Statement>> statementMap = operation.getStatements();
-        if (statementMap == null) {
-            return "";
-        }
-        List<Statement> statementList = statementMap.get("body");
+        List<Statement> statementList = operation.getStatements();
         this.operation = inOperation;
         StringWriter    stringWriter = new StringWriter();
         PrintWriter     printWriter = new PrintWriter(stringWriter);

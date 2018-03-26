@@ -87,8 +87,9 @@ public class ActionSemanticsOperationBuilder2Test {
         MofClass customerClass                = (MofClass)result.getElementByName("Customer");
         List<MofOperation> ownedOperation     = customerClass.getOwnedOperation();
         EnhancedMofOperationImpl        transferOperation = (EnhancedMofOperationImpl) ownedOperation.get(0);
-        Map<String, List<Statement>> statements = transferOperation.getStatements();
+        List<Statement> body = transferOperation.getBody();
         System.out.println(transferOperation);
+        System.out.println(body);
     }       // testEnableActionSemantics method
 
 

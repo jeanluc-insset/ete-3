@@ -156,11 +156,7 @@ public class JavaGenerator extends DynamicVisitorSupport implements Generator, J
     public String getOperationBody(MofOperation inOperation, String inIndentation) {
             EnhancedMofOperationImpl operation = (EnhancedMofOperationImpl) inOperation;
             List<Precondition> preconditions = operation.getPreconditions();
-            Map<String, List<Statement>> statementMap = operation.getStatements();
-            if (statementMap == null) {
-                return "";
-            }
-            List<Statement> statementList = statementMap.get("body");
+            List<Statement> statementList = operation.getStatements();
 //            this.operation = inOperation;
             StringWriter    stringWriter = new StringWriter();
             PrintWriter     printWriter = new PrintWriter(stringWriter);
