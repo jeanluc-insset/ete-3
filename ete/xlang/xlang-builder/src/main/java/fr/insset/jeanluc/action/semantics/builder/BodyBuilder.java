@@ -22,13 +22,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * An instance of this class builds statements to realize a postcondition. 
  *
  * @author jldeleage
  */
-public class SimpleActionSemanticsBuilder extends DynamicVisitorSupport {
+public class BodyBuilder extends DynamicVisitorSupport {
 
 
-    public SimpleActionSemanticsBuilder() throws InstantiationException {
+    public BodyBuilder() throws InstantiationException {
         register("visit", "fr.insset.jeanluc.ete.gel");
         FactoryRegistry.getRegistry().registerDefaultFactory(Assignment.class, AssignmentImpl.class);
     }

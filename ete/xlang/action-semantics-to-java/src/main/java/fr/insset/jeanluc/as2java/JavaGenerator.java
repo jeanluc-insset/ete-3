@@ -446,7 +446,7 @@ public class JavaGenerator extends DynamicVisitorSupport implements Generator, J
         List<GelExpression> operand = inOperation.getOperand();
         genericVisit(operand.get(0), inParameters);
         PrintWriter output      = (PrintWriter)inParameters[0];
-        output.print(inOperation.getSymbol());
+        output.print(inOperation.getValueOf("symbol"));
         genericVisit(operand.get(1), inParameters);
         return inOperation;
     }

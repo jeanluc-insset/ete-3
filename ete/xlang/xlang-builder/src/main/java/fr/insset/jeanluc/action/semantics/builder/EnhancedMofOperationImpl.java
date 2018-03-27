@@ -36,6 +36,7 @@ public class EnhancedMofOperationImpl extends MofOperationImpl {
 
 
     public void buildBody() throws InstantiationException {
+        System.out.println("Building body of " + this);
         body = FactoryMethods.newList(Statement.class);
         for (Precondition aCondition : getPreconditions()) {
             EnhancedPrecondition enhanced = (EnhancedPrecondition) aCondition;

@@ -152,7 +152,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         Map<String, VariableDefinition> variables  = FactoryMethods.newMap(String.class, VariableDefinition.class);
         addVariable("result", context.getType(), variables);
         GelExpression expression = visitACondition(inCondition, model, context, variables, statements);
-        SimpleActionSemanticsBuilder builder = new SimpleActionSemanticsBuilder();
+        BodyBuilder builder = new BodyBuilder();
         List<Statement> inoutResult = new LinkedList<>();
         builder.buildStatements(expression, inoutResult);
         return inCondition;
@@ -259,10 +259,12 @@ public class ConditionVisitor extends DynamicVisitorSupport {
 
         // 3- visit the GelExpression to build statements
         //    The statements are added to the preexisting list
-        SimpleActionSemanticsBuilder builder = new SimpleActionSemanticsBuilder();
+        BodyBuilder builder = new BodyBuilder();
         builder.buildStatements(expression, inoutResult);
         logger.log(Level.INFO, "Statements : " + inoutResult + " (" + inoutResult.size() + ")");
 
+        EnhancedMofOperationImpl    enhancedMofOperation = (EnhancedMofOperationImpl) context;
+        enhancedMofOperation.buildBody();
         return expression;
     }
 
@@ -289,7 +291,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
 
         // 3- visit the GelExpression to build statements
         //    The statements are added to the preexisting list
-//        SimpleActionSemanticsBuilder builder = new SimpleActionSemanticsBuilder();
+//        BodyBuilder builder = new BodyBuilder();
 //        builder.buildStatements(expression, inoutResult);
 
         // 4- wrap everything into a "container" and put it into the

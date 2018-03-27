@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
@@ -26,6 +27,7 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import javax.tools.Diagnostic;
 import javax.tools.JavaCompiler;
@@ -219,6 +221,117 @@ public class PostAssertionJavaGeneratorTest {
         fileManager.close();
     }       // testJavaGeneration method
 
+
+    @Test
+    public void testTransfer() throws InstantiationException, IllegalAccessException, IOException, EteException, ClassNotFoundException, NoSuchMethodException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException {
+        System.out.println("transfer");
+
+        // 1- initialize frameworks
+        // 1-a basic factories
+        Factories.init();
+        // 1-b xlang factories
+        Class.forName("fr.insset.jeanluc.action.semantics.builder.ActionSemanticsAction");
+
+        // 2- read a model
+        //    This operation invokes the SimpleActionSemanticsBuilder which
+        //    builds statements along the post-conditions of operations.
+        // 2-a prepare a reader
+        XmlModelReader instance = new XmlModelReader();
+        instance.addVisitors(new XmlModelReaderVisitor());
+        ConditionVisitor.enableActionSemantics(instance);
+        // 2-b actually read
+        EteModel parent = new EteModelImpl();
+        PrimitiveDataTypes.init(parent);
+        EteModel model = instance.readModel(MODEL_PATH);
+
+        // 3- generate classes
+        VelocityAction    action = new VelocityAction();
+        action.setModel(model);
+        action.addParameter(BASE_DIR, "src/test/mda/");
+        action.addParameter("dialect", "fr.insset.jeanluc.as2java.JavaGenerator");
+//        action.addParameter("output_base", "target/test/generated-sources/ete/");
+        action.addParameter("output_base", SRC_DIR);
+        action.addParameter("items", "${classes}");
+        action.addParameter("target", "${current.owningPackage.getQualifiedName().replace('::', '/').replace('.', '/')}/${current.name}.java");
+        action.addParameter("template", "templates/pojo-with-operations.vm");
+        action.process(model);
+
+        // 4- check the result
+        // In order to get the result during the test we cannot wait for maven to
+        // compile the generated sources.
+        // 4-1 compile generated files
+        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+        StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
+        List<String> optionList = new ArrayList<String>();
+        optionList.add("-classpath");
+//        optionList.add(System.getProperty("java.class.path") + ":dist/InlineCompiler.jar");
+        optionList.add(System.getProperty("java.class.path")
+                + ":" + SRC_DIR
+                + ":" + "target/classes/"
+                + ":" + "../../gel/gel-impl/target/gel-impl-3.1.jar");
+        
+        File        sessionJava = new File(SRC_DIR + "fr/insset/jeanluc/mda/qcm/modele/Session.java");
+
+        Iterable<? extends JavaFileObject> compilationUnit
+                        = fileManager.getJavaFileObjectsFromFiles(Arrays.asList(sessionJava));
+                JavaCompiler.CompilationTask task = compiler.getTask(
+                    null, 
+                    fileManager, 
+                    null, // diagnostics, 
+                    optionList, 
+                    null, 
+                    compilationUnit);
+        if (task.call()) {
+            // 4-2 instantiate some classes
+            // Load and execute
+            System.out.println("Loading and compiling the files");
+            // Create a new custom class loader, pointing to the directory that contains the compiled
+            // classes, this should point to the top of the package structure!
+            URLClassLoader classLoader = new URLClassLoader(
+                    new URL[]{
+                        new File(SRC_DIR).toURI().toURL(),
+                        new File(TARGET_DIR).toURI().toURL()
+                    });
+            System.out.println("Classloader : " + classLoader);
+            System.out.println("URLS : " + classLoader.getURLs());
+            // Load the class from the classloader by name....
+            Class accountClass = classLoader.loadClass("fr.insset.jeanluc.ete.example.bank.Account");
+            Class customerClass = classLoader.loadClass("fr.insset.jeanluc.ete.example.bank.Customer");
+            // Create some instances...
+            Object  aCustomer     = customerClass.newInstance();
+            Field   accountsField = customerClass.getField("accounts");
+            List    customerAccounts = new LinkedList();
+            accountsField.set(aCustomer, customerAccounts);
+            Object  firstAccount     = accountClass.newInstance();
+            Object  secondAccount    = accountClass.newInstance();
+            customerAccounts.add(firstAccount);
+            customerAccounts.add(secondAccount);
+            Method  transfer  = customerClass.getMethod("transfer", Double.TYPE);
+            Method  getBalance  = accountClass.getMethod("getBalance");
+            Method  deposit     = accountClass.getMethod("deposit", Double.TYPE);
+
+            // 4-3 run the transfer operation
+            deposit.invoke(firstAccount, 5000D);
+            transfer.invoke(firstAccount, firstAccount, secondAccount, 1000D);
+            double result = (double) getBalance.invoke(firstAccount, new Object[0]);
+            System.out.println("The balance of the first account is " + result);
+            assertEquals(4000.0, result, 0.01);
+            result = (double) getBalance.invoke(secondAccount, new Object[0]);
+            System.out.println("The balance of the second account is " + result);
+            assertEquals(1000.0, result, 0.01);
+            
+            //************************************************************************************************* Load and execute ** /
+        } else {
+//            for (Diagnostic<? extends JavaFileObject> diagnostic : diagnostics.getDiagnostics()) {
+//                System.out.format("Error on line %d in %s%n",
+//                        diagnostic.getLineNumber(),
+//                        diagnostic.getSource().toUri());
+//            }
+//            Assert.fail("The generated files could not be compiled");
+        }       // task.call() not OK
+
+        fileManager.close();
+    }       // testJavaGeneration method
 
 /*
     @Test 
