@@ -62,7 +62,7 @@ public class BodyBuilder extends DynamicVisitorSupport {
     //========================================================================//
 
 
-    public void buildStatements(GelExpression inExpression, List<Statement> inoutStatements) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    public void buildStatements(GelExpression inExpression, List<Statement> inoutStatements, Map<GelExpression, VariableDeclaration> inLocalVariables) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         variables = new HashMap<>();
         // if the expression is an equality we must build an affectation
 //        if (inExpression instanceof Equal) {
@@ -76,7 +76,7 @@ public class BodyBuilder extends DynamicVisitorSupport {
 
     public IsNew visitIsNew(IsNew inIsNew, Object... inParameters) throws InstantiationException, IllegalAccessException {
         List<Statement> statements = (List<Statement>) inParameters[0];
-        Allocation newInstance = (Allocation) FactoryRegistry.newInstance("new");
+        Allocation newInstance = (Allocation) FactoryRegistry.newInstance("allocation");
         statements.add(newInstance);
         newInstance.setMofClass((MofClass)inIsNew.getType());
         return inIsNew;

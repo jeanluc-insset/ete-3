@@ -6,12 +6,19 @@ import fr.insset.jeanluc.ete.api.EteException;
 import fr.insset.jeanluc.ete.api.impl.VelocityAction;
 import fr.insset.jeanluc.ete.meta.model.core.PrimitiveDataTypes;
 import fr.insset.jeanluc.ete.meta.model.core.impl.Factories;
+import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
+import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
+import fr.insset.jeanluc.ete.meta.model.mofpackage.PackageableElement;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.impl.EteModelImpl;
+import fr.insset.jeanluc.ete.xlang.Statement;
+import fr.insset.jeanluc.ete.xlang.builder.BodyBuilder;
 import fr.insset.jeanluc.xmi.io.impl.XmlModelReader;
 import fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -62,7 +69,7 @@ public class IsNewTest {
      * @throws EteException 
      */
     @Test
-    public void testIsNew() throws InstantiationException, ClassNotFoundException, IllegalAccessException, IOException, EteException {
+    public void testIsNew() throws InstantiationException, ClassNotFoundException, IllegalAccessException, IOException, EteException, IllegalArgumentException, InvocationTargetException {
         // 1- initialize framework
         // 1-a basic factories
         Factories.init();
@@ -78,19 +85,23 @@ public class IsNewTest {
         PrimitiveDataTypes.init(parent);
         EteModel result = instance.readModel(MODEL_PATH);
 
-        // 4- add auxiliary variables and sort the conditions of an operation
-// TODO
+        // 4- check result
+        MofClass formalLinkedListClass = (MofClass)result.getElementByName("FormalLinkedList");
+        EnhancedMofOperationImpl addOperation = (EnhancedMofOperationImpl) formalLinkedListClass.getOwnedOperation("add");
+        List<Statement> body = addOperation.buildBody();
 
-        // 5- generate the resulting code
-//        velocityAction(result, "header.vm", "${current.name}.h");
-//        velocityAction(result, "implementation.vm", "${current.name}.c");
-
-        // 6- check results
-
+        int     i=0;
+        for (Statement aStatement : body) {
+            if (i<10) System.out.print(" ");
+            System.out.print(i++);
+            System.out.print(" ");
+            System.out.println(aStatement.getClass().getName());
+        }
     }
 
     protected void velocityAction(EteModel model, String template, String target) throws EteException {
         VelocityAction    action = new VelocityAction();
+        System.out.println(new File(".").getAbsolutePath());
         action.setModel(model);
         action.addParameter(BASE_DIR, "src/test/mda/");
         action.addParameter("dialect", "fr.insset.jeanluc.xlang.to.c.CGenerator");

@@ -2,6 +2,7 @@
 
 package fr.insset.jeanluc.action.semantics.builder;
 
+import fr.insset.jeanluc.ete.gel.GelExpression;
 import fr.insset.jeanluc.ete.xlang.Statement;
 import java.util.List;
 
@@ -11,6 +12,9 @@ import java.util.List;
  */
 public interface EnhancedCondition {
 
-    List<Statement>     getStatements();
+    public List<Statement>  getStatements();
+
+    public GelExpression    getExpression();
+    public void             setExpression(GelExpression inExpression);
 
 }

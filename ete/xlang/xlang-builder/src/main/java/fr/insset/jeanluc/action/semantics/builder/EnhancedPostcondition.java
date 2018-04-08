@@ -1,10 +1,12 @@
 package fr.insset.jeanluc.action.semantics.builder;
 
+import fr.insset.jeanluc.ete.gel.AtPre;
 import fr.insset.jeanluc.ete.gel.GelExpression;
 import fr.insset.jeanluc.ete.meta.model.constraint.Postcondition;
 import fr.insset.jeanluc.ete.meta.model.constraint.impl.PostconditionImpl;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
 import fr.insset.jeanluc.ete.xlang.Statement;
+import fr.insset.jeanluc.ete.xlang.VariableDeclaration;
 import fr.insset.jeanluc.util.factory.FactoryMethods;
 import java.util.LinkedList;
 import java.util.List;
@@ -112,6 +114,7 @@ public class EnhancedPostcondition extends PostconditionImpl implements Enhanced
     private     List<MofProperty>   finalUsedValues = new LinkedList<>();
     private     List<MofProperty>   initialUsedValues = new LinkedList<>();
     private     GelExpression       expression;
+
 
 
 }

@@ -199,7 +199,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         extractVariables(expression);
         BodyBuilder builder = new BodyBuilder();
         List<Statement> inoutResult = new LinkedList<>();
-        builder.buildStatements(expression, inoutResult);
+        builder.buildStatements(expression, inoutResult, context.getLocalVariables());
         inCondition.setStatements(statements);
 
         return inCondition;
@@ -266,7 +266,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         // 3- visit the GelExpression to build statements
         //    The statements are added to the preexisting list
         BodyBuilder builder = new BodyBuilder();
-        builder.buildStatements(expression, inoutResult);
+        builder.buildStatements(expression, inoutResult, ((EnhancedMofOperationImpl)context).getLocalVariables());
         logger.log(Level.INFO, "Statements : " + inoutResult + " (" + inoutResult.size() + ")");
 
         EnhancedMofOperationImpl    enhancedMofOperation = (EnhancedMofOperationImpl) context;
