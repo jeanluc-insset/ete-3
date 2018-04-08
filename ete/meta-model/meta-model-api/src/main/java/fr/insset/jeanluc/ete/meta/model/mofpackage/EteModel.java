@@ -5,8 +5,11 @@ import fr.insset.jeanluc.ete.meta.model.core.NamedElement;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.MofPackage;
 import fr.insset.jeanluc.util.factory.AbstractFactory;
+import fr.insset.jeanluc.util.factory.FactoryMethods;
 import fr.insset.jeanluc.util.factory.FactoryRegistry;
 import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 
@@ -44,6 +47,22 @@ public interface EteModel extends MofPackage {
         EteModel result = (EteModel)FactoryRegistry.newInstance(MODEL);;
         result.setParent(this);
         return result;
+    }
+
+    @Override
+    public default Collection<MofClass> getAllClasses() {
+        try {
+            Collection<MofClass> result = FactoryMethods.newList(MofClass.class);
+            result.addAll(getClasses());
+            EteModel parent = getParent();
+            if (parent != null) {
+                result.addAll(parent.getAllClasses());
+            }
+            return result;
+        } catch (InstantiationException ex) {
+            Logger.getLogger(EteModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return getClasses();
     }
 
 

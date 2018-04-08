@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script>
+
+function convert(event) {
+    var rect = event.target.getBoundingClientRect();
+    event.monX = event.x - rect.x;
+    event.monY = event.y - rect .y;
+}
+
+function display(event) {
+   convert(event);
+   console.log(event.monX, event.monY);
+}
+
+        </script>
+    </head>
+    <body>
+        <div>TODO write content</div>
+        <div style="display:inline">
+            Hello
+        </div>
+        <div style="position:absolute;left:100px;display:inline">
+            <svg onclick="display(event)" width="500" height="300">
+                <rect  width="500" height="300" fill="#BBBBBB"/>
+            </svg>
+        </div>
+    </body>
+</html>

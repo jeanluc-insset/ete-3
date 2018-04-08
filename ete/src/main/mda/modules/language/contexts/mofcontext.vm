@@ -179,6 +179,12 @@ public class ${dialect.i2uc($projectName)}ContextImpl implements ${dialect.i2uc(
             }
         }
         MofType   current = (MofType)resolveVariable(CURRENT);
+        if (SELF.equals(inString)) {
+            System.out.println("Resolving SELF");
+            Self    self = FactoryRegistry.newInstance(Self.class);
+            self.setName("self");
+            self.setType(current);
+        }
         if (current == null) {
             result = resolveProperty(inString, (MofClass)resolveVariable(ROOT), false);
             if (result != null) {
@@ -263,6 +269,11 @@ public class ${dialect.i2uc($projectName)}ContextImpl implements ${dialect.i2uc(
 
     //========================================================================//
 
+    public  TypedElement getContext() throws InstantiationException, IllegalAccessException {
+        return (TypedElement)resolveVariable(CONTEXT);
+    }
+
+
     public ${dialect.i2uc($projectName)}Expression resolveParameter(String inString, MofOperation inOperation) throws InstantiationException, IllegalAccessException {
         Collection<MofParameter> ownedParameter = inOperation.getOwnedParameter();
         for (MofParameter aParameter : ownedParameter) {
@@ -303,11 +314,17 @@ public class ${dialect.i2uc($projectName)}ContextImpl implements ${dialect.i2uc(
     }
 
 
-    public   ${dialect.i2uc($projectName)}Expression resolveOperation(String inString, MofType from) {
+    public   ${dialect.i2uc($projectName)}Expression resolveOperation(String inString, MofType from) throws InstantiationException, IllegalAccessException {
         // TODO : we should allow methods on predefined types (at least on
         // String and date types)
         if (! (from instanceof MofClass)) {
             return null;
+        }
+        if ("isNew".equals(inString)) {
+            return (GelExpression) FactoryRegistry.newInstance("isnew");
+        }
+        else if ("isDeleted".equals(inString)) {
+            return (GelExpression) FactoryRegistry.newInstance("isdeleted");
         }
         Feature feature = ((MofClass)from).getOwnedOperation(inString);
         if (feature != null) {

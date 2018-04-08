@@ -19,9 +19,8 @@
               -->
         <module src="../../../../../src/main/mda/modules/C/ete-config.xml"/>
 
-<!--        <velocity   template="main.vm"
-                    items='${classes.filter(c->hasStereotype("main"))}'
-                    target="main.c"/>-->
+        <velocity   template="main.vm"
+                    target="main.c"/>
 
     </transformation-set>
 

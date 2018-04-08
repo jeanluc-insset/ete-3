@@ -15,6 +15,7 @@
         <module>xlang-builder</module>
         <module>action-semantics-to-java</module>
         <module>xlang-to-xxx</module>
+        <module>xlang-to-c</module>
     </modules>
     <name>xlang</name>
 </project>

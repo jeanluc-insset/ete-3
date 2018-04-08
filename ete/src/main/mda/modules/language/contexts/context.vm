@@ -7,8 +7,9 @@
 package fr.insset.jeanluc.ete.${dialect.i2lc($projectName)};
 
 
+import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
 import fr.insset.jeanluc.ete.meta.model.types.MofType;
-// import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
+import fr.insset.jeanluc.ete.meta.model.types.TypedElement;
 import javax.annotation.Generated;
 
 
@@ -30,23 +31,41 @@ public interface ${dialect.i2uc($projectName)}Context<T> {
                                     CURRENT_TYPE = "current_type";
 
 
+    public default TypedElement getContext() throws InstantiationException, IllegalAccessException {
+        return (TypedElement)resolve(CONTEXT);
+    }
+
+
+    public default MofType getContextType() throws InstantiationException, IllegalAccessException {
+        TypedElement context = getContext();
+        if (context instanceof MofOperation) {
+            return ((MofOperation)context).getOwningMofClass();
+        }
+        else {
+            return (MofType)context;
+        }
+    }
+
+
+
+
     /**
      * Looks for the value of <code>inString</code>
      */
-    public T        resolve(String inString);
+    public T        resolve(String inString) throws InstantiationException, IllegalAccessException;
     /**
      *
      */
-    public Object   resolveVariable(String inString);
+    public Object   resolveVariable(String inString) throws InstantiationException, IllegalAccessException;
     /**
      * Looks for an operation with <code>inString</code> as identifier
      */
-    public T        resolveOperation(String inString, MofType inType);
+    public T        resolveOperation(String inString, MofType inType) throws InstantiationException, IllegalAccessException;
     /**
      * Looks for a collection operation whose identifier is the value of
      * <code>inString</code>
      */
-    public T        resolveCollOp(String inString);
+    public T        resolveCollOp(String inString) throws InstantiationException, IllegalAccessException;
 
     /**
      * Adds a local variable

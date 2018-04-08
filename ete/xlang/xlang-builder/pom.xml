@@ -42,13 +42,20 @@
         <dependency>
             <groupId>fr.insset.jeanluc</groupId>
             <artifactId>gel-impl</artifactId>
-            <version>${project.version}</version>
+            <version>3.1</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>fr.insset.jeanluc</groupId>
             <artifactId>xlang-impl</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>fr.insset.jeanluc</groupId>
+            <artifactId>ete-lib-impl</artifactId>
+            <version>3.1</version>
+            <scope>test</scope>
+            <type>jar</type>
         </dependency>
     </dependencies>
 

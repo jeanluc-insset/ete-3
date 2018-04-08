@@ -9,6 +9,9 @@
     <artifactId>linked_list</artifactId>
     <packaging>jar</packaging>
 
+
+
+
     <build>
         <plugins>
 
@@ -74,7 +77,7 @@
                     </dependency>
                     <dependency>
                         <groupId>fr.insset.jeanluc</groupId>
-                        <artifactId>xlang-to-java</artifactId>
+                        <artifactId>xlang-to-c</artifactId>
                         <version>3.1</version>
                     </dependency>
                 </dependencies>

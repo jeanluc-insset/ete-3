@@ -11,10 +11,28 @@
 
     <dependencies>
         <dependency>
+            <groupId>fr.insset.jeanluc</groupId>
+            <artifactId>el-evaluator</artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>gel-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>xlang-api</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>fr.insset.jeanluc</groupId>
+            <artifactId>xlang-builder</artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
+        </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -27,35 +45,11 @@
             <version>1.3</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>fr.insset.jeanluc</groupId>
-            <artifactId>xlang-impl</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>gel-impl</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>fr.insset.jeanluc</groupId>
-            <artifactId>xlang-builder</artifactId>
-            <version>${project.version}</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
+         <dependency>
             <groupId>fr.insset.jeanluc</groupId>
             <artifactId>xmi-io</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>fr.insset.jeanluc</groupId>
-            <artifactId>el-evaluator</artifactId>
-            <version>${project.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
@@ -66,15 +60,13 @@
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>xlang-builder</artifactId>
+            <groupId>fr.insset.jeanluc</groupId>
+            <artifactId>xlang-impl</artifactId>
             <version>${project.version}</version>
+            <scope>test</scope>
+            <type>jar</type>
         </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>el-evaluator</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+
     </dependencies>
 
     <build>

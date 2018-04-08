@@ -59,6 +59,7 @@ import java.io.IOException;
 public class XmlModelReader implements ModelReader {
 
 
+
     public final static String     PACKAGE_PATH            = "uml:Package";
     public final static String     CLASS_PATH              = "//*[@*='uml:Package']/*[@*='uml:Class']";
     public final static String     ENUM_PATH               = "//*[@*='uml:Package']/*[@*='uml:Enumeration']";
@@ -85,6 +86,12 @@ public class XmlModelReader implements ModelReader {
         FactoryRegistry registry = FactoryRegistry.getRegistry();
         registry.registerDefaultFactory(READER_VISITOR, XmlModelReaderVisitor.class);
         registry.registerFactory(XLIST, XList.class);
+    }
+
+    @Override
+    public EteModel readModel(Object inDocument, EteModel inParent) throws IllegalAccessException, InstantiationException, IOException {
+        nextModelId++;
+        return ModelReader.super.readModel(inDocument, inParent); //To change body of generated methods, choose Tools | Templates.
     }
 
 
@@ -138,15 +145,20 @@ public class XmlModelReader implements ModelReader {
             Logger  logger = Logger.getGlobal();
             for (int i=0 ; i<elements.getLength() ; i++) {
                 Element next        = (Element) elements.item(i);
-                String idSubClass   = ((Element)next.getParentNode()).getAttribute("name");
-                String idSuperClass = next.getAttribute("general");
+                String idSubClass   = getModelId() + ((Element)next.getParentNode()).getAttribute("name");
+                String idSuperClass = getModelId() + next.getAttribute("general");
                 logger.log(Level.FINER,"Ids : [" + idSubClass + "]   [" + idSuperClass + "]");
-                MofType subClass   = (MofType) inoutModel.getElementByName(idSubClass);
-                MofType superClass = (MofType) inoutModel.getElementById(idSuperClass);
-                logger.log(Level.FINER,"SubClass : " + subClass + " superClass : " + superClass);
-                if (subClass != null && superClass != null) {
-                    Logger.getGlobal().log(Level.FINE, "Adding inheritance {0} -> {1}", new Object[]{subClass, superClass});
-                    subClass.addSuperType(superClass);
+                try {
+                    MofType subClass   = (MofType) inoutModel.getElementByName(idSubClass);
+                    MofType superClass = (MofType) inoutModel.getElementById(idSuperClass);
+                    logger.log(Level.FINER,"SubClass : " + subClass + " superClass : " + superClass);
+                    if (subClass != null && superClass != null) {
+                        Logger.getGlobal().log(Level.FINE, "Adding inheritance {0} -> {1}", new Object[]{subClass, superClass});
+                        subClass.addSuperType(superClass);
+                    }
+                }
+                catch (Exception ex) {
+                    continue;
                 }
             }
         } catch (XPathExpressionException ex) {
@@ -290,10 +302,10 @@ public class XmlModelReader implements ModelReader {
                     newInstance.setName(name);
                 }
                 String id = domElement.getAttribute("xmi:id");
-                newInstance.setId(id);
+                newInstance.setId(getModelId() + id);
                 inModel.addElement(newInstance);
                 Node parentNode = domElement.getParentNode();
-                String parentId   = parentNode instanceof Element ? ((Element)parentNode).getAttribute("xmi:id"):"";
+                String parentId = getModelId() + (parentNode instanceof Element ? ((Element)parentNode).getAttribute("xmi:id"):"");
                 NamedElement parentNamedElement = inModel.getElementById(parentId);
 //                String parentName = parentNode instanceof Element ? ((Element)parentNode).getAttribute("name"):"";
 //                PackageableElement parentElement = inModel.getElementByName(parentName);
@@ -355,6 +367,11 @@ public class XmlModelReader implements ModelReader {
 
 
 
+    public static   String  getModelId() {
+        return "" ; // nextModelId + ":";
+    }
+    
+
     //========================================================================//
     //                   I N S T A N C E   V A R I A B L E S                  //
     //========================================================================//
@@ -366,6 +383,11 @@ public class XmlModelReader implements ModelReader {
      */
     private     Collection<DynamicVisitorSupport>       visitors = new LinkedList<>();
 
+    /**
+     * We must avoid id collisions in a process which handles several models.
+     * The nextModelId is used as a prefix.>
+     */
+    private static int        nextModelId = 0;
 
 
 }

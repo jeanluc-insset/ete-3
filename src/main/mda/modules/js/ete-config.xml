@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  This module generates all JPA stuff. It first calls a template to generate
+  entities, then generate the DAOs and the persistence unit.
+  -->
+
+<mda>
+
+    <transformation-set output_base="generated-web-pages/ete/">
+
+            <!-- Configuration -->
+            <velocity template="entity.vm"
+                      items="${classes}"
+                      target="scripts/${current.name}.js"/> 
+
+            <velocity template="drawer.vm"
+                      target="drawer.html"/>
+
+    </transformation-set>
+
+</mda>
+
+
+

@@ -152,7 +152,7 @@ public class JavaGenerator extends DynamicVisitorSupport implements Generator, J
     }
 
 
-    @Override
+
     public String getOperationBody(MofOperation inOperation, String inIndentation) {
             EnhancedMofOperationImpl operation = (EnhancedMofOperationImpl) inOperation;
             List<Precondition> preconditions = operation.getPreconditions();

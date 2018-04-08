@@ -2,13 +2,16 @@
 
 package fr.insset.jeanluc.action.semantics.builder;
 
+import fr.insset.jeanluc.ete.api.EteException;
 import fr.insset.jeanluc.ete.gel.Equal;
 import fr.insset.jeanluc.ete.gel.GelExpression;
 import fr.insset.jeanluc.ete.gel.GreaterThan;
 import fr.insset.jeanluc.ete.xlang.Assignment;
 import fr.insset.jeanluc.ete.xlang.Conditional;
 import fr.insset.jeanluc.ete.xlang.Statement;
+import fr.insset.jeanluc.ete.xlang.XLangException;
 import fr.insset.jeanluc.ete.xlang.impl.AssignmentImpl;
+import fr.insset.jeanluc.ete.xlang.impl.XLangExceptionImpl;
 import fr.insset.jeanluc.util.factory.FactoryRegistry;
 import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
 import java.lang.reflect.InvocationTargetException;
@@ -33,25 +36,27 @@ public class CheckBuilder extends DynamicVisitorSupport {
         // if not inExpression throw new Exception(...)
         Conditional condition = (Conditional) FactoryRegistry.newInstance(Conditional.class);
         condition.setCondition(inExpression);
-        condition.setOperand(null);
+        XLangException eteException = new XLangExceptionImpl();
+        condition.getOperand().add(eteException);
         inoutStatements.add(condition);
     }
 
 
     //========================================================================//
 
-
-    public Equal visitEqual(Equal inEqual, Object... inParameters) throws InstantiationException, IllegalAccessException {
-        Logger      logger = Logger.getGlobal();
-        logger.log(Level.FINE, "Visit of an equality");
-        Conditional condition = (Conditional) FactoryRegistry.newInstance(Conditional.class);
-
-        return inEqual;
-    }
-
-    public GreaterThan  visitGreaterThan(GreaterThan inGreaterThan, Object... inParameters) {
-        return inGreaterThan;
-    }
+//
+//    public Equal visitEqual(Equal inEqual, Object... inParameters) throws InstantiationException, IllegalAccessException {
+//        Logger      logger = Logger.getGlobal();
+//        logger.log(Level.FINE, "Visit of an equality");
+//        Conditional condition = (Conditional) FactoryRegistry.newInstance(Conditional.class);
+//        List<Statement> statements = (List<Statement>) inParameters[0];
+//        statements.add(condition);
+//        return inEqual;
+//    }
+//
+//    public GreaterThan  visitGreaterThan(GreaterThan inGreaterThan, Object... inParameters) {
+//        return inGreaterThan;
+//    }
 
 
 }

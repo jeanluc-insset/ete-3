@@ -4,12 +4,15 @@ package fr.insset.jeanluc.action.semantics.builder;
 import fr.insset.jeanluc.ete.gel.Equal;
 import fr.insset.jeanluc.ete.gel.GelExpression;
 import fr.insset.jeanluc.ete.gel.Includes;
+import fr.insset.jeanluc.ete.gel.IsNew;
 import fr.insset.jeanluc.ete.gel.VariableDefinition;
 import fr.insset.jeanluc.ete.gel.impl.VariableDefinitionImpl;
 import fr.insset.jeanluc.ete.meta.model.types.MofType;
+import fr.insset.jeanluc.ete.xlang.Allocation;
 import fr.insset.jeanluc.ete.xlang.Assignment;
 import fr.insset.jeanluc.ete.xlang.Statement;
 import fr.insset.jeanluc.ete.xlang.VariableDeclaration;
+import fr.insset.jeanluc.ete.xlang.impl.AllocationImpl;
 import fr.insset.jeanluc.ete.xlang.impl.AssignmentImpl;
 import fr.insset.jeanluc.ete.xlang.impl.VariableDeclarationImpl;
 import fr.insset.jeanluc.util.factory.FactoryRegistry;
@@ -26,12 +29,13 @@ import java.util.logging.Logger;
  *
  * @author jldeleage
  */
-public class BodyBuilder extends DynamicVisitorSupport {
+public class BodyBuilderOld extends DynamicVisitorSupport {
 
 
-    public BodyBuilder() throws InstantiationException {
+    public BodyBuilderOld() throws InstantiationException {
         register("visit", "fr.insset.jeanluc.ete.gel");
         FactoryRegistry.getRegistry().registerDefaultFactory(Assignment.class, AssignmentImpl.class);
+        FactoryRegistry.register("allocation", AllocationImpl.class);
     }
 
 
@@ -48,6 +52,13 @@ public class BodyBuilder extends DynamicVisitorSupport {
             genericVisit(inExpression, inoutStatements);
 //        }
     }
+
+
+    public IsNew visitIsNew(IsNew inIsNew, Object... inParameters) throws InstantiationException, IllegalAccessException {
+        Allocation newInstance = (Allocation) FactoryRegistry.newInstance("new");
+        return inIsNew;
+    }
+
 
 
     public Equal visitEqual(Equal inEqual, Object... inParameters) throws InstantiationException, IllegalAccessException {

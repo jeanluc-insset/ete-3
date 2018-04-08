@@ -23,6 +23,7 @@ import static fr.insset.jeanluc.ete.meta.model.emof.MofOperation.MOF_OPERATION;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
 import fr.insset.jeanluc.ete.meta.model.types.MofType;
 import fr.insset.jeanluc.ete.xlang.Statement;
+import fr.insset.jeanluc.ete.xlang.builder.BodyBuilder;
 import fr.insset.jeanluc.meta.model.io.ModelReader;
 import fr.insset.jeanluc.util.factory.FactoryMethods;
 import fr.insset.jeanluc.util.factory.FactoryRegistry;
@@ -127,36 +128,36 @@ public class ConditionVisitor extends DynamicVisitorSupport {
     //========================================================================//
 
 
-    /**
-     * This method is called for each and every postcondition when the model is
-     * read.<br>
-     * The condition must already have a string specification.<br>
-     * We compile it and store into the condition a StatementContainer
-     * containing the resulting abstract tree and the statements computing
-     * it.<br>
-     * Furthermore, the statement containers are sorted on the fly&nbsp;: the
-     * order is defined by the precedence graph.
-     * 
-     * @param inCondition
-     * @param inParameters
-     * @return 
-     */
-    public Postcondition    visitPostcondition(Postcondition inCondition, Object... inParameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        Logger.getLogger("fr.insset.jeanluc.oclanalyzer.ReaderVisitor").log(Level.FINE, "Visit of " + inCondition.getSpecificationAsString());
-
-        System.out.println("Parsing a standard postcondition : " + inCondition + " (" + inCondition.getClass().getName() + ")");
-        EnhancedMofOperationImpl    context = (EnhancedMofOperationImpl)inParameters[0];
-        List<Statement>             statements    = getStatements(context, "body");
-
-        EteModel        model               = (EteModel)inParameters[1];
-        Map<String, VariableDefinition> variables  = FactoryMethods.newMap(String.class, VariableDefinition.class);
-        addVariable("result", context.getType(), variables);
-        GelExpression expression = visitACondition(inCondition, model, context, variables, statements);
-        BodyBuilder builder = new BodyBuilder();
-        List<Statement> inoutResult = new LinkedList<>();
-        builder.buildStatements(expression, inoutResult);
-        return inCondition;
-    }
+//    /**
+//     * This method is called for each and every postcondition when the model is
+//     * read.<br>
+//     * The condition must already have a string specification.<br>
+//     * We compile it and store into the condition a StatementContainer
+//     * containing the resulting abstract tree and the statements computing
+//     * it.<br>
+//     * Furthermore, the statement containers are sorted on the fly&nbsp;: the
+//     * order is defined by the precedence graph.
+//     * 
+//     * @param inCondition
+//     * @param inParameters
+//     * @return 
+//     */
+//    public Postcondition    visitPostcondition(Postcondition inCondition, Object... inParameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+//        Logger.getLogger("fr.insset.jeanluc.oclanalyzer.ReaderVisitor").log(Level.FINE, "Visit of " + inCondition.getSpecificationAsString());
+//
+//        System.out.println("Parsing a standard postcondition : " + inCondition + " (" + inCondition.getClass().getName() + ")");
+//        EnhancedMofOperationImpl    context = (EnhancedMofOperationImpl)inParameters[0];
+//        List<Statement>             statements    = getStatements(context, "body");
+//
+//        EteModel        model               = (EteModel)inParameters[1];
+//        Map<String, VariableDefinition> variables  = FactoryMethods.newMap(String.class, VariableDefinition.class);
+//        addVariable("result", context.getType(), variables);
+//        GelExpression expression = visitACondition(inCondition, model, context, variables, statements);
+//        BodyBuilderOld builder = new BodyBuilderOld();
+//        List<Statement> inoutResult = new LinkedList<>();
+//        builder.buildStatements(expression, inoutResult);
+//        return inCondition;
+//    }
 
 
     public EnhancedPrecondition    visitEnhancedPrecondition(EnhancedPrecondition inCondition, Object... inParameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
@@ -183,18 +184,23 @@ public class ConditionVisitor extends DynamicVisitorSupport {
     public EnhancedPostcondition    visitEnhancedPostcondition(EnhancedPostcondition inCondition, Object... inParameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         Logger.getLogger("fr.insset.jeanluc.oclanalyzer.ReaderVisitor").log(Level.FINE, "Visit of " + inCondition.getSpecificationAsString());
 
-        System.out.println("PARSING AN ENHANCED POSTCONDITION");
-        
+        System.out.println("PARSING AN ENHANCED POSTCONDITION : " + inCondition.getSpecificationAsString());
 
         EnhancedMofOperationImpl    context = (EnhancedMofOperationImpl)inParameters[0];
+//        context.getPostconditions().add(inCondition);
         List<Statement>             statements    = getStatements(context, "body");
 
         EteModel        model               = (EteModel)inParameters[1];
         Map<String, VariableDefinition> variables  = FactoryMethods.newMap(String.class, VariableDefinition.class);
         addVariable("result", context.getType(), variables);
         GelExpression expression = visitACondition(inCondition, model, context, variables, statements);
+        inCondition.setExpression(expression);
 
         extractVariables(expression);
+        BodyBuilder builder = new BodyBuilder();
+        List<Statement> inoutResult = new LinkedList<>();
+        builder.buildStatements(expression, inoutResult);
+        inCondition.setStatements(statements);
 
         return inCondition;
     }
@@ -291,7 +297,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
 
         // 3- visit the GelExpression to build statements
         //    The statements are added to the preexisting list
-//        BodyBuilder builder = new BodyBuilder();
+//        BodyBuilderOld builder = new BodyBuilderOld();
 //        builder.buildStatements(expression, inoutResult);
 
         // 4- wrap everything into a "container" and put it into the

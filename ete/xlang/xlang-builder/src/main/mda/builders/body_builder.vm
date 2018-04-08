@@ -1,0 +1,145 @@
+package fr.insset.jeanluc.ete.xlang.builder;
+
+
+#foreach ($aClass in $current.allClasses)
+#if (! $aClass.hasStereotype("ignore"))
+import ${aClass.owningPackage.name}.${aClass.name};
+#end
+#end
+import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
+#foreach ($aClass in $current.allClasses)
+#if (! $aClass.hasStereotype("ignore"))
+import ${aClass.owningPackage.name}.impl.${aClass.name}Impl;
+#end
+#end
+import fr.insset.jeanluc.ete.meta.model.emof.impl.FeatureImpl;
+import fr.insset.jeanluc.ete.meta.model.emof.impl.MofParameterImpl;
+import fr.insset.jeanluc.ete.meta.model.types.MofType;
+import fr.insset.jeanluc.ete.meta.model.types.collections.impl.MofBagImpl;
+import fr.insset.jeanluc.ete.meta.model.types.collections.impl.MofCollectionImpl;
+import fr.insset.jeanluc.ete.meta.model.types.collections.impl.MofOrderedSetImpl;
+import fr.insset.jeanluc.ete.meta.model.types.collections.impl.MofSequenceImpl;
+import fr.insset.jeanluc.ete.meta.model.types.collections.impl.MofSetImpl;
+import fr.insset.jeanluc.ete.meta.model.types.impl.TypedElementImpl;
+import fr.insset.jeanluc.ete.xlang.Allocation;
+import fr.insset.jeanluc.ete.xlang.Assignment;
+import fr.insset.jeanluc.ete.xlang.Statement;
+import fr.insset.jeanluc.ete.xlang.VariableDeclaration;
+import fr.insset.jeanluc.ete.xlang.impl.AssignmentImpl;
+import fr.insset.jeanluc.ete.xlang.impl.VariableDeclarationImpl;
+import fr.insset.jeanluc.util.factory.FactoryRegistry;
+import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+
+
+
+/**
+ * An instance of this class builds statements to realize a postcondition. 
+ *
+ * @author jldeleage
+ */
+public class BodyBuilder extends DynamicVisitorSupport {
+
+
+    public BodyBuilder() throws InstantiationException {
+        register("visit", "fr.insset.jeanluc.ete.gel");
+        FactoryRegistry registry = FactoryRegistry.getRegistry();
+        registry.registerDefaultFactory(Assignment.class, AssignmentImpl.class);
+#foreach ($aClass in $current.allClasses)
+#if (! $aClass.hasStereotype("ignore"))
+        registry.registerDefaultFactory("${aClass.name.toLowerCase()}", ${aClass.name}Impl.class);
+#end
+#end
+    }
+
+
+    //========================================================================//
+
+
+    public void buildStatements(GelExpression inExpression, List<Statement> inoutStatements) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        variables = new HashMap<>();
+        // if the expression is an equality we must build an affectation
+//        if (inExpression instanceof Equal) {
+//            
+//        }
+//        else {
+            genericVisit(inExpression, inoutStatements);
+//        }
+    }
+
+
+    public IsNew visitIsNew(IsNew inIsNew, Object... inParameters) throws InstantiationException, IllegalAccessException {
+        List<Statement> statements = (List<Statement>) inParameters[0];
+        Allocation newInstance = (Allocation) FactoryRegistry.newInstance("new");
+        statements.add(newInstance);
+        newInstance.setMofClass((MofClass)inIsNew.getType());
+        return inIsNew;
+    }
+
+
+
+    public Equal visitEqual(Equal inEqual, Object... inParameters) throws InstantiationException, IllegalAccessException {
+        Logger      logger = Logger.getGlobal();
+        logger.log(Level.FINE, "Visit of an equality");
+        Assignment assignment = (Assignment) FactoryRegistry.newInstance(Assignment.class);
+        List<GelExpression> operands = inEqual.getOperand();
+        GelExpression leftValue = operands.get(0);
+        GelExpression rightValue = operands.get(1);
+        assignment.setLeftValue(leftValue);
+        assignment.setValue(rightValue);
+        List<Statement> statements = (List<Statement>) inParameters[0];
+        statements.add(assignment);
+        return inEqual;
+    }
+
+
+    public Includes visitIncludes(Includes inIncludes, Object... inParameters) {
+        return inIncludes;
+    }
+
+
+    //========================================================================//
+
+
+
+    protected void buildTemporalGraph() {
+        
+    }
+
+
+
+    //========================================================================//
+
+
+
+
+
+    //========================================================================//
+
+
+    protected final void addVariable(String inName, MofType inType) {
+        VariableDeclaration variable = new VariableDeclarationImpl();
+        variable.setIdentifier(inName);
+        VariableDefinition definition = new VariableDefinitionImpl();
+        definition.setIdentifier(inName);
+        definition.setType(inType);
+        variable.setDefinitionExpression(definition);
+        variables.put(inName, variable);
+    }
+
+
+
+    //========================================================================//
+
+
+    private     Map<String, VariableDeclaration>    variables;
+
+
+}
+

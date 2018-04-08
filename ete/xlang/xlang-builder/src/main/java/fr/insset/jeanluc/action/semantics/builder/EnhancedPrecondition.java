@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author jldeleage
  */
-public class EnhancedPrecondition extends PreconditionImpl {
+public class EnhancedPrecondition extends PreconditionImpl implements EnhancedCondition {
 
 
     public EnhancedPrecondition() throws InstantiationException {

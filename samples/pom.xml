@@ -14,5 +14,6 @@
         <module>linked_list</module>
     <module>modeleur</module>
     <module>mavenproject1</module>
+    <module>dsl</module>
   </modules>
 </project>

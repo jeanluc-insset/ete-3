@@ -64,7 +64,7 @@ public class ActionSemanticsOperationBuilder2Test {
     /**
      * Test of EnableActionSemantics method, of class ActionSemanticsOperationBuilder.
      */
-    @Test
+//    @Test
     public void testAnalysePostConditions() throws EteException, InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
 
         // 1- initialize framework

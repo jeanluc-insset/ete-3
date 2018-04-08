@@ -13,7 +13,7 @@ typedef struct s_${current.name} {
 }  t_${current.name};
 
 #foreach ($anOperation in ${current.ownedOperation})
-#parse("result_type.vm") ${anOperation.name}(#foreach ($aParameter in $anOperation.ownedParameter)#parse("parameter.vm"),#end t_${current.name} *self);
+#parse("result_type.vm") ${anOperation.name}(t_${current.name} *self, #foreach ($aParameter in $anOperation.ownedParameter), #parse("parameter.vm")#end);
 #end
 
 

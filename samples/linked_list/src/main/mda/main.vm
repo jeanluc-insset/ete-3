@@ -1,8 +1,7 @@
-
 #foreach ($aClass in $current.classes)
-##if ($aClass.hasStereotype("Entity"))
+#if ($aClass.hasStereotype("Entity"))
 \#include "${aClass.name.toUpperCase()}_H"
-##end
+#end
 #end
 
 

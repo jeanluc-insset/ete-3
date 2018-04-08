@@ -1,6 +1,7 @@
 package fr.insset.jeanluc.action.semantics.builder;
 
 
+import fr.insset.jeanluc.ete.gel.GelExpression;
 import fr.insset.jeanluc.ete.meta.model.constraint.Postcondition;
 import fr.insset.jeanluc.ete.meta.model.constraint.Precondition;
 import fr.insset.jeanluc.ete.meta.model.emof.impl.MofOperationImpl;
@@ -57,6 +58,8 @@ public class EnhancedMofOperationImpl extends MofOperationImpl {
     public List<Statement> getBody() {
         return body;
     }
+
+
 
 
     private     List<Statement>                 body;

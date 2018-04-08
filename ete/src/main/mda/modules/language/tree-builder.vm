@@ -169,6 +169,21 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
     //========================================================================//
 
 
+    @Override
+    public GelExpression visitSelfExpression(GelParser.SelfExpressionContext ctx) {
+        try {
+            Self    result = (Self) FactoryRegistry.newInstance("self");
+            result.setType(context.getContextType());
+            return result;
+        } catch (InstantiationException ex) {
+            Logger.getLogger(TreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(TreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return super.visitSelfExpression(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+
 
     @Override
     public ${dialect.i2uc($projectName)}Expression visitAtPreExpression(${dialect.i2uc($projectName)}Parser.AtPreExpressionContext ctx) {
@@ -211,9 +226,16 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
 
     @Override
     public ${dialect.i2uc($projectName)}Expression visitIdentifier(${dialect.i2uc($projectName)}Parser.IdentifierContext ctx) {
-        String text = ctx.getText();
-        Object resolve = context.resolve(text);
-        return (${dialect.i2uc($projectName)}Expression)resolve;
+        try {
+            String text = ctx.getText();
+            Object resolve = context.resolve(text);
+            return (GelExpression)resolve;
+        } catch (InstantiationException ex) {
+            Logger.getLogger(TreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(TreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
 
@@ -225,8 +247,14 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
 
     @Override
     public ${dialect.i2uc($projectName)}Expression visitVariableOrMember(${dialect.i2uc($projectName)}Parser.VariableOrMemberContext ctx) {
-        return (${dialect.i2uc($projectName)}Expression)context.resolve(ctx.getText());
-    }
+        try {
+            return (GelExpression)context.resolve(ctx.getText());
+        } catch (InstantiationException ex) {
+            Logger.getLogger(TreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(TreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;    }
 
 
     @Override

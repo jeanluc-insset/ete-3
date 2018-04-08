@@ -1,5 +1,6 @@
 package fr.insset.jeanluc.action.semantics.builder;
 
+import fr.insset.jeanluc.ete.gel.GelExpression;
 import fr.insset.jeanluc.ete.meta.model.constraint.Postcondition;
 import fr.insset.jeanluc.ete.meta.model.constraint.impl.PostconditionImpl;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
@@ -13,7 +14,7 @@ import java.util.Map;
  *
  * @author jldeleage
  */
-public class EnhancedPostcondition extends PostconditionImpl implements Comparable<EnhancedPostcondition>, Postcondition {
+public class EnhancedPostcondition extends PostconditionImpl implements EnhancedCondition, Comparable<EnhancedPostcondition>, Postcondition {
 
 
     public EnhancedPostcondition() throws InstantiationException {
@@ -55,6 +56,7 @@ public class EnhancedPostcondition extends PostconditionImpl implements Comparab
         else if (o.isResult()) {
             return -1;
         }
+
         if (o.getFinalUsedValues().contains(definedProperty)) {
             if (finalUsedValues.contains(o.getDefinedProperty())) {
                 throw new RuntimeException("Circular definition in " + this.getSpecificationAsString()
@@ -95,6 +97,13 @@ public class EnhancedPostcondition extends PostconditionImpl implements Comparab
     }
 
 
+    public GelExpression getExpression() {
+        return expression;
+    }
+
+    public void setExpression(GelExpression expression) {
+        this.expression = expression;
+    }
 
 
     private     List<Statement>     statements;
@@ -102,6 +111,7 @@ public class EnhancedPostcondition extends PostconditionImpl implements Comparab
     private     boolean             result;
     private     List<MofProperty>   finalUsedValues = new LinkedList<>();
     private     List<MofProperty>   initialUsedValues = new LinkedList<>();
+    private     GelExpression       expression;
 
 
 }

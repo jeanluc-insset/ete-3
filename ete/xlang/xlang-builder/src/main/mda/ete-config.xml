@@ -13,10 +13,17 @@
       -->
 
     <transformation-set>
-        <model url="../../../../../gel/gel-spec/src/main/mda/models/Gel.xml"/>
 
-        <velocity template="builders/check_builder.vm"
-                  target="generated-sources/ete/fr/insset/jeanluc/ete/xlang/builder/CheckBuilder.java" />
+        <model url="../../../../xlang-spec/src/main/mda/ExecutionLanguage.xml"/>
+    
+        <transformation-set>
+            <model url="../../../../../gel/gel-spec/src/main/mda/models/Gel.xml"/>
+
+            <velocity template="builders/check_builder.vm"
+                      target="generated-sources/ete/fr/insset/jeanluc/ete/xlang/builder/CheckBuilder.java" />
+            <velocity template="builders/body_builder.vm"
+                      target="generated-sources/ete/fr/insset/jeanluc/ete/xlang/builder/BodyBuilder.java" />
+        </transformation-set>
     </transformation-set>
 
 </mda>
