@@ -20,7 +20,7 @@ public interface Allocation  extends fr.insset.jeanluc.ete.xlang.Statement  {
 
 
     public default String getSymbol() {
-        return "new";
+        return "allocation";
     }
 
 

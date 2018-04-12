@@ -14,6 +14,8 @@ import java.util.Collection;
 import java.util.List;
 import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
 import fr.insset.jeanluc.ete.meta.model.emof.MofParameter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -21,11 +23,15 @@ import fr.insset.jeanluc.ete.meta.model.emof.MofParameter;
  */
 public class MofOperationImpl extends FeatureImpl implements MofOperation {
 
-    public MofOperationImpl() throws InstantiationException {
-        this.ownedParameter = FactoryMethods.newList(MofParameter.class);
-        this.raisedException = FactoryMethods.newSet(MofType.class);
-        this.preconditions = FactoryMethods.newList(Precondition.class);
-        this.postconditions = FactoryMethods.newList(Postcondition.class);
+    public MofOperationImpl() {
+        try {
+            this.ownedParameter = FactoryMethods.newList(MofParameter.class);
+            this.raisedException = FactoryMethods.newSet(MofType.class);
+            this.preconditions = FactoryMethods.newList(Precondition.class);
+            this.postconditions = FactoryMethods.newList(Postcondition.class);
+        } catch (InstantiationException ex) {
+            throw new RuntimeException("Unable to initialize MofOperationImpl class", ex);
+        }
     }
 
     @Override

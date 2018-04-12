@@ -21,12 +21,12 @@
             <artifactId>javax.el</artifactId>
             <version>3.0.0</version>
         </dependency>
-<!--        <dependency>
+        <dependency>
             <groupId>fr.insset.jeanluc</groupId>
             <artifactId>meta-model-api</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
-        </dependency>-->
+        </dependency>
 
 <!--        <dependency>
             <groupId>junit</groupId>
@@ -47,50 +47,25 @@
             <scope>test</scope>
             <type>jar</type>
         </dependency>-->
-<!--        <dependency>
+        <dependency>
             <groupId>fr.insset.jeanluc</groupId>
             <artifactId>meta-model-impl</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
-        </dependency>-->
-<!--        <dependency>
+        </dependency>
+
+
+        <dependency>
             <groupId>fr.insset.jeanluc</groupId>
             <artifactId>ete-lib-api</artifactId>
             <version>${project.version}</version>
-            <scope>test</scope>
-            <type>jar</type>
-        </dependency>-->
-<!--        <dependency>
-            <groupId>fr.insset.jeanluc</groupId>
-            <artifactId>xmi-io</artifactId>
-            <version>3.1</version>
-            <scope>test</scope>
-            <type>jar</type>
-        </dependency>-->
-        <dependency>
-            <groupId>fr.insset.jeanluc</groupId>
-            <artifactId>meta-model-api</artifactId>
-            <version>3.1</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>fr.insset.jeanluc</groupId>
-            <artifactId>ete-lib-api</artifactId>
-            <version>3.1</version>
-            <scope>test</scope>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>fr.insset.jeanluc</groupId>
-            <artifactId>meta-model-impl</artifactId>
-            <version>3.1</version>
             <scope>test</scope>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>fr.insset.jeanluc</groupId>
             <artifactId>xmi-io</artifactId>
-            <version>3.1</version>
+            <version>${project.version}</version>
             <scope>test</scope>
             <type>jar</type>
         </dependency>

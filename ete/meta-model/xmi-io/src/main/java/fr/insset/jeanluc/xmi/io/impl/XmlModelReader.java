@@ -40,6 +40,7 @@ import static fr.insset.jeanluc.ete.meta.model.emof.MofOperation.MOF_OPERATION;
 import static fr.insset.jeanluc.ete.meta.model.emof.MofProperty.MOF_PROPERTY;
 import static fr.insset.jeanluc.ete.meta.model.emof.instance.InstanceSpecification.INSTANCE_SPECIFICATION;
 import static fr.insset.jeanluc.ete.meta.model.emof.instance.Slot.SLOT;
+import fr.insset.jeanluc.util.visit.DynamicVisitor;
 import static fr.insset.jeanluc.xmi.io.impl.XmlUtilities.getElements;
 import static fr.insset.jeanluc.xmi.io.impl.XmlUtilities.getElementsByType;
 import java.io.IOException;
@@ -309,7 +310,7 @@ public class XmlModelReader implements ModelReader {
                 NamedElement parentNamedElement = inModel.getElementById(parentId);
 //                String parentName = parentNode instanceof Element ? ((Element)parentNode).getAttribute("name"):"";
 //                PackageableElement parentElement = inModel.getElementByName(parentName);
-                visitors : for (DynamicVisitorSupport visitor : getVisitors()) {
+                visitors : for (DynamicVisitor visitor : getVisitors()) {
                     try {
                         visitor.genericVisit(newInstance, parentNamedElement, inModel, domElement);
                     } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
@@ -342,13 +343,17 @@ public class XmlModelReader implements ModelReader {
      * 
      * @return 
      */
-    public Collection<DynamicVisitorSupport> getVisitors() throws InstantiationException {
+    @Override
+    public Iterable<DynamicVisitor> getVisitors() {
+        
         if (visitors.isEmpty()) {
             try {
                 visitors.add((DynamicVisitorSupport) FactoryRegistry.newInstance(READER_VISITOR));
             } catch (IllegalAccessException ex) {
                 Logger.getLogger(XmlModelReader.class.getName()).log(Level.FINE, null, ex);
                 // OK, never mind, we'll get a "weak" model
+            } catch (InstantiationException ex) {
+                Logger.getLogger(XmlModelReader.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         return visitors;
@@ -356,13 +361,14 @@ public class XmlModelReader implements ModelReader {
 
  
     @Override
-    public void addVisitors(DynamicVisitorSupport... inVisitors) {
+    public void addVisitors(DynamicVisitor... inVisitors) {
         Collections.addAll(visitors, inVisitors);
     }
 
 
     public void setVisitors(Collection<DynamicVisitorSupport> visitors) {
-        this.visitors = visitors;
+        visitors.clear();
+        visitors.addAll(visitors);
     }
 
 
@@ -381,7 +387,7 @@ public class XmlModelReader implements ModelReader {
     /**
      * 
      */
-    private     Collection<DynamicVisitorSupport>       visitors = new LinkedList<>();
+    private     List<DynamicVisitor>       visitors = new LinkedList<>();
 
     /**
      * We must avoid id collisions in a process which handles several models.

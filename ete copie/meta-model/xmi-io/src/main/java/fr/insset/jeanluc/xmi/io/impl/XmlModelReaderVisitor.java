@@ -579,10 +579,10 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
         MofType     result = null;
         String      attribute = inElement.getAttribute("type");
         Logger logger = Logger.getGlobal();
-        logger.info("Reading type");
+        logger.finer("Reading type");
         if (attribute != null && ! "".equals(attribute)) {
             result = (MofType)inModel.getElementById(attribute);
-            logger.log(Level.INFO, "In readType, attribute = " + result);
+            logger.log(Level.FINER, "In readType, attribute = " + result);
         }
         else {
             try {

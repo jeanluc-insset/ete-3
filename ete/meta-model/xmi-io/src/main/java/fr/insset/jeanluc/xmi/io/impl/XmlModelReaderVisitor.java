@@ -126,6 +126,11 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
 
     public Object   visitPackageableElement(PackageableElement inElement, Object... inParam) {
         PackageableElement packageable = (PackageableElement) inElement;
+        // This method can be called for a whole model. In such a case, there
+        // is no parameters.
+        if (inParam.length < 2) {
+            return inElement;
+        }
         NamedElement       parentElement = (NamedElement) inParam[0];
         if (parentElement instanceof MofPackage) {
             MofPackage parentPackage = (MofPackage) parentElement;
@@ -581,10 +586,10 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
         MofType     result = null;
         String      attribute = inElement.getAttribute("type");
         Logger logger = Logger.getGlobal();
-        logger.info("Reading type");
+        logger.finer("Reading type");
         if (attribute != null && ! "".equals(attribute)) {
             result = (MofType)inModel.getElementById(attribute);
-            logger.log(Level.INFO, "In readType, attribute = " + result);
+            logger.log(Level.FINER, "In readType, attribute = " + result);
         }
         else {
             try {

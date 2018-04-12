@@ -21,7 +21,7 @@
             <!--
                 current dir :
                 ete-toolchain/samples/web-ete-bank/src/main/mda
-                target dir :
+                template src dir :
                 ete-toolchain/src/main/mda/modules/jpa/ete-config.xml
               -->
             <module src="../../../../../src/main/mda/modules/web/ete-config.xml"/>

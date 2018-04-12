@@ -1,43 +1,36 @@
 package fr.insset.jeanluc.el.evaluator;
 
-
-
 import fr.insset.jeanluc.el.dialect.BasicJavaDialect;
 import fr.insset.jeanluc.ete.api.EteException;
 import fr.insset.jeanluc.ete.meta.model.core.impl.Factories;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
-import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
 import fr.insset.jeanluc.ete.meta.model.emof.Stereotype;
 import static fr.insset.jeanluc.ete.meta.model.emof.Stereotype.STEREOTYPE;
 import fr.insset.jeanluc.ete.meta.model.emof.impl.MofClassImpl;
-import fr.insset.jeanluc.ete.meta.model.emof.impl.MofOperationImpl;
-import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
 import static fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel.MODEL;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.MofPackage;
-import fr.insset.jeanluc.ete.meta.model.mofpackage.impl.EteModelImpl;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.impl.MofPackageImpl;
 import fr.insset.jeanluc.ete.util.XList;
 import fr.insset.jeanluc.util.factory.FactoryRegistry;
-import fr.insset.jeanluc.xmi.io.impl.XmlModelReader;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
-import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
+
+
+
+
 
 
 
@@ -325,17 +318,17 @@ public class ELEvaluatorTest {
     }
 
 
-    @Test
-    public void testFlatmap() throws InstantiationException {
-        System.out.println("flatmap");
-        List<MofOperation> ownedOperation = mcq.getOwnedOperation();
-        MofOperation        computeMark = new MofOperationImpl();
-        computeMark.setName("computeMark");
-        ownedOperation.add(computeMark);
-        List result = (List) instance.evaluate("${classes.flatmap(c -> c.getOwnedOperation())}");
-        assertEquals(1, result.size());
-        assertTrue(result.contains(computeMark));
-    }
+//    @Test
+//    public void testFlatmap() throws InstantiationException, Exception {
+//        System.out.println("flatmap");
+//        List<MofOperation> ownedOperation = mcq.getOwnedOperation();
+//        MofOperation        computeMark = new MofOperationImpl();
+//        computeMark.setName("computeMark");
+//        ownedOperation.add(computeMark);
+//        List result = (List) instance.evaluate("${classes.flatmap(c -> c.getOwnedOperation())}");
+//        assertEquals(1, result.size());
+//        assertTrue(result.contains(computeMark));
+//    }
 
 
 }

@@ -84,3 +84,5 @@
 /samples/mavenproject1/target/
 /ete/xlang/xlang-to-c/target/
 /samples/dsl/target/
+/ete/xlang/xlang_builder-api/target/
+/ete/xlang/xlang_builder-impl/target/

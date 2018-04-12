@@ -10,10 +10,12 @@ import fr.insset.jeanluc.ete.util.XList;
 import fr.insset.jeanluc.util.factory.AbstractFactory;
 import static fr.insset.jeanluc.util.factory.FactoryMethods.LIST;
 import fr.insset.jeanluc.util.factory.FactoryRegistry;
+import fr.insset.jeanluc.util.visit.DynamicVisitor;
 import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
@@ -165,15 +167,27 @@ public interface ModelReader {
     }
 
     public default void afterReading(Object inDocument, EteModel inoutModel) throws IOException {
+        for (DynamicVisitor aVisitor : getVisitors()) {
+            try {
+                aVisitor.genericVisit(inoutModel);
+            } catch (IllegalAccessException  | IllegalArgumentException | InvocationTargetException ex) {
+                Logger.getLogger(ModelReader.class.getName()).log(Level.SEVERE, null, ex);
+                throw new IOException(ex);
+            }
+        }
     }
 
     /**
      *
      * @param inVisitors
      */
-    public default void addVisitors(DynamicVisitorSupport... inVisitors) {
+    public default void addVisitors(DynamicVisitor... inVisitors) {
         
     }
+
+    public Iterable<DynamicVisitor> getVisitors(); 
+
+
 
 
 }
