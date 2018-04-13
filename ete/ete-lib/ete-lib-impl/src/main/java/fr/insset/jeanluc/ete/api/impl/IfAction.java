@@ -4,6 +4,7 @@ package fr.insset.jeanluc.ete.api.impl;
 import fr.insset.jeanluc.el.evaluator.JSR341Evaluator;
 import fr.insset.jeanluc.ete.api.ActionSupport;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.MofPackage;
+import java.util.logging.Logger;
 
 
 /**
@@ -21,20 +22,21 @@ public class IfAction extends ActionSupport {
         JSR341Evaluator evaluator = new JSR341Evaluator(inModel, getAllParameters());
         
         Object test = getParameter("test");
-        System.out.println("Parametre test de if : " + test);
+        Logger logger = Logger.getGlobal();
+        logger.fine("Test parameter of if : " + test);
         if (test instanceof Boolean) {
-            System.out.println("Le parametre est un booléen");
+            logger.fine("The parameter is a boolean");
             return (Boolean)test;
         }
         boolean result;
         try {
-            System.out.println("Le paramètre n'est pas un booléen...");
+            logger.fine("The parameter is not a boolean...");
             test = evaluator.evaluate((String)test);
-            System.out.println("Le résultat de test est " + test);
+            logger.fine("The result of the test is " + test);
             return Boolean.parseBoolean(test.toString());
         }
         catch (Exception e) {
-            System.out.println("Exception dans if : " + e);
+            logger.fine("Exception dans if : " + e);
             return false;
         }
     }       // process

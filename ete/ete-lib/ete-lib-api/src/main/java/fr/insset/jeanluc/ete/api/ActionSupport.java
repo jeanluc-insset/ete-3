@@ -232,6 +232,5 @@ public abstract class ActionSupport implements Action {
     // The definition must be read by an ActionReader
     private Object                  definition;
 
-
 }       // XmlActionSupport
 

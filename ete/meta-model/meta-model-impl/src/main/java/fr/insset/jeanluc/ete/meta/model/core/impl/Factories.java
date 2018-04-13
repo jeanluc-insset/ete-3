@@ -60,7 +60,7 @@ import java.util.logging.Logger;
 public abstract class Factories {
 
     public static void init() {
-        Logger.getGlobal().info("Registration of default factories");
+        Logger.getGlobal().finer("Registration of default factories");
         FactoryRegistry registry = FactoryRegistry.getRegistry();
         registry.registerDefaultFactory(MOF_TYPE, MofTypeImpl.class);
         registry.registerDefaultFactory(MODEL, EteModelImpl.class);

@@ -75,7 +75,6 @@ public class VelocityAction extends GenericTemplate {
             Object dialect = dialectClass.newInstance();
             context.put("_d", dialect);
             context.put("dialect", dialect);
-            System.out.println("DIALECT ADDED : " + dialect);
             Logger.getGlobal().log(Level.FINE, "Added dialect " + context.get("dialect"));
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(VelocityAction.class.getName()).log(Level.SEVERE, "Unable to load dialect " + dialectName, ex);

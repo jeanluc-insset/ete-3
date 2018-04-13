@@ -155,7 +155,7 @@
                     </dependency>
                     <dependency>
                         <groupId>fr.insset.jeanluc</groupId>
-                        <artifactId>xlang-builder</artifactId>
+                        <artifactId>xlang_builder-impl</artifactId>
                         <version>3.1</version>
                     </dependency>
                     <dependency>

@@ -315,7 +315,7 @@ public class XmlModelReader implements ModelReader {
                         visitor.genericVisit(newInstance, parentNamedElement, inModel, domElement);
                     } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                         Logger.getLogger(XmlModelReader.class.getName()).log(Level.FINE, null, ex);
-                        Logger.getGlobal().log(Level.WARNING, "Error when visiting {0} : {1}", new Object[]{newInstance.getName(), ex});
+                        Logger.getGlobal().log(Level.FINE, "Error when visiting {0} : {1}", new Object[]{newInstance.getName(), ex});
                         continue elements;
                     }
                 }

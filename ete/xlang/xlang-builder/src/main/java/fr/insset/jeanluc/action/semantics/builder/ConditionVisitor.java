@@ -163,7 +163,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
     public EnhancedPrecondition    visitEnhancedPrecondition(EnhancedPrecondition inCondition, Object... inParameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         Logger.getLogger("fr.insset.jeanluc.oclanalyzer.ReaderVisitor").log(Level.FINE, "Visit of " + inCondition.getSpecificationAsString());
 
-        System.out.println("PARSING AN ENHANCED PRECONDITION");
+        System.out.println("PARSING A STANDARD ENHANCED PRECONDITION");
         
 
         EnhancedMofOperationImpl    context = (EnhancedMofOperationImpl)inParameters[0];
@@ -184,7 +184,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
     public EnhancedPostcondition    visitEnhancedPostcondition(EnhancedPostcondition inCondition, Object... inParameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         Logger.getLogger("fr.insset.jeanluc.oclanalyzer.ReaderVisitor").log(Level.FINE, "Visit of " + inCondition.getSpecificationAsString());
 
-        System.out.println("PARSING AN ENHANCED POSTCONDITION : " + inCondition.getSpecificationAsString());
+        System.out.println("PARSING A STANDARD ENHANCED POSTCONDITION : " + inCondition.getSpecificationAsString());
 
         EnhancedMofOperationImpl    context = (EnhancedMofOperationImpl)inParameters[0];
 //        context.getPostconditions().add(inCondition);

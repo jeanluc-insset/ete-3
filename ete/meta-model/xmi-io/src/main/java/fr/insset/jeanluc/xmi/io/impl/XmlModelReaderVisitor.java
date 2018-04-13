@@ -154,7 +154,7 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
             MofPackage parentPackage = (MofPackage) parentElement;
             parentPackage.addPackagedElement(packageable);
             packageable.setOwningPackage(parentPackage);
-            logger.log(Level.INFO, "the item {0} is put into package {1}", new Object[]{packageable, parentPackage});
+            logger.log(Level.FINER, "the item {0} is put into package {1}", new Object[]{packageable, parentPackage});
         }
         else {
             logger.log(Level.WARNING, "the item " + packageable + " is not put into any package");
@@ -597,7 +597,7 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
                 int index = typeAsString.lastIndexOf("::");
                 typeAsString = typeAsString.substring(index+2);
                 result = (MofType)inModel.getElementByName(typeAsString + TYPE_SUFFIX);
-                logger.log(Level.INFO, "In readType, typeAsString = " + typeAsString + " -> " + result);
+                logger.log(Level.FINER, "In readType, typeAsString = " + typeAsString + " -> " + result);
             } catch (java.lang.StringIndexOutOfBoundsException ex) {
                 logger.log(Level.WARNING, "StringIndexOutOfBoundsException while extracting type from " + attribute);
             } catch (XPathExpressionException ex) {
@@ -612,10 +612,10 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
                 try {
                     // TODO : check properties of the association to derive the
                     // true nature of the collection
-                    logger.log(Level.INFO, "The type is a collection of " + result + "s");
+                    logger.log(Level.FINE, "The type is a collection of " + result + "s");
                     MofCollection sequence = (MofCollection) FactoryRegistry.newInstance(MOF_SEQUENCE);
                     sequence.setBaseType(result);
-                    logger.log(Level.INFO, "After wrapping : " + sequence.getName() + " (" + sequence.getClass() + ")");
+                    logger.log(Level.FINER, "After wrapping : " + sequence.getName() + " (" + sequence.getClass() + ")");
                     result = sequence;
                 } catch (InstantiationException ex) {
                     throw new EteException(ex);

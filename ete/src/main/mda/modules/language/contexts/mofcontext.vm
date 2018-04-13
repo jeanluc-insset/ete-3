@@ -181,7 +181,8 @@ public class ${dialect.i2uc($projectName)}ContextImpl implements ${dialect.i2uc(
         }
         MofType   current = (MofType)resolveVariable(CURRENT);
         if (SELF.equals(inString)) {
-            System.out.println("Resolving SELF");
+            Logger logger = Logger.getGlobal();
+            logger.fine("Resolving SELF");
             Self    self = FactoryRegistry.newInstance(Self.class);
             self.setName("self");
             self.setType(current);

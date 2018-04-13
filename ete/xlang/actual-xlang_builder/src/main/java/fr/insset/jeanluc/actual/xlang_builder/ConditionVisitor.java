@@ -72,6 +72,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         register(Precondition.class, "visitPrecondition");
         register(Postcondition.class, "visitPostcondition");
         register(EnhancedPostcondition.class, "visitEnhancedPostcondition");
+        register(EteModel.class, "visitEteModel");
         // Registration of the methods to visit gel expression
         register("gelVisit", "fr.insset.jeanluc.ete.gel");
         
@@ -159,7 +160,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
     public EnhancedPrecondition    visitEnhancedPrecondition(EnhancedPrecondition inCondition, Object... inParameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         Logger.getLogger("fr.insset.jeanluc.oclanalyzer.ReaderVisitor").log(Level.FINE, "Visit of " + inCondition.getSpecificationAsString());
 
-        System.out.println("PARSING AN ENHANCED PRECONDITION");
+        System.out.println("PARSING AN ACTUAL ENHANCED PRECONDITION");
 
         EnhancedMofOperationImpl    context = (EnhancedMofOperationImpl)inParameters[0];
 
@@ -190,6 +191,14 @@ public class ConditionVisitor extends DynamicVisitorSupport {
 
         return inCondition;
     }
+
+
+
+    public EteModel     visitEteModel(EteModel inModel, Object... inParameters) {
+        System.out.println("VISITING THE MODEL");
+        return inModel;
+    }
+
 
 
 

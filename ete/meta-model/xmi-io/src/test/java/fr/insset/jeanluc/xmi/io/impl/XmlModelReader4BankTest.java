@@ -32,6 +32,7 @@ import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
 import fr.insset.jeanluc.ete.meta.model.emof.Stereotype;
 import fr.insset.jeanluc.ete.util.XList;
+import java.util.logging.Logger;
 
 
 
@@ -84,7 +85,7 @@ public class XmlModelReader4BankTest {
         assertEquals(4, classes.size());
         Collection<Association> associations = new XList<>();
         for (MofClass aClass : classes) {
-            System.out.println("Scanning : " + aClass +  " (" + aClass.getOwningPackage() + ")");
+            Logger.getGlobal().fine("Scanning : " + aClass +  " (" + aClass.getOwningPackage() + ")");
             Collection<Stereotype> stereotypes = aClass.getStereotypes();
             for (Stereotype aStereotype : stereotypes) {
                 System.out.println("   " + aStereotype);

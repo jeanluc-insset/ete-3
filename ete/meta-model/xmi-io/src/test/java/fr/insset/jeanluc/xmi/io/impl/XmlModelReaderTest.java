@@ -31,6 +31,7 @@ import static fr.insset.jeanluc.ete.meta.model.types.collections.MofSequence.MOF
 import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
 import fr.insset.jeanluc.ete.util.XList;
+import java.util.logging.Logger;
 
 
 
@@ -83,7 +84,7 @@ public class XmlModelReaderTest {
         assertEquals(2, classes.size());
         Collection<Association> associations = new XList<>();
         for (MofClass aClass : classes) {
-            System.out.println("Scanning : " + aClass);
+            Logger.getGlobal().fine("Scanning : " + aClass);
             List<MofProperty> ownedAttribute = aClass.getOwnedAttribute();
             assertEquals((long)properties.get(aClass.getName()), (long)ownedAttribute.size());
             for (MofProperty aProperty : ownedAttribute) {
