@@ -8,7 +8,7 @@ import javax.annotation.Generated;
 
 
 @Generated("jean-luc@insset.fr template : ete/src/main/mda/modules/from-spec/class2interface.vm")
-public interface EnhancedPostcondition  extends fr.insset.jeanluc.ete.meta.model.constraint.Postcondition  {
+public interface EnhancedPrecondition  extends fr.insset.jeanluc.ete.meta.model.constraint.Precondition  {
 
 
     public GelExpression getExpression();

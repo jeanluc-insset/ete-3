@@ -20,5 +20,17 @@
             <version>3.1</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>fr.insset.jeanluc</groupId>
+            <artifactId>meta-model-io</artifactId>
+            <version>3.1</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>fr.insset.jeanluc</groupId>
+            <artifactId>gel-impl</artifactId>
+            <version>3.1</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 </project>

@@ -1,6 +1,5 @@
 package fr.insset.jeanluc.ete.xlang.builder.impl;
 
-import fr.insset.jeanluc.ete.meta.model.constraint.Postcondition;
 import fr.insset.jeanluc.ete.xlang.Statement;
 import fr.insset.jeanluc.ete.xlang.builder.*;
 import java.util.Collection;

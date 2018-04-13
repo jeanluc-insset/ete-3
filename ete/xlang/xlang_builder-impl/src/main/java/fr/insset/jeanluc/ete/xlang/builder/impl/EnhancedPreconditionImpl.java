@@ -9,7 +9,7 @@ import java.util.Set;
 
 
 
-public class EnhancedPostconditionImpl  extends fr.insset.jeanluc.ete.meta.model.constraint.impl.PostconditionImpl  implements EnhancedPostcondition {
+public class EnhancedPreconditionImpl  extends fr.insset.jeanluc.ete.meta.model.constraint.impl.PreconditionImpl  implements EnhancedPrecondition {
 
 
     //========================================================================//

@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.stream.Stream;
 import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -15,9 +17,13 @@ import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
  */
 public class ClassifierImpl extends MofTypeImpl implements Classifier {
 
-    public ClassifierImpl() throws InstantiationException {
-        this.ownedOperation = FactoryMethods.newList(MofOperation.class);
-        this.ownedAttribute = FactoryMethods.newList(MofProperty.class);
+    public ClassifierImpl() {
+        try {
+            this.ownedOperation = FactoryMethods.newList(MofOperation.class);
+            this.ownedAttribute = FactoryMethods.newList(MofProperty.class);
+        } catch (InstantiationException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
 

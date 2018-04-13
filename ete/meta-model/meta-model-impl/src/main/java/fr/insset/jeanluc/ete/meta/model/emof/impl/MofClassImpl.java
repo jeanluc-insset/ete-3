@@ -23,9 +23,12 @@ import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
  */
 public class MofClassImpl extends ClassifierImpl implements MofClass {
 
-    public MofClassImpl() throws InstantiationException {
-//        this.superClass = FactoryMethods.newList(MofClass.class);
-        this.invariants = FactoryMethods.newList(Invariant.class);
+    public MofClassImpl() {
+        try {
+            this.invariants = FactoryMethods.newList(Invariant.class);
+        } catch (InstantiationException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
 

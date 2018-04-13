@@ -38,8 +38,8 @@ public class EnhancedMofOperationImpl extends MofOperationImpl implements Enhanc
     
     public EnhancedMofOperationImpl() throws InstantiationException {
         Map plainMap = FactoryMethods.newMap(String.class, List.class);
-        body = FactoryMethods.newList(Statement.class);
-        plainMap.put("body", body);
+        statements = FactoryMethods.newList(Statement.class);
+        plainMap.put("body", statements);
     }
 
 
@@ -47,11 +47,11 @@ public class EnhancedMofOperationImpl extends MofOperationImpl implements Enhanc
     @Override
     public List<Statement> buildBody() throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         System.out.println("Building body of " + this);
-        body = FactoryMethods.newList(Statement.class);
+        statements = FactoryMethods.newList(Statement.class);
         localVariables = FactoryMethods.newMap(GelExpression.class, VariableDeclaration.class);
         for (Precondition aCondition : getPreconditions()) {
             EnhancedPrecondition enhanced = (EnhancedPrecondition) aCondition;
-            body.addAll(enhanced.getStatements());
+            statements.addAll(enhanced.getStatements());
         }
         List<EnhancedPostcondition> postconditions = (List)getPostconditions();
         Collections.sort(postconditions);
@@ -61,22 +61,33 @@ public class EnhancedMofOperationImpl extends MofOperationImpl implements Enhanc
             atPreFinder.genericVisit(expression);
         }
         for (EnhancedPostcondition aCondition : postconditions) {
-            body.addAll(aCondition.getStatements());
+            statements.addAll(aCondition.getStatements());
         }
-        return body;
+        return statements;
     }
 
 
 
     @Override
     public List<Statement> getBody() {
-        return body;
+        return statements;
     }
 
     @Override
     public Map<GelExpression, VariableDeclaration> getLocalVariables() {
         return localVariables;
     }
+
+    public List<Statement> getStatements() {
+        return statements;
+    }
+
+    public void setStatements(List<Statement> statements) {
+        this.statements = statements;
+    }
+
+
+    //========================================================================//
 
 
     private class AtPreFinder extends DynamicVisitorSupport {
@@ -88,7 +99,7 @@ public class EnhancedMofOperationImpl extends MofOperationImpl implements Enhanc
             String  typeName = type.getName();
             declaration.setName(typeName + numLocalVar++);
             localVariables.put(inAtPre, declaration);
-            body.add(declaration);
+            statements.add(declaration);
             return inAtPre;
         }
 
@@ -99,15 +110,19 @@ public class EnhancedMofOperationImpl extends MofOperationImpl implements Enhanc
             String  typeName = type.getName();
             declaration.setName(typeName + numLocalVar++);
             localVariables.put(inAllocation, declaration);
-            body.add(declaration);
+            statements.add(declaration);
             return inAllocation;
         }
     }       // class AtPreFinder
 
 
-    private     List<Statement>                 body;
+
+    //========================================================================//
+
+
+    private     List<Statement>                         statements;
     private     Map<GelExpression, VariableDeclaration> localVariables;
-    private     int                             numLocalVar;
+    private     int                                     numLocalVar;
 
 
 }
