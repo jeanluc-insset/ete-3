@@ -82,7 +82,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
     private void registerFactories(FactoryRegistry inoutRegistry) {
         inoutRegistry.registerFactory(MOF_CLASS, fr.insset.jeanluc.action.semantics.builder.EnhancedMofClassImpl.class);
         inoutRegistry.registerFactory(MOF_OPERATION, fr.insset.jeanluc.action.semantics.builder.EnhancedMofOperationImpl.class);
-        inoutRegistry.registerFactory(INVARIANT, EnhancedInvariant.class);
+        inoutRegistry.registerFactory(INVARIANT, EnhancedInvariantImpl.class);
         inoutRegistry.registerFactory(POSTCONDITION, EnhancedPostcondition.class);
     }
 

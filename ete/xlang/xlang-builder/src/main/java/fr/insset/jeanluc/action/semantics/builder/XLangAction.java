@@ -25,7 +25,7 @@ import fr.insset.jeanluc.xmi.io.impl.XmlModelReader;
  *
  * @author jldeleage
  */
-public class ActionSemanticsAction extends ActionSupport {
+public class XLangAction extends ActionSupport {
 
 
     /**
@@ -36,7 +36,7 @@ public class ActionSemanticsAction extends ActionSupport {
         FactoryRegistry registry = FactoryRegistry.getRegistry();
         registry.registerFactory(MOF_CLASS, EnhancedMofClassImpl.class);
         registry.registerFactory(MOF_OPERATION, EnhancedMofOperationImpl.class);
-        registry.registerFactory(INVARIANT, EnhancedInvariant.class);
+        registry.registerFactory(INVARIANT, EnhancedInvariantImpl.class);
         registry.registerFactory(POSTCONDITION, EnhancedPostcondition.class);
         registry.registerFactory(PRECONDITION, EnhancedPrecondition.class);
 //        registry.registerFactory(XmlModelReader.READER_VISITOR, ConditionVisitor.class);

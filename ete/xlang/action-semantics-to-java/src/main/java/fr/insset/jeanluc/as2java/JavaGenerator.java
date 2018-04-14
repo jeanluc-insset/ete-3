@@ -1,15 +1,13 @@
 package fr.insset.jeanluc.as2java;
 
 
-import fr.insset.jeanluc.action.semantics.builder.EnhancedMofOperationImpl;
-import fr.insset.jeanluc.action.semantics.builder.StatementContainer;
+import fr.insset.jeanluc.action.semantics.builder.EnhancedMofOperation;
 import fr.insset.jeanluc.el.dialect.JavaDialect;
 import fr.insset.jeanluc.ete.gel.AtPre;
 import fr.insset.jeanluc.ete.gel.AttributeNav;
 import fr.insset.jeanluc.ete.gel.Collect;
 import fr.insset.jeanluc.ete.gel.Flatten;
 import fr.insset.jeanluc.ete.gel.GelExpression;
-import fr.insset.jeanluc.ete.gel.Nav;
 import fr.insset.jeanluc.ete.gel.Operation;
 import fr.insset.jeanluc.ete.gel.Self;
 import fr.insset.jeanluc.ete.gel.Step;
@@ -18,17 +16,11 @@ import fr.insset.jeanluc.ete.gel.Sum;
 import fr.insset.jeanluc.ete.gel.VariableDefinition;
 import fr.insset.jeanluc.ete.gel.VariableReference;
 import fr.insset.jeanluc.ete.meta.model.constraint.Condition;
-import fr.insset.jeanluc.ete.meta.model.constraint.Postcondition;
 import fr.insset.jeanluc.ete.meta.model.constraint.Precondition;
-import static fr.insset.jeanluc.ete.meta.model.core.PrimitiveDataTypes.FLOAT_TYPE;
-import static fr.insset.jeanluc.ete.meta.model.core.PrimitiveDataTypes.INT_TYPE;
-import static fr.insset.jeanluc.ete.meta.model.core.PrimitiveDataTypes.TYPE_SUFFIX;
 import fr.insset.jeanluc.ete.meta.model.emof.Feature;
 import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
 import fr.insset.jeanluc.ete.meta.model.types.MofType;
-import fr.insset.jeanluc.ete.meta.model.types.TypedElement;
-import fr.insset.jeanluc.ete.meta.model.types.collections.MofCollection;
 import fr.insset.jeanluc.ete.xlang.Assignment;
 import fr.insset.jeanluc.ete.xlang.Conditional;
 import fr.insset.jeanluc.ete.xlang.DoWhileLoop;
@@ -39,7 +31,6 @@ import fr.insset.jeanluc.ete.xlang.Statement;
 import fr.insset.jeanluc.ete.xlang.VariableDeclaration;
 import fr.insset.jeanluc.ete.xlang.WhileDoLoop;
 import fr.insset.jeanluc.ete.xlang.generator.Generator;
-import fr.insset.jeanluc.util.factory.FactoryMethods;
 import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -154,9 +145,9 @@ public class JavaGenerator extends DynamicVisitorSupport implements Generator, J
 
 
     public String getOperationBody(MofOperation inOperation, String inIndentation) {
-            EnhancedMofOperationImpl operation = (EnhancedMofOperationImpl) inOperation;
+            EnhancedMofOperation operation = (EnhancedMofOperation) inOperation;
             List<Precondition> preconditions = operation.getPreconditions();
-            List<Statement> statementList = operation.getStatements();
+            List<Statement> statementList = operation.getBody();
 //            this.operation = inOperation;
             StringWriter    stringWriter = new StringWriter();
             PrintWriter     printWriter = new PrintWriter(stringWriter);
@@ -178,20 +169,10 @@ public class JavaGenerator extends DynamicVisitorSupport implements Generator, J
             Logger      logger = Logger.getGlobal();
             logger.log(Level.FINE, "Operation generee : \n" + result);
             return result;
-
     }
 
 
     protected void processCondition(Condition aCondition, PrintWriter printWriter, String inIndentation) {
-        StatementContainer container = (StatementContainer)aCondition.getSpecification();
-        List<Statement> statements = container.getStatements();
-        for (Statement aStatement : statements) {
-            try {
-                genericVisit(aStatement, printWriter, inIndentation);
-            } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-                Logger.getLogger(JavaGenerator.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
     }
 
 

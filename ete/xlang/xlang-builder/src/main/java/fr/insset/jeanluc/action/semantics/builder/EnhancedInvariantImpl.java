@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author jldeleage
  */
-public class EnhancedInvariant extends InvariantImpl implements Invariant {
+public class EnhancedInvariantImpl extends InvariantImpl implements Invariant {
 
 
 

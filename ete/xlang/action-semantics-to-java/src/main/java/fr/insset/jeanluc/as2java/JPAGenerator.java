@@ -3,8 +3,7 @@ package fr.insset.jeanluc.as2java;
 
 
 
-import fr.insset.jeanluc.action.semantics.builder.EnhancedMofOperationImpl;
-import fr.insset.jeanluc.action.semantics.builder.StatementContainer;
+import fr.insset.jeanluc.action.semantics.builder.EnhancedMofOperation;
 import fr.insset.jeanluc.el.dialect.JavaDialect;
 import fr.insset.jeanluc.ete.gel.GelExpression;
 import fr.insset.jeanluc.ete.gel.Nav;
@@ -13,14 +12,9 @@ import fr.insset.jeanluc.ete.gel.Step;
 import fr.insset.jeanluc.ete.gel.StringLiteral;
 import fr.insset.jeanluc.ete.gel.VariableDefinition;
 import fr.insset.jeanluc.ete.meta.model.constraint.Condition;
-import static fr.insset.jeanluc.ete.meta.model.core.PrimitiveDataTypes.FLOAT_TYPE;
-import static fr.insset.jeanluc.ete.meta.model.core.PrimitiveDataTypes.INT_TYPE;
-import static fr.insset.jeanluc.ete.meta.model.core.PrimitiveDataTypes.TYPE_SUFFIX;
-import fr.insset.jeanluc.ete.meta.model.emof.Feature;
 import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
 import fr.insset.jeanluc.ete.meta.model.types.MofType;
-import fr.insset.jeanluc.ete.meta.model.types.collections.MofCollection;
 import fr.insset.jeanluc.ete.xlang.Assignment;
 import fr.insset.jeanluc.ete.xlang.Conditional;
 import fr.insset.jeanluc.ete.xlang.DoWhileLoop;
@@ -107,22 +101,11 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
 
     @Override
     public String getOperationBody(MofOperation inOperation, String inIndentation) {
-        EnhancedMofOperationImpl operation = (EnhancedMofOperationImpl) inOperation;
-        List<Statement> statementList = operation.getStatements();
+        EnhancedMofOperation operation = (EnhancedMofOperation) inOperation;
         this.operation = inOperation;
         StringWriter    stringWriter = new StringWriter();
         PrintWriter     printWriter = new PrintWriter(stringWriter);
         printWriter.append(inIndentation);
-        for (Statement aStatement : statementList) {
-            try {
-                genericVisit(aStatement, printWriter, inIndentation);
-            } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-                Logger.getLogger(JPAGenerator.class.getName()).log(Level.SEVERE, null, ex);
-                printWriter.append("// Unable to compile : ");
-                printWriter.append(aStatement.toString());
-                printWriter.append('\n');
-            }
-        }
         printWriter.flush();
         String result = stringWriter.toString();
         Logger      logger = Logger.getGlobal();
@@ -132,15 +115,7 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
 
 
     protected void processCondition(Condition aCondition, PrintWriter printWriter, String inIndentation) {
-        StatementContainer container = (StatementContainer)aCondition.getSpecification();
-        List<Statement> statements = container.getStatements();
-        for (Statement aStatement : statements) {
-            try {
-                genericVisit(aStatement, printWriter, inIndentation);
-            } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-                Logger.getLogger(JPAGenerator.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+
     }
 
 

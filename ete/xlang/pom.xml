@@ -16,10 +16,10 @@
         <module>action-semantics-to-java</module>
         <module>xlang-to-xxx</module>
         <module>xlang-to-c</module>
-        <module>xlang_builder-spec</module>
+<!--        <module>xlang_builder-spec</module>
         <module>xlang_builder-api</module>
         <module>xlang_builder-impl</module>
-        <module>actual-xlang_builder</module>
+        <module>actual-xlang_builder</module>-->
     </modules>
     <name>xlang</name>
 </project>

@@ -13,28 +13,20 @@ import fr.insset.jeanluc.ete.meta.model.mofpackage.impl.EteModelImpl;
 import fr.insset.jeanluc.xmi.io.impl.XmlModelReader;
 import fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import javax.tools.Diagnostic;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
-import javax.tools.JavaFileObject.Kind;
-import javax.tools.SimpleJavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Assert;
-import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -117,7 +109,7 @@ public class JavaGeneratorResultTest {
         // 1-a basic factories
         Factories.init();
         // 1-b xlang factories
-        Class.forName("fr.insset.jeanluc.action.semantics.builder.ActionSemanticsAction");
+        Class.forName("fr.insset.jeanluc.actual.xlang_builder.XLangBuilderInjectionAction");
 
         // 2- read a model
         //    This operation invokes the SimpleActionSemanticsBuilder which

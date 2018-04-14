@@ -46,7 +46,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
 
 
     public static void  enableActionSemantics(ModelReader inReader) throws ClassNotFoundException {
-        Class.forName("fr.insset.jeanluc.action.semantics.builder.ActionSemanticsAction");
+        Class.forName("fr.insset.jeanluc.actual.xlang_builder.XLangBuilderInjectionAction");
         FactoryRegistry registry = FactoryRegistry.getRegistry();
         inReader.addVisitors(new ConditionVisitor());
     }
@@ -81,8 +81,8 @@ public class ConditionVisitor extends DynamicVisitorSupport {
 
     private void registerFactories(FactoryRegistry inoutRegistry) {
         inoutRegistry.registerFactory(MOF_CLASS, EnhancedMofClassImpl.class);
-        inoutRegistry.registerFactory(MOF_OPERATION, EnhancedMofOperationImpl.class);
-        inoutRegistry.registerFactory(INVARIANT, EnhancedInvariant.class);
+        inoutRegistry.registerFactory(MOF_OPERATION, ActualEnhancedOperationImpl.class);
+        inoutRegistry.registerFactory(INVARIANT, EnhancedInvariantImpl.class);
         inoutRegistry.registerFactory(POSTCONDITION, EnhancedPostcondition.class);
     }
 
@@ -143,7 +143,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
 //        Logger.getLogger("fr.insset.jeanluc.oclanalyzer.ReaderVisitor").log(Level.FINE, "Visit of " + inCondition.getSpecificationAsString());
 //
 //        System.out.println("Parsing a standard postcondition : " + inCondition + " (" + inCondition.getClass().getName() + ")");
-//        EnhancedMofOperationImpl    context = (EnhancedMofOperationImpl)inParameters[0];
+//        ActualEnhancedOperationImpl    context = (ActualEnhancedOperationImpl)inParameters[0];
 //        List<Statement>             statements    = getStatements(context, "body");
 //
 //        EteModel        model               = (EteModel)inParameters[1];
@@ -162,7 +162,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
 
         System.out.println("PARSING AN ACTUAL ENHANCED PRECONDITION");
 
-        EnhancedMofOperationImpl    context = (EnhancedMofOperationImpl)inParameters[0];
+        ActualEnhancedOperationImpl    context = (ActualEnhancedOperationImpl)inParameters[0];
 
         EteModel        model               = (EteModel)inParameters[1];
         Map<String, VariableDefinition> variables  = FactoryMethods.newMap(String.class, VariableDefinition.class);
@@ -181,7 +181,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
 
         System.out.println("PARSING AN ENHANCED POSTCONDITION : " + inCondition.getSpecificationAsString());
 
-        EnhancedMofOperationImpl    operation = (EnhancedMofOperationImpl)inParameters[0];
+        ActualEnhancedOperationImpl    operation = (ActualEnhancedOperationImpl)inParameters[0];
 
         EteModel        model               = (EteModel)inParameters[1];
         Map<String, VariableDefinition> variables  = FactoryMethods.newMap(String.class, VariableDefinition.class);
@@ -294,10 +294,10 @@ public class ConditionVisitor extends DynamicVisitorSupport {
 //        container.setStatements(inoutResult);
 //        container.setAbstractTree(expression);
 //        inCondition.setSpecification(container);
-//        List<Statement> statements = ((EnhancedMofOperationImpl)context).getBody();
+//        List<Statement> statements = ((ActualEnhancedOperationImpl)context).getBody();
 //        if (statements == null) {
 //            statements = FactoryMethods.newList(Statement.class);
-//            ((EnhancedMofOperationImpl)context).setStatements(statements);
+//            ((ActualEnhancedOperationImpl)context).setStatements(statements);
 //        }
         return expression;
     }

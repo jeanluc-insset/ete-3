@@ -50,6 +50,6 @@ public class EnhancedMofClassImpl extends MofClassImpl {
      * That list helps to build requests to find out matching value for
      * an in work entity.
      */
-    private Map<MofProperty, List<EnhancedInvariant>>   support = new HashMap<>();
+    private Map<MofProperty, List<EnhancedInvariantImpl>>   support = new HashMap<>();
 
 }

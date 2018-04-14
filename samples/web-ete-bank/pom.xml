@@ -150,11 +150,6 @@
                     </dependency>
                     <dependency>
                         <groupId>fr.insset.jeanluc</groupId>
-                        <artifactId>xlang-impl</artifactId>
-                        <version>3.1</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>fr.insset.jeanluc</groupId>
                         <artifactId>xlang_builder-impl</artifactId>
                         <version>3.1</version>
                     </dependency>
