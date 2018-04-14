@@ -73,6 +73,13 @@ public class EnhancedMofOperationImpl extends MofOperationImpl implements Enhanc
         return statements;
     }
 
+
+    @Override
+    public void setBody(List<Statement> inStatements) {
+        statements = inStatements;
+    }
+
+
     @Override
     public Map<GelExpression, VariableDeclaration> getLocalVariables() {
         return localVariables;

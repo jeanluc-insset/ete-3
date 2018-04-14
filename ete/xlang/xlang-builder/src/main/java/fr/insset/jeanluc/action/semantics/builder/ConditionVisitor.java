@@ -37,8 +37,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * The ConditionVisitor builds statements for an "enhanced" condition and stores
- * these statements into the condition itself.
+ * When visiting a method, the ConditionVisitor builds the GEL abstract tree
+ * for that condition.<br>
+ * When visiting an EteModel, the ConditionVisitor builds the statements of the
+ * body for each and every operation in the model (actually, each operation
+ * in a not ignorable MofClass).
  *
  * @author jldeleage
  */
@@ -47,7 +50,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
 
 
     public static void  enableActionSemantics(ModelReader inReader) throws ClassNotFoundException {
-        Class.forName("fr.insset.jeanluc.action.semantics.builder.ActionSemanticsAction");
+        Class.forName("fr.insset.jeanluc.action.semantics.builder.XLangAction");
         FactoryRegistry registry = FactoryRegistry.getRegistry();
         inReader.addVisitors(new ConditionVisitor());
     }
@@ -75,6 +78,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         register(EnhancedPostcondition.class, "visitEnhancedPostcondition");
         // Registration of the methods to visit gel expression
         register("gelVisit", "fr.insset.jeanluc.ete.gel");
+        register(EteModel.class, "visitEteModel");
         
     }
 
@@ -128,37 +132,6 @@ public class ConditionVisitor extends DynamicVisitorSupport {
     //========================================================================//
 
 
-//    /**
-//     * This method is called for each and every postcondition when the model is
-//     * read.<br>
-//     * The condition must already have a string specification.<br>
-//     * We compile it and store into the condition a StatementContainer
-//     * containing the resulting abstract tree and the statements computing
-//     * it.<br>
-//     * Furthermore, the statement containers are sorted on the fly&nbsp;: the
-//     * order is defined by the precedence graph.
-//     * 
-//     * @param inCondition
-//     * @param inParameters
-//     * @return 
-//     */
-//    public Postcondition    visitPostcondition(Postcondition inCondition, Object... inParameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-//        Logger.getLogger("fr.insset.jeanluc.oclanalyzer.ReaderVisitor").log(Level.FINE, "Visit of " + inCondition.getSpecificationAsString());
-//
-//        System.out.println("Parsing a standard postcondition : " + inCondition + " (" + inCondition.getClass().getName() + ")");
-//        EnhancedMofOperationImpl    context = (EnhancedMofOperationImpl)inParameters[0];
-//        List<Statement>             statements    = getStatements(context, "body");
-//
-//        EteModel        model               = (EteModel)inParameters[1];
-//        Map<String, VariableDefinition> variables  = FactoryMethods.newMap(String.class, VariableDefinition.class);
-//        addVariable("result", context.getType(), variables);
-//        GelExpression expression = visitACondition(inCondition, model, context, variables, statements);
-//        BodyBuilderOld builder = new BodyBuilderOld();
-//        List<Statement> inoutResult = new LinkedList<>();
-//        builder.buildStatements(expression, inoutResult);
-//        return inCondition;
-//    }
-
 
     public EnhancedPrecondition    visitEnhancedPrecondition(EnhancedPrecondition inCondition, Object... inParameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         Logger.getLogger("fr.insset.jeanluc.oclanalyzer.ReaderVisitor").log(Level.FINE, "Visit of " + inCondition.getSpecificationAsString());
@@ -182,9 +155,10 @@ public class ConditionVisitor extends DynamicVisitorSupport {
 
 
     public EnhancedPostcondition    visitEnhancedPostcondition(EnhancedPostcondition inCondition, Object... inParameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        Logger.getLogger("fr.insset.jeanluc.oclanalyzer.ReaderVisitor").log(Level.FINE, "Visit of " + inCondition.getSpecificationAsString());
+        Logger logger = Logger.getLogger("fr.insset.jeanluc.oclanalyzer.ReaderVisitor");
+        logger.log(Level.FINE, "Visit of " + inCondition.getSpecificationAsString());
 
-        System.out.println("PARSING A STANDARD ENHANCED POSTCONDITION : " + inCondition.getSpecificationAsString());
+        logger.log(Level.INFO, "PARSING A STANDARD ENHANCED POSTCONDITION : " + inCondition.getSpecificationAsString());
 
         EnhancedMofOperationImpl    context = (EnhancedMofOperationImpl)inParameters[0];
 //        context.getPostconditions().add(inCondition);
@@ -206,6 +180,19 @@ public class ConditionVisitor extends DynamicVisitorSupport {
     }
 
 
+    public EteModel visitEteModel(EteModel inModel, Object... inParameters) throws InstantiationException {
+        System.out.println("**** VISITING THE MODEL ****");
+        for (MofClass aClass : inModel.getAllClasses()) {
+            if (aClass.hasStereotype("ignore")) {
+                continue;
+            }
+            for (MofOperation anOperation : aClass.getOwnedOperation()) {
+                // TODO : can we use the same BodyBuilder for all operations ?
+                BodyBuilder builder = new BodyBuilder();
+            }
+        }
+        return inModel;
+    }
 
     //========================================================================//
     //      G E L   E X P R E S S I O N   V I S I T O R   M E T H O D S       //
@@ -261,58 +248,17 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         gelContext.set("contextualClass", parser);
         TreeBuilder     treeBuilder           = new TreeBuilder(gelContext);
         GelExpression   expression            = treeBuilder.visitGelExpression(ctx);
+        ((EnhancedPostcondition)inCondition).setExpression(expression);
         logger.log(Level.FINER, "GelExpression : " + expression);
 
         // 3- visit the GelExpression to build statements
         //    The statements are added to the preexisting list
-        BodyBuilder builder = new BodyBuilder();
-        builder.buildStatements(expression, inoutResult, ((EnhancedMofOperationImpl)context).getLocalVariables());
-        logger.log(Level.INFO, "Statements : " + inoutResult + " (" + inoutResult.size() + ")");
-
-        EnhancedMofOperationImpl    enhancedMofOperation = (EnhancedMofOperationImpl) context;
-        enhancedMofOperation.buildBody();
-        return expression;
-    }
-
-
-
-    protected GelExpression visitAConditionOld(Condition inCondition, EteModel model,
-            MofOperation context, Map<String, VariableDefinition> variables,
-            List<Statement> inoutResult) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        Logger.getLogger("fr.insset.jeanluc.oclanalyzer.ReaderVisitor").log(Level.FINE, "Visit of " + inCondition.getSpecificationAsString());
-
-        // 1- parse the condition
-        String          specificationAsString = inCondition.getSpecificationAsString();
-        GelParser       parser                = GelParserWrapper.newParser(specificationAsString);
-        GelParser.GelExpressionContext   ctx  = parser.gelExpression();
-
-        // 2- build expression as an abstract tree
-        // TODO : use an abstract factory
-        GelContext      gelContext            = new GelContextImpl(model, (MofClass)context.getOwningMofClass(), context);
-        gelContext.set("model", model);
-        gelContext.set("context", context);
-        gelContext.set("contextualClass", parser);
-        TreeBuilder     treeBuilder           = new TreeBuilder(gelContext);
-        GelExpression   expression            = treeBuilder.visitGelExpression(ctx);
-
-        // 3- visit the GelExpression to build statements
-        //    The statements are added to the preexisting list
-//        BodyBuilderOld builder = new BodyBuilderOld();
-//        builder.buildStatements(expression, inoutResult);
-
-        // 4- wrap everything into a "container" and put it into the
-        // the condition itself
-        // TODO : we should share the same container between all conditions on
-        // a single operation, should not we ?
-//        StatementContainer  container         = new StatementContainer();
-//        container.setStatements(inoutResult);
-//        container.setAbstractTree(expression);
-//        inCondition.setSpecification(container);
-//        List<Statement> statements = ((EnhancedMofOperationImpl)context).getBody();
-//        if (statements == null) {
-//            statements = FactoryMethods.newList(Statement.class);
-//            ((EnhancedMofOperationImpl)context).setStatements(statements);
-//        }
+//        BodyBuilder builder = new BodyBuilder();
+//        builder.buildStatements(expression, inoutResult, ((EnhancedMofOperationImpl)context).getLocalVariables());
+//        logger.log(Level.INFO, "Statements : " + inoutResult + " (" + inoutResult.size() + ")");
+//
+//        EnhancedMofOperationImpl    enhancedMofOperation = (EnhancedMofOperationImpl) context;
+//        enhancedMofOperation.buildBody();
         return expression;
     }
 

@@ -12,8 +12,13 @@ import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 import ${aClass.owningPackage.name}.impl.${aClass.name}Impl;
 #end
 #end
+import fr.insset.jeanluc.action.semantics.builder.EnhancedMofOperation;
+import fr.insset.jeanluc.action.semantics.builder.EnhancedPostcondition;
+import fr.insset.jeanluc.ete.meta.model.constraint.Postcondition;
 import fr.insset.jeanluc.ete.meta.model.emof.impl.FeatureImpl;
 import fr.insset.jeanluc.ete.meta.model.emof.impl.MofParameterImpl;
+import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
+import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
 import fr.insset.jeanluc.ete.meta.model.types.MofType;
 import fr.insset.jeanluc.ete.meta.model.types.collections.impl.MofBagImpl;
 import fr.insset.jeanluc.ete.meta.model.types.collections.impl.MofCollectionImpl;
@@ -27,6 +32,7 @@ import fr.insset.jeanluc.ete.xlang.Statement;
 import fr.insset.jeanluc.ete.xlang.VariableDeclaration;
 import fr.insset.jeanluc.ete.xlang.impl.AssignmentImpl;
 import fr.insset.jeanluc.ete.xlang.impl.VariableDeclarationImpl;
+import fr.insset.jeanluc.util.factory.FactoryMethods;
 import fr.insset.jeanluc.util.factory.FactoryRegistry;
 import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
 import java.lang.reflect.InvocationTargetException;
@@ -60,6 +66,28 @@ public class BodyBuilder extends DynamicVisitorSupport {
 
 
     //========================================================================//
+
+
+
+    public void buildStatements(EteModel inModel) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        for (MofClass aClass : inModel.getClasses()) {
+            for (MofOperation anOperation : aClass.getOwnedOperation()) {
+                EnhancedMofOperation thisOperation = (EnhancedMofOperation) anOperation;
+                buildStatements(thisOperation);
+            }
+        }
+    }
+
+
+
+    public void buildStatements(EnhancedMofOperation inOperation) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        List<Statement>   statements = FactoryMethods.newList(Statement.class);
+        for (Postcondition aPostcondition : inOperation.getPostconditions()) {
+            EnhancedPostcondition thisCondition = (EnhancedPostcondition) aPostcondition;
+            buildStatements(thisCondition.getExpression(), statements, null);
+        }
+    }
+
 
 
     public void buildStatements(GelExpression inExpression, List<Statement> inoutStatements, Map<GelExpression, VariableDeclaration> inLocalVariables) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {

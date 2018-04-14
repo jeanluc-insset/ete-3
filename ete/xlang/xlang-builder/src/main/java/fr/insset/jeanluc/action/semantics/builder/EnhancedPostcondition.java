@@ -16,7 +16,7 @@ import java.util.Map;
  *
  * @author jldeleage
  */
-public class EnhancedPostcondition extends PostconditionImpl implements EnhancedCondition, Comparable<EnhancedPostcondition>, Postcondition {
+public class EnhancedPostcondition extends PostconditionImpl implements EnhancedCondition, Postcondition {
 
 
     public EnhancedPostcondition() throws InstantiationException {
@@ -49,33 +49,36 @@ public class EnhancedPostcondition extends PostconditionImpl implements Enhanced
         this.initialUsedValues = initialUsedValues;
     }
 
-
     @Override
-    public int compareTo(EnhancedPostcondition o) {
+    public int compareTo(Postcondition inOther) {
         if (isResult()) {
             return 1;
+        };
+        if (! (inOther instanceof EnhancedPostcondition)) {
+            return -1;
         }
-        else if (o.isResult()) {
+        EnhancedPostcondition other = (EnhancedPostcondition) inOther;
+        if (other.isResult()) {
             return -1;
         }
 
-        if (o.getFinalUsedValues().contains(definedProperty)) {
-            if (finalUsedValues.contains(o.getDefinedProperty())) {
+        if (other.getFinalUsedValues().contains(definedProperty)) {
+            if (finalUsedValues.contains(other.getDefinedProperty())) {
                 throw new RuntimeException("Circular definition in " + this.getSpecificationAsString()
-                        + " between" + o.getDefinedProperty() + " and " + definedProperty);
+                        + " between" + other.getDefinedProperty() + " and " + definedProperty);
             }
             return 1;
         }
-        if (finalUsedValues.contains(o.getDefinedProperty())) {
+        if (finalUsedValues.contains(other.getDefinedProperty())) {
             return -1;
         }
         // We don't care the order, should we ?
         // Maybe we can optimize the code using less auxiliary variables
         // Let's give a try
-        if (initialUsedValues.contains(o.getDefinedProperty())) {
+        if (initialUsedValues.contains(other.getDefinedProperty())) {
             return -1;
         }
-        if (o.getInitialUsedValues().contains(definedProperty)) {
+        if (other.getInitialUsedValues().contains(definedProperty)) {
             return 1;
         }
         // OK, now we don't care, really.

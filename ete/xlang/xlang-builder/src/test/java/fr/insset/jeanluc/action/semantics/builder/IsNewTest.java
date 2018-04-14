@@ -88,7 +88,8 @@ public class IsNewTest {
         // 4- check result
         MofClass formalLinkedListClass = (MofClass)result.getElementByName("FormalLinkedList");
         EnhancedMofOperationImpl addOperation = (EnhancedMofOperationImpl) formalLinkedListClass.getOwnedOperation("add");
-        List<Statement> body = addOperation.buildBody();
+//        List<Statement> body = addOperation.buildBody();
+        List<Statement> body = addOperation.getBody();
 
         int     i=0;
         for (Statement aStatement : body) {

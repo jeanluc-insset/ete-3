@@ -19,9 +19,10 @@ import java.util.Map;
  */
 public interface EnhancedMofOperation extends MofOperation {
 
-    List<Statement> buildBody() throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException;
+    public List<Statement> buildBody() throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException;
 
-    List<Statement> getBody();
+    public List<Statement> getBody();
+    public void            setBody(List<Statement> inStatements);
     
     public Map<GelExpression, VariableDeclaration> getLocalVariables();
 

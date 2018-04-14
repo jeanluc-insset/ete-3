@@ -26,6 +26,7 @@ import fr.insset.jeanluc.util.factory.FactoryMethods;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Map;
+import static org.junit.Assert.assertEquals;
 
 
 
@@ -33,14 +34,14 @@ import java.util.Map;
  *
  * @author jldeleage
  */
-public class ActionSemanticsOperationBuilder2Test {
+public class BankTransferTest {
 
 
 //    public final String     MODEL_PATH = "../../../src/test/mda/models/full_MCQ.xml";
     public final String     MODEL_PATH = "../../../samples/web-ete-bank/src/main/mda/Bank.xml";
 
 
-    public ActionSemanticsOperationBuilder2Test() {
+    public BankTransferTest() {
     }
     
     @BeforeClass
@@ -64,7 +65,7 @@ public class ActionSemanticsOperationBuilder2Test {
     /**
      * Test of EnableActionSemantics method, of class ActionSemanticsOperationBuilder.
      */
-//    @Test
+    @Test
     public void testAnalysePostConditions() throws EteException, InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
 
         // 1- initialize framework

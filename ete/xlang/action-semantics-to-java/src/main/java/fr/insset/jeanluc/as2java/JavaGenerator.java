@@ -49,7 +49,7 @@ import java.util.logging.Logger;
  * 
  * 
  * <div>
- * This class is a dialect so it can be used in velocity templates.<br>
+ * This class is a dialect ; it is intended be used in velocity templates.<br>
  * It overrides the getOperationBody method with the cross compilation of
  * all the statements associated to the method.
  * </div>

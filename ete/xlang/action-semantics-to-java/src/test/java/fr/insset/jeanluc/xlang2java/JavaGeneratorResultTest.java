@@ -109,7 +109,7 @@ public class JavaGeneratorResultTest {
         // 1-a basic factories
         Factories.init();
         // 1-b xlang factories
-        Class.forName("fr.insset.jeanluc.actual.xlang_builder.XLangBuilderInjectionAction");
+        Class.forName("fr.insset.jeanluc.action.semantics.builder.XLangAction");
 
         // 2- read a model
         //    This operation invokes the SimpleActionSemanticsBuilder which
