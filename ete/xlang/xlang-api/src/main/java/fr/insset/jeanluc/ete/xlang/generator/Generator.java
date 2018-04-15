@@ -2,6 +2,7 @@ package fr.insset.jeanluc.ete.xlang.generator;
 
 
 import fr.insset.jeanluc.el.dialect.Dialect;
+import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
 import fr.insset.jeanluc.ete.xlang.Statement;
 import java.util.List;
 import java.util.Set;
@@ -12,13 +13,7 @@ import javax.annotation.Generated;
 public interface Generator extends Dialect  {
 
 
-    public List<Statement> getStatements(String inKey);
-    public void setStatements(String inKey, List<Statement> inValue);
-                
-
-    //========================================================================//
-
-
+    public String getOperationBody(MofOperation inOperation, String inIndentation);
 
 
 
