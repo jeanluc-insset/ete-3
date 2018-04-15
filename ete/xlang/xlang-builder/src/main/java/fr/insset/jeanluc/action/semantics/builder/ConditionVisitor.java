@@ -147,7 +147,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         addVariable("result", context.getType(), variables);
         GelExpression expression = visitACondition(inCondition, model, context, variables, statements);
 
-        extractVariables(expression);
+//        extractVariables(expression);
 
         return inCondition;
     }
@@ -170,27 +170,30 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         GelExpression expression = visitACondition(inCondition, model, context, variables, statements);
         inCondition.setExpression(expression);
 
-        extractVariables(expression);
-        BodyBuilder builder = new BodyBuilder();
-        List<Statement> inoutResult = new LinkedList<>();
-        builder.buildStatements(expression, inoutResult, context.getLocalVariables());
-        inCondition.setStatements(statements);
+//        extractVariables(expression);
+//        BodyBuilder builder = new BodyBuilder();
+//        List<Statement> inoutResult = new LinkedList<>();
+//        builder.buildStatements(expression, inoutResult, context.getLocalVariables());
+//        inCondition.setStatements(statements);
 
         return inCondition;
     }
 
 
-    public EteModel visitEteModel(EteModel inModel, Object... inParameters) throws InstantiationException {
+    public EteModel visitEteModel(EteModel inModel, Object... inParameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         System.out.println("**** VISITING THE MODEL ****");
-        for (MofClass aClass : inModel.getAllClasses()) {
-            if (aClass.hasStereotype("ignore")) {
-                continue;
-            }
-            for (MofOperation anOperation : aClass.getOwnedOperation()) {
-                // TODO : can we use the same BodyBuilder for all operations ?
-                BodyBuilder builder = new BodyBuilder();
-            }
-        }
+        BodyBuilder builder = new BodyBuilder();
+        builder.buildStatements(inModel);
+//        for (MofClass aClass : inModel.getAllClasses()) {
+//            if (aClass.hasStereotype("ignore")) {
+//                continue;
+//            }
+//            for (MofOperation anOperation : aClass.getOwnedOperation()) {
+//                // TODO : can we use the same BodyBuilder for all operations ?
+//                BodyBuilder builder = new BodyBuilder();
+//                builder.
+//            }
+//        }
         return inModel;
     }
 

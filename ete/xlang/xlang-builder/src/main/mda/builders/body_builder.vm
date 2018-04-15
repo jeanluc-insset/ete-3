@@ -86,6 +86,7 @@ public class BodyBuilder extends DynamicVisitorSupport {
             EnhancedPostcondition thisCondition = (EnhancedPostcondition) aPostcondition;
             buildStatements(thisCondition.getExpression(), statements, null);
         }
+        inOperation.setBody(statements);
     }
 
 

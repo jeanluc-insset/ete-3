@@ -19,7 +19,7 @@ import java.util.Map;
  */
 public interface EnhancedMofOperation extends MofOperation {
 
-    public List<Statement> buildBody() throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException;
+//    public List<Statement> buildBody() throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException;
 
     public List<Statement> getBody();
     public void            setBody(List<Statement> inStatements);

@@ -26,6 +26,8 @@ import java.util.LinkedList;
 import java.util.Map;
 import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 
 
@@ -33,14 +35,14 @@ import static org.junit.Assert.assertEquals;
  *
  * @author jldeleage
  */
-public class FullMCQTest {
+public class EnableSemanticsTest {
 
 
     public final String     MODEL_PATH = "../../../src/test/mda/models/full_MCQ.xml";
 //    public final String     MODEL_PATH = "../../../samples/web-ete-bank/src/main/mda/Bank.xml";
 
 
-    public FullMCQTest() {
+    public EnableSemanticsTest() {
     }
     
     @BeforeClass
@@ -89,8 +91,6 @@ public class FullMCQTest {
         Collection<Postcondition> postconditions = calculeNote.getPostconditions();
         assertEquals(1, postconditions.size());
     }       // testEnableActionSemantics method
-
-
 
 
 }       // ActionSemanticsOperationBuilder class

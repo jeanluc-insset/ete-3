@@ -113,7 +113,7 @@ public class PostAssertionJavaGeneratorTest {
         // 1-a basic factories
         Factories.init();
         // 1-b xlang factories
-        Class.forName("fr.insset.jeanluc.action.semantics.builder.ActionSemanticsAction");
+        Class.forName("fr.insset.jeanluc.action.semantics.builder.XLangAction");
 
         // 2- read a model
         //    This operation invokes the SimpleActionSemanticsBuilder which
