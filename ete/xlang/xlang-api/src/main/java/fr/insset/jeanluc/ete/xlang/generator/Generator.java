@@ -16,7 +16,5 @@ public interface Generator extends Dialect  {
     public String getOperationBody(MofOperation inOperation, String inIndentation);
 
 
-
 }
-
 

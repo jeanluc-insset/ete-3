@@ -1,6 +1,7 @@
 package fr.insset.jeanluc.ete.xlang.to.xxx;
 
 
+import fr.insset.jeanluc.action.semantics.builder.EnhancedMofOperation;
 import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
 import fr.insset.jeanluc.ete.gel.*;
 import fr.insset.jeanluc.ete.meta.model.emof.*;
@@ -8,15 +9,23 @@ import fr.insset.jeanluc.ete.meta.model.types.*;
 import fr.insset.jeanluc.ete.xlang.*;
 import fr.insset.jeanluc.util.factory.FactoryMethods;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class GeneratorSupport extends DynamicVisitorSupport implements Generator {
 
 
-    public GeneratorSupport()throws InstantiationException {
+    public GeneratorSupport() throws InstantiationException {
+        this ("    ");
+    }
+
+
+    public GeneratorSupport(String inIndentation)throws InstantiationException {
         symbols = FactoryMethods.newMap(String.class, String.class);
 #foreach ($aClass in $current.allClasses)
 #if ($aClass.getValueOf("symbol"))
@@ -45,12 +54,12 @@ public class GeneratorSupport extends DynamicVisitorSupport implements Generator
                 try {
                     genericVisit(aStatement, printWriter, inIndentation);
                 } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-                    Logger.getLogger(JavaGenerator.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
                     printWriter.append("// Unable to compile : ");
                     printWriter.append(aStatement.toString());
                     printWriter.append('\n');
-                    printWriter.append(indentation);
-                    printWriter.append("throw new RuntimeException();");
+                    printWriter.append(inIndentation);
+                    printWriter.append(getExceptionMessage());
                 }
             }
             printWriter.flush();
@@ -70,12 +79,23 @@ public class GeneratorSupport extends DynamicVisitorSupport implements Generator
         PrintWriter output = (PrintWriter) inParameters[0];
         List<GelExpression> operand = inExpression.getOperand();
         // TODO : we must take care of the priority
-#if ($aClass.getValueOf("kind") == "infix")
+#if ($aClass.getValueOf("kind").equals("prefix"))
+        // prefixed unary operation
+        output.print(symbols.get("${aClass.getValueOf("symbol")}"));
+        genericVisit(operand.get(0), inParameters);
+#elseif ($aClass.getValueOf("kind").equals("infix") || $aClass.getValueOf("kind").equals("rightPartOfInfix"))
+        // infix binary operation
         genericVisit(operand.get(0), inParameters);
         output.print(' ');
         output.print(symbols.get("${aClass.getValueOf("symbol")}"));
         output.print(' ');
         genericVisit(operand.get(1), inParameters);
+#elseif ($aClass.name.equals("AtPre"))
+        // atpre operation  
+        genericVisit(operand.get(0), inParameters);
+#else
+        // other operation
+        // ${aClass.getValueOf("kind")}
 #end
         return inExpression;
     }
@@ -84,6 +104,12 @@ public class GeneratorSupport extends DynamicVisitorSupport implements Generator
 
 
     //========================================================================//
+
+
+
+    protected String getExceptionMessage() {
+        return "";
+    }
 
 
     public      void setSymbol(String inFor, String inSymbol) {

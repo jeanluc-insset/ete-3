@@ -71,16 +71,6 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
     //========================================================================//
 
 
-    @Override
-    public List<Statement> getStatements(String inKey) {
-        return statements.get(inKey);
-    }
-
-    @Override
-    public void setStatements(String inKey, List<Statement> inValue) {
-        statements.put(inKey, inValue);
-    }
-
 
 
     //========================================================================//
@@ -102,7 +92,6 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
     @Override
     public String getOperationBody(MofOperation inOperation, String inIndentation) {
         EnhancedMofOperation operation = (EnhancedMofOperation) inOperation;
-        this.operation = inOperation;
         StringWriter    stringWriter = new StringWriter();
         PrintWriter     printWriter = new PrintWriter(stringWriter);
         printWriter.append(inIndentation);
@@ -489,8 +478,6 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
 
 
     private     String                          indentation;
-    private     MofOperation                    operation;
-    private     Map<String, List<Statement>>    statements = new HashMap<>();
 
 
 

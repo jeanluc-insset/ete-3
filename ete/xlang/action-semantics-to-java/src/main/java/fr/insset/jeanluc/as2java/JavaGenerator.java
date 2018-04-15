@@ -14,7 +14,6 @@ import fr.insset.jeanluc.ete.gel.Step;
 import fr.insset.jeanluc.ete.gel.StringLiteral;
 import fr.insset.jeanluc.ete.gel.Sum;
 import fr.insset.jeanluc.ete.gel.VariableDefinition;
-import fr.insset.jeanluc.ete.gel.VariableReference;
 import fr.insset.jeanluc.ete.meta.model.constraint.Condition;
 import fr.insset.jeanluc.ete.meta.model.constraint.Precondition;
 import fr.insset.jeanluc.ete.meta.model.emof.Feature;
@@ -100,12 +99,12 @@ public class JavaGenerator extends GeneratorSupport implements Generator, JavaDi
 
 
 
-    public JavaGenerator() {
+    public JavaGenerator() throws InstantiationException {
         this("    ");
     }
 
 
-    public JavaGenerator(String indentation) {
+    public JavaGenerator(String indentation) throws InstantiationException {
         this.indentation = indentation;
         register("gelVisit", "fr.insset.jeanluc.ete.gel");
         register("xlangVisit", "fr.insset.jeanluc.ete.xlang");
@@ -336,11 +335,11 @@ public class JavaGenerator extends GeneratorSupport implements Generator, JavaDi
     //========================================================================//
 
 
-    public Object gelVisitVariableReference(VariableReference inReference, Object... inParameters) {
-        PrintWriter output = (PrintWriter) inParameters[0];
-        output.print(inReference.getDefinition().getName());
-        return inReference;
-    }
+//    public Object gelVisitVariableReference(VariableReference inReference, Object... inParameters) {
+//        PrintWriter output = (PrintWriter) inParameters[0];
+//        output.print(inReference.getDefinition().getName());
+//        return inReference;
+//    }
 
 
     public Object gelVisitVariableDefinition(VariableDefinition inDefinition, Object... inParameters) {
