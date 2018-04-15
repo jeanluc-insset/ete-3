@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<mda>
+
+
+    <transformation-set>
+
+
+        <model  url="../../../../../gel/gel-spec/src/main/mda/models/Gel.xml"/>
+
+        <!--
+          - The context parameter specifies which context to use when
+          - resolving an identifier
+        -->
+        <transformation-set>
+
+            <!--
+                current dir :
+                ete-toolchain/samples/web-ete-bank/src/main/mda
+                template src dir :
+                ete-toolchain/src/main/mda/modules/jpa/ete-config.xml
+              -->
+            <velocity template="generator.vm"
+                    target="generated-sources/ete/fr/insset/jeanluc/ete/xlang/to/xxx/GeneratorSupport.java"
+                    />
+        </transformation-set>
+
+
+    </transformation-set>
+
+</mda>
+
+
+

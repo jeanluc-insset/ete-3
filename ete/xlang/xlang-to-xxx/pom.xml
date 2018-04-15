@@ -108,7 +108,7 @@
                             <goal>ete</goal>
                         </goals>
                         <configuration>
-                            <configFilePath>src/test/mda/ete-config.xml</configFilePath>
+                            <configFilePath>src/main/mda/ete-config.xml</configFilePath>
                             <additionalClasspathElements>
                                 <additionalClasspathElement>target/classes</additionalClasspathElement>
                                 <additionalClasspathElement>../xlang-api/target/classes</additionalClasspathElement>
@@ -119,7 +119,7 @@
                                 <additionalClasspathElement>../../gel/gel-api/target/classes</additionalClasspathElement>
                             </additionalClasspathElements>
                         </configuration>
-                        <phase>generate-test-sources</phase>
+                        <phase>generate-sources</phase>
                     </execution>
                 </executions>
             </plugin>

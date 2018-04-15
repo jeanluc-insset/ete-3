@@ -1,0 +1,99 @@
+package fr.insset.jeanluc.ete.xlang.to.xxx;
+
+
+import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
+import fr.insset.jeanluc.ete.gel.*;
+import fr.insset.jeanluc.ete.meta.model.emof.*;
+import fr.insset.jeanluc.ete.meta.model.types.*;
+import fr.insset.jeanluc.ete.xlang.*;
+import fr.insset.jeanluc.util.factory.FactoryMethods;
+import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+import java.util.Map;
+
+
+public class GeneratorSupport extends DynamicVisitorSupport implements Generator {
+
+
+    public GeneratorSupport()throws InstantiationException {
+        symbols = FactoryMethods.newMap(String.class, String.class);
+#foreach ($aClass in $current.allClasses)
+#if ($aClass.getValueOf("symbol"))
+        symbols.put("${aClass.getValueOf("symbol")}","${aClass.getValueOf("symbol")}");
+#end
+#end
+        register("visit",
+                 "fr.insset.jeanluc.ete.gel",
+                 "fr.insset.jeanluc.ete.meta.model.emof",
+                 "fr.insset.jeanluc.ete.meta.model.types",
+                 "fr.insset.jeanluc.ete.xlang");
+    }
+
+
+    //========================================================================//
+
+
+    public String getOperationBody(MofOperation inOperation, String inIndentation) {
+            EnhancedMofOperation operation = (EnhancedMofOperation) inOperation;
+            List<Statement> statementList = operation.getBody();
+//            this.operation = inOperation;
+            StringWriter    stringWriter = new StringWriter();
+            PrintWriter     printWriter = new PrintWriter(stringWriter);
+            printWriter.append(inIndentation);
+            for (Statement aStatement : statementList) {
+                try {
+                    genericVisit(aStatement, printWriter, inIndentation);
+                } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+                    Logger.getLogger(JavaGenerator.class.getName()).log(Level.SEVERE, null, ex);
+                    printWriter.append("// Unable to compile : ");
+                    printWriter.append(aStatement.toString());
+                    printWriter.append('\n');
+                    printWriter.append(indentation);
+                    printWriter.append("throw new RuntimeException();");
+                }
+            }
+            printWriter.flush();
+            String result = stringWriter.toString();
+            Logger      logger = Logger.getGlobal();
+            logger.log(Level.FINE, "Operation generee : \n" + result);
+            return result;
+    }
+
+    //========================================================================//
+
+
+#foreach ($aClass in $current.allClasses)
+#if ($aClass.getValueOf("priority"))
+
+    public ${aClass.name} visit${aClass.name}(${aClass.name} inExpression, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        PrintWriter output = (PrintWriter) inParameters[0];
+        List<GelExpression> operand = inExpression.getOperand();
+        // TODO : we must take care of the priority
+#if ($aClass.getValueOf("kind") == "infix")
+        genericVisit(operand.get(0), inParameters);
+        output.print(' ');
+        output.print(symbols.get("${aClass.getValueOf("symbol")}"));
+        output.print(' ');
+        genericVisit(operand.get(1), inParameters);
+#end
+        return inExpression;
+    }
+#end
+#end
+
+
+    //========================================================================//
+
+
+    public      void setSymbol(String inFor, String inSymbol) {
+        symbols.put(inFor, inSymbol);
+    }
+
+
+    //========================================================================//
+
+
+    private     Map<String, String>     symbols;
+
+}

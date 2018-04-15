@@ -32,6 +32,7 @@ import fr.insset.jeanluc.ete.xlang.VariableDeclaration;
 import fr.insset.jeanluc.ete.xlang.WhileDoLoop;
 import fr.insset.jeanluc.ete.xlang.generator.Generator;
 import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
+import fr.insset.jeanluc.ete.xlang.to.xxx.GeneratorSupport;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
@@ -91,7 +92,7 @@ import java.util.logging.Logger;
  *
  * @author jldeleage
  */
-public class JavaGenerator extends DynamicVisitorSupport implements Generator, JavaDialect  {
+public class JavaGenerator extends GeneratorSupport implements Generator, JavaDialect  {
 
     private enum LEFT_RIGHT {
         LEFT, RIGHT
@@ -112,20 +113,6 @@ public class JavaGenerator extends DynamicVisitorSupport implements Generator, J
     }
 
 
-    //========================================================================//
-    //            G E N E R A T O R   I M P L E M E N T A T I O N             //
-    //========================================================================//
-
-
-    @Override
-    public List<Statement> getStatements(String inKey) {
-        return statements.get(inKey);
-    }
-
-    @Override
-    public void setStatements(String inKey, List<Statement> inValue) {
-        statements.put(inKey, inValue);
-    }
 
 
     //========================================================================//
@@ -142,34 +129,6 @@ public class JavaGenerator extends DynamicVisitorSupport implements Generator, J
         return buffer.toString();
     }
 
-
-
-    public String getOperationBody(MofOperation inOperation, String inIndentation) {
-            EnhancedMofOperation operation = (EnhancedMofOperation) inOperation;
-            List<Precondition> preconditions = operation.getPreconditions();
-            List<Statement> statementList = operation.getBody();
-//            this.operation = inOperation;
-            StringWriter    stringWriter = new StringWriter();
-            PrintWriter     printWriter = new PrintWriter(stringWriter);
-            printWriter.append(inIndentation);
-            for (Statement aStatement : statementList) {
-                try {
-                    genericVisit(aStatement, printWriter, inIndentation);
-                } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-                    Logger.getLogger(JavaGenerator.class.getName()).log(Level.SEVERE, null, ex);
-                    printWriter.append("// Unable to compile : ");
-                    printWriter.append(aStatement.toString());
-                    printWriter.append('\n');
-                    printWriter.append(indentation);
-                    printWriter.append("throw new RuntimeException();");
-                }
-            }
-            printWriter.flush();
-            String result = stringWriter.toString();
-            Logger      logger = Logger.getGlobal();
-            logger.log(Level.FINE, "Operation generee : \n" + result);
-            return result;
-    }
 
 
     protected void processCondition(Condition aCondition, PrintWriter printWriter, String inIndentation) {
