@@ -64,7 +64,7 @@ public class BankTest {
         EteModel parent = new EteModelImpl();
         PrimitiveDataTypes.init(parent);
         EteModel result = instance.readModel(MODEL_PATH);
-        StatementDumper.dumpModel(result);
+        new StatementDumper().dumpModel(result);
 
         // 4- let's build the statements of an operation of an operation
         // this should have been done by the visitor

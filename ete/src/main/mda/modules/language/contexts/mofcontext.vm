@@ -45,14 +45,6 @@ public class ${dialect.i2uc($projectName)}ContextImpl implements ${dialect.i2uc(
 
 
 
-/*
-    public ${dialect.i2uc($projectName)}ContextImpl() {
-        // We must start with at least a stack frame
-        push();
-//        FactoryRegistry.getRegistry().registerDefaultFactory("let", VariableDefinitionImpl.class);
-    }
-*/
-
     public ${dialect.i2uc($projectName)}ContextImpl(EteModel inModel, MofClass inContextualClass, NamedElement inContext) {
         // We must start with at least a stack frame
         push();
@@ -283,6 +275,8 @@ public class ${dialect.i2uc($projectName)}ContextImpl implements ${dialect.i2uc(
                 VariableReference   result = (VariableReference) FactoryRegistry.newInstance("var");
                 result.setName(inString);
                 result.setDefinition(aParameter);
+                result.setType(aParameter.getType());
+                set(CURRENT, aParameter.getType());
                 return result;
             }
         }

@@ -81,12 +81,23 @@ public class BodyBuilder extends DynamicVisitorSupport {
 
 
     public void buildStatements(EnhancedMofOperation inOperation) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        System.out.println("   building statements for " + inOperation.getName());
         List<Statement>   statements = FactoryMethods.newList(Statement.class);
         for (Postcondition aPostcondition : inOperation.getPostconditions()) {
             EnhancedPostcondition thisCondition = (EnhancedPostcondition) aPostcondition;
             buildStatements(thisCondition.getExpression(), statements, null);
+            System.out.println("        building statements for " + thisCondition.getSpecificationAsString()
+                                                + " -> " + statements.size() + " statement(s)");
+            for (Statement aStatement : statements) {
+                displayStatement(aStatement);
+            }
         }
         inOperation.setBody(statements);
+    }
+
+
+    protected void displayStatement(Statement aStatement) {
+    
     }
 
 

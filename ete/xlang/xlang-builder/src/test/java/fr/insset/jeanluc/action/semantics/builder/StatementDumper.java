@@ -5,7 +5,8 @@ package fr.insset.jeanluc.action.semantics.builder;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
-import fr.insset.jeanluc.ete.xlang.Statement;
+import fr.insset.jeanluc.ete.xlang.*;
+import fr.insset.jeanluc.ete.gel.*;
 import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -17,7 +18,9 @@ import java.util.List;
 public class StatementDumper extends DynamicVisitorSupport {
 
     
-    public static void dumpModel(EteModel result) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    public void dumpModel(EteModel result) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        register("visit", "fr.insset.jeanluc.ete.xlang");
+        register("visitGel", "fr.insset.jeanluc.ete.xlang");
         for (MofClass aClass : result.getClasses()) {
             for (MofOperation anOperation : aClass.getOwnedOperation()) {
                 EnhancedMofOperation thisOperation = (EnhancedMofOperation) anOperation;
@@ -35,9 +38,19 @@ public class StatementDumper extends DynamicVisitorSupport {
 
     public String   toString(List<Statement> inStatements) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         StringBuilder   builder = new StringBuilder();
-        int i = 0;
+        int i = 1;
         for (Statement aStatement : inStatements) {
+            if (i<100) {
+                builder.append(' ');
+            }
+            if (i<10) {
+                builder.append(' ');
+            }
+            builder.append(i);
+            builder.append(' ');
             genericVisit(aStatement, builder);
+            builder.append('\n');
+            i++;
         }
         return builder.toString();
     }
@@ -51,5 +64,22 @@ public class StatementDumper extends DynamicVisitorSupport {
     }
 
 
+    public Assignment visitAssignment(Assignment inExp, Object... inParams) {
+        GelExpression leftValue = inExp.getLeftValue();
+        return inExp;
+    }
 
-}       // StatemenetDumper
+
+    public fr.insset.jeanluc.ete.gel.Nav visitNav(Nav inNav, Object... inParams) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        List<GelExpression> operand = inNav.getOperand();
+        StringBuilder builder = (StringBuilder) inParams[0];
+        if (operand.size()>0) {
+            genericVisit(operand.get(0), inParams);
+            builder.append(".");
+        }
+        builder.append(inNav.getName());
+        return inNav;
+    }
+
+
+}       // StatementDumper

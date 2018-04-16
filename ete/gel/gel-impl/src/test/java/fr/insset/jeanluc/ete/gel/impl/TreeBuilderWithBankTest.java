@@ -68,8 +68,10 @@ public class TreeBuilderWithBankTest {
 
     private MofProperty  accounts;
 
+
     public TreeBuilderWithBankTest() {
     }
+
 
     @BeforeClass
     public static void setUpClass() {
@@ -138,6 +140,15 @@ public class TreeBuilderWithBankTest {
     }
 
 
+    /**
+     * This test checks the parameter fromAccount of the transfer method and
+     * the accounts field of the Customer class.<br>
+     * It tests the "includes" operator as well.
+     * 
+     * @throws InstantiationException
+     * @throws IOException
+     * @throws IllegalAccessException 
+     */
     @Test
     public void testIncludes() throws InstantiationException, IOException, IllegalAccessException {
         System.out.println("includes");
@@ -159,7 +170,24 @@ public class TreeBuilderWithBankTest {
     }
 
 
-    //========================================================================//
+
+    @Test
+    public void testNavFromParam() throws IOException, InstantiationException, IllegalAccessException {
+        System.out.println("Navigation from parameter");
+        String expressionAsString = "fromAccount.balance";
+        readModel();
+        // Navigation to the account
+        Step    fromAccountNavigation = new NavHelper()
+                            .startFrom(model, transfer)
+                            .navigateTo("fromAccount")
+                            .navigateTo("balance")
+                            .getNavigation();
+
+        testAny(fromAccountNavigation, expressionAsString, model, transfer);
+    }
+    
+
+//========================================================================//
 
 
     protected void testAny(GelExpression expectedResult, String inExpression, EteModel inModel, TypedElement inContext) {

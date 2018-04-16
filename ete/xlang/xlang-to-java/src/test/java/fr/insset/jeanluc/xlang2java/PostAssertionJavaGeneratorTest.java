@@ -214,7 +214,7 @@ public class PostAssertionJavaGeneratorTest {
         // 1-a basic factories
         Factories.init();
         // 1-b xlang factories
-        Class.forName("fr.insset.jeanluc.action.semantics.builder.ActionSemanticsAction");
+        Class.forName("fr.insset.jeanluc.action.semantics.builder.XLangAction");
 
         // 2- read a model
         //    This operation invokes the SimpleActionSemanticsBuilder which
@@ -283,20 +283,20 @@ public class PostAssertionJavaGeneratorTest {
             Class customerClass = classLoader.loadClass("fr.insset.jeanluc.ete.example.bank.Customer");
             // Create some instances...
             Object  aCustomer     = customerClass.newInstance();
-            Field   accountsField = customerClass.getField("accounts");
-            List    customerAccounts = new LinkedList();
-            accountsField.set(aCustomer, customerAccounts);
+//            Field   accountsField = customerClass.getField("accounts");
+//            List    customerAccounts = new LinkedList();
+//            accountsField.set(aCustomer, customerAccounts);
             Object  firstAccount     = accountClass.newInstance();
             Object  secondAccount    = accountClass.newInstance();
-            customerAccounts.add(firstAccount);
-            customerAccounts.add(secondAccount);
-            Method  transfer  = customerClass.getMethod("transfer", Double.TYPE);
+//            customerAccounts.add(firstAccount);
+//            customerAccounts.add(secondAccount);
+            Method  transfer  = customerClass.getMethod("transfer", Double.TYPE, accountClass, accountClass);
             Method  getBalance  = accountClass.getMethod("getBalance");
             Method  deposit     = accountClass.getMethod("deposit", Double.TYPE);
 
             // 4-3 run the transfer operation
             deposit.invoke(firstAccount, 5000D);
-            transfer.invoke(firstAccount, firstAccount, secondAccount, 1000D);
+            transfer.invoke(aCustomer, 1000D, firstAccount, secondAccount);
             double result = (double) getBalance.invoke(firstAccount, new Object[0]);
             System.out.println("The balance of the first account is " + result);
             assertEquals(4000.0, result, 0.01);

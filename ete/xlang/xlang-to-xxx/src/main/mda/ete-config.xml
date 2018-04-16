@@ -24,6 +24,9 @@
             <velocity template="generator.vm"
                     target="generated-sources/ete/fr/insset/jeanluc/ete/xlang/to/xxx/GeneratorSupport.java"
                     />
+            <velocity template="cbasedgenerator.vm"
+                    target="generated-sources/ete/fr/insset/jeanluc/ete/xlang/to/xxx/CBasedGenerator.java"
+                    />
         </transformation-set>
 
 

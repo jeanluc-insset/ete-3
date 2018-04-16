@@ -13,6 +13,7 @@ import fr.insset.jeanluc.ete.meta.model.emof.MofParameter;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
 import fr.insset.jeanluc.ete.meta.model.types.MofType;
+import fr.insset.jeanluc.ete.meta.model.types.collections.MofCollection;
 import fr.insset.jeanluc.ete.meta.model.types.collections.MofSequence;
 import fr.insset.jeanluc.ete.meta.model.types.collections.impl.MofSequenceImpl;
 import java.util.Collection;
@@ -72,26 +73,37 @@ public class NavHelper {
                 }
             }
         }
-        MofProperty attribute = currentClass.getOwnedAttribute(inName);
         if (navigation != null) {
             MofType     sourceType = navigation.getType();
             if (sourceType.isCollection()) {
+                MofCollection   mofColl = (MofCollection) sourceType;
+                MofClass sourceClass = (MofClass)mofColl.getRecBaseType();
+                MofProperty attribute = sourceClass.getOwnedAttribute(inName);
                 nextStep = new CollectImpl();
                 MofSequence sequence = new MofSequenceImpl();
                 sequence.setBaseType(attribute.getType());
                 nextStep.setType(sequence);
             }
             else {
+                MofClass    sourceClass = (MofClass) sourceType;
+                MofProperty attribute = sourceClass.getOwnedAttribute(inName);
                 nextStep = new AttributeNavImpl();
+                nextStep.setToFeature(attribute);
+                nextStep.setType(attribute.getType());
             }
             addOp(nextStep);
         }
         else {
+            MofProperty attribute = currentClass.getOwnedAttribute(inName);
             nextStep = new AttributeNavImpl();
             nextStep.setType(attribute.getType());
             nextStep.setToFeature(attribute);
         }
-        current    = attribute.getType();
+        current    = nextStep.getType();
+        if (current instanceof MofCollection) {
+            MofCollection coll = (MofCollection) current;
+            current = coll.getRecBaseType();
+        }
         navigation = nextStep;
         return this;
     }

@@ -29,7 +29,7 @@ import fr.insset.jeanluc.ete.xlang.MethodInvocation;
 import fr.insset.jeanluc.ete.xlang.Statement;
 import fr.insset.jeanluc.ete.xlang.VariableDeclaration;
 import fr.insset.jeanluc.ete.xlang.WhileDoLoop;
-import fr.insset.jeanluc.ete.xlang.generator.Generator;
+import fr.insset.jeanluc.ete.xlang.to.xxx.Generator;
 import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
 import fr.insset.jeanluc.ete.xlang.to.xxx.GeneratorSupport;
 import java.io.PrintWriter;

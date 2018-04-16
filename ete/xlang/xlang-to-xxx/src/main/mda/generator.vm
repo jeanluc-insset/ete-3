@@ -73,7 +73,16 @@ public class GeneratorSupport extends DynamicVisitorSupport implements Generator
 
 
 #foreach ($aClass in $current.allClasses)
-#if ($aClass.getValueOf("priority"))
+#if ($aClass.name.equals("VariableReference"))
+
+    public VariableReference visitVariableReference(VariableReference inExpression, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        PrintWriter output = (PrintWriter) inParameters[0];
+        String      variableName = inExpression.getName();
+        System.out.println("Generating a variable reference : " + variableName);
+        output.print(variableName);
+        return inExpression;
+    }
+#elseif ($aClass.getValueOf("priority"))
 
     public ${aClass.name} visit${aClass.name}(${aClass.name} inExpression, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         PrintWriter output = (PrintWriter) inParameters[0];
