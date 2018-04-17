@@ -113,7 +113,23 @@ public class TreeBuilderWithBankTest {
         MofProperty balanceAttribute = accountClass.getOwnedAttribute("balance");
         result.setToFeature(accountClass.getOwnedAttribute("balance"));
         result.setType(balanceAttribute.getType());
-        testAny(result, expressionAsString,model, accountClass);
+        testAny(result, expressionAsString, model, accountClass);
+    }
+
+
+    @Test
+    public void atPreOfParameterTest() throws InstantiationException, IOException, IllegalAccessException {
+        String  expressionAsString = "fromAccount.balance@pre";
+        System.out.println(expressionAsString);
+        readModel();
+        Step result = new NavHelper().startFrom(model, transfer)
+                .navigateTo("fromAccount")
+                .navigateTo("balance")
+                .atPre().getNavigation();
+        MofProperty balanceAttribute = accountClass.getOwnedAttribute("balance");
+        result.setToFeature(accountClass.getOwnedAttribute("balance"));
+        result.setType(balanceAttribute.getType());
+        testAny(result, expressionAsString, model, accountClass);
     }
 
 

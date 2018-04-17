@@ -34,7 +34,7 @@ import fr.insset.jeanluc.ete.xlang.MethodInvocation;
 import fr.insset.jeanluc.ete.xlang.Statement;
 import fr.insset.jeanluc.ete.xlang.VariableDeclaration;
 import fr.insset.jeanluc.ete.xlang.WhileDoLoop;
-import fr.insset.jeanluc.ete.xlang.generator.Generator;
+import fr.insset.jeanluc.ete.xlang.to.xxx.CBasedGenerator;
 import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -95,20 +95,16 @@ import java.util.logging.Logger;
  *
  * @author jldeleage
  */
-public class CGenerator extends DynamicVisitorSupport implements Generator, JavaDialect  {
-
-    private enum LEFT_RIGHT {
-        LEFT, RIGHT
-    };
+public class CGenerator extends CBasedGenerator  {
 
 
 
-    public CGenerator() {
+    public CGenerator() throws InstantiationException {
         this("    ");
     }
 
 
-    public CGenerator(String indentation) {
+    public CGenerator(String indentation) throws InstantiationException  {
         this.indentation = indentation;
         register("gelVisit", "fr.insset.jeanluc.ete.gel");
         register("xlangVisit", "fr.insset.jeanluc.ete.xlang");
@@ -120,16 +116,6 @@ public class CGenerator extends DynamicVisitorSupport implements Generator, Java
     //            G E N E R A T O R   I M P L E M E N T A T I O N             //
     //========================================================================//
 
-
-    @Override
-    public List<Statement> getStatements(String inKey) {
-        return statements.get(inKey);
-    }
-
-    @Override
-    public void setStatements(String inKey, List<Statement> inValue) {
-        statements.put(inKey, inValue);
-    }
 
 
     //========================================================================//

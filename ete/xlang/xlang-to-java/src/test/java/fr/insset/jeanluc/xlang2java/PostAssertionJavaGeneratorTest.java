@@ -2,27 +2,29 @@
 package fr.insset.jeanluc.xlang2java;
 
 
-// import fr.insset.jeanluc.action.semantics.builder.ActionSemanticsUtil;
 import fr.insset.jeanluc.action.semantics.builder.ConditionVisitor;
+import fr.insset.jeanluc.action.semantics.builder.EnhancedMofOperation;
 import static fr.insset.jeanluc.ete.api.Action.BASE_DIR;
 import fr.insset.jeanluc.ete.api.EteException;
 import fr.insset.jeanluc.ete.api.impl.VelocityAction;
 import fr.insset.jeanluc.ete.meta.model.core.PrimitiveDataTypes;
 import fr.insset.jeanluc.ete.meta.model.core.impl.Factories;
+import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
+import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
+import fr.insset.jeanluc.ete.meta.model.mofpackage.PackageableElement;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.impl.EteModelImpl;
+import fr.insset.jeanluc.ete.xlang.Statement;
 import fr.insset.jeanluc.xmi.io.impl.XmlModelReader;
 import fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
@@ -126,6 +128,12 @@ public class PostAssertionJavaGeneratorTest {
         EteModel parent = new EteModelImpl();
         PrimitiveDataTypes.init(parent);
         EteModel model = instance.readModel(MODEL_PATH);
+        MofClass customerClass = (MofClass) model.getElementByName("Customer");
+        EnhancedMofOperation transfer = (EnhancedMofOperation) customerClass.getOwnedOperation("transfer");
+        List<Statement> body = transfer.getBody();
+        for (Statement aStatement : body) {
+            System.out.println(aStatement);
+        }
 
         // 3- generate classes
         VelocityAction    action = new VelocityAction();

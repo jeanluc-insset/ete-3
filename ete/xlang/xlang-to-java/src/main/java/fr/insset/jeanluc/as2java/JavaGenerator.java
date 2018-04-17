@@ -1,7 +1,6 @@
 package fr.insset.jeanluc.as2java;
 
 
-import fr.insset.jeanluc.action.semantics.builder.EnhancedMofOperation;
 import fr.insset.jeanluc.el.dialect.JavaDialect;
 import fr.insset.jeanluc.ete.gel.AtPre;
 import fr.insset.jeanluc.ete.gel.AttributeNav;
@@ -15,9 +14,7 @@ import fr.insset.jeanluc.ete.gel.StringLiteral;
 import fr.insset.jeanluc.ete.gel.Sum;
 import fr.insset.jeanluc.ete.gel.VariableDefinition;
 import fr.insset.jeanluc.ete.meta.model.constraint.Condition;
-import fr.insset.jeanluc.ete.meta.model.constraint.Precondition;
 import fr.insset.jeanluc.ete.meta.model.emof.Feature;
-import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
 import fr.insset.jeanluc.ete.meta.model.types.MofType;
 import fr.insset.jeanluc.ete.xlang.Assignment;
@@ -29,18 +26,14 @@ import fr.insset.jeanluc.ete.xlang.MethodInvocation;
 import fr.insset.jeanluc.ete.xlang.Statement;
 import fr.insset.jeanluc.ete.xlang.VariableDeclaration;
 import fr.insset.jeanluc.ete.xlang.WhileDoLoop;
+import fr.insset.jeanluc.ete.xlang.to.xxx.CBasedGenerator;
 import fr.insset.jeanluc.ete.xlang.to.xxx.Generator;
-import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
-import fr.insset.jeanluc.ete.xlang.to.xxx.GeneratorSupport;
 import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 
@@ -91,7 +84,7 @@ import java.util.logging.Logger;
  *
  * @author jldeleage
  */
-public class JavaGenerator extends GeneratorSupport implements Generator, JavaDialect  {
+public class JavaGenerator extends CBasedGenerator implements Generator, JavaDialect  {
 
     private enum LEFT_RIGHT {
         LEFT, RIGHT
@@ -129,9 +122,6 @@ public class JavaGenerator extends GeneratorSupport implements Generator, JavaDi
     }
 
 
-
-    protected void processCondition(Condition aCondition, PrintWriter printWriter, String inIndentation) {
-    }
 
 
     //========================================================================//
@@ -249,7 +239,8 @@ public class JavaGenerator extends GeneratorSupport implements Generator, JavaDi
 
 
     /*
-     * TODO : Do we really need such a structure in the abstract syntax ? Maybe.
+     * TODO : move this method to CBasedGenerator
+     * TODO : do we really need such a structure in the abstract syntax ? Maybe.
      */
     public ForLoop  xlangVisitForLoop(ForLoop inForLoop, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         PrintWriter output = (PrintWriter) inParameters[0];
@@ -291,6 +282,16 @@ public class JavaGenerator extends GeneratorSupport implements Generator, JavaDi
     }
 
 
+    /**
+     * TODO : move this method to CBasedGenerator
+     * 
+     * @param inLoop
+     * @param inParameters
+     * @return
+     * @throws IllegalAccessException
+     * @throws IllegalArgumentException
+     * @throws InvocationTargetException 
+     */
     public WhileDoLoop xlangVisitWhileDoLoop(WhileDoLoop inLoop, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         PrintWriter output = (PrintWriter) inParameters[0];
         String      indent = (String) inParameters[1];
@@ -306,6 +307,16 @@ public class JavaGenerator extends GeneratorSupport implements Generator, JavaDi
     }
 
 
+    /**
+     * TODO : move this method to CBasedGenerator
+     * 
+     * @param inLoop
+     * @param inParameters
+     * @return
+     * @throws IllegalAccessException
+     * @throws IllegalArgumentException
+     * @throws InvocationTargetException 
+     */
     public DoWhileLoop xlangVisitDoWhileLoop(DoWhileLoop inLoop, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         PrintWriter output = (PrintWriter) inParameters[0];
         String      indent = (String) inParameters[1];
