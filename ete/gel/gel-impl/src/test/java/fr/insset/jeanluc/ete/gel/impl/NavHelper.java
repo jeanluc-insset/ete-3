@@ -4,6 +4,7 @@ package fr.insset.jeanluc.ete.gel.impl;
 
 import fr.insset.jeanluc.ete.gel.AtPre;
 import fr.insset.jeanluc.ete.gel.GelExpression;
+import fr.insset.jeanluc.ete.gel.Self;
 import fr.insset.jeanluc.ete.gel.Step;
 import fr.insset.jeanluc.ete.gel.VariableReference;
 import fr.insset.jeanluc.ete.meta.model.core.NamedElement;
@@ -16,6 +17,7 @@ import fr.insset.jeanluc.ete.meta.model.types.MofType;
 import fr.insset.jeanluc.ete.meta.model.types.collections.MofCollection;
 import fr.insset.jeanluc.ete.meta.model.types.collections.MofSequence;
 import fr.insset.jeanluc.ete.meta.model.types.collections.impl.MofSequenceImpl;
+import fr.insset.jeanluc.util.factory.FactoryRegistry;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -37,26 +39,38 @@ import java.util.List;
 public class NavHelper {
 
 
-    public NavHelper startFrom(EteModel inModel, String inContext) {
+    public NavHelper startFrom(EteModel inModel, String inContext) throws InstantiationException, IllegalAccessException {
         model = inModel;
         current = (MofType)model.getElementByName(inContext);
         context = current;
+        navigation = new SelfImpl();
+        navigation.setType(current);
+        navigation.setName("self");
         return this;
     }
 
-    public NavHelper startFrom(EteModel inModel, MofClass inClass) {
+
+    public NavHelper startFrom(EteModel inModel, MofClass inClass) throws InstantiationException, IllegalAccessException {
         model = inModel;
         current = inClass;
         context = inClass;
+        navigation = new SelfImpl();
+        navigation.setType(current);
+        navigation.setName("self");
         return this;
     }
+
 
     public NavHelper startFrom(EteModel inModel, MofOperation inContext) {
         model = inModel;
         current = inContext.getOwningMofClass();
         context = inContext;
+        navigation = new SelfImpl();
+        navigation.setType(current);
+        navigation.setName("self");
         return this;
     }
+
 
     public NavHelper  navigateTo(String inName) {
         MofClass    currentClass = (MofClass)current.getRecBaseType();

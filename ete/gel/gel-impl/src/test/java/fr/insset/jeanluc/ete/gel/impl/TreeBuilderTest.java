@@ -6,6 +6,7 @@ import fr.insset.jeanluc.ete.gel.Collect;
 import fr.insset.jeanluc.ete.gel.Equal;
 import fr.insset.jeanluc.ete.gel.GelExpression;
 import fr.insset.jeanluc.ete.gel.Nav;
+import fr.insset.jeanluc.ete.gel.Result;
 import fr.insset.jeanluc.ete.gel.Step;
 import fr.insset.jeanluc.ete.gel.Sub;
 import fr.insset.jeanluc.ete.gel.VariableDefinition;
@@ -166,7 +167,9 @@ public class TreeBuilderTest {
         System.out.println("simple attribute");
         readModel();
         String specificationAsString = "startTime";
-        AttributeNav    expectedResult = new AttributeNavImpl();
+        Step expectedResult = new NavHelper().startFrom(model, "Session")
+                .navigateTo("startTime")
+                .getNavigation();
         expectedResult.setToFeature(sessionClass.getOwnedAttribute("startTime"));
         testAny(expectedResult, specificationAsString, model, sessionClass);
     }
@@ -236,7 +239,7 @@ public class TreeBuilderTest {
                         .sum()
                         .getNavigation();
         Equal   equal = new EqualImpl();
-        VariableDefinition  variable = new VariableDefinitionImpl();
+        Result  variable = new ResultImpl();
         List    operands = new LinkedList();
         operands.add(variable);
         operands.add(sum);
@@ -258,7 +261,7 @@ public class TreeBuilderTest {
     private void compare(GelExpression expectedResult, GelExpression abstractGelExpression) {
         Class   expectedClass = expectedResult.getClass();
         Class   gottenClass   = abstractGelExpression.getClass();
-        assertEquals(expectedClass, gottenClass);
+        compareClasses(expectedClass, gottenClass);
         List<GelExpression> expectedOperand = expectedResult.getOperand();
         List<GelExpression> gottenOperand = abstractGelExpression.getOperand();
         if (expectedOperand == null) {
@@ -280,6 +283,22 @@ public class TreeBuilderTest {
             assertTrue(abstractGelExpression instanceof Step);
         }
     }
+
+
+    public void compareClasses(Class expectedClass, Class gottenClass) {
+        if (expectedClass.isInterface()) {
+            
+        }
+        Class currentClass = gottenClass;
+        while (currentClass != null) {
+            if (expectedClass.equals(currentClass)) {
+                return;
+            }
+            currentClass = currentClass.getSuperclass();
+        }
+        fail("Class " + gottenClass.getName() + " does not conform to " + expectedClass.getName());
+    }
+
 
 
     //========================================================================//

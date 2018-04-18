@@ -169,7 +169,10 @@ parenthesisExpression:
 
 
 navExpression
-    : primitive
+    : 
+      ( primitive
+      | primitiveAtPre
+      )
       ( attributeNavAtPreOrNot
       | methodNavExpression
       | collectionMethodNavExpression
@@ -198,7 +201,9 @@ primitive
     | variableOrMemberAtPre
 ;
 
-
+primitiveAtPre :
+    primitive ATPRE
+;
 
 
 attributeNavAtPreOrNot

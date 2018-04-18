@@ -125,7 +125,8 @@ public class TreeBuilderWithBankTest {
         Step result = new NavHelper().startFrom(model, transfer)
                 .navigateTo("fromAccount")
                 .navigateTo("balance")
-                .atPre().getNavigation();
+                .atPre()
+                .getNavigation();
         MofProperty balanceAttribute = accountClass.getOwnedAttribute("balance");
         result.setToFeature(accountClass.getOwnedAttribute("balance"));
         result.setType(balanceAttribute.getType());
