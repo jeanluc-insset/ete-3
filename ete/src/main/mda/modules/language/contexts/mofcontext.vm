@@ -160,6 +160,7 @@ public class ${dialect.i2uc($projectName)}ContextImpl implements ${dialect.i2uc(
                 String parameterName = aParameter.getName();
                 if (parameterName.equals(inIdentifier)) {
                     VariableReference   result = (VariableReference) FactoryRegistry.newInstance("var");
+                    result.setName(inIdentifier);
                     result.setType(aParameter.getType());
                     set(CURRENT, result);
                     return result;
@@ -174,6 +175,7 @@ public class ${dialect.i2uc($projectName)}ContextImpl implements ${dialect.i2uc(
         if (ownedAttribute != null) {
             Self self = resolveSelf();
             Step nav = buildStep(self, ownedAttribute);
+            nav.getOperand().add(self);
             return nav;
         }
         return null;
@@ -226,19 +228,21 @@ public class ${dialect.i2uc($projectName)}ContextImpl implements ${dialect.i2uc(
     }
 
     protected Step  buildStep(Step current, MofProperty ownedAttribute) throws InstantiationException, IllegalAccessException {
-        Step nav = (Step) FactoryRegistry.newInstance(".att");
+        MofType type = current.getType();
+        Step nav = type.isCollection() ? (Step) FactoryRegistry.newInstance("collect") : (Step) FactoryRegistry.newInstance(".att");
+//        Step nav = (Step) FactoryRegistry.newInstance(".att");
         List<GelExpression>     operands = FactoryMethods.newList(GelExpression.class);
         nav.setOperand(operands);
         nav.setToFeature(ownedAttribute);
         MofType nextType;
-        MofType type = current.getType();
+//        MofType type = current.getType();
         if (type.isCollection()) {
             nextType = clone(type, ownedAttribute.getType());
         } else {
             nextType = ownedAttribute.getType();
         }
         nav.setType(nextType);
-        operands.add(current);
+//        operands.add(current);
         set(CURRENT, nav);
         return nav;        
     }

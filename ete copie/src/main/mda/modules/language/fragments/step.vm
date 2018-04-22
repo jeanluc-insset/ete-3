@@ -1,7 +1,0 @@
-################################################################################
-##                                                                            ##
-## Fragment for TreeBuilder.vm                                                ##
-##                                                                            ##
-################################################################################
-            ${dialect.i2uc($projectName)}Expression result = children.get(1).accept(this);
-            return result;

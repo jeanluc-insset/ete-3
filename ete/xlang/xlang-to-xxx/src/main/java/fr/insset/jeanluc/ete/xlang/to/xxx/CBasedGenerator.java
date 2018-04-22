@@ -15,7 +15,7 @@ public class CBasedGenerator extends GeneratorSupport {
     public CBasedGenerator(String inIndentation) throws InstantiationException {
         super(inIndentation);
         setSymbol("and","&&");
-        setSymbol("or", "||");
+        setSymbol("oe", "||");
     }
 
 

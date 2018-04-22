@@ -81,7 +81,9 @@ public class VelocityAction extends GenericTemplate {
         } catch (InstantiationException | IllegalAccessException ex) {
             Logger.getLogger(VelocityAction.class.getName()).log(Level.SEVERE, "Unable to instanciate dialect " + dialectName, ex);
         } catch (MalformedURLException ex) {
-            Logger.getLogger(VelocityAction.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(VelocityAction.class.getName()).log(Level.SEVERE, "Unable to find dialect " + dialectName, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(VelocityAction.class.getName()).log(Level.SEVERE, "Unable to instanciate dialect " + dialectName, ex);
         }
 
     }

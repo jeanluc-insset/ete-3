@@ -10,7 +10,7 @@ import fr.insset.jeanluc.ete.gel.AttributeNav;
 import fr.insset.jeanluc.ete.gel.Collect;
 import fr.insset.jeanluc.ete.gel.Flatten;
 import fr.insset.jeanluc.ete.gel.GelExpression;
-import fr.insset.jeanluc.ete.gel.Operation;
+import fr.insset.jeanluc.ete.gel.OclOperation;
 import fr.insset.jeanluc.ete.gel.Self;
 import fr.insset.jeanluc.ete.gel.Step;
 import fr.insset.jeanluc.ete.gel.StringLiteral;
@@ -134,43 +134,43 @@ public class CGenerator extends CBasedGenerator  {
 
 
 
-    public String getOperationBody(MofOperation inOperation, String inIndentation) {
-        EnhancedMofOperationImpl operation = (EnhancedMofOperationImpl) inOperation;
-        List<Precondition> preconditions = operation.getPreconditions();
-        List<Postcondition> postconditions = operation.getPostconditions();
-        StringWriter    stringWriter = new StringWriter();
-        PrintWriter     printWriter = new PrintWriter(stringWriter);
-        printWriter.append(inIndentation);
-        printWriter.append("// number of preconditions : " + preconditions.size());
-        printWriter.append("\n");
-        for (Condition aCondition : preconditions) {
-            processCondition(aCondition, printWriter, inIndentation);
-        }
-        for (Condition aCondition : postconditions) {
-            processCondition(aCondition, printWriter, inIndentation);
-        }
-        List<Statement> statementList = operation.getStatements();
-//            this.operation = inOperation;
-        printWriter.append(inIndentation);
-        for (Statement aStatement : statementList) {
-            try {
-                genericVisit(aStatement, printWriter, inIndentation);
-            } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-                Logger.getLogger(CGenerator.class.getName()).log(Level.SEVERE, null, ex);
-                printWriter.append("// Unable to compile : ");
-                printWriter.append(aStatement.toString());
-                printWriter.append('\n');
-                printWriter.append(indentation);
-                printWriter.append("throw new RuntimeException();");
-            }
-        }
-        printWriter.flush();
-        String result = stringWriter.toString();
-        Logger      logger = Logger.getGlobal();
-        logger.log(Level.FINE, "Operation generee : \n" + result);
-        return result;
-
-    }
+//    public String getOperationBody(MofOperation inOperation, String inIndentation) {
+//        EnhancedMofOperationImpl operation = (EnhancedMofOperationImpl) inOperation;
+//        List<Precondition> preconditions = operation.getPreconditions();
+//        List<Postcondition> postconditions = operation.getPostconditions();
+//        StringWriter    stringWriter = new StringWriter();
+//        PrintWriter     printWriter = new PrintWriter(stringWriter);
+//        printWriter.append(inIndentation);
+//        printWriter.append("// number of preconditions : " + preconditions.size());
+//        printWriter.append("\n");
+//        for (Condition aCondition : preconditions) {
+//            processCondition(aCondition, printWriter, inIndentation);
+//        }
+//        for (Condition aCondition : postconditions) {
+//            processCondition(aCondition, printWriter, inIndentation);
+//        }
+//        List<Statement> statementList = operation.getStatements();
+////            this.operation = inOperation;
+//        printWriter.append(inIndentation);
+//        for (Statement aStatement : statementList) {
+//            try {
+//                genericVisit(aStatement, printWriter, inIndentation);
+//            } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+//                Logger.getLogger(CGenerator.class.getName()).log(Level.SEVERE, null, ex);
+//                printWriter.append("// Unable to compile : ");
+//                printWriter.append(aStatement.toString());
+//                printWriter.append('\n');
+//                printWriter.append(indentation);
+//                printWriter.append("throw new RuntimeException();");
+//            }
+//        }
+//        printWriter.flush();
+//        String result = stringWriter.toString();
+//        Logger      logger = Logger.getGlobal();
+//        logger.log(Level.FINE, "Operation generee : \n" + result);
+//        return result;
+//
+//    }
 
 
     protected void processCondition(Condition aCondition, PrintWriter printWriter, String inIndentation) {
@@ -453,7 +453,7 @@ public class CGenerator extends CBasedGenerator  {
     //------------------------------------------------------------------------//
 
 
-    public Operation gelVisitOperation(Operation inOperation, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    public OclOperation gelVisitOclOperation(OclOperation inOperation, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         List<GelExpression> operand = inOperation.getOperand();
         genericVisit(operand.get(0), inParameters);
         PrintWriter output      = (PrintWriter)inParameters[0];
@@ -500,11 +500,7 @@ public class CGenerator extends CBasedGenerator  {
         output.print("\n");
         output.print(indent);
         output.print(indentation);
-        output.print(".flatMap(x -> x.get");
-        Feature feature = left.getToFeature();
-        String  featureName = feature.getName();
-        output.print(i2uc(featureName));
-        output.print("().stream())");
+        output.print("// flatten is not translated");
         return inFlatten;
     }
 
@@ -515,31 +511,7 @@ public class CGenerator extends CBasedGenerator  {
         output.print("\n");
         output.print(indent);
         output.print(indentation);
-
-        List<GelExpression> operand = inCollect.getOperand();
-        if (operand != null && operand.size() > 0) {
-            genericVisit(operand.get(0), inParameters);
-        }
-
-        MofType     resultType      = inCollect.getType().getRecBaseType();
-        String      resultTypeName  = resultType.getName();
-
-        switch (resultTypeName) {
-            case "double":
-            case "float" :
-                output.print(".mapToDouble(x -> x.get");
-                break;
-            case "long":
-            case "int" :
-                output.print(".mapToLong(x -> x.get");
-                break;
-            default:
-                output.print(".map(x -> x.get");
-        }
-
-        String  name = inCollect.getToFeature().getName();
-        output.print(i2uc(name));
-        output.print("())");
+        output.print("// collect is not translated");
         return inCollect;
     }
 
@@ -565,6 +537,7 @@ public class CGenerator extends CBasedGenerator  {
  */
     public AttributeNav gelVisitAttributeNav(AttributeNav inAttributeNav, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         PrintWriter output          = (PrintWriter)inParameters[0];
+        String      indent = indentation + (String) inParameters[1];
 
         List<GelExpression> operand = inAttributeNav.getOperand();
         if (operand != null && operand.size() > 0) {
@@ -577,9 +550,13 @@ public class CGenerator extends CBasedGenerator  {
         output.print(featureName);
         if (feature.getType().isCollection()) {
             output.print("[");
+            output.print("\n");
+            output.print(indent);
+            output.print("// collect is not translated");
+            output.print("\n");
+            output.print(indent);
             output.print("]");
         }
-
         return inAttributeNav;
     }
 

@@ -170,14 +170,18 @@ parenthesisExpression:
 
 navExpression
     : 
-      ( primitive
-      | primitiveAtPre
+      ( 
+          primitive
       )
-      ( attributeNavAtPreOrNot
+      (  attributeNavExpression
+      |  atPreExpression
+      | asTypeExpression
       | methodNavExpression
       | collectionMethodNavExpression
       )*
 ;
+
+
 
 navExpressionWithFinalStep :
     navExpression
@@ -201,23 +205,15 @@ primitive
     | variableOrMemberAtPre
 ;
 
-primitiveAtPre :
-    primitive ATPRE
-;
 
 
-attributeNavAtPreOrNot
-    : atPreExpression
-    | attributeNavExpression
-    | asTypeExpression
-;
 
 attributeNavExpression
     : DOT identifier
 ;
 
 atPreExpression
-    : attributeNavExpression ATPRE
+    : ATPRE
 ;
 
 asTypeExpression

@@ -189,13 +189,9 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
     public ${dialect.i2uc($projectName)}Expression visitAtPreExpression(${dialect.i2uc($projectName)}Parser.AtPreExpressionContext ctx) {
         try {
             AtPre   result = (AtPre) FactoryRegistry.newInstance("@pre");
-            Step accept = (Step)ctx.children.get(0).accept(this);
             List<${dialect.i2uc($projectName)}Expression> operands = new XList<>();
-            operands.add(accept);
+//            operands.add(accept);
             result.setOperand(operands);
-            Feature feature = accept.getToFeature();
-            result.setToFeature(feature);
-            result.setType(feature.getType());
             return result;
         } catch (InstantiationException | IllegalAccessException ex) {
             Logger.getLogger(TreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
@@ -264,8 +260,7 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
             ${dialect.i2uc($projectName)}Parser.IdentifierContext functionCall = (${dialect.i2uc($projectName)}Parser.IdentifierContext)children.get(1);
             String identifier = functionCall.getText();
             ${dialect.i2uc($projectName)}Expression result = context.resolve(identifier);
-            List<${dialect.i2uc($projectName)}Expression>  operands = FactoryMethods.newList(${dialect.i2uc($projectName)}Expression.class);
-            result.setOperand(operands);
+            List<${dialect.i2uc($projectName)}Expression>  operands = result.getOperand();
             // Parse the parameters of the call 
             // Warning : there are commas between parameters
             List<ParseTree>     functionChildren = functionCall.children;

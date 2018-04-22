@@ -66,7 +66,7 @@ public abstract class GenericTemplate extends ForEachAction {
         String targetUrl = getTargetUrl();
         try {
             String templateUrl = getTemplateUrl();
-            Logger.getGlobal().log(Level.FINE, "Template used on " + inElement +  " -> " + targetUrl);
+            Logger.getGlobal().log(Level.INFO, "Template used on " + inElement +  " -> " + targetUrl);
             Writer output = openTargetUrl(targetUrl, (EteModel) inPackage, inElement, "UTF-8");
             applyTemplate(templateUrl, getTemplateEncoding(), output);
             output.flush();

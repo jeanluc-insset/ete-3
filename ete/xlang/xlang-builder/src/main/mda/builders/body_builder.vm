@@ -1,19 +1,22 @@
 package fr.insset.jeanluc.ete.xlang.builder;
 
 
-#foreach ($aClass in $current.allClasses)
-#if (! $aClass.hasStereotype("ignore"))
-import ${aClass.owningPackage.name}.${aClass.name};
-#end
-#end
+##foreach ($aClass in $current.allClasses)
+##if (! $aClass.hasStereotype("ignore"))
+##import ${aClass.owningPackage.name}.${aClass.name};
+##end
+##end
+import fr.insset.jeanluc.ete.xlang.impl.*;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 #foreach ($aClass in $current.allClasses)
 #if (! $aClass.hasStereotype("ignore"))
-import ${aClass.owningPackage.name}.impl.${aClass.name}Impl;
+##import ${aClass.owningPackage.name}.impl.${aClass.name}Impl;
 #end
 #end
 import fr.insset.jeanluc.action.semantics.builder.EnhancedMofOperation;
 import fr.insset.jeanluc.action.semantics.builder.EnhancedPostcondition;
+import fr.insset.jeanluc.ete.gel.*;
+import fr.insset.jeanluc.ete.gel.impl.*;
 import fr.insset.jeanluc.ete.meta.model.constraint.Postcondition;
 import fr.insset.jeanluc.ete.meta.model.emof.impl.FeatureImpl;
 import fr.insset.jeanluc.ete.meta.model.emof.impl.MofParameterImpl;

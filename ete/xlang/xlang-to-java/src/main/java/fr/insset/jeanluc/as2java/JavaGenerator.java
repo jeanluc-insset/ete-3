@@ -7,7 +7,7 @@ import fr.insset.jeanluc.ete.gel.AttributeNav;
 import fr.insset.jeanluc.ete.gel.Collect;
 import fr.insset.jeanluc.ete.gel.Flatten;
 import fr.insset.jeanluc.ete.gel.GelExpression;
-import fr.insset.jeanluc.ete.gel.Operation;
+import fr.insset.jeanluc.ete.gel.OclOperation;
 import fr.insset.jeanluc.ete.gel.Self;
 import fr.insset.jeanluc.ete.gel.Step;
 import fr.insset.jeanluc.ete.gel.StringLiteral;
@@ -392,7 +392,7 @@ public class JavaGenerator extends CBasedGenerator implements Generator, JavaDia
     //------------------------------------------------------------------------//
 
 
-    public Operation gelVisitOperation(Operation inOperation, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    public OclOperation gelVisitOperation(OclOperation inOperation, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         List<GelExpression> operand = inOperation.getOperand();
         genericVisit(operand.get(0), inParameters);
         PrintWriter output      = (PrintWriter)inParameters[0];

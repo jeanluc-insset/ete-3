@@ -130,7 +130,7 @@ public class TreeBuilderWithBankTest {
         MofProperty balanceAttribute = accountClass.getOwnedAttribute("balance");
         result.setToFeature(accountClass.getOwnedAttribute("balance"));
         result.setType(balanceAttribute.getType());
-        testAny(result, expressionAsString, model, accountClass);
+        testAny(result, expressionAsString, model, transfer);
     }
 
 
@@ -166,7 +166,7 @@ public class TreeBuilderWithBankTest {
      * @throws IOException
      * @throws IllegalAccessException 
      */
-    @Test
+//    @Test
     public void testIncludes() throws InstantiationException, IOException, IllegalAccessException {
         System.out.println("includes");
         String expressionAsString = "accounts->includes(fromAccount)";
