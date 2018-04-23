@@ -121,6 +121,9 @@ public interface GelContext<T> {
      */
     public T        resolveCollOp(String inString) throws InstantiationException, IllegalAccessException;
 
+    public T        resolveIsNew();
+
+
     /**
      * Adds a local variable
      */

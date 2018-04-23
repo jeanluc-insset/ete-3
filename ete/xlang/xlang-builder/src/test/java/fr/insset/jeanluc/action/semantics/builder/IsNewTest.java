@@ -11,6 +11,8 @@ import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.PackageableElement;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.impl.EteModelImpl;
+import fr.insset.jeanluc.ete.xlang.Allocation;
+import fr.insset.jeanluc.ete.xlang.Assignment;
 import fr.insset.jeanluc.ete.xlang.Statement;
 import fr.insset.jeanluc.ete.xlang.builder.BodyBuilder;
 import fr.insset.jeanluc.xmi.io.impl.XmlModelReader;
@@ -21,6 +23,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -84,20 +88,16 @@ public class IsNewTest {
         EteModel parent = new EteModelImpl();
         PrimitiveDataTypes.init(parent);
         EteModel result = instance.readModel(MODEL_PATH);
+        MofClass formalLinkedListClass = (MofClass) result.getElementByName("FormalLinkedList");
 
         // 4- check result
-        MofClass formalLinkedListClass = (MofClass)result.getElementByName("FormalLinkedList");
         EnhancedMofOperationImpl addOperation = (EnhancedMofOperationImpl) formalLinkedListClass.getOwnedOperation("add");
 //        List<Statement> body = addOperation.buildBody();
         List<Statement> body = addOperation.getBody();
-
-        int     i=0;
-        for (Statement aStatement : body) {
-            if (i<10) System.out.print(" ");
-            System.out.print(i++);
-            System.out.print(" ");
-            System.out.println(aStatement.getClass().getName());
-        }
+        assertEquals(3, body.size());
+        assertTrue(body.get(0) instanceof Allocation);
+        assertTrue(body.get(1) instanceof Assignment);
+        assertTrue(body.get(2) instanceof Assignment);
     }
 
     protected void velocityAction(EteModel model, String template, String target) throws EteException {

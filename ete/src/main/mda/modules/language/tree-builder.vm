@@ -341,6 +341,13 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
 
 
 
+    @Override
+    public GelExpression visitOclIsNew(GelParser.OclIsNewContext ctx) {
+        return context.resolveIsNew();
+    }
+
+
+
 
 
 

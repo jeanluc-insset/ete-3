@@ -156,7 +156,6 @@ modExpression  : MOD operand;
 operand
     : oppExpression
     | navExpression
-    | navExpressionWithFinalStep
     | literal
     | parenthesisExpression
 ;
@@ -179,14 +178,11 @@ navExpression
       | methodNavExpression
       | collectionMethodNavExpression
       )*
+      finalStep ?
 ;
 
 
 
-navExpressionWithFinalStep :
-    navExpression
-    finalStep
-;
 
 
 finalStep :

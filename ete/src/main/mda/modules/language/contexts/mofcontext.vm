@@ -106,25 +106,29 @@ public class ${dialect.i2uc($projectName)}ContextImpl implements ${dialect.i2uc(
      */
     @Override
     public GelExpression resolve(String inIdentifier) {
+        GelExpression   result = null;
         try {
             if ("self".equals(inIdentifier)) {
                 Logger logger = Logger.getGlobal();
                 logger.fine("Resolving SELF");
-                return resolveSelf();
+                result = resolveSelf();
             }
             if ("result".equals(inIdentifier)) {
-                return resolveResult();
+                result = resolveResult();
+                result.setType(((MofOperation)get(CONTEXT)).getType());
             }
             // can we extend the current navigation ? or A current navigation ?
-            GelExpression result = null;
             for (int i=0 ; i<stack.size() ; i++) {
                 result = resolveInCurrent(inIdentifier, i);
                 if (result != null) {
-                    return result;
+                    break;
                 }
             }
-            result = resolveInContext(inIdentifier);
+            if (result == null) {
+                result = resolveInContext(inIdentifier);
+            }
             if (result != null) {
+                set(CURRENT, result);
                 return result;
             }
         }
@@ -146,6 +150,20 @@ public class ${dialect.i2uc($projectName)}ContextImpl implements ${dialect.i2uc(
         result.setName("result");
         result.setType(((TypedElement)get(RESULT)).getType());
         return result;        
+    }
+
+
+    public GelExpression resolveIsNew() {
+        IsNew   result;
+        try {
+            result = (IsNew) FactoryRegistry.newInstance("isnew");
+            Step current = (Step) get(CURRENT);
+            result.setOperand(FactoryMethods.newList(GelExpression.class));
+            result.setType(current.getType());
+        } catch (InstantiationException | IllegalAccessException ex) {
+            throw new RuntimeException("Unable to instantiate isNew ", ex);
+        }
+        return result;
     }
 
 

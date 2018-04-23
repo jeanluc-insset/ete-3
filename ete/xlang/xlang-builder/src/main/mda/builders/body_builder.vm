@@ -120,6 +120,8 @@ public class BodyBuilder extends DynamicVisitorSupport {
     public IsNew visitIsNew(IsNew inIsNew, Object... inParameters) throws InstantiationException, IllegalAccessException {
         List<Statement> statements = (List<Statement>) inParameters[0];
         Allocation newInstance = (Allocation) FactoryRegistry.newInstance("allocation");
+        List<GelExpression> operands = FactoryMethods.newList(GelExpression.class);
+        newInstance.setOperand(operands);
         statements.add(newInstance);
         newInstance.setMofClass((MofClass)inIsNew.getType());
         return inIsNew;

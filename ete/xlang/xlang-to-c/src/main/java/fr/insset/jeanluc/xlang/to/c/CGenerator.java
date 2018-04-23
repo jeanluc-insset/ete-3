@@ -279,19 +279,24 @@ public class CGenerator extends CBasedGenerator  {
 
     public Object xlangVisitInstanciation(Instanciation inInstanciation, Object... inParameters) {
         PrintWriter output = (PrintWriter) inParameters[0];
+        
         output.print("malloc(sizeof(t_");
         output.print(inInstanciation.getMofClass().getName());
-        output.print("))");
+        output.print("));\n");
         return inInstanciation;
     }
 
 
 
-    public Object xlangVisitAllocation(Allocation inInstanciation, Object... inParameters) {
+    public Object xlangVisitAllocation(Allocation inInstanciation, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         PrintWriter output = (PrintWriter) inParameters[0];
-        output.print("malloc(sizeof(t_");
+        String      indent = (String) inParameters[1];
+        output.print(indent);
+        GelExpression get = inInstanciation.getOperand().get(0);
+        genericVisit(get, inParameters);
+        output.print(" = malloc(sizeof(t_");
         output.print(inInstanciation.getMofClass().getName());
-        output.print("))");
+        output.print("));\n");
         return inInstanciation;
     }
 
@@ -409,7 +414,7 @@ public class CGenerator extends CBasedGenerator  {
 
     public Object gelVisitVariableReference(VariableReference inReference, Object... inParameters) {
         PrintWriter output = (PrintWriter) inParameters[0];
-        output.print(inReference.getDefinition().getName());
+        output.print(inReference.getName());
         return inReference;
     }
 
