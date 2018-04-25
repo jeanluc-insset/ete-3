@@ -25,6 +25,9 @@ public class LoopImpl  extends fr.insset.jeanluc.ete.xlang.impl.StatementImpl  i
 
 
 
+
+
+
     //========================================================================//
 
 

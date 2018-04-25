@@ -64,6 +64,11 @@ public#if($current.abstract) abstract#end class ${current.name}Impl #if (${curre
 #end
 
 
+#foreach ($aProperty in $current.ownedAttribute)
+
+#end
+
+
     //========================================================================//
 
 

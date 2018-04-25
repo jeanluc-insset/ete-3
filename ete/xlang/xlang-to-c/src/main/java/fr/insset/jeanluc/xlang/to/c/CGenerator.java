@@ -202,14 +202,16 @@ public class CGenerator extends CBasedGenerator  {
     //========================================================================//
 
 
-    public Object xlangVisitVariableDeclaration(VariableDeclaration inDeclaration, Object... parameters) {
+    public Object xlangVisitVariableDeclaration(VariableDeclaration inDeclaration, Object... parameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         PrintWriter output = (PrintWriter) parameters[0];
         String      indent = (String) parameters[1];
         VariableDefinition definitionExpression = inDeclaration.getDefinitionExpression();
         output.print(indent);
         output.print(definitionExpression.getType());
-        output.print(" ");
+        output.print(" *");
         output.print(definitionExpression.getIdentifier());
+        output.print(" = ");
+        genericVisit(definitionExpression.getValue(), parameters);
         output.println(";");
         return inDeclaration;
     }
@@ -293,6 +295,7 @@ public class CGenerator extends CBasedGenerator  {
         String      indent = (String) inParameters[1];
         output.print(indent);
         GelExpression get = inInstanciation.getOperand().get(0);
+        get = get.getOperand().get(0);
         genericVisit(get, inParameters);
         output.print(" = malloc(sizeof(t_");
         output.print(inInstanciation.getMofClass().getName());

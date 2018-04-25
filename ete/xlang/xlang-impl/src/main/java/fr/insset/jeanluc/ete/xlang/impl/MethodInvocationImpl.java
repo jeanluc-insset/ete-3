@@ -40,6 +40,11 @@ public class MethodInvocationImpl  extends fr.insset.jeanluc.ete.xlang.impl.Stat
 
 
 
+
+
+
+
+
     //========================================================================//
 
 

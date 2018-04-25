@@ -17,6 +17,8 @@ public class WhileDoLoopImpl  extends fr.insset.jeanluc.ete.xlang.impl.LoopImpl 
 
 
 
+
+
     //========================================================================//
 
 

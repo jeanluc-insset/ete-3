@@ -40,6 +40,11 @@ public class VariableDeclarationImpl  extends fr.insset.jeanluc.ete.xlang.impl.S
 
 
 
+
+
+
+
+
     //========================================================================//
 
 

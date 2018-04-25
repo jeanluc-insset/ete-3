@@ -14,6 +14,7 @@ import fr.insset.jeanluc.ete.meta.model.mofpackage.impl.EteModelImpl;
 import fr.insset.jeanluc.ete.xlang.Allocation;
 import fr.insset.jeanluc.ete.xlang.Assignment;
 import fr.insset.jeanluc.ete.xlang.Statement;
+import fr.insset.jeanluc.ete.xlang.VariableDeclaration;
 import fr.insset.jeanluc.ete.xlang.builder.BodyBuilder;
 import fr.insset.jeanluc.xmi.io.impl.XmlModelReader;
 import fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor;
@@ -94,10 +95,12 @@ public class IsNewTest {
         EnhancedMofOperationImpl addOperation = (EnhancedMofOperationImpl) formalLinkedListClass.getOwnedOperation("add");
 //        List<Statement> body = addOperation.buildBody();
         List<Statement> body = addOperation.getBody();
-        assertEquals(3, body.size());
-        assertTrue(body.get(0) instanceof Allocation);
-        assertTrue(body.get(1) instanceof Assignment);
-        assertTrue(body.get(2) instanceof Assignment);
+        assertEquals(4, body.size());
+        int i=0;
+        assertTrue(body.get(i++) instanceof VariableDeclaration);
+        assertTrue(body.get(i++) instanceof Allocation);
+        assertTrue(body.get(i++) instanceof Assignment);
+        assertTrue(body.get(i++) instanceof Assignment);
     }
 
     protected void velocityAction(EteModel model, String template, String target) throws EteException {

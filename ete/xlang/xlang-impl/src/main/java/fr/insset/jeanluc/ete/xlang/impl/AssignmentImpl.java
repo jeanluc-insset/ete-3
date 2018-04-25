@@ -32,6 +32,10 @@ public class AssignmentImpl  extends fr.insset.jeanluc.ete.xlang.impl.StatementI
 
 
 
+
+
+
+
     //========================================================================//
 
 
