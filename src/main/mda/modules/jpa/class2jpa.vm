@@ -87,9 +87,20 @@ public class ${current.name}Jpa extends AbstractJpa<${current.name}> {
         TypedQuery<${current.name}> query = em.createQuery(cq);
         return query.getResultList();
     }
-
+#end
 
 #end
+
+
+//============================================================================//
+
+// FILTERS
+#foreach ($aFilter in $current.filters)
+/*
+    public List<${dialect.mt2lt($aFilter.feature.type)}> filterAvailable${dialect.mt2lt($aFilter.feature.type)}As${dialect.i2uc($aFilter.feature.name)}(${current.name} inSelf) {
+${dialect.getBody($aFilter)}
+    }
+*/
 #end
 
 }

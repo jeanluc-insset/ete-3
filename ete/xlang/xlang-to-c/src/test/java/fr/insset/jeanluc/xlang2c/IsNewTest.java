@@ -10,6 +10,7 @@ import fr.insset.jeanluc.ete.meta.model.core.PrimitiveDataTypes;
 import fr.insset.jeanluc.ete.meta.model.core.impl.Factories;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.impl.EteModelImpl;
+import fr.insset.jeanluc.xlang.to.c.CGenerator;
 import fr.insset.jeanluc.xmi.io.impl.XmlModelReader;
 import fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor;
 import java.io.File;
@@ -36,7 +37,7 @@ public class IsNewTest {
     }
 
     @BeforeClass
-    public static void setUpClass() {
+    public static void setUpClass() throws InstantiationException {
     }
 
     @AfterClass
@@ -93,8 +94,9 @@ public class IsNewTest {
      * @param target
      * @throws EteException 
      */
-    protected void velocityAction(EteModel model, String template, String target) throws EteException {
+    protected void velocityAction(EteModel model, String template, String target) throws EteException, ClassNotFoundException, InstantiationException {
         VelocityAction    action = new VelocityAction();
+        new CGenerator();
         action.setModel(model);
         action.addParameter(BASE_DIR, "src/test/mda/c/");
         action.addParameter("dialect", "fr.insset.jeanluc.xlang.to.c.CGenerator");
