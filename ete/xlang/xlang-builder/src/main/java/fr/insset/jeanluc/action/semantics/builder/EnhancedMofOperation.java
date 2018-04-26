@@ -25,5 +25,6 @@ public interface EnhancedMofOperation extends MofOperation {
     public void            setBody(List<Statement> inStatements);
     
     public Map<GelExpression, VariableDeclaration> getLocalVariables();
+    public void setLocalVariables(Map<GelExpression, VariableDeclaration> inVariables);
 
 }

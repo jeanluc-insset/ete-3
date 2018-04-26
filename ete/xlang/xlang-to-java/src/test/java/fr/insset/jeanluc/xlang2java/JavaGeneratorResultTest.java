@@ -101,7 +101,7 @@ public class JavaGeneratorResultTest {
      * </ol>
      * Currently, points 1 to 4 are done.
      */
-    @Test
+//    @Test
     public void testFullJavaGeneration() throws InstantiationException, IllegalAccessException, IOException, EteException, ClassNotFoundException, NoSuchMethodException, IllegalArgumentException, InvocationTargetException {
         System.out.println("Full Java generation");
 

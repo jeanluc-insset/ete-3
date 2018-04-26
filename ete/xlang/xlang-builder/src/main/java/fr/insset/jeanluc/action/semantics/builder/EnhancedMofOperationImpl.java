@@ -82,6 +82,11 @@ public class EnhancedMofOperationImpl extends MofOperationImpl implements Enhanc
         return localVariables;
     }
 
+    public void setLocalVariables(Map<GelExpression, VariableDeclaration> localVariables) {
+        this.localVariables = localVariables;
+    }
+
+
     public List<Statement> getStatements() {
         return statements;
     }

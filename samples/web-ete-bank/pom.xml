@@ -150,7 +150,12 @@
                     </dependency>
                     <dependency>
                         <groupId>fr.insset.jeanluc</groupId>
-                        <artifactId>xlang_builder-impl</artifactId>
+                        <artifactId>xlang-builder</artifactId>
+                        <version>3.1</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>fr.insset.jeanluc</groupId>
+                        <artifactId>xlang-to-xxx</artifactId>
                         <version>3.1</version>
                     </dependency>
                     <dependency>
@@ -180,7 +185,27 @@
             <version>2.5.2</version>
             <scope>provided</scope>
         </dependency>
-
+        <dependency>
+            <groupId>fr.insset.jeanluc</groupId>
+            <artifactId>xlang-builder</artifactId>
+            <version>3.1</version>
+            <scope>test</scope>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>fr.insset.jeanluc</groupId>
+            <artifactId>ete-lib-impl</artifactId>
+            <version>3.1</version>
+            <scope>test</scope>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+            <type>jar</type>
+        </dependency>
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>

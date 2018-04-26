@@ -93,6 +93,7 @@ public class BodyBuilder extends DynamicVisitorSupport {
             VariableDeclaration aDeclaration = variables.get(anExpression);
             statements.add(aDeclaration);
         }
+        inOperation.setLocalVariables(variables);
         for (Postcondition aPostcondition : postconditions) {
             EnhancedPostcondition thisCondition = (EnhancedPostcondition) aPostcondition;
             buildStatements(thisCondition.getExpression(), statements, null);

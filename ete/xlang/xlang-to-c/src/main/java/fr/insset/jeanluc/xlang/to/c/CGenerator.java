@@ -2,6 +2,7 @@ package fr.insset.jeanluc.xlang.to.c;
 
 
 import fr.insset.jeanluc.action.semantics.builder.EnhancedCondition;
+import fr.insset.jeanluc.action.semantics.builder.EnhancedMofOperation;
 import fr.insset.jeanluc.action.semantics.builder.EnhancedMofOperationImpl;
 import fr.insset.jeanluc.action.semantics.builder.StatementContainer;
 import fr.insset.jeanluc.el.dialect.JavaDialect;
@@ -475,7 +476,13 @@ public class CGenerator extends CBasedGenerator  {
 
 
     public AtPre gelVisitAtPre(AtPre inAtPre, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        genericVisit(inAtPre.getOperand().get(0), inParameters);
+        GelExpression get = inAtPre.getOperand().get(0);
+        EnhancedMofOperation operation = (EnhancedMofOperation) inParameters[2];
+        Map<GelExpression, VariableDeclaration> localVariables = operation.getLocalVariables();
+        VariableDeclaration variable = localVariables.get(get);
+        String name = variable.getDefinitionExpression().getIdentifier();
+        PrintWriter output      = (PrintWriter)inParameters[0];
+        output.print(name);
         return inAtPre;
     }
 
