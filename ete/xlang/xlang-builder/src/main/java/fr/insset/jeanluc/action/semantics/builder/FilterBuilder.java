@@ -138,6 +138,47 @@ public class FilterBuilder extends DynamicVisitorSupport {
     }
 
 
+    //========================================================================//
+
+    public List<MofOperation> buildFilters(MofClass inMofClass) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        List<MofOperation>  result = FactoryMethods.newList(MofOperation.class);
+        Collection<Invariant> invariants = inMofClass.getInvariants();
+        for (Invariant anInvariant : invariants) {
+            buildFilters((EnhancedInvariantImpl) anInvariant, inMofClass);
+        }
+        return result;
+    }
+
+    /**
+     * Create
+     * 
+     * @param anInvariant
+     * @throws IllegalAccessException
+     * @throws IllegalArgumentException
+     * @throws InvocationTargetException 
+     */
+    private void buildFilters(EnhancedInvariantImpl anInvariant, MofClass inMofClass) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        EnhancedMofClassImpl mofClass = (EnhancedMofClassImpl) anInvariant.getContext();
+        SyntheticFilter result = new SyntheticFilter();
+        // Looks for "top level" roles
+        Object specification = anInvariant.getSpecification();
+        if (specification == null) {
+            return;
+        }
+        GelExpression expression = (GelExpression) specification;
+        List<GelExpression> operands = expression.getOperand();
+        for (GelExpression anOperand : operands) {
+            if (anOperand instanceof AttributeNav) {
+                buildAFilter((AttributeNav) anOperand, anInvariant, inMofClass);
+            }
+        }
+        genericVisit(anInvariant.getSpecification(), result);
+    }
+
+
+    private void buildAFilter(AttributeNav inOperand, EnhancedInvariantImpl inInvariant, MofClass inMofClass) {
+        
+    }
 
     //========================================================================//
 
