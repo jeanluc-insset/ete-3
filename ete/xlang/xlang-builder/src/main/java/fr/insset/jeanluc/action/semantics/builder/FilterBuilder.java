@@ -169,16 +169,17 @@ public class FilterBuilder extends DynamicVisitorSupport {
         List<GelExpression> operands = expression.getOperand();
         for (GelExpression anOperand : operands) {
             if (anOperand instanceof AttributeNav) {
-                buildAFilter((AttributeNav) anOperand, anInvariant, inMofClass);
+                buildAFilter((AttributeNav) anOperand, anInvariant, mofClass);
             }
         }
         genericVisit(anInvariant.getSpecification(), result);
     }
 
 
-    private void buildAFilter(AttributeNav inOperand, EnhancedInvariantImpl inInvariant, MofClass inMofClass) {
+    private void buildAFilter(AttributeNav inOperand, EnhancedInvariantImpl inInvariant, EnhancedMofClassImpl inMofClass) {
         
     }
+
 
     //========================================================================//
 
