@@ -1,0 +1,118 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+package ${symbol_dollar}{current.owningPackage.qualifiedName.replace("::", ".")};
+
+
+${symbol_pound}foreach (${symbol_dollar}aDependance in ${symbol_dollar}{current.dependances})
+import ${symbol_dollar}{dialect.getQualifiedName(${symbol_dollar}aDependance)};
+${symbol_pound}end
+import java.util.LinkedList;
+import java.util.List;
+import javax.annotation.Generated;
+
+
+
+@Generated("ete - jean-luc@insset.fr  src/test/mda/templates/pojo-with-operations.vm")
+public class ${symbol_dollar}{current.name} ${symbol_pound}if (${symbol_dollar}{current.superClass.size()} > 0) extends ${symbol_dollar}{current.superClass.get(0).package.name}.${symbol_dollar}{current.superClass.get(0)} ${symbol_pound}end {
+
+${symbol_pound}if (${symbol_dollar}current.hasStereotype("singleton"))
+    private ${symbol_dollar}{current.name}() {
+    }
+${symbol_pound}else
+    public ${symbol_dollar}{current.name}() {
+    }
+${symbol_pound}end
+
+
+    //========================================================================//
+
+
+${symbol_pound}foreach (${symbol_dollar}tagValue in ${symbol_dollar}{current.getTagValues().keySet()})
+    public String get${symbol_dollar}{tagValue.name.substring(0,1).toUpperCase()}${symbol_dollar}{tagValue.name.substring(1)}() {
+        return "${symbol_dollar}{current.getValueOf(${symbol_dollar}tagValue.name)}";
+    }
+${symbol_pound}end
+
+
+
+    //========================================================================//
+    //                A C C E S S O R S   and   M U T A T O R S               //
+    //========================================================================//
+
+
+
+${symbol_pound}foreach (${symbol_dollar}aProperty in ${symbol_dollar}current.ownedAttribute)
+    ${symbol_pound}if(${symbol_dollar}aProperty.name && ${symbol_dollar}aProperty.type.name)
+
+    public ${symbol_pound}if (${symbol_dollar}aProperty.type.package) ${symbol_dollar}{aProperty.type.qualifiedName.replace("::", ".")}${symbol_pound}else${symbol_dollar}{dialect.mt2lt(${symbol_dollar}aProperty.type)}${symbol_pound}end get${symbol_dollar}{aProperty.name.substring(0,1).toUpperCase()}${symbol_dollar}{aProperty.name.substring(1)}() {
+        return ${symbol_dollar}{aProperty.name};
+    }
+
+    public void set${symbol_dollar}{aProperty.name.substring(0,1).toUpperCase()}${symbol_dollar}{aProperty.name.substring(1)}(${symbol_pound}if (${symbol_dollar}aProperty.type.package) ${symbol_dollar}{aProperty.type.qualifiedName.replace("::", ".")}${symbol_pound}else${symbol_dollar}{dialect.mt2lt(${symbol_dollar}aProperty.type)}${symbol_pound}end inValue) {
+        ${symbol_dollar}{aProperty.name} = inValue;
+    }
+
+    ${symbol_pound}if(${symbol_dollar}aProperty.type.collection)
+    public void add${symbol_dollar}{aProperty.name.substring(0,1).toUpperCase()}${symbol_dollar}{aProperty.name.substring(1)}(${symbol_dollar}{dialect.mt2lt(${symbol_dollar}aProperty.type.baseType)} inValue) {
+        ${symbol_dollar}{aProperty.name}.add(inValue);
+    }
+    ${symbol_pound}end
+
+    ${symbol_pound}end
+${symbol_pound}end
+
+
+    //========================================================================//
+    //                           O P E R A T I O N S                          //
+    //========================================================================//
+
+
+${symbol_pound}foreach (${symbol_dollar}aMethod in ${symbol_dollar}{current.ownedOperation})
+${symbol_pound}foreach (${symbol_dollar}aPrecondition in ${symbol_dollar}{aMethod.preconditions})
+//    @${symbol_dollar}{dialect.getConditionName(${symbol_dollar}aPrecondition)}
+${symbol_pound}end
+    public ${symbol_dollar}{dialect.mt2lt(${symbol_dollar}aMethod.type)} ${symbol_dollar}{aMethod.name}(${symbol_pound}foreach(${symbol_dollar}aParam in ${symbol_dollar}{aMethod.ownedParameter})${symbol_dollar}{dialect.mt2lt(${symbol_dollar}aParam.type)} ${symbol_dollar}{aParam.name}${symbol_pound}if( ${symbol_dollar}foreach.hasNext ), ${symbol_pound}end${symbol_pound}end) {
+${symbol_pound}if (${symbol_dollar}dialect.getOperationBody(${symbol_dollar}aMethod).length() > 0)
+${symbol_dollar}{dialect.getOperationBody(${symbol_dollar}aMethod)}
+${symbol_pound}${symbol_pound}elseif (${symbol_dollar}dialect.mt2lt(${symbol_dollar}aMethod.type) == "double")
+${symbol_pound}${symbol_pound}        return 0.0;
+${symbol_pound}${symbol_pound}elseif (${symbol_dollar}dialect.mt2lt(${symbol_dollar}aMethod.type) == "int")
+${symbol_pound}${symbol_pound}        return 0;
+${symbol_pound}${symbol_pound}elseif (${symbol_dollar}dialect.mt2lt(${symbol_dollar}aMethod.type) == "String")
+${symbol_pound}${symbol_pound}        return "";
+${symbol_pound}else
+        throw new RuntimeException("Not specified yet");
+${symbol_pound}end
+    }
+${symbol_pound}end
+
+
+    //========================================================================//
+    //                   I N S T A N C E   V A R I A B L E S                  //
+    //========================================================================//
+
+
+${symbol_pound}foreach (${symbol_dollar}aProperty in ${symbol_dollar}current.ownedAttribute)
+${symbol_pound}if(${symbol_dollar}aProperty.type.collection)
+    private ${symbol_dollar}{dialect.mt2lt(${symbol_dollar}aProperty.type)} ${symbol_dollar}{aProperty.name} = new LinkedList<>();
+${symbol_pound}else
+    private ${symbol_pound}if (${symbol_dollar}aProperty.type.package) ${symbol_dollar}{aProperty.type.qualifiedName.replace("::", ".")}${symbol_pound}else${symbol_dollar}{dialect.mt2lt(${symbol_dollar}aProperty.type)}${symbol_pound}end ${symbol_dollar}{aProperty.name};
+${symbol_pound}end
+${symbol_pound}end
+
+
+${symbol_pound}if (${symbol_dollar}current.hasStereotype("singleton"))
+    public static ${symbol_dollar}{current.name} get${symbol_dollar}{current.name}() {
+        return singleton;
+    }
+
+    private static ${symbol_dollar}{current.name} singleton = new ${symbol_dollar}{current.name}();
+
+${symbol_pound}end
+
+
+
+}
+
+

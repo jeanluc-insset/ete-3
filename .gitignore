@@ -89,3 +89,9 @@
 /ete/xlang/actual-xlang_builder/target/
 /ete/xlang/xlang-to-java/target/
 /ete/xlang/xlang-to-java/nbproject/
+/samples/target/
+/samples/web-ete-bank/archetype/target/
+/samples/web-ete-bank/web-app/target/
+/archetypes/web-app/target/
+/samples/insset-airways/target/
+/archetypes/archetype/target/

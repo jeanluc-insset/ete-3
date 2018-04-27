@@ -66,7 +66,7 @@ public class EnhancedMofClassImpl extends MofClassImpl {
      * That list helps to build requests to find out matching value for
      * an in work entity.
      */
-    private Map<MofProperty, List<EnhancedInvariantImpl>>   support = new HashMap<>();
+    private Map<MofProperty, List<SyntheticFilter>>   support = new HashMap<>();
 
     private List<SyntheticFilter>                       filters;
 

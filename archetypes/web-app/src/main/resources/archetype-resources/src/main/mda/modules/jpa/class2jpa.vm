@@ -1,0 +1,109 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+package ${symbol_dollar}{current.owningPackage.name}.jpa;
+
+
+import fr.insset.jeanluc.ete.jpa.AbstractJpa;
+import ${symbol_dollar}{current.owningPackage.name}.model.*;
+import java.io.Serializable;
+import java.util.List;
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+\#if (${symbol_dollar}javase)
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+\#end
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.ParameterExpression;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Root;
+import javax.persistence.metamodel.EntityType;
+import javax.persistence.metamodel.Metamodel;
+import javax.persistence.metamodel.SingularAttribute;
+
+
+
+/**
+ *
+ * @author jldeleage
+ */
+@Stateless
+public class ${symbol_dollar}{current.name}Jpa extends AbstractJpa<${symbol_dollar}{current.name}> {
+
+\#if (true == ${symbol_dollar}javase)
+    private EntityManagerFactory factory;
+\#else
+    @PersistenceContext(unitName = "${symbol_dollar}{pu}")
+\#end
+    private EntityManager em;
+
+    @Override
+    protected EntityManager getEntityManager() {
+\#if (true == ${symbol_dollar}javase)
+        if (factory == null) {
+            factory = Persistence.createEntityManagerFactory("${symbol_dollar}{pu}");
+        }
+        if (em == null) {
+            em = factory.createEntityManager();
+        }
+\#end
+        return em;
+    }
+
+    public ${symbol_dollar}{current.name}Jpa() {
+        super(${symbol_dollar}{current.name}.class);
+    }
+
+\#foreach (${symbol_dollar}aProperty in ${symbol_dollar}current.ownedAttribute)
+\#if (${symbol_dollar}dialect.isEntity(${symbol_dollar}aProperty.type))
+
+    public List<${symbol_dollar}aProperty.type> findAll${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)}For(${symbol_dollar}current.name item) {
+        javax.persistence.criteria.CriteriaQuery cq = getEntityManager().getCriteriaBuilder().createQuery();
+        cq.select(cq.from(${symbol_dollar}{aProperty.type.name}.class));
+        // we must now add all constraints to the request
+        // now we can build the query
+        TypedQuery query = getEntityManager().createQuery(cq);
+        // we must set the parameters
+        // finally we can fetch the data and return the result
+        return query.getResultList();
+    }
+
+
+
+    public List<${symbol_dollar}{current.name}> findBy(${symbol_dollar}{dialect.mt2lt(${symbol_dollar}aProperty.type)} inValue) {
+        EntityManager em = getEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<${symbol_dollar}{current.name}> cq = cb.createQuery(${symbol_dollar}{current.name}.class);
+        Root<${symbol_dollar}{current.name}> from = cq.from(${symbol_dollar}{current.name}.class);
+        // There is an "unkown compilation error" if we try to use the metamodel
+        // generator processor so we use the metamodel on runtime only
+        Metamodel metamodel = em.getMetamodel();
+        EntityType<${symbol_dollar}{current.name}> entity = metamodel.entity(${symbol_dollar}{current.name}.class);
+        SingularAttribute<? super ${symbol_dollar}{current.name}, ?> singularAttribute = entity.getSingularAttribute("${symbol_dollar}{dialect.i2lc(${symbol_dollar}aProperty.type.name)}");
+        from.join(singularAttribute);
+        cq.where(cb.equal(from.get(singularAttribute), inValue));
+        TypedQuery<${symbol_dollar}{current.name}> query = em.createQuery(cq);
+        return query.getResultList();
+    }
+\#end
+
+\#end
+
+
+//============================================================================//
+
+// FILTERS
+\#foreach (${symbol_dollar}aFilter in ${symbol_dollar}current.filters)
+/*
+    public List<${symbol_dollar}{dialect.mt2lt(${symbol_dollar}aFilter.feature.type)}> filterAvailable${symbol_dollar}{dialect.mt2lt(${symbol_dollar}aFilter.feature.type)}As${symbol_dollar}{dialect.i2uc(${symbol_dollar}aFilter.feature.name)}(${symbol_dollar}{current.name} inSelf) {
+${symbol_dollar}{dialect.getBody(${symbol_dollar}aFilter)}
+    }
+*/
+\#end
+
+}

@@ -1,0 +1,33 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<mda>
+
+
+    <transformation-set>
+
+        <register name="add-visitor-action" action="${package}.ete.api.impl.AddVisitorAction"/>
+
+        <model  url="Model.xml">
+            <add-visitor class="${package}.action.semantics.builder.ConditionVisitor"/>
+        </model>
+
+        <transformation-set jsf="true" jaxrs="true">
+
+            <velocity template="pojo-with-operations.vm"
+                    items="${symbol_dollar}{classes}"
+                    dialect="${package}.as2java.JavaGenerator"
+                    target="generated-sources/ete/${symbol_dollar}{current.owningPackage.name.replace('.', '/')}/${symbol_dollar}{current.name}.java"
+                    />
+        </transformation-set>
+
+
+    </transformation-set>
+
+</mda>
+
+
+

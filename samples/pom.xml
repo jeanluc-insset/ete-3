@@ -15,5 +15,6 @@
     <module>modeleur</module>
     <module>mavenproject1</module>
     <module>dsl</module>
+    <module>insset-airways</module>
   </modules>
 </project>

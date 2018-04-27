@@ -46,7 +46,7 @@ public class BankTest {
     }
 
     @Test
-    public void testCompare() throws InstantiationException, ClassNotFoundException, IllegalAccessException, IOException, IllegalArgumentException, InvocationTargetException {
+    public void testRead() throws InstantiationException, ClassNotFoundException, IllegalAccessException, IOException, IllegalArgumentException, InvocationTargetException {
         // 1- initialize framework
         // 1-a basic factories
         Factories.init();

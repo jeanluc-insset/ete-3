@@ -170,32 +170,19 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         GelExpression expression = visitACondition(inCondition, model, context, variables, statements);
         inCondition.setExpression(expression);
 
-//        extractVariables(expression);
-//        BodyBuilder builder = new BodyBuilder();
-//        List<Statement> inoutResult = new LinkedList<>();
-//        builder.buildStatements(expression, inoutResult, context.getLocalVariables());
-//        inCondition.setStatements(statements);
-
         return inCondition;
     }
 
 
-    public EteModel visitEteModel(EteModel inModel, Object... inParameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    public EteModel visitEteModel(EteModel inModel, Object... inParameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException {
         System.out.println("**** VISITING THE MODEL ****");
         BodyBuilder builder = new BodyBuilder();
         builder.buildStatements(inModel);
-//        for (MofClass aClass : inModel.getAllClasses()) {
-//            if (aClass.hasStereotype("ignore")) {
-//                continue;
-//            }
-//            for (MofOperation anOperation : aClass.getOwnedOperation()) {
-//                // TODO : can we use the same BodyBuilder for all operations ?
-//                BodyBuilder builder = new BodyBuilder();
-//                builder.
-//            }
-//        }
+        FilterBuilder filterBuilder = new FilterBuilder();
+        filterBuilder.buildFilters(inModel);
         return inModel;
     }
+
 
     //========================================================================//
     //      G E L   E X P R E S S I O N   V I S I T O R   M E T H O D S       //
@@ -254,14 +241,6 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         ((EnhancedPostcondition)inCondition).setExpression(expression);
         logger.log(Level.FINER, "GelExpression : " + expression);
 
-        // 3- visit the GelExpression to build statements
-        //    The statements are added to the preexisting list
-//        BodyBuilder builder = new BodyBuilder();
-//        builder.buildStatements(expression, inoutResult, ((EnhancedMofOperationImpl)context).getLocalVariables());
-//        logger.log(Level.INFO, "Statements : " + inoutResult + " (" + inoutResult.size() + ")");
-//
-//        EnhancedMofOperationImpl    enhancedMofOperation = (EnhancedMofOperationImpl) context;
-//        enhancedMofOperation.buildBody();
         return expression;
     }
 

@@ -10,9 +10,11 @@ import fr.insset.jeanluc.ete.gel.*;
 import fr.insset.jeanluc.ete.gel.impl.*;
 import fr.insset.jeanluc.ete.meta.model.constraint.Invariant;
 import fr.insset.jeanluc.ete.meta.model.constraint.Postcondition;
+import fr.insset.jeanluc.ete.meta.model.emof.Feature;
 import fr.insset.jeanluc.ete.meta.model.emof.impl.FeatureImpl;
 import fr.insset.jeanluc.ete.meta.model.emof.impl.MofParameterImpl;
 import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
+import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
 import fr.insset.jeanluc.ete.meta.model.types.MofType;
 import fr.insset.jeanluc.ete.meta.model.types.collections.impl.MofBagImpl;
@@ -45,29 +47,41 @@ import java.util.logging.Logger;
 
 
 /**
+ * <div>
  * An instance of this class builds a filter for every property used in any
  * invariant.<br>
- * For example in the airflight domain, the "crew invariant" states that the
- * captain and the copilot must be two distinct people.<br>
+ * For example in the airflight domain, within the context of the Flight class,
+ * the "crew invariant" states that the captain and the copilot must be two
+ * distinct Pilots.<br>
  * This leads to build two operations :<br>
  * <code><pre>getCopilotForCrew(inContext : Flight) : Pilot[*]
- * getCaptainForCrew(inContext : Flight) : Pilot[*]
+ * filterCaptainForCrew(inContext : Flight) : Pilot[*]
  * </pre></code>
  * Furthermore, the captain must be licensed. The invariant<br>
  * context Flight inv captainMusBeLicenced: self.captain.licences.type -&gt; includes(self.plane.type)
  * <br>
  * leads to the operation<br>
- * <code>getCaptainForCaptainMustBeLicensed(inContext : Flight) : Pilot[*]</code>
- *
+ * Finally, two synthetic queries are added :<br>
+ * <code>getCaptainForFlight(inFlight : Flight)<br>
+ * getCopilotForFlight(inFlight : Flight)</code>
+ * <code>filterCaptainForTheCaptainMustBeLicensed(inContext : Flight) : Pilot[*]</code><br>
+ * Remark : these filters must be added to the Pilot class but they are built
+ * while parsing the invariants of the Flight class.
+ * </div>
+ * 
  * @author jldeleage
  */
 public class FilterBuilder extends DynamicVisitorSupport {
 
 
     public FilterBuilder() throws InstantiationException, NoSuchMethodException {
+        System.out.println("Creation de FilterBuilder");
         register("visit", "fr.insset.jeanluc.ete.gel");
-        Method examineMethod = getClass().getMethod("examineObject");
-        register(Object.class, examineMethod);
+        Method[] methods = getClass().getMethods();
+        for (Method aMethod : methods) {
+            if ("examineObject".equals(aMethod.getName()))
+                register(Object.class, aMethod);
+        }
         FactoryRegistry registry = FactoryRegistry.getRegistry();
         registry.registerDefaultFactory(Assignment.class, AssignmentImpl.class);
         registry.registerDefaultFactory("stringliteral", StringLiteralImpl.class);
@@ -140,7 +154,18 @@ public class FilterBuilder extends DynamicVisitorSupport {
 
     //========================================================================//
 
+
+    public void buildFilters(EteModel inModel) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        System.out.println("Creation des filtres pour le modele");
+        Collection<MofClass> allClasses = inModel.getAllClasses();
+        for (MofClass aMofClass : allClasses) {
+            buildFilters(aMofClass);
+        }
+    }
+
+
     public List<MofOperation> buildFilters(MofClass inMofClass) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        System.out.println("Creation des filtres pour la classe cliente");
         List<MofOperation>  result = FactoryMethods.newList(MofOperation.class);
         Collection<Invariant> invariants = inMofClass.getInvariants();
         for (Invariant anInvariant : invariants) {
@@ -158,28 +183,17 @@ public class FilterBuilder extends DynamicVisitorSupport {
      * @throws InvocationTargetException 
      */
     private void buildFilters(EnhancedInvariantImpl anInvariant, MofClass inMofClass) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        System.out.println("Création des filtres pour l'invariant " + anInvariant.getSpecificationAsString());
         EnhancedMofClassImpl mofClass = (EnhancedMofClassImpl) anInvariant.getContext();
-        SyntheticFilter result = new SyntheticFilter();
         // Looks for "top level" roles
         Object specification = anInvariant.getSpecification();
         if (specification == null) {
             return;
         }
-        GelExpression expression = (GelExpression) specification;
-        List<GelExpression> operands = expression.getOperand();
-        for (GelExpression anOperand : operands) {
-            if (anOperand instanceof AttributeNav) {
-                buildAFilter((AttributeNav) anOperand, anInvariant, mofClass);
-            }
-        }
-        genericVisit(anInvariant.getSpecification(), result);
+        // This should add a filter per navigation in the invariant
+        System.out.println("Visite de l'expression");
+        genericVisit(specification, anInvariant, inMofClass);
     }
-
-
-    private void buildAFilter(AttributeNav inOperand, EnhancedInvariantImpl inInvariant, EnhancedMofClassImpl inMofClass) {
-        
-    }
-
 
     //========================================================================//
 
@@ -193,23 +207,29 @@ public class FilterBuilder extends DynamicVisitorSupport {
     //========================================================================//
 
 
-    public GelExpression visitGelExpression(GelExpression inExpression, Object... inParameters) {
-        SyntheticFilter filter = new SyntheticFilter();
-        
+    public GelExpression visitGelExpression(GelExpression inExpression, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        List<GelExpression> operand = inExpression.getOperand();
+        for (GelExpression anExpression : operand) {
+            genericVisit(anExpression, inParameters);
+        }
         return inExpression;
     }
 
+    public GelExpression visitAttributeNav(AttributeNav inNav, Object... inParameters) {
+        System.out.println("BUILDING A FILTER for " + inParameters[0] + " in " + inParameters[1]);
+        SyntheticFilter result = new SyntheticFilter();
+        MofProperty toFeature = (MofProperty) inNav.getToFeature();
+        result.setFilteredProperty(toFeature);
+        result.setInvariant((Invariant) inParameters[0]);
+        MofType type = inNav.getType();
+        EnhancedMofClassImpl filteredClass = type instanceof EnhancedMofClassImpl ?
+            (EnhancedMofClassImpl) type :
+            (EnhancedMofClassImpl)inNav.getOperand().get(0).getType();
+        filteredClass.addFilter(result);
+        result.setClientClass((MofClass) inParameters[1]);
+        return inNav;
+    }
 
-//    public Equal visitEqual(Equal inEqual, Object... inParameters) {
-//        
-//        return inEqual;
-//    }
-//
-//
-//    public Different visitDifferent(Different inDifferent, Object... inParameters) {
-//        return inDifferent;
-//    }
-
-}       // BodyBuilder
+}       // FilterBuilder
 
 
