@@ -13,6 +13,7 @@
         </model>
 
         <transformation-set jsf="true" jaxrs="true">
+            <module src="modules/web/ete-config.xml"/>
             <velocity template="pojo-with-operations.vm"
                     items="${classes}"
                     dialect="fr.insset.jeanluc.as2java.JavaGenerator"

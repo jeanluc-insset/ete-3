@@ -1,0 +1,121 @@
+package ${current.owningPackage.name}.jpa;
+
+
+import fr.insset.jeanluc.ete.jpa.AbstractJpa;
+import ${current.owningPackage.name}.model.*;
+import java.io.Serializable;
+import java.util.List;
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+#if ($javase)
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+#end
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.ParameterExpression;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Root;
+import javax.persistence.metamodel.EntityType;
+import javax.persistence.metamodel.Metamodel;
+import javax.persistence.metamodel.SingularAttribute;
+
+
+
+/**
+ *
+ * @author jldeleage
+ */
+@Stateless
+public class ${current.name}Jpa extends AbstractJpa<${current.name}> {
+
+#if (true == $javase)
+    private EntityManagerFactory factory;
+#else
+    @PersistenceContext(unitName = "${pu}")
+#end
+    private EntityManager em;
+
+    @Override
+    protected EntityManager getEntityManager() {
+#if (true == $javase)
+        if (factory == null) {
+            factory = Persistence.createEntityManagerFactory("${pu}");
+        }
+        if (em == null) {
+            em = factory.createEntityManager();
+        }
+#end
+        return em;
+    }
+
+    public ${current.name}Jpa() {
+        super(${current.name}.class);
+    }
+
+
+    //========================================================================//
+
+#foreach ($aProperty in $current.ownedAttribute)
+#if ($dialect.isEntity($aProperty.type))
+
+    public List<${current.name}> findBy${dialect.i2uc($aProperty.name)}(${dialect.mt2lt($aProperty.type)} inValue) {
+        EntityManager em = getEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<${current.name}> cq = cb.createQuery(${current.name}.class);
+        Root<${current.name}> from = cq.from(${current.name}.class);
+        // There is an "unkown compilation error" if we try to use the metamodel
+        // generator processor so we use the metamodel on runtime only
+        Metamodel metamodel = em.getMetamodel();
+        EntityType<${current.name}> entity = metamodel.entity(${current.name}.class);
+        SingularAttribute<? super ${current.name}, ?> singularAttribute = entity.getSingularAttribute("${dialect.i2lc($aProperty.type.name)}");
+        from.join(singularAttribute);
+        cq.where(cb.equal(from.get(singularAttribute), inValue));
+        TypedQuery<${current.name}> query = em.createQuery(cq);
+        return query.getResultList();
+    }
+#end
+#end
+
+
+    //========================================================================//
+    //           F I L T E R S   F O R   I N V A R I A N T S   O F            //
+    //            E V E N T U A L L Y   O T H E R   C L A S S E S             //
+    //========================================================================//
+    
+
+
+#foreach ($aProperty in $current.support.keySet())
+#if ($aProperty.type.hasStereotype("Entity"))
+    public List<$aProperty.type> findAll${dialect.i2uc($aProperty.name)}For${aProperty.owningMofClass.name}($aProperty.owningMofClass.name inItem) {
+        EntityManager em = getEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<${current.name}> cq = cb.createQuery(${current.name}.class);
+#foreach ($aFilter in $$current.support.get($aProperty))
+        filter${dialect.i2uc($aProperty.name)}For${dialect.i2uc($aFilter.invariant.name)}(cq, inItem);
+#end
+        TypedQuery<${current.name}> query = em.createQuery(cq);
+        // NO : we should use more precise variables
+        query.setParameter("item", inItem);
+#foreach ($aFilter in $$current.support.get($aProperty))
+        // ...
+#end
+        return query.getResultList();
+    }
+
+#foreach ($aFilter in $$current.support.get($aProperty))
+    public CriteriaQuery filter${dialect.i2uc($aProperty.name)}For${dialect.i2uc($aFilter.invariant.name)}(CriteriaQuery inQuery, ${aFilter.clientClass.name} inItem) {
+        return inQuery;
+    }
+
+#end
+
+#end
+#end
+
+
+
+}

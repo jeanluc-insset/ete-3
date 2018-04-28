@@ -12,6 +12,7 @@ import fr.insset.jeanluc.ete.gel.impl.GelParserWrapper;
 import fr.insset.jeanluc.ete.gel.impl.TreeBuilder;
 import fr.insset.jeanluc.ete.gel.impl.VariableDefinitionImpl;
 import fr.insset.jeanluc.ete.meta.model.constraint.Condition;
+import fr.insset.jeanluc.ete.meta.model.constraint.Invariant;
 import static fr.insset.jeanluc.ete.meta.model.constraint.Invariant.INVARIANT;
 import fr.insset.jeanluc.ete.meta.model.constraint.Postcondition;
 import static fr.insset.jeanluc.ete.meta.model.constraint.Postcondition.POSTCONDITION;
@@ -75,6 +76,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         // Visiting methods registration
         register(Precondition.class, "visitPrecondition");
         register(Postcondition.class, "visitPostcondition");
+        register(Invariant.class, "visitEnhancedInvariantImpl");
         register(EnhancedPostcondition.class, "visitEnhancedPostcondition");
         // Registration of the methods to visit gel expression
         register("gelVisit", "fr.insset.jeanluc.ete.gel");
@@ -121,10 +123,9 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         addVariable(conditionName, (MofType)model.getElementByName("boolean"), variables);
 
         MofOperation    context                   = (MofOperation) inParameters[0];
-        List<Statement> statements = getStatements((EnhancedMofOperationImpl) context, "body");
         // This should build a list of statements returning a boolean value
         // If that value is not
-        visitACondition(inCondition, model, context, variables, statements);
+        visitACondition(inCondition, model, context, variables);
         return inCondition;
     }
 
@@ -140,12 +141,11 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         
 
         EnhancedMofOperationImpl    context = (EnhancedMofOperationImpl)inParameters[0];
-        List<Statement>             statements    = getStatements(context, "body");
 
         EteModel        model               = (EteModel)inParameters[1];
         Map<String, VariableDefinition> variables  = FactoryMethods.newMap(String.class, VariableDefinition.class);
         addVariable("result", context.getType(), variables);
-        GelExpression expression = visitACondition(inCondition, model, context, variables, statements);
+        GelExpression expression = visitACondition(inCondition, model, context, variables);
 
 //        extractVariables(expression);
 
@@ -167,15 +167,43 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         EteModel        model               = (EteModel)inParameters[1];
         Map<String, VariableDefinition> variables  = FactoryMethods.newMap(String.class, VariableDefinition.class);
         addVariable("result", context.getType(), variables);
-        GelExpression expression = visitACondition(inCondition, model, context, variables, statements);
+        GelExpression expression = visitACondition(inCondition, model, context, variables);
         inCondition.setExpression(expression);
 
         return inCondition;
     }
 
 
+    //========================================================================//
+
+
+    public EnhancedInvariantImpl    visitEnhancedInvariantImpl(EnhancedInvariantImpl inInvariant, Object... inParameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        System.out.println("Visiting : " + inInvariant.getSpecificationAsString());
+        EteModel        model               = (EteModel)inParameters[1];
+        MofClass        context = (MofClass) inParameters[0];
+        Map<String, VariableDefinition> variables  = FactoryMethods.newMap(String.class, VariableDefinition.class);
+        GelExpression expression = visitAnInvariant(inInvariant, model, context, variables);
+        inInvariant.setExpression(expression);
+        return inInvariant;
+    }
+
+
+    //========================================================================//
+
+
+    /**
+     * When we have read the whole model we can build statements.
+     * 
+     * @param inModel
+     * @param inParameters
+     * @return
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws IllegalArgumentException
+     * @throws InvocationTargetException
+     * @throws NoSuchMethodException 
+     */
     public EteModel visitEteModel(EteModel inModel, Object... inParameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException {
-        System.out.println("**** VISITING THE MODEL ****");
         BodyBuilder builder = new BodyBuilder();
         builder.buildStatements(inModel);
         FilterBuilder filterBuilder = new FilterBuilder();
@@ -220,8 +248,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
 
 
     protected GelExpression visitACondition(Condition inCondition, EteModel model,
-            MofOperation context, Map<String, VariableDefinition> variables,
-            List<Statement> inoutResult) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+            MofOperation context, Map<String, VariableDefinition> variables) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         Logger logger = Logger.getLogger("fr.insset.jeanluc.oclanalyzer.ReaderVisitor");
         logger.log(Level.INFO, "Visit of " + inCondition.getSpecificationAsString());
 
@@ -239,6 +266,30 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         TreeBuilder     treeBuilder           = new TreeBuilder(gelContext);
         GelExpression   expression            = treeBuilder.visitGelExpression(ctx);
         ((EnhancedPostcondition)inCondition).setExpression(expression);
+        logger.log(Level.FINER, "GelExpression : " + expression);
+
+        return expression;
+    }
+
+    protected GelExpression visitAnInvariant(Invariant inCondition, EteModel model,
+            MofClass context, Map<String, VariableDefinition> variables) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        Logger logger = Logger.getLogger("fr.insset.jeanluc.oclanalyzer.ReaderVisitor");
+        logger.log(Level.INFO, "Visit of " + inCondition.getSpecificationAsString());
+
+        // 1- parse the condition
+        String          specificationAsString = inCondition.getSpecificationAsString();
+        GelParser       parser                = GelParserWrapper.newParser(specificationAsString);
+        GelParser.GelExpressionContext   ctx  = parser.gelExpression();
+
+        // 2- build expression as an abstract tree
+        // TODO : use an abstract factory
+        GelContext      gelContext            = new GelContextImpl(model, context, context);
+        gelContext.set("model", model);
+        gelContext.set("context", context);
+        gelContext.set("contextualClass", parser);
+        TreeBuilder     treeBuilder           = new TreeBuilder(gelContext);
+        GelExpression   expression            = treeBuilder.visitGelExpression(ctx);
+        ((EnhancedInvariantImpl)inCondition).setExpression(expression);
         logger.log(Level.FINER, "GelExpression : " + expression);
 
         return expression;

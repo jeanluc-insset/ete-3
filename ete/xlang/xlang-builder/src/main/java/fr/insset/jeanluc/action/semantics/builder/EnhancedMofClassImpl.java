@@ -23,7 +23,6 @@ public class EnhancedMofClassImpl extends MofClassImpl {
     public EnhancedMofClassImpl() throws EteException, InstantiationException {
         Map     map = FactoryMethods.newMap(String.class, List.class);
         statements = map;
-        filters = FactoryMethods.newList(SyntheticFilter.class);
     }
 
 
@@ -31,17 +30,23 @@ public class EnhancedMofClassImpl extends MofClassImpl {
         this.statements = statements;
     }
 
-    public List<SyntheticFilter> getFilters() {
-        return filters;
-    }
 
-    public void setFilters(List<SyntheticFilter> filters) {
-        this.filters = filters;
-    }
-
-    public void addFilter(SyntheticFilter inFilter) {
+    public void addFilter(SyntheticFilter inFilter) throws InstantiationException {
+        MofProperty filteredProperty = inFilter.getFilteredProperty();
+        List<SyntheticFilter> filters = support.get(filteredProperty);
+        if (filters == null) {
+            filters = FactoryMethods.newList(SyntheticFilter.class);
+            support.put(filteredProperty, filters);
+        }
         filters.add(inFilter);
     }
+
+
+
+    public Map<MofProperty, List<SyntheticFilter>> getSupport() {
+        return support;
+    }
+
 
 
     //========================================================================//
@@ -67,8 +72,6 @@ public class EnhancedMofClassImpl extends MofClassImpl {
      * an in work entity.
      */
     private Map<MofProperty, List<SyntheticFilter>>   support = new HashMap<>();
-
-    private List<SyntheticFilter>                       filters;
 
 
 }

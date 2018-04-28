@@ -75,7 +75,6 @@ public class FilterBuilder extends DynamicVisitorSupport {
 
 
     public FilterBuilder() throws InstantiationException, NoSuchMethodException {
-        System.out.println("Creation de FilterBuilder");
         register("visit", "fr.insset.jeanluc.ete.gel");
         Method[] methods = getClass().getMethods();
         for (Method aMethod : methods) {
@@ -156,7 +155,6 @@ public class FilterBuilder extends DynamicVisitorSupport {
 
 
     public void buildFilters(EteModel inModel) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        System.out.println("Creation des filtres pour le modele");
         Collection<MofClass> allClasses = inModel.getAllClasses();
         for (MofClass aMofClass : allClasses) {
             buildFilters(aMofClass);
@@ -165,7 +163,6 @@ public class FilterBuilder extends DynamicVisitorSupport {
 
 
     public List<MofOperation> buildFilters(MofClass inMofClass) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        System.out.println("Creation des filtres pour la classe cliente");
         List<MofOperation>  result = FactoryMethods.newList(MofOperation.class);
         Collection<Invariant> invariants = inMofClass.getInvariants();
         for (Invariant anInvariant : invariants) {
@@ -183,15 +180,13 @@ public class FilterBuilder extends DynamicVisitorSupport {
      * @throws InvocationTargetException 
      */
     private void buildFilters(EnhancedInvariantImpl anInvariant, MofClass inMofClass) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        System.out.println("Création des filtres pour l'invariant " + anInvariant.getSpecificationAsString());
         EnhancedMofClassImpl mofClass = (EnhancedMofClassImpl) anInvariant.getContext();
         // Looks for "top level" roles
-        Object specification = anInvariant.getSpecification();
+        Object specification = anInvariant.getExpression();
         if (specification == null) {
             return;
         }
         // This should add a filter per navigation in the invariant
-        System.out.println("Visite de l'expression");
         genericVisit(specification, anInvariant, inMofClass);
     }
 
@@ -215,8 +210,7 @@ public class FilterBuilder extends DynamicVisitorSupport {
         return inExpression;
     }
 
-    public GelExpression visitAttributeNav(AttributeNav inNav, Object... inParameters) {
-        System.out.println("BUILDING A FILTER for " + inParameters[0] + " in " + inParameters[1]);
+    public GelExpression visitAttributeNav(AttributeNav inNav, Object... inParameters) throws InstantiationException {
         SyntheticFilter result = new SyntheticFilter();
         MofProperty toFeature = (MofProperty) inNav.getToFeature();
         result.setFilteredProperty(toFeature);
