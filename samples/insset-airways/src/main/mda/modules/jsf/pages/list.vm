@@ -25,7 +25,13 @@
                             <f:facet name="header">
                                 <h:outputText value="#{bundle.List${current.name}Title_${aProperty.name}}"/>
                             </f:facet>
+#if ($aProperty.type.name.equals("date"))
                             <h:outputText value="#{item.${aProperty.name}}"/>
+#elseif (${aProperty.type.hasStereotype("Entity")})
+                            <h:outputText value="#{item.${aProperty.name}.toString()}"/>
+#else
+                            <h:outputText value="#{item.${aProperty.name}}"/>
+#end
                         </h:column>
 #end
                         <h:column>
