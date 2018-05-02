@@ -112,8 +112,8 @@ public class ${current.name}Jpa extends AbstractJpa<${current.name}> {
     public CriteriaQuery select${dialect.i2uc($aProperty.name)}For${dialect.i2uc($aQuery.invariant.name)}(CriteriaQuery cq, Root<${current.name}> root, ${aProperty.owningMofClass.name} inItem) {
         CriteriaBuilder cb = getCriteriaBuilder();
 #foreach ($aVariable in $aQuery.variables)
-        ParameterExpression<${current.name}> ${aProperty.name} = cb.parameter(${aVariable.type.name}.class, "${aVariable.name}");
-        Predicate   predicate = cb.notEqual(root, ${aProperty.name});
+        ParameterExpression<${current.name}> ${aVariable.name} = cb.parameter(${aVariable.type.name}.class, "${aVariable.name}");
+        Predicate   predicate = ${dialect.getPredicate($aQuery)};
         cq.where(predicate);
 #end
         return cq;

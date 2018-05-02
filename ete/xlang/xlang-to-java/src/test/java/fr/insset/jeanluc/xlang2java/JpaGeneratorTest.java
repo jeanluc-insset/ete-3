@@ -85,7 +85,9 @@ public class JpaGeneratorTest {
      * @throws EteException 
      */
     @Test
-    public void testFilterBuilder() throws InstantiationException, ClassNotFoundException, IllegalAccessException, IOException, EteException, IllegalArgumentException, InvocationTargetException {
+    public void testParameterBuilder() throws InstantiationException, ClassNotFoundException, IllegalAccessException, IOException, EteException, IllegalArgumentException, InvocationTargetException {
+        System.out.println("parameter builder");
+
         // 1- initialize framework
         // 1-a basic factories
         Factories.init();
@@ -114,21 +116,40 @@ public class JpaGeneratorTest {
         assertEquals("inFor.getCopilot()", jpa);
     }
 
-    protected void velocityAction(EteModel model, String template, String target) throws EteException {
-        VelocityAction    action = new VelocityAction();
-        System.out.println(new File(".").getAbsolutePath());
-        action.setModel(model);
-        action.addParameter(BASE_DIR, "src/test/mda/");
-        action.addParameter("dialect", "fr.insset.jeanluc.xlang.to.c.CGenerator");
-//        action.addParameter("output_base", "target/test/generated-sources/ete/");
-        action.addParameter("output_base", SRC_DIR);
-        action.addParameter("items", "${classes}");
-        action.addParameter("target", target);
-        String absolutePath = new File(".").getAbsolutePath();
-        System.out.println(absolutePath);
-        action.addParameter("template", TEMPLATES_DIR + template);
-        action.process(model);
+    @Test
+    public void testPredicateBuilder() throws InstantiationException, ClassNotFoundException, IllegalAccessException, IOException, EteException, IllegalArgumentException, InvocationTargetException {
+        System.out.println("predicate builder");
+
+        // 1- initialize framework
+        // 1-a basic factories
+        Factories.init();
+        // 1-b custom factories
+
+        // 2- prepare reader and its visitors
+        XmlModelReader instance = new XmlModelReader();
+        instance.addVisitors(new XmlModelReaderVisitor());
+        ConditionVisitor.enableActionSemantics(instance);
+
+        // 3- read model. This will call the condition visitor
+        EteModel parent = new EteModelImpl();
+        PrimitiveDataTypes.init(parent);
+        EteModel result = instance.readModel(MODEL_PATH);
+
+        // 4- check result
+        EnhancedMofClassImpl pilotClass = (EnhancedMofClassImpl) result.getElementByName("Pilot");
+        EnhancedMofClassImpl flightClass = (EnhancedMofClassImpl) result.getElementByName("Flight");        
+        MofProperty          captain = flightClass.getOwnedAttribute("captain");
+        Map<MofProperty, List<EteQuery>> support = pilotClass.getSupport();
+        List<EteQuery> queries = support.get(captain);
+        EteQuery    aQuery = queries.get(0);
+        List<VariableDeclaration> variables = aQuery.getVariables();
+        JPAGenerator    generator = new JPAGenerator();
+        String predicate = generator.getPredicate(aQuery);
+        System.out.println("Predicate : " + predicate);
+        assertEquals("\n                cb.notEqual(root, copilotInCrew1)", predicate);
     }
+
+
 
 }       // EnhancedPostConditionTest
 

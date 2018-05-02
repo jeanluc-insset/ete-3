@@ -16,6 +16,7 @@ import fr.insset.jeanluc.ete.gel.Self;
 import fr.insset.jeanluc.ete.gel.Step;
 import fr.insset.jeanluc.ete.gel.StringLiteral;
 import fr.insset.jeanluc.ete.gel.VariableDefinition;
+import fr.insset.jeanluc.ete.gel.impl.*;
 import fr.insset.jeanluc.ete.meta.model.constraint.Condition;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
@@ -31,6 +32,7 @@ import fr.insset.jeanluc.ete.xlang.Statement;
 import fr.insset.jeanluc.ete.xlang.VariableDeclaration;
 import fr.insset.jeanluc.ete.xlang.WhileDoLoop;
 import fr.insset.jeanluc.ete.xlang.to.xxx.Generator;
+import fr.insset.jeanluc.util.factory.FactoryMethods;
 import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -69,6 +71,17 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
         this.indentation = indentation;
         register("visit", "fr.insset.jeanluc.ete.gel");
         register("visit", "fr.insset.jeanluc.ete.xlang");
+        operators = FactoryMethods.newMap(Class.class, String.class);
+        operators.put(DifferentImpl.class, "notEqual");
+        operators.put(EqualImpl.class, "equal");
+        operators.put(GreaterThanImpl.class, "greaterThan");
+        operators.put(LessThanImpl.class, "lessThan");
+        operators.put(GreaterOrEqualImpl.class, "ge");
+        operators.put(LessOrEqualImpl.class, "le");
+        operators.put(AddImpl.class, "sum");
+        operators.put(SubImpl.class, "diff");
+        operators.put(MultImpl.class, "prod");
+        operators.put(DivImpl.class, "quot");
     }
 
 
@@ -82,6 +95,14 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
     //                              D I A L E C T                             //
     //========================================================================//
 
+
+    public String getPredicate(EteQuery inQuery) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        StringBuffer    buffer = new StringBuffer();
+        genericVisit(inQuery.getExpression(), buffer, indentation + indentation, inQuery);
+        return buffer.toString();
+    }
+
+
     /**
      * This method is used to pass the value to a parameter.
      * 
@@ -90,9 +111,8 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
      */
     public String getJpa(VariableDeclaration inDeclaration) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         GelExpression initValue = inDeclaration.getInitValue();
-        System.out.println("InitValue : " + initValue + " (" + initValue.getClass().getName() + ")");
         StringBuffer buffer = new StringBuffer();
-        genericVisit(initValue, buffer, "");
+        genericVisit(initValue, buffer);
         return buffer.toString();
     }
 
@@ -102,27 +122,46 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
     //========================================================================//
 
 
-    public GelExpression visitGelExpression(GelExpression inExpression, Object... inParameters) {
-        System.out.println("Visiting a plain gel expression");
+    public GelExpression visitGelExpression(GelExpression inExpression, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         StringBuffer buffer = (StringBuffer) inParameters[0];
         String indentation = (String) inParameters[1];
-        buffer.append(indentation);
-        buffer.append(indentation);
         buffer.append("\n");
+        buffer.append(indentation);
+        DifferentImpl   impl;
+        buffer.append(indentation);
+        String jpaOperator = operators.get(inExpression.getClass());
+        if (jpaOperator != null) {
+            buffer.append("cb.");
+            buffer.append(jpaOperator);
+            buffer.append("(");
+            boolean notTheFirstOne = false;
+            for (GelExpression anExpression : inExpression.getOperand()) {
+                if (notTheFirstOne) {
+                    buffer.append(", ");
+                }
+                notTheFirstOne = true;
+                genericVisit(anExpression, inParameters);
+            }       // for anOperand
+        }       // jpaOperator != null
+        buffer.append(")");
         return inExpression;
     }
 
 
     public VariableDeclaration visitVariableDeclaration(VariableDeclaration inDeclaration, Object... inParameters) {
-        System.out.println("Visiting a variable declaration");
         StringBuffer buffer = (StringBuffer) inParameters[0];
-        buffer.append(inDeclaration.getName());
+        EteQuery query = (EteQuery) inParameters[2];
+        if (inDeclaration == query.getTargetVariable()) {
+            buffer.append("root");
+        }
+        else {
+            buffer.append(inDeclaration.getName());
+        }
         return inDeclaration;
     }
 
 
     public Self visitSelf(Self inSelf, Object... inParameters) {
-        System.out.println("Visiting self");
         StringBuffer buffer = (StringBuffer) inParameters[0];
         buffer.append("inFor");
         return inSelf;
@@ -165,6 +204,9 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
     //========================================================================//
     //========================================================================//
 
-    String      indentation;
+
+    private     String                  indentation;
+    private     Map<Class, String>     operators;
+
 
 }       // JpaGenerator
