@@ -38,7 +38,7 @@
         </transformation-set>
 
         <velocity   template="pu.vm"
-                        target="generated-resources/ete/META-INF/persistence.xml"/>
+                        target="generated-web-pages/ete/WEB-INF/classes/META-INF/persistence.xml"/>
     </transformation-set>
 
 </mda>

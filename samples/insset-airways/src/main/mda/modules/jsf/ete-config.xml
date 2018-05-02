@@ -28,7 +28,7 @@
                       target="generated-web-pages/ete/WEB-INF/faces-config.xml"/> 
             
             <velocity template="config/bundle.vm"
-                      target="generated-resources/ete/Bundle.properties"/>
+                      target="generated-web-pages/ete/WEB-INF/classes/Bundle.properties"/>
 
     </transformation-set>
 
