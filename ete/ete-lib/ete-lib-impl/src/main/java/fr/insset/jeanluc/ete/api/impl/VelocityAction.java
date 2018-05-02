@@ -71,20 +71,6 @@ public class VelocityAction extends GenericTemplate {
             dialectName = "fr.insset.jeanluc.el.dialect.BasicJavaDialect";
         }
         try {
-            ClassLoader classLoader = getClass().getClassLoader();
-            System.out.println("Class of the ClassLoader : " + classLoader.getClass());
-            while (classLoader != null) {
-                if (classLoader instanceof URLClassLoader) {
-                    URLClassLoader urlcl = (URLClassLoader) classLoader;
-                    URL[] urls = urlcl.getURLs();
-                    for (int i=0 ; i<urls.length ; i++) {
-                        System.out.println("url : "  + urls[i].getFile());
-                    }
-                    classLoader = classLoader.getParent();
-                } else {
-                    break;
-                }
-            }
             Class dialectClass = loadClass(dialectName);
             Object dialect = dialectClass.newInstance();
             context.put("_d", dialect);

@@ -207,7 +207,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         BodyBuilder builder = new BodyBuilder();
         builder.buildStatements(inModel);
         FilterBuilder filterBuilder = new FilterBuilder();
-        filterBuilder.buildFilters(inModel);
+        filterBuilder.buildQueries(inModel);
         return inModel;
     }
 

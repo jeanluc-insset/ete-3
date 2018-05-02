@@ -31,19 +31,23 @@ public class EnhancedMofClassImpl extends MofClassImpl {
     }
 
 
-    public void addFilter(SyntheticFilter inFilter) throws InstantiationException {
+    public void addQuery(EteQuery inFilter) throws InstantiationException {
+        System.out.println("ADDING " + inFilter + " to " + getName());
         MofProperty filteredProperty = inFilter.getFilteredProperty();
-        List<SyntheticFilter> filters = support.get(filteredProperty);
+        List<EteQuery> filters = support.get(filteredProperty);
         if (filters == null) {
-            filters = FactoryMethods.newList(SyntheticFilter.class);
+            System.out.println("It is the first query for this class");
+            filters = FactoryMethods.newList(EteQuery.class);
             support.put(filteredProperty, filters);
         }
         filters.add(inFilter);
+        System.out.println("Number of filters : " + filters.size());
     }
 
 
 
-    public Map<MofProperty, List<SyntheticFilter>> getSupport() {
+    public Map<MofProperty, List<EteQuery>> getSupport() {
+        System.out.println("Getting queries for " + getName() + " -> " + support.size());
         return support;
     }
 
@@ -66,12 +70,19 @@ public class EnhancedMofClassImpl extends MofClassImpl {
 
 
     /**
-     * Any invariant of the class is scanned.<br>
+     * Every invariant of the class is scanned.<br>
      * It is added to the list associated with any property it contains.<br>
-     * That list helps to build requests to find out matching value for
-     * an in work entity.
+     * That list helps to build requests to find out matching values for
+     * an in work entity.<br>
+     * Remark : the MofProperties used as keys do not need to be owned by
+     * the "this" object. Usually they do not.<br>
+     * For example, in the "airways" model, the constraint<br>
+     * <code>captain &lt;&gt; copilot</code><br>
+     * the properties <code>captain</code> and <code>copilot</code> belong to
+     * the Flight entity and are used as keys in the support property of the
+     * Pilot entity.
      */
-    private Map<MofProperty, List<SyntheticFilter>>   support = new HashMap<>();
+    private Map<MofProperty, List<EteQuery>>   support = new HashMap<>();
 
 
 }

@@ -2,12 +2,14 @@
 
 package fr.insset.jeanluc.action.semantics.builder;
 
+import fr.insset.jeanluc.ete.gel.AttributeNav;
 import fr.insset.jeanluc.ete.gel.GelExpression;
 import fr.insset.jeanluc.ete.meta.model.constraint.Invariant;
 import fr.insset.jeanluc.ete.meta.model.constraint.impl.InvariantImpl;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -32,8 +34,11 @@ public class EnhancedInvariantImpl extends InvariantImpl implements Invariant {
     }
 
 
-    private     GelExpression           expression;
 
-    private     List<MofProperty>       support = new LinkedList<>();
+    //========================================================================//
+
+
+    private     GelExpression               expression;
+    private     List<MofProperty>           support = new LinkedList<>();
 
 }

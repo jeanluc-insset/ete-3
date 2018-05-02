@@ -1,11 +1,16 @@
 
-package fr.insset.jeanluc.action.semantics.builder;
+package fr.insset.jeanluc.xlang2java;
 
 
 
+import fr.insset.jeanluc.action.semantics.builder.ConditionVisitor;
+import fr.insset.jeanluc.action.semantics.builder.EnhancedMofClassImpl;
+import fr.insset.jeanluc.action.semantics.builder.EteQuery;
+import fr.insset.jeanluc.as2java.JPAGenerator;
 import static fr.insset.jeanluc.ete.api.Action.BASE_DIR;
 import fr.insset.jeanluc.ete.api.EteException;
 import fr.insset.jeanluc.ete.api.impl.VelocityAction;
+import fr.insset.jeanluc.ete.gel.GelExpression;
 import fr.insset.jeanluc.ete.meta.model.core.PrimitiveDataTypes;
 import fr.insset.jeanluc.ete.meta.model.core.impl.Factories;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
@@ -33,12 +38,14 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  *
  * @author jldeleage
  */
-public class FilterBuilderTest {
+public class JpaGeneratorTest {
 
 
     public final String     MODEL_PATH    = "../../../samples/insset-airways/src/main/mda/Model.xml";
@@ -47,7 +54,7 @@ public class FilterBuilderTest {
     public final String     TEMPLATES_DIR = "src/test/mda/modules/c/";
 
 
-    public FilterBuilderTest() {
+    public JpaGeneratorTest() {
     }
 
     @BeforeClass
@@ -96,19 +103,15 @@ public class FilterBuilderTest {
 
         // 4- check result
         EnhancedMofClassImpl pilotClass = (EnhancedMofClassImpl) result.getElementByName("Pilot");
+        EnhancedMofClassImpl flightClass = (EnhancedMofClassImpl) result.getElementByName("Flight");        
+        MofProperty          captain = flightClass.getOwnedAttribute("captain");
         Map<MofProperty, List<EteQuery>> support = pilotClass.getSupport();
-        for (MofProperty aProperty : support.keySet()) {
-            List<EteQuery>  queries = support.get(aProperty);
-            for (EteQuery aQuery : queries) {
-                try {
-                    System.out.println(aQuery.getExpression().getClass());
-//                    System.out.println(jpaGenerator.getJpa(aQuery));
-                }
-                catch (Exception ex) {
-                    System.out.println(ex.getMessage() + " (" + ex.getClass() + ")");
-                }
-            }
-        }
+        List<EteQuery> queries = support.get(captain);
+        EteQuery    aQuery = queries.get(0);
+        List<VariableDeclaration> variables = aQuery.getVariables();
+        JPAGenerator    generator = new JPAGenerator();
+        String jpa = generator.getJpa(variables.get(0));
+        assertEquals("inFor.getCopilot()", jpa);
     }
 
     protected void velocityAction(EteModel model, String template, String target) throws EteException {

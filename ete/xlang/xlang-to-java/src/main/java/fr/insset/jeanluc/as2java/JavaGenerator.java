@@ -531,6 +531,10 @@ public class JavaGenerator extends CBasedGenerator implements Generator, JavaDia
     //========================================================================//
 
 
+    public String getIndentation() {
+        return indentation;
+    }
+
 
 
     //========================================================================//

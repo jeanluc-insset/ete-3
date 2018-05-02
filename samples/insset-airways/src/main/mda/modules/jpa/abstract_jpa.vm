@@ -3,6 +3,7 @@ package fr.insset.jeanluc.ete.jpa;
 
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
 
 
 /**
@@ -20,7 +21,12 @@ public abstract class AbstractJpa<T> {
     /**
      * 
      */
-   protected abstract EntityManager getEntityManager();
+    protected abstract EntityManager getEntityManager();
+
+    protected CriteriaBuilder   getCriteriaBuilder() {
+        return getEntityManager().getCriteriaBuilder();
+    }
+
 
     public void create(T entity) {
         EntityManager em = getEntityManager();

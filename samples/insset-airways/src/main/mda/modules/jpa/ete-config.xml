@@ -32,7 +32,7 @@
                         target="${current.owningPackage.name.replace('.', '/')}/model/${current.name}.java"/>
             
             <velocity items='${classes.filter(c -> c.hasStereotype("Entity"))}'
-                        dialect="fr.insset.jeanluc.as2java.JavaGenerator"
+                        dialect="fr.insset.jeanluc.as2java.JPAGenerator"
                         template="class2jpa.vm"
                         target="${current.owningPackage.name.replace('.', '/')}/jpa/${current.name}Jpa.java"/>
         </transformation-set>

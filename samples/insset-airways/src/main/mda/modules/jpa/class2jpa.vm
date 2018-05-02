@@ -18,6 +18,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.Metamodel;
@@ -85,37 +86,41 @@ public class ${current.name}Jpa extends AbstractJpa<${current.name}> {
     //           F I L T E R S   F O R   I N V A R I A N T S   O F            //
     //            E V E N T U A L L Y   O T H E R   C L A S S E S             //
     //========================================================================//
-    
+
+
 
 
 #foreach ($aProperty in $current.support.keySet())
-#if ($aProperty.type.hasStereotype("Entity"))
-    public List<$aProperty.type> findAll${dialect.i2uc($aProperty.name)}For${aProperty.owningMofClass.name}($aProperty.owningMofClass.name inItem) {
-        EntityManager em = getEntityManager();
-        CriteriaBuilder cb = em.getCriteriaBuilder();
+    public List<${current.name}> getAll${current.name}As${dialect.i2uc($aProperty.name)}For(${aProperty.owningMofClass.name} inFor) {
+        CriteriaBuilder cb = getCriteriaBuilder();
         CriteriaQuery<${current.name}> cq = cb.createQuery(${current.name}.class);
-#foreach ($aFilter in $$current.support.get($aProperty))
-        filter${dialect.i2uc($aProperty.name)}For${dialect.i2uc($aFilter.invariant.name)}(cq, inItem);
+        Root<${current.name}> root = cq.from(${current.name}.class);
+        cq.select(root);
+#foreach ($aQuery in $current.support.get(${aProperty}))
+        select${dialect.i2uc($aProperty.name)}For${dialect.i2uc($aQuery.invariant.name)}(cq, root, inFor);
 #end
         TypedQuery<${current.name}> query = em.createQuery(cq);
-        // NO : we should use more precise variables
-        query.setParameter("item", inItem);
-#foreach ($aFilter in $$current.support.get($aProperty))
-        // ...
+#foreach ($aQuery in $current.support.get(${aProperty}))
+#foreach ($aVariable in $aQuery.variables)
+        query.setParameter("${aVariable.name}", ${dialect.getJpa($aVariable)});
+#end
 #end
         return query.getResultList();
     }
 
-#foreach ($aFilter in $$current.support.get($aProperty))
-    public CriteriaQuery filter${dialect.i2uc($aProperty.name)}For${dialect.i2uc($aFilter.invariant.name)}(CriteriaQuery inQuery, ${aFilter.clientClass.name} inItem) {
-        return inQuery;
+#foreach ($aQuery in $current.support.get(${aProperty}))
+    public CriteriaQuery select${dialect.i2uc($aProperty.name)}For${dialect.i2uc($aQuery.invariant.name)}(CriteriaQuery cq, Root<${current.name}> root, ${aProperty.owningMofClass.name} inItem) {
+        CriteriaBuilder cb = getCriteriaBuilder();
+#foreach ($aVariable in $aQuery.variables)
+        ParameterExpression<${current.name}> ${aProperty.name} = cb.parameter(${aVariable.type.name}.class, "${aVariable.name}");
+        Predicate   predicate = cb.notEqual(root, ${aProperty.name});
+        cq.where(predicate);
+#end
+        return cq;
     }
-
 #end
 
 #end
-#end
-
 
 
 }
