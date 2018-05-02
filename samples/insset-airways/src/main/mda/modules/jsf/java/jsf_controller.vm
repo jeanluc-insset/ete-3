@@ -271,7 +271,7 @@ ${aMethod.name}${dialect.i2uc($aParameter.name)}#if( $foreach.hasNext ), #end
                 return null;
             }
             ${current.name}Controller controller = (${current.name}Controller) facesContext.getApplication().getELResolver().
-                    getValue(facesContext.getELContext(), null, "addressController");
+                    getValue(facesContext.getELContext(), null, "${dialect.i2lc($current.name)}Controller");
             return controller.get${current.name}(getKey(value));
         }
 
