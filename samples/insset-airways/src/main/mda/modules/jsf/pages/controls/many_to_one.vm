@@ -1,1 +1,3 @@
-Many to One
+                    <h:selectOneMenu value="#{${scope}${varName}}">
+                        <f:selectItems value="#{${dialect.i2lc($aProperty.type.name)}Controller.itemsAvailableSelectOne}"/>
+                    </h:selectOneMenu>

@@ -10,7 +10,7 @@
     <h:body>
 #foreach ($aClass in $current.classes)
 #if ($aClass.hasStereotype("Entity"))
-       <h:link outcome="/admin/${dialect.i2lc($aClass.name)}/list" value="Show All ${aClass.name} Items"/>
+       <h:link outcome="/admin/${aClass.name.toLowerCase()}/list" value="Show All ${aClass.name} Items"/>
         <br />
 #end
 #end
