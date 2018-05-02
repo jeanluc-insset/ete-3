@@ -161,6 +161,16 @@ public class FilterBuilder extends DynamicVisitorSupport {
 
     public void buildQueries(EteModel inModel) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         Collection<MofClass> allClasses = inModel.getAllClasses();
+
+        for (MofClass aMofClass : allClasses) {
+            for (MofProperty aProperty : aMofClass.getAllAttributes()) {
+                MofType type = aProperty.getType();
+                if (type instanceof EnhancedMofClassImpl) {
+                    EnhancedMofClassImpl    targetClass = (EnhancedMofClassImpl) type;
+                    targetClass.getSupport().put(aProperty, FactoryMethods.newList(EteQuery.class));
+                }
+            }       // loop on properties
+        }       // loop on classes
         for (MofClass aMofClass : allClasses) {
             buildQueries(aMofClass);
         }
