@@ -82,66 +82,12 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
     //                              D I A L E C T                             //
     //========================================================================//
 
-//
-//    public String getJpa(EnhancedMofClassImpl inClass) {
-//        StringBuffer    buffer = new StringBuffer();
-//        for (MofProperty aProperty : inClass.getSupport().keySet()) {
-//            getJpa(inClass, aProperty, buffer);
-//        }
-//        return buffer.toString();
-//    }
-//
-//    protected void getJpa(EnhancedMofClassImpl inClass, MofProperty inProperty, StringBuffer buffer) {
-//        String   propertyName = i2uc(inProperty.getName());
-//        MofClass propertyOWningClass = (MofClass) inProperty.getOwningMofClass();
-//        buffer.append(indentation);
-//        buffer.append("public List<");
-//        buffer.append(inClass.getName());
-//        buffer.append("> get");
-//        buffer.append(propertyName);
-//        buffer.append("For");
-//        buffer.append(propertyOWningClass.getName());
-//        buffer.append("(");
-//        buffer.append(") {\n");
-//        String indentation = this.indentation + this.indentation;
-//        inClass.getSupport().get(inProperty);
-//        inProperty.getName();
-//        buffer.append(indentation);
-//    }
-//
-//
-//    public void getJpa(EteQuery inQuery, StringBuilder buffer) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-//        MofType type = inQuery.getTargetVariable().getType();
-//        System.out.println("Trying to generate query");
-//        String  indentation = getIndentation();
-//        buffer.append(indentation);
-//        buffer.append("public CriteriaQuery select");
-//        buffer.append(i2uc(inQuery.getPropertyName()));
-//        buffer.append("(CriteriaQuery<");
-//        buffer.append(type.getName());
-//        buffer.append("> inoutQuery, ");
-//        buffer.append(inQuery.getClientClass().getName());
-//        buffer.append(" inClient) {\n");
-//        indentation += indentation;
-//        buffer.append(indentation);
-//        buffer.append("CriteriaBuilder  cb = getCriteriaBuilder();\n");
-//        buffer.append(indentation);
-//        buffer.append("Root<");
-//        buffer.append("> root = inoutQuery.getRoot();\n");
-//        buffer.append(indentation);
-//        buffer.append("Predicate predicate = \n");
-//        buffer.append(indentation);
-//        buffer.append(indentation);
-//        genericVisit(inQuery.getExpression(), buffer, inQuery, indentation, type);
-//        buffer.append(";\n");
-//        buffer.append(indentation);
-//        buffer.append("return inoutQuery;\n");
-//        indentation = getIndentation();
-//        buffer.append(indentation);
-//        buffer.append("}\n\n");
-//    }
-
-
+    /**
+     * This method is used to pass the value to a parameter.
+     * 
+     * @param VariableDeclaration inDeclaration : variable waiting for its value
+     * @return String : the expression getting the value of this variable
+     */
     public String getJpa(VariableDeclaration inDeclaration) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         GelExpression initValue = inDeclaration.getInitValue();
         System.out.println("InitValue : " + initValue + " (" + initValue.getClass().getName() + ")");
@@ -184,10 +130,7 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
 
 
     public AttributeNav visitAttributeNav(AttributeNav inNav, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        System.out.println("Visiting a navigation to ");
-        System.out.println(inNav.getToFeature().getName());
         StringBuffer buffer = (StringBuffer) inParameters[0];
-        System.out.println("Visiting an attribute navigation");
         List<GelExpression> operand = inNav.getOperand();
         GelExpression firstOperand = operand.get(0);
         genericVisit(firstOperand, inParameters);
