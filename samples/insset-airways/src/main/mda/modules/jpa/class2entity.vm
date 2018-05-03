@@ -5,6 +5,7 @@ package ${current.owningPackage}.model;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -84,6 +85,14 @@ public class ${current.name} #if (${current.superClass.size()}>0)extends ${curre
 
     public void remove${dialect.i2uc($aProperty.name)}(${dialect.mt2lt($aProperty.type.baseType)} inValue) {
         ${aProperty.name}.remove(inValue);
+    }
+#elseif ($aProperty.type.hasStereotype("Entity") || $aProperty.type.name.equals("String"))
+    public Optional<${aProperty.type}> get${dialect.i2uc($aProperty.name)}$() {
+        return Optional.ofNullable(${aProperty.name});
+    }
+#elseif ($aProperty.type.name.equals("date"))
+    public Optional<java.util.Date> get${dialect.i2uc($aProperty.name)}$() {
+        return Optional.ofNullable(${aProperty.name});
     }
 #end
 #end
