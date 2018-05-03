@@ -88,10 +88,8 @@ public class ${current.name}Jpa extends AbstractJpa<${current.name}> {
     //========================================================================//
 
 
-
-
 #foreach ($aProperty in $current.support.keySet())
-    public List<${current.name}> getAll${current.name}As${dialect.i2uc($aProperty.name)}For(${aProperty.owningMofClass.name} inFor) {
+    public List<${current.name}> getAll${current.name}As${dialect.i2uc($aProperty.name)}For${aProperty.owningMofClass.name}(${aProperty.owningMofClass.name} inFor) {
         CriteriaBuilder cb = getCriteriaBuilder();
         CriteriaQuery<${current.name}> cq = cb.createQuery(${current.name}.class);
         Root<${current.name}> root = cq.from(${current.name}.class);
