@@ -18,6 +18,7 @@ import fr.insset.jeanluc.ete.gel.StringLiteral;
 import fr.insset.jeanluc.ete.gel.VariableDefinition;
 import fr.insset.jeanluc.ete.gel.impl.*;
 import fr.insset.jeanluc.ete.meta.model.constraint.Condition;
+import fr.insset.jeanluc.ete.meta.model.emof.Feature;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
@@ -38,6 +39,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -102,6 +104,45 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
         return buffer.toString();
     }
 
+    public String addChecking(Step inStep) {
+        StringBuffer    buffer = new StringBuffer();
+        addChecking(inStep, buffer);
+        return buffer.toString();
+    }
+
+    protected void addChecking(Step inStep, StringBuffer buffer) {
+        System.out.println("Dans addChecking : " + inStep + " (" + inStep.getClass().getName() + ")");
+        if (inStep instanceof AttributeNav) {
+            AttributeNav nav = (AttributeNav) inStep;
+            List<GelExpression> operand = inStep.getOperand();
+            if (operand != null && operand.size()>0)
+                addChecking((Step) operand.get(0), buffer);
+            Feature toFeature = nav.getToFeature();
+            buffer.append(".get");
+            buffer.append(i2uc(toFeature.getName()));
+            buffer.append("$()");
+        }
+        else {
+            buffer.append("inFor");
+        }
+    }
+    
+
+    public String getFilter(AttributeNav inNav, String start) {
+        StringBuffer buffer = new StringBuffer(start);
+        addNavInFilter(inNav, buffer);
+        return buffer.toString();
+    }
+
+    protected void addNavInFilter(Step inStep, StringBuffer inoutBuffer) {
+        List<GelExpression> operand = inStep.getOperand();
+        if (operand == null || operand.size() == 0) {
+            return;
+        }
+        AttributeNav nav = (AttributeNav) inStep;
+        addNavInFilter((Step) operand.get(0), inoutBuffer);
+        inoutBuffer.append(i2uc(nav.getToFeature().getName()));
+    }
 
     /**
      * This method is used to pass the value to a parameter.
@@ -177,7 +218,7 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
         String name = inNav.getToFeature().getName();
         name = i2uc(name);
         buffer.append(name);
-        buffer.append("()");
+        buffer.append("$()");
         return inNav;
     }
 

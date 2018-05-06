@@ -4,25 +4,18 @@ package ${current.owningPackage.name}.jpa;
 import fr.insset.jeanluc.ete.jpa.AbstractJpa;
 import ${current.owningPackage.name}.model.*;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-#if ($javase)
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-#end
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.ParameterExpression;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.persistence.metamodel.EntityType;
-import javax.persistence.metamodel.Metamodel;
-import javax.persistence.metamodel.SingularAttribute;
+##if ($javase)
+##import javax.persistence.EntityManagerFactory;
+##import javax.persistence.Persistence;
+##end
+import javax.persistence.*;
+import javax.persistence.criteria.*;
+import javax.persistence.metamodel.*;
 
 
 
@@ -94,27 +87,37 @@ public class ${current.name}Jpa extends AbstractJpa<${current.name}> {
         CriteriaQuery<${current.name}> cq = cb.createQuery(${current.name}.class);
         Root<${current.name}> root = cq.from(${current.name}.class);
         cq.select(root);
+        Map<ParameterExpression, Object>    parameters = new HashMap<>();
 #foreach ($aQuery in $current.support.get(${aProperty}))
-        select${dialect.i2uc($aProperty.name)}For${dialect.i2uc($aQuery.invariant.name)}(cq, root, inFor);
+        select${dialect.i2uc($aProperty.name)}For${dialect.i2uc($aQuery.invariant.name)}(cq, root, inFor, parameters);
 #end
         TypedQuery<${current.name}> query = em.createQuery(cq);
 #foreach ($aQuery in $current.support.get(${aProperty}))
-#foreach ($aVariable in $aQuery.variables)
-        query.setParameter("${aVariable.name}", ${dialect.getJpa($aVariable)});
-#end
+        for (ParameterExpression param : parameters.keySet()) {
+            query.setParameter(param, parameters.get(param));
+        }
 #end
         return query.getResultList();
     }
 
+
 #foreach ($aQuery in $current.support.get(${aProperty}))
-    public CriteriaQuery select${dialect.i2uc($aProperty.name)}For${dialect.i2uc($aQuery.invariant.name)}(CriteriaQuery cq, Root<${current.name}> root, ${aProperty.owningMofClass.name} inItem) {
+    public void select${dialect.i2uc($aProperty.name)}For${dialect.i2uc($aQuery.invariant.name)}(CriteriaQuery cq,
+                                Root<${current.name}> root,
+                                ${aProperty.owningMofClass.name} inFor,
+                                Map<ParameterExpression, Object> inoutParameters) {
         CriteriaBuilder cb = getCriteriaBuilder();
 #foreach ($aVariable in $aQuery.variables)
-        ParameterExpression<${current.name}> ${aVariable.name} = cb.parameter(${aVariable.type.name}.class, "${aVariable.name}");
-        Predicate   predicate = ${dialect.getPredicate($aQuery)};
-        cq.where(predicate);
+##        ${dialect.getPredicate($aQuery)};
+        Optional<${aVariable.type.name}> ${aVariable.name}Opt = ${dialect.addChecking($aVariable.initValue)};
+        if (! ${aVariable.name}Opt.isPresent()) {
+            return;
+        }
 #end
-        return cq;
+#foreach ($aVariable in $aQuery.variables)
+        Expression<${aVariable.type.name}> ${aVariable.name} = cb.literal(${aVariable.name}Opt.get());
+        cq.where(${dialect.getPredicate($aQuery)});
+#end
     }
 #end
 

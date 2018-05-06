@@ -1,3 +1,4 @@
                     <h:inputText id="${var.name}" value="#{${scope}${varName}}" title="#{bundle.Create${current.name}Title_street}">
-                        <f:convertDateTime pattern=""/>
+                        <f:convertDateTime pattern="dd/MM/yy"/>
+                        <f:ajax render="@form"/>
                     </h:inputText>
