@@ -221,7 +221,7 @@ public class TreeBuilderTest {
 
 
     // The expected result is not built yet so the test is not available
-//    @Test
+    @Test
     public void testNavigationWithCollectionOperation() throws InstantiationException, IOException, IllegalAccessException {
         System.out.println("navigation with collection operation");
         readModel();

@@ -87,16 +87,10 @@ public class ${current.name}Jpa extends AbstractJpa<${current.name}> {
         CriteriaQuery<${current.name}> cq = cb.createQuery(${current.name}.class);
         Root<${current.name}> root = cq.from(${current.name}.class);
         cq.select(root);
-        Map<ParameterExpression, Object>    parameters = new HashMap<>();
 #foreach ($aQuery in $current.support.get(${aProperty}))
-        select${dialect.i2uc($aProperty.name)}For${dialect.i2uc($aQuery.invariant.name)}(cq, root, inFor, parameters);
+        select${dialect.i2uc($aProperty.name)}For${dialect.i2uc($aQuery.invariant.name)}(cq, root, inFor);
 #end
         TypedQuery<${current.name}> query = em.createQuery(cq);
-#foreach ($aQuery in $current.support.get(${aProperty}))
-        for (ParameterExpression param : parameters.keySet()) {
-            query.setParameter(param, parameters.get(param));
-        }
-#end
         return query.getResultList();
     }
 
@@ -104,8 +98,7 @@ public class ${current.name}Jpa extends AbstractJpa<${current.name}> {
 #foreach ($aQuery in $current.support.get(${aProperty}))
     public void select${dialect.i2uc($aProperty.name)}For${dialect.i2uc($aQuery.invariant.name)}(CriteriaQuery cq,
                                 Root<${current.name}> root,
-                                ${aProperty.owningMofClass.name} inFor,
-                                Map<ParameterExpression, Object> inoutParameters) {
+                                ${aProperty.owningMofClass.name} inFor) {
         CriteriaBuilder cb = getCriteriaBuilder();
 #foreach ($aVariable in $aQuery.variables)
 ##        ${dialect.getPredicate($aQuery)};
