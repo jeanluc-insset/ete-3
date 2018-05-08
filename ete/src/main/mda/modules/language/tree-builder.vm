@@ -37,6 +37,7 @@ import fr.insset.jeanluc.ete.${dialect.i2lc($projectName)}.${dialect.i2uc($proje
 import fr.insset.jeanluc.ete.${dialect.i2lc($projectName)}.${dialect.i2uc($projectName)}ParserBaseVisitor;
 import fr.insset.jeanluc.ete.${dialect.i2lc($projectName)}.*;
 import static fr.insset.jeanluc.ete.${dialect.i2lc($projectName)}.${dialect.i2uc($projectName)}Context.CURRENT;
+import static fr.insset.jeanluc.ete.${dialect.i2lc($projectName)}.${dialect.i2uc($projectName)}Context.ROOT;
 import fr.insset.jeanluc.ete.meta.model.emof.Feature;
 import fr.insset.jeanluc.util.factory.FactoryMethods;
 import fr.insset.jeanluc.util.factory.FactoryRegistry;
@@ -174,6 +175,7 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
         try {
             Self    result = (Self) FactoryRegistry.newInstance("self");
             result.setType(context.getContextType());
+            context.set(CURRENT, result);
             return result;
         } catch (InstantiationException ex) {
             Logger.getLogger(TreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
@@ -312,6 +314,9 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
             return children.get(0).accept(this);
         }
         try {
+            Collect  current = (Collect) context.get(CURRENT);
+            Feature toFeature = current.getToFeature();
+            context.set(ROOT, toFeature);
             ${dialect.i2uc($projectName)}Parser.FunctionCallContext functionCall = (${dialect.i2uc($projectName)}Parser.FunctionCallContext)children.get(1);
             String functionIdentifier = functionCall.children.get(0).getText();
             ${dialect.i2uc($projectName)}Expression result = context.resolveCollOp(functionIdentifier);
@@ -325,10 +330,13 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
                 ${dialect.i2uc($projectName)}Parser.ParameterListContext parameterList = (${dialect.i2uc($projectName)}Parser.ParameterListContext) functionChildren.get(2);
                 List<ParseTree> parameters = parameterList.children;
                 if (parameters != null) {
+                    context.push();
+                    context.set(CURRENT, context.get(CURRENT));
                     for (int i=0 ; i<parameters.size() ; i += 2) {
                         ${dialect.i2uc($projectName)}Expression aParameter = parameters.get(i).accept(this);
                         operands.add(aParameter);
                     }
+                    context.pop();
                 }
             }
             return result;

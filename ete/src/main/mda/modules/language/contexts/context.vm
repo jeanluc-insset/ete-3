@@ -84,6 +84,7 @@ public interface GelContext<T> {
 
 
 
+    public Object get(String inKey) throws InstantiationException, IllegalAccessException;
 
     public default TypedElement getContext() throws InstantiationException, IllegalAccessException {
         return (TypedElement)resolve(CONTEXT);

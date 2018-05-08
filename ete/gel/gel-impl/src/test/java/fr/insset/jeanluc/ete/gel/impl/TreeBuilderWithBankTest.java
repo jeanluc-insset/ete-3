@@ -179,8 +179,7 @@ public class TreeBuilderWithBankTest {
         Step    includesNavigation = new NavHelper()
                             .startFrom(model, transfer)
                             .navigateTo("accounts")
-                            .includes()
-                            .addAnOperand(fromAccountNavigation)
+                            .includes(fromAccountNavigation)
                             .getNavigation();
 
         testAny(includesNavigation, expressionAsString, model, transfer);

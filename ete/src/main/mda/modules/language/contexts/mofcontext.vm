@@ -203,12 +203,12 @@ public class ${dialect.i2uc($projectName)}ContextImpl implements ${dialect.i2uc(
 
     @Override
     public Object resolveVariable(String inString) throws InstantiationException, IllegalAccessException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet : " + inString); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public GelExpression resolveOperation(String inString, MofType inType) throws InstantiationException, IllegalAccessException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet : " + inString + " in " + inType.getName()); //To change body of generated methods, choose Tools | Templates.
     }
 
 
@@ -297,8 +297,8 @@ public class ${dialect.i2uc($projectName)}ContextImpl implements ${dialect.i2uc(
                 case "excludes":
                 case "includesAll":
                 case "excludesAll":
-                    EteModel model = (EteModel)resolveVariable(MODEL);
-                    MofType booleanType = (MofType) model.getElementByName("Boolean");
+                    EteModel model = (EteModel)get(MODEL);
+                    MofType booleanType = (MofType) model.getElementByName("boolean");
                     result.setType(booleanType);
                     break;
                 default:
@@ -438,9 +438,15 @@ public class ${dialect.i2uc($projectName)}ContextImpl implements ${dialect.i2uc(
 
     //========================================================================//
 
-//    public  TypedElement getContext() throws InstantiationException, IllegalAccessException {
-//        return (TypedElement)resolveVariable(CONTEXT);
-//    }
+
+    public  TypedElement getContext() throws InstantiationException, IllegalAccessException {
+        return (TypedElement) get(CONTEXT);
+    }
+
+
+
+
+
 //
 //
 //    public GelExpression resolveParameter(String inString, MofOperation inOperation) throws InstantiationException, IllegalAccessException {

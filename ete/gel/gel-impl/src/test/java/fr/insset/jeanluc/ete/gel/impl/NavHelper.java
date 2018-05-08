@@ -141,11 +141,12 @@ public class NavHelper {
         return this;
     }
 
-    public NavHelper includes() {
+    public NavHelper includes(Step inStep) {
         Step    nextStep = new IncludesImpl();
         addOp(nextStep);
         MofType resultType = (MofType) model.getElementByName("boolean");
         nextStep.setType(resultType);
+        nextStep.getOperand().add(inStep);
         navigation = nextStep;
         return this;
     }
@@ -170,7 +171,11 @@ public class NavHelper {
 
 
     protected void addOp(Step nextStep) {
-        List    operands = new LinkedList();
+        List    operands = nextStep.getOperand();
+        if (operands == null) {
+            operands = new LinkedList();
+            nextStep.setOperand(operands);
+        }
         operands.add(navigation);
         nextStep.setOperand(operands);        
     }
