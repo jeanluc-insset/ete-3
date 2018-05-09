@@ -94,11 +94,11 @@ public class ${current.name} #if (${current.superClass.size()}>0)extends ${curre
     public void remove${dialect.i2uc($aProperty.name)}(${dialect.mt2lt($aProperty.type.baseType)} inValue) {
         ${aProperty.name}.remove(inValue);
     }
-#elseif ($aProperty.type.hasStereotype("Entity") || $aProperty.type.name.equals("String"))
+#elseif ($aProperty.type.recBaseType.hasStereotype("Entity") || $aProperty.type.recBaseType.name.equals("String"))
     public Optional<${aProperty.type}> get${dialect.i2uc($aProperty.name)}$() {
         return Optional.ofNullable(${aProperty.name});
     }
-#elseif ($aProperty.type.name.equals("date"))
+#elseif ($aProperty.type.recBaseType.name.equals("date"))
     public Optional<java.util.Date> get${dialect.i2uc($aProperty.name)}$() {
         return Optional.ofNullable(${aProperty.name});
     }
