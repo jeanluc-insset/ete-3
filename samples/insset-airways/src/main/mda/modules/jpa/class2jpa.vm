@@ -82,8 +82,12 @@ public class ${current.name}Jpa extends AbstractJpa<${current.name}> {
 
 
 #foreach ($aProperty in $current.support.keySet())
-#foreach ($aQuery in $current.support.get($aProperty))
-    public List<${current.name}> getAll${current.name}As${dialect.i2uc($aProperty.name)}For${aProperty.owningMofClass.name}In${aQuery.clientClass.name}(${aQuery.clientClass.name} inFor) {
+    /**
+     * Should return all the instances of ${current.name} which are acceptable
+     * as values of ${dialect.i2uc($aProperty.name)} of ${aProperty.owningMofClass.name}
+     * without violating any constraint on ${aQuery.clientClass.name}
+     */
+    public List<${current.name}> getAll${current.name}As${dialect.i2uc($aProperty.name)}For${aProperty.owningMofClass.name}(${aProperty.owningMofClass.name} inFor) {
         CriteriaBuilder cb = getCriteriaBuilder();
         CriteriaQuery<${current.name}> cq = cb.createQuery(${current.name}.class);
         Root<${current.name}> root = cq.from(${current.name}.class);
@@ -94,7 +98,6 @@ public class ${current.name}Jpa extends AbstractJpa<${current.name}> {
         TypedQuery<${current.name}> query = em.createQuery(cq);
         return query.getResultList();
     }
-#end
 
 /*
     public void selectPlaneModelForCaptainMustBeCertified(CriteriaQuery cq,
@@ -130,9 +133,10 @@ public class ${current.name}Jpa extends AbstractJpa<${current.name}> {
         cq.where(${dialect.getPredicate($aQuery)});
 #end
     }
-#end
 
 #end
+#end
+
 
 
 }
