@@ -15,5 +15,6 @@
         <module>ete-maven-plugin</module>
         <module>gel</module>
         <module>xlang</module>
+        <module>xlang-to-sql</module>
     </modules>
 </project>

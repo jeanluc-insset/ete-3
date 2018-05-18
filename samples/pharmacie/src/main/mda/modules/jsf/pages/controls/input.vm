@@ -1,0 +1,1 @@
+                    <h:inputText id="${var.name}" value="#{${scope}${varName}}" title="#{bundle.Create${current.name}Title_street}" />

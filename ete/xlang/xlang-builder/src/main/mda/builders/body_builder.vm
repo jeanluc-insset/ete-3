@@ -88,7 +88,7 @@ public class BodyBuilder extends DynamicVisitorSupport {
         List<Statement>   statements = FactoryMethods.newList(Statement.class);
         List<Postcondition> postconditions = inOperation.getPostconditions();
         Collections.sort(postconditions, new PostconditionsComparator());
-        System.out.println("Postconditions are sorted ; there are " + variables.size() + " local variable(s)");
+        System.out.println("Postconditions are sorted ; there is (are) " + variables.size() + " local variable(s)");
         for (GelExpression anExpression : variables.keySet()) {
             VariableDeclaration aDeclaration = variables.get(anExpression);
             statements.add(aDeclaration);
@@ -97,7 +97,7 @@ public class BodyBuilder extends DynamicVisitorSupport {
         for (Postcondition aPostcondition : postconditions) {
             EnhancedPostcondition thisCondition = (EnhancedPostcondition) aPostcondition;
             buildStatements(thisCondition.getExpression(), statements, null);
-            System.out.println("        building statements for " + thisCondition.getSpecificationAsString()
+            System.out.println("    building statements for " + thisCondition.getSpecificationAsString()
                                                 + " -> " + statements.size() + " statement(s)");
             for (Statement aStatement : statements) {
                 displayStatement(aStatement);
@@ -107,8 +107,23 @@ public class BodyBuilder extends DynamicVisitorSupport {
     }
 
 
+
     protected void displayStatement(Statement aStatement) {
-    
+        displayOperand(aStatement, "        ");
+    }
+
+
+    protected void displayOperand(GelExpression anExpression, String indentation) {
+        System.out.print(indentation);
+        System.out.println(anExpression.getClass().getName());
+        List<GelExpression> operand = anExpression.getOperand();
+        if (operand == null) {
+            return;
+        }
+        indentation += "    ";
+        for (GelExpression anOperand : operand) {
+            displayOperand(anOperand, indentation);
+        }
     }
 
 

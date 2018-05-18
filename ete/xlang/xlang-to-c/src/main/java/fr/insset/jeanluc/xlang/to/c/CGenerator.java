@@ -135,43 +135,43 @@ public class CGenerator extends CBasedGenerator  {
 
 
 
-//    public String getOperationBody(MofOperation inOperation, String inIndentation) {
-//        EnhancedMofOperationImpl operation = (EnhancedMofOperationImpl) inOperation;
-//        List<Precondition> preconditions = operation.getPreconditions();
-//        List<Postcondition> postconditions = operation.getPostconditions();
-//        StringWriter    stringWriter = new StringWriter();
-//        PrintWriter     printWriter = new PrintWriter(stringWriter);
-//        printWriter.append(inIndentation);
-//        printWriter.append("// number of preconditions : " + preconditions.size());
-//        printWriter.append("\n");
-//        for (Condition aCondition : preconditions) {
-//            processCondition(aCondition, printWriter, inIndentation);
-//        }
-//        for (Condition aCondition : postconditions) {
-//            processCondition(aCondition, printWriter, inIndentation);
-//        }
-//        List<Statement> statementList = operation.getStatements();
-////            this.operation = inOperation;
-//        printWriter.append(inIndentation);
-//        for (Statement aStatement : statementList) {
-//            try {
-//                genericVisit(aStatement, printWriter, inIndentation);
-//            } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-//                Logger.getLogger(CGenerator.class.getName()).log(Level.SEVERE, null, ex);
-//                printWriter.append("// Unable to compile : ");
-//                printWriter.append(aStatement.toString());
-//                printWriter.append('\n');
-//                printWriter.append(indentation);
-//                printWriter.append("throw new RuntimeException();");
-//            }
-//        }
-//        printWriter.flush();
-//        String result = stringWriter.toString();
-//        Logger      logger = Logger.getGlobal();
-//        logger.log(Level.FINE, "Operation generee : \n" + result);
-//        return result;
-//
-//    }
+    public String getOperationBody(MofOperation inOperation, String inIndentation) {
+        EnhancedMofOperationImpl operation = (EnhancedMofOperationImpl) inOperation;
+        List<Precondition> preconditions = operation.getPreconditions();
+        List<Postcondition> postconditions = operation.getPostconditions();
+        StringWriter    stringWriter = new StringWriter();
+        PrintWriter     printWriter = new PrintWriter(stringWriter);
+        printWriter.append(inIndentation);
+        printWriter.append("// number of preconditions : " + preconditions.size());
+        printWriter.append("\n");
+        for (Condition aCondition : preconditions) {
+            processCondition(aCondition, printWriter, inIndentation);
+        }
+        for (Condition aCondition : postconditions) {
+            processCondition(aCondition, printWriter, inIndentation);
+        }
+        List<Statement> statementList = operation.getStatements();
+        printWriter.append('\n');
+        printWriter.append(inIndentation);
+        for (Statement aStatement : statementList) {
+            try {
+                genericVisit(aStatement, printWriter, inIndentation);
+            } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+                Logger.getLogger(CGenerator.class.getName()).log(Level.SEVERE, null, ex);
+                printWriter.append("// Unable to compile : ");
+                printWriter.append(aStatement.toString());
+                printWriter.append('\n');
+                printWriter.append(indentation);
+                printWriter.append("throw new RuntimeException();");
+            }
+        }
+        printWriter.flush();
+        String result = stringWriter.toString();
+        Logger      logger = Logger.getGlobal();
+        logger.log(Level.FINE, "Operation generee : \n" + result);
+        return result;
+
+    }
 
 
     protected void processCondition(Condition aCondition, PrintWriter printWriter, String inIndentation) {
