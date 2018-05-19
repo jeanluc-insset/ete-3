@@ -184,8 +184,6 @@ public class BankTest {
                         new File(SRC_DIR).toURI().toURL(),
                         new File(TARGET_DIR).toURI().toURL()
                     });
-            System.out.println("Classloader : " + classLoader);
-            System.out.println("URLS : " + classLoader.getURLs());
             // Load the class from the classloader by name....
             Class accountClass = classLoader.loadClass("fr.insset.jeanluc.ete.example.bank.Account");
             // Create some instances...
@@ -198,7 +196,6 @@ public class BankTest {
             setBalance.invoke(account, 2000D);
             deposit.invoke(account, 300D);
             double result = (double) getBalance.invoke(account, new Object[0]);
-            System.out.println("The result is " + result);
             assertEquals(2300.0, result, 0.01);
             
             //************************************************************************************************* Load and execute ** /

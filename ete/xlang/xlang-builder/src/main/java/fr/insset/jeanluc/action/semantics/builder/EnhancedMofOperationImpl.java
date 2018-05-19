@@ -42,28 +42,6 @@ public class EnhancedMofOperationImpl extends MofOperationImpl implements Enhanc
 
 
 
-//    @Override
-//    public List<Statement> buildBody() throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-//        System.out.println("Building body of " + this);
-//        localVariables = FactoryMethods.newMap(GelExpression.class, VariableDeclaration.class);
-//        for (Precondition aCondition : getPreconditions()) {
-//            EnhancedPrecondition enhanced = (EnhancedPrecondition) aCondition;
-//            statements.addAll(enhanced.getStatements());
-//        }
-//        List<EnhancedPostcondition> postconditions = (List)getPostconditions();
-//        Collections.sort(postconditions);
-//        AtPreFinder atPreFinder = new AtPreFinder();
-//        for (EnhancedPostcondition aCondition : postconditions) {
-//            GelExpression expression = aCondition.getExpression();
-//            atPreFinder.genericVisit(expression);
-//        }
-//        for (EnhancedPostcondition aCondition : postconditions) {
-//            statements.addAll(aCondition.getStatements());
-//        }
-//        return statements;
-//    }
-
-
 
     @Override
     public List<Statement> getBody() {

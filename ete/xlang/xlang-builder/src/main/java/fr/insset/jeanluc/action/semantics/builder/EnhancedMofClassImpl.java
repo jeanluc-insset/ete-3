@@ -32,16 +32,13 @@ public class EnhancedMofClassImpl extends MofClassImpl {
 
 
     public void addQuery(EteQuery inFilter) throws InstantiationException {
-        System.out.println("ADDING " + inFilter + " to " + getName());
         MofProperty filteredProperty = inFilter.getFilteredProperty();
         List<EteQuery> filters = support.get(filteredProperty);
         if (filters == null) {
-            System.out.println("It is the first query for this class");
             filters = FactoryMethods.newList(EteQuery.class);
             support.put(filteredProperty, filters);
         }
         filters.add(inFilter);
-        System.out.println("Number of filters : " + filters.size());
     }
 
 

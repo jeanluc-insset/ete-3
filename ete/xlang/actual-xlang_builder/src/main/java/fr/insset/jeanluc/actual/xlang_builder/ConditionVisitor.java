@@ -160,8 +160,6 @@ public class ConditionVisitor extends DynamicVisitorSupport {
     public EnhancedPrecondition    visitEnhancedPrecondition(EnhancedPrecondition inCondition, Object... inParameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         Logger.getLogger("fr.insset.jeanluc.oclanalyzer.ReaderVisitor").log(Level.FINE, "Visit of " + inCondition.getSpecificationAsString());
 
-        System.out.println("PARSING AN ACTUAL ENHANCED PRECONDITION");
-
         ActualEnhancedOperationImpl    context = (ActualEnhancedOperationImpl)inParameters[0];
 
         EteModel        model               = (EteModel)inParameters[1];
@@ -179,8 +177,6 @@ public class ConditionVisitor extends DynamicVisitorSupport {
     public EnhancedPostcondition    visitEnhancedPostcondition(EnhancedPostcondition inCondition, Object... inParameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         Logger.getLogger("fr.insset.jeanluc.oclanalyzer.ReaderVisitor").log(Level.FINE, "Visit of " + inCondition.getSpecificationAsString());
 
-        System.out.println("PARSING AN ENHANCED POSTCONDITION : " + inCondition.getSpecificationAsString());
-
         ActualEnhancedOperationImpl    operation = (ActualEnhancedOperationImpl)inParameters[0];
 
         EteModel        model               = (EteModel)inParameters[1];
@@ -195,7 +191,6 @@ public class ConditionVisitor extends DynamicVisitorSupport {
 
 
     public EteModel     visitEteModel(EteModel inModel, Object... inParameters) {
-        System.out.println("VISITING THE MODEL");
         return inModel;
     }
 

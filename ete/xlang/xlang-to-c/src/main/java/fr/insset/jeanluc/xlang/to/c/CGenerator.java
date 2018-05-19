@@ -155,11 +155,12 @@ public class CGenerator extends CBasedGenerator  {
         printWriter.append(inIndentation);
         for (Statement aStatement : statementList) {
             try {
-                genericVisit(aStatement, printWriter, inIndentation);
+                genericVisit(aStatement, printWriter, inIndentation, operation);
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                 Logger.getLogger(CGenerator.class.getName()).log(Level.SEVERE, null, ex);
-                printWriter.append("// Unable to compile : ");
+                printWriter.append("\n// Unable to compile : ");
                 printWriter.append(aStatement.toString());
+                printWriter.append(ex.toString());
                 printWriter.append('\n');
                 printWriter.append(indentation);
                 printWriter.append("throw new RuntimeException();");

@@ -178,7 +178,6 @@ public class ConditionVisitor extends DynamicVisitorSupport {
 
 
     public EnhancedInvariantImpl    visitEnhancedInvariantImpl(EnhancedInvariantImpl inInvariant, Object... inParameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        System.out.println("Visiting : " + inInvariant.getSpecificationAsString());
         EteModel        model               = (EteModel)inParameters[1];
         MofClass        context = (MofClass) inParameters[0];
         Map<String, VariableDefinition> variables  = FactoryMethods.newMap(String.class, VariableDefinition.class);
