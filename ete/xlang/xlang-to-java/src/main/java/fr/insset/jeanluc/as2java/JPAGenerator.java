@@ -168,7 +168,6 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
         String indentation = (String) inParameters[1];
         buffer.append("\n");
         buffer.append(indentation);
-        DifferentImpl   impl;
         buffer.append(indentation);
         String jpaOperator = operators.get(inExpression.getClass());
         if (jpaOperator != null) {

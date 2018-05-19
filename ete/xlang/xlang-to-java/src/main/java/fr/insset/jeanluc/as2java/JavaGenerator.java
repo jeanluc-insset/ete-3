@@ -1,6 +1,7 @@
 package fr.insset.jeanluc.as2java;
 
 
+import fr.insset.jeanluc.action.semantics.builder.EnhancedMofOperationImpl;
 import fr.insset.jeanluc.el.dialect.JavaDialect;
 import fr.insset.jeanluc.ete.gel.AtPre;
 import fr.insset.jeanluc.ete.gel.AttributeNav;
@@ -11,12 +12,16 @@ import fr.insset.jeanluc.ete.gel.OclOperation;
 import fr.insset.jeanluc.ete.gel.Self;
 import fr.insset.jeanluc.ete.gel.Step;
 import fr.insset.jeanluc.ete.gel.StringLiteral;
+import fr.insset.jeanluc.ete.gel.Sub;
 import fr.insset.jeanluc.ete.gel.Sum;
 import fr.insset.jeanluc.ete.gel.VariableDefinition;
+import fr.insset.jeanluc.ete.gel.VariableReference;
 import fr.insset.jeanluc.ete.meta.model.constraint.Condition;
 import fr.insset.jeanluc.ete.meta.model.emof.Feature;
+import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
 import fr.insset.jeanluc.ete.meta.model.types.MofType;
+import fr.insset.jeanluc.ete.meta.model.types.TypedElement;
 import fr.insset.jeanluc.ete.xlang.Assignment;
 import fr.insset.jeanluc.ete.xlang.Conditional;
 import fr.insset.jeanluc.ete.xlang.DoWhileLoop;
@@ -29,11 +34,14 @@ import fr.insset.jeanluc.ete.xlang.WhileDoLoop;
 import fr.insset.jeanluc.ete.xlang.to.xxx.CBasedGenerator;
 import fr.insset.jeanluc.ete.xlang.to.xxx.Generator;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 
@@ -117,6 +125,25 @@ public class JavaGenerator extends CBasedGenerator implements Generator, JavaDia
         String[] name = inCondition.getName().split(" ");
         for (String aPiece : name) {
             buffer.append(i2uc(aPiece));
+        }
+        return buffer.toString();
+    }
+
+
+
+    @Override
+    public String getOperationBody(MofOperation inOperation, String inIndentation) {
+        StringWriter    buffer = new StringWriter();
+        PrintWriter output = new PrintWriter(new StringWriter());
+        EnhancedMofOperationImpl operation = (EnhancedMofOperationImpl) inOperation;
+        List<Statement> body = operation.getBody();
+        for (Statement aStatement : body) {
+            try {
+                genericVisit(aStatement, output, inIndentation);
+            } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+                Logger.getLogger(JavaGenerator.class.getName()).log(Level.SEVERE, null, ex);
+                throw new RuntimeException("Unable to generate code for " + aStatement, ex);
+            }
         }
         return buffer.toString();
     }
@@ -345,12 +372,22 @@ public class JavaGenerator extends CBasedGenerator implements Generator, JavaDia
     //            V I S I T S   O F   G E L   E X P R E S S I O N S           //
     //========================================================================//
 
-
-//    public Object gelVisitVariableReference(VariableReference inReference, Object... inParameters) {
-//        PrintWriter output = (PrintWriter) inParameters[0];
-//        output.print(inReference.getDefinition().getName());
-//        return inReference;
-//    }
+    public Object gelVisitGelExpression(GelExpression inExpression, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        List<GelExpression> operand = inExpression.getOperand();
+        if (operand != null) {
+            switch (operand.size()) {
+                case 1:
+                    genericVisit(operand.get(0), inParameters);
+                    break;
+                case 2:
+                    genericVisit(operand.get(0), inParameters);
+                    
+                    genericVisit(operand.get(1), inParameters);
+                    break;
+            }
+        }
+        return inExpression;
+    }
 
 
     public Object gelVisitVariableDefinition(VariableDefinition inDefinition, Object... inParameters) {
@@ -381,12 +418,16 @@ public class JavaGenerator extends CBasedGenerator implements Generator, JavaDia
     }
 
 
-//    public Object gelVisitVariableReference(VariableReference inVariable, Object... inParameters) {
-//        PrintWriter output      = (PrintWriter)inParameters[0];
-//        TypedElement definition = inVariable.getDefinition();
-//        output.print(definition.getName());
-//        return inVariable;
-//    }
+    public Object gelVisitVariableReference(VariableReference inVariable, Object... inParameters) {
+        PrintWriter output      = (PrintWriter)inParameters[0];
+        TypedElement definition = inVariable.getDefinition();
+        if (definition != null) {
+            output.print(definition.getName());
+        } else {
+            output.print(inVariable.getName());
+        }
+        return inVariable;
+    }
 
 
     //------------------------------------------------------------------------//

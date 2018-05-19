@@ -20,13 +20,14 @@ public class GeneratorSupport extends DynamicVisitorSupport  implements Generato
         this.indentation = indentation;
     }
 
-    public void setSymbol(String gel, String language) {
+    public final void setSymbol(String gel, String language) {
         symbols.put(gel, language);
     }
 
     public String getSymbol(String gel) {
         return symbols.get(gel);
     }
+
 
     private     Map<String, String>     symbols = new HashMap<>();
     private     String                  indentation;

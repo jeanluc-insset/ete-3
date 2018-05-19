@@ -36,6 +36,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Currently, the only test reads a model and generate classes from that
@@ -51,7 +52,7 @@ import static org.junit.Assert.assertEquals;
  *
  * @author jldeleage
  */
-public class PostAssertionJavaGeneratorTest {
+public class BankTest {
     
 
     public final static String      FOLDER      = "fr/insset/jeanluc/ete";
@@ -161,7 +162,7 @@ public class PostAssertionJavaGeneratorTest {
                 + ":" + "target/classes/"
                 + ":" + "../../gel/gel-impl/target/gel-impl-3.1.jar");
         
-        File        sessionJava = new File(SRC_DIR + "fr/insset/jeanluc/mda/qcm/modele/Session.java");
+        File        sessionJava = new File(SRC_DIR + "fr/insset/jeanluc/ete/example/bank/Account.java");
 
         Iterable<? extends JavaFileObject> compilationUnit
                         = fileManager.getJavaFileObjectsFromFiles(Arrays.asList(sessionJava));
