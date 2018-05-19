@@ -134,7 +134,7 @@ public class JavaGenerator extends CBasedGenerator implements Generator, JavaDia
     @Override
     public String getOperationBody(MofOperation inOperation, String inIndentation) {
         StringWriter    buffer = new StringWriter();
-        PrintWriter output = new PrintWriter(new StringWriter());
+        PrintWriter output = new PrintWriter(buffer);
         EnhancedMofOperationImpl operation = (EnhancedMofOperationImpl) inOperation;
         List<Statement> body = operation.getBody();
         for (Statement aStatement : body) {
@@ -145,7 +145,12 @@ public class JavaGenerator extends CBasedGenerator implements Generator, JavaDia
                 throw new RuntimeException("Unable to generate code for " + aStatement, ex);
             }
         }
-        return buffer.toString();
+        output.flush();
+        String  result = buffer.toString();
+        System.out.println("---------------------------");
+        System.out.println("Generated instructions :");
+        System.out.println(result);
+        return result;
     }
 
 
@@ -381,7 +386,9 @@ public class JavaGenerator extends CBasedGenerator implements Generator, JavaDia
                     break;
                 case 2:
                     genericVisit(operand.get(0), inParameters);
-                    
+                    String symbol = getSymbol(inExpression);
+                    PrintWriter output = (PrintWriter) inParameters[0];
+                    output.print(symbol);
                     genericVisit(operand.get(1), inParameters);
                     break;
             }
@@ -437,7 +444,9 @@ public class JavaGenerator extends CBasedGenerator implements Generator, JavaDia
         List<GelExpression> operand = inOperation.getOperand();
         genericVisit(operand.get(0), inParameters);
         PrintWriter output      = (PrintWriter)inParameters[0];
-        output.print(inOperation.getValueOf("symbol"));
+        String symbol = getSymbol(inOperation);
+        output.print(symbol);
+//        output.print(inOperation.getValueOf("symbol"));
         genericVisit(operand.get(1), inParameters);
         return inOperation;
     }
