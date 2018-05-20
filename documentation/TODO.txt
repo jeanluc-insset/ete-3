@@ -6,6 +6,7 @@ Infrastructure
     - full support of OCL
 
 Projects
+    - Ete 4.0
     - Mof2Text
     - MOF-QVTop
     - MOF-QVTrel
