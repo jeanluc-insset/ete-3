@@ -15,8 +15,10 @@ Projects
 Templates and modules
     - composition in JPA, in forms
     - custom boundaries components
+    - WebSockets
     - SOAP
     - REST
+    - JavaScript / TypeScript
     - React
     - Angular
     - other languages
