@@ -1,11 +1,14 @@
-package ${current.owningPackage.name}.${packagename};
+package ${current.owningPackage.name}.api;
 
+import javax.annotation.Generated;
 
 
 /**
- * This interface is generated in the project ${project}
+ * This interface is generated in the project ${project}.<br>
+ * The generator uses a moke dialect.
+ * ${moke.hello}
  */
-
+@Generated("Ete - template : src/test/mda/templates/umlclass2interface.vm")
 public interface $current.name {
 
 

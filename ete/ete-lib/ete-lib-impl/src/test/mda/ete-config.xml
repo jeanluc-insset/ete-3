@@ -22,7 +22,9 @@
         <!-- executes the actions described in the module -->
         <velocity template="templates/umlclass2interface.vm"
                   items="${classes}"
-                  target="target/test-generated/ete/${current.owningPackage.name.replace('.', '/')}/api/${current.name}.java"/>
+                  target="test-generated/ete/${current.owningPackage.name.replace('.', '/')}/api/${current.name}.java">
+            <dialect name="moke" class="fr.insset.jeanluc.ete.api.impl.MokeDialect"/>
+        </velocity>
     </transformation-set>
 
 </mda>

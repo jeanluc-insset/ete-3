@@ -11,6 +11,7 @@ import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
 public class SqlGenerator  extends DynamicVisitorSupport implements Generator {
 
     public SqlGenerator() {
+        System.out.println("The SQL dialect has been loaded");
     }
 
 

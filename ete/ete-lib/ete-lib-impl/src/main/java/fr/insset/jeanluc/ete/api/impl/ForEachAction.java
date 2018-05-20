@@ -28,6 +28,7 @@ public class ForEachAction extends ActionSupport {
 
     @Override
     public MofPackage processChildren(MofPackage inModel) throws EteException {
+        super.processChildren(inModel);
         Collection<NamedElement> items = getItems(inModel);
         String varName = (String)getParameter("var");
         if (varName == null) {

@@ -177,6 +177,11 @@
                         <artifactId>xlang-to-java</artifactId>
                         <version>3.1</version>
                     </dependency>
+                    <dependency>
+                        <groupId>fr.insset.jeanluc</groupId>
+                        <artifactId>xlang-to-sql</artifactId>
+                        <version>3.1</version>
+                    </dependency>
                 </dependencies>
 
                 <executions>

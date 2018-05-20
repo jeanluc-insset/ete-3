@@ -34,7 +34,9 @@
             <velocity items='${classes.filter(c -> c.hasStereotype("Entity"))}'
                         dialect="fr.insset.jeanluc.as2java.JPAGenerator"
                         template="class2jpa.vm"
-                        target="${current.owningPackage.name.replace('.', '/')}/jpa/${current.name}Jpa.java"/>
+                        target="${current.owningPackage.name.replace('.', '/')}/jpa/${current.name}Jpa.java">
+                <dialect name="sql" class="fr.insset.jeanluc.xlang.to.sql.SqlGenerator"/>
+            </velocity>
         </transformation-set>
 
         <velocity   template="pu.vm"
