@@ -1,0 +1,30 @@
+
+
+Infrastructure
+    - generation of "filters"
+    - use of OCL defined functions
+    - full support of OCL
+
+Projects
+    - Mof2Text
+    - MOF-QVTop
+    - MOF-QVTrel
+    - B
+
+Templates and modules
+    - composition in JPA, in forms
+    - custom boundaries components
+    - SOAP
+    - REST
+    - React
+    - Angular
+    - other languages
+
+Dialects
+    - SQL
+
+Miscellaneous
+    - archetypes
+    - User Manual
+    - Developper Manual
+
