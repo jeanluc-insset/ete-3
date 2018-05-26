@@ -23,6 +23,11 @@ public interface MofPackage extends PackageableElement {
 
     public final static String      MOF_PACKAGE     = "mof-package";
 
+    public  default String              getXmiType() {
+        return "uml:Package";
+    }
+
+
 
     public  Collection<PackageableElement>          getPackagedElementAsCollection();
     public  void                                    addPackagedElement(PackageableElement inPackageableElement);

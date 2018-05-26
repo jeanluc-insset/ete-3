@@ -13,6 +13,10 @@ public interface Stereotype extends PackageableElement {
 
     public final static String      STEREOTYPE = "stereotype";
 
+    public  default String              getXmiType() {
+        return "uml:Stereotype";
+    }
+
     public MofPackage   getProfile();
     public void         setProfile(MofPackage inProfile);
 

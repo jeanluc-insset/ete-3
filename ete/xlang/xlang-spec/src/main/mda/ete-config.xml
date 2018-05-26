@@ -13,7 +13,7 @@
     There is no concrete syntax for this language since instructions are
     supposed to be synthetized from specifications (in OCL or any other
     specification language).
-    TODO : should we implement the Alf syntax ?
+    TODO : should we implement the ALF syntax ?
     -->
 
     <transformation-set output_base="../../">

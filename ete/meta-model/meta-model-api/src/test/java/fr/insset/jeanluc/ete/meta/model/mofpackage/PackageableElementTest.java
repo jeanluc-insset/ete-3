@@ -181,6 +181,11 @@ public class PackageableElementTest {
         public void setOwnedElements(Collection<NamedElement> inSubElements) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
+
+        @Override
+        public String getXmiType() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
     }           // PackageableElementImpl
     
 }       // PackageableElementTest

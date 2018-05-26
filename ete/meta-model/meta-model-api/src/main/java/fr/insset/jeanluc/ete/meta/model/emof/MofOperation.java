@@ -19,6 +19,10 @@ public interface MofOperation extends Feature, NamedElement, MultiplicityElement
 
     public final static String          MOF_OPERATION = "mof-operation";
 
+    public  default String              getXmiType() {
+        return "uml:Operation";
+    }
+
     public  Collection<MofParameter>    getOwnedParameter();
     public  void                        addOwnedParameter(MofParameter inParameter);
     public  void                        removeOwnedParameter(MofParameter inParameter);

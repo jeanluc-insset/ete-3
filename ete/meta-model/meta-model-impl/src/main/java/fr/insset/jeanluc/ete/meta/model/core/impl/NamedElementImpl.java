@@ -19,6 +19,23 @@ import java.util.logging.Logger;
  */
 public class NamedElementImpl implements NamedElement {
 
+    @Override
+    public String getXmiType() {
+        String className = getClass().getName();
+        if (className.endsWith("Impl")) {
+            className = className.substring(0, className.length()-4);
+        }
+        int index = className.lastIndexOf(".");
+        if (index > 0) {
+            className = className.substring(index+1);
+        }
+        if (className.startsWith("Mof")) {
+            className = className.substring(3);
+        }
+        className = className.substring(0,1).toUpperCase() + className.substring(1);
+        return "uml:" + className;
+    }
+
 
     @Override
     public String getName() {

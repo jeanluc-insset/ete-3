@@ -10,6 +10,10 @@ import java.util.Collection;
  */
 public interface Association extends PackageableElement {
 
+    public  default String              getXmiType() {
+        return "uml:Association";
+    }
+
     public  final static String         ASSOCIATION  = "association";
 
     public  Collection<MofProperty>        getMemberEnd();

@@ -11,7 +11,7 @@
 
     <ui:composition template="/template.xhtml">
         <ui:define name="title">
-            <h:outputText value="\#{bundle.Create${symbol_dollar}{current.name}Title}"></h:outputText>
+            <h:outputText value="Create New ${symbol_dollar}{aClass.name}"></h:outputText>
         </ui:define>
         <ui:define name="body">
             <h:panelGroup id="messagePanel" layout="block">
@@ -22,13 +22,13 @@
                            selection="\#{${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller.selected}"
 />
                 <br />
-                <h:commandLink action="\#{${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller.create}" value="\#{bundle.Create${symbol_dollar}{current.name}SaveLink}" />
+                <h:commandLink action="\#{${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller.create}" value="Save" />
                 <br />
                 <br />
-                <h:commandLink action="\#{${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller.prepareList}" value="\#{bundle.Create${symbol_dollar}{current.name}ShowAllLink}" immediate="true"/>
+                <h:commandLink action="\#{${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller.prepareList}" value="Show All ${symbol_dollar}{current.name} Items" immediate="true"/>
                 <br />
                 <br />
-                <h:link outcome="/index" value="\#{bundle.Create${symbol_dollar}{current.name}IndexLink}"/>
+                <h:link outcome="/index" value="Index"/>
             </h:form>
         </ui:define>
     </ui:composition>

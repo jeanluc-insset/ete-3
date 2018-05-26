@@ -15,7 +15,14 @@ import java.util.logging.Logger;
  * @author jldeleage
  */
 public interface NamedElement extends MofElement {
-    
+
+    /**
+     * Conceptually it is a static method (all the instances of a same class
+     * return the same value) but it is declared as an instance method to allow
+     * polymorphism
+     */
+    public  String                          getXmiType();
+
     public  String                          getName();
     public  void                            setName(String inName);
 

@@ -12,6 +12,10 @@ public interface Enumeration extends Classifier {
     
     public final static String      MOF_ENUMERATION = "enumeration";
 
+    public  default String              getXmiType() {
+        return "uml:Enumeration";
+    }
+
 
     public List<Literal>    getLiteral();
     public void             setLiteral(List<Literal> inLiterals);

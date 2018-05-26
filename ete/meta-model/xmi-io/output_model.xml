@@ -1,0 +1,102 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<xmi:XMI xmlns:uml='http://www.omg.org/spec/UML/20131001' xmlns:xmi='http://www.omg.org/spec/XMI/20131001'
+         xmlns:StandardProfile='http://www.omg.org/spec/UML/20131001/StandardProfile'
+     >
+	<uml:Model xmi:type='uml:Model' xmi:id='null' name='Model'>
+		<packagedElement xmi:type='uml:Package' xmi:id='_9_0_2_be00301_1111670217596_336168_627'>
+		</packagedElement>
+		<packagedElement xmi:type='uml:Enumeration' xmi:id='_18_2_1243039e_1499889846787_19294_4192' name='QuestionKind'>
+		</packagedElement>
+		<packagedElement xmi:type='uml:Class' xmi:id='_18_2_1243039e_1472796238403_783003_4230' name='MCQ'>
+		    <ownedAttribute xmi:type='uml:Property' xmi:id='_18_2_1243039e_1472796242994_68279_4256' name='titre'>
+		    </ownedAttribute>
+		    <ownedAttribute xmi:type='uml:Property' xmi:id='_18_2_1243039e_1472796312808_937081_4302' name='null'>
+		    </ownedAttribute>
+		    <ownedAttribute xmi:type='uml:Property' xmi:id='_18_2_1243039e_1499890301039_741320_4322' name='null'>
+		    </ownedAttribute>
+		</packagedElement>
+		<packagedElement xmi:type='uml:Association' xmi:id='_18_2_1243039e_1499890301039_779349_4321'>
+		</packagedElement>
+		<packagedElement xmi:type='uml:Package' xmi:id='_be00301_1073394351331_445580_2'>
+		    <packagedElement xmi:type='uml:Stereotype' xmi:id='_9_0_be00301_1108044721245_236588_411' name='InvisibleStereotype'>
+		    </packagedElement>
+		    <packagedElement xmi:type='uml:Stereotype' xmi:id='_9_0_be00301_1108044380615_150487_0' name='DiagramInfo'>
+		    </packagedElement>
+		    <packagedElement xmi:type='uml:Stereotype' xmi:id='_12_1_8f90291_1173963323875_662612_98' name='auxiliaryResource'>
+		    </packagedElement>
+		</packagedElement>
+		<packagedElement xmi:type='uml:Stereotype' xmi:id='_9_0_be00301_1108044721245_236588_411' name='InvisibleStereotype'>
+		</packagedElement>
+		<packagedElement xmi:type='uml:Stereotype' xmi:id='_9_0_be00301_1108044380615_150487_0' name='DiagramInfo'>
+		</packagedElement>
+		<packagedElement xmi:type='uml:Stereotype' xmi:id='magicdraw_1046861421236_601240_36' name='Metamodel'>
+		</packagedElement>
+		<packagedElement xmi:type='uml:Package' xmi:id='_18_2_1243039e_1472796198853_138150_4194'>
+		    <packagedElement xmi:type='uml:Package' xmi:id='_18_2_1243039e_1472796210720_758420_4195'>
+		        <packagedElement xmi:type='uml:Enumeration' xmi:id='_18_2_1243039e_1499889846787_19294_4192' name='QuestionKind'>
+		        </packagedElement>
+		        <packagedElement xmi:type='uml:Class' xmi:id='_18_2_1243039e_1472796238403_783003_4230' name='MCQ'>
+		            <ownedAttribute xmi:type='uml:Property' xmi:id='_18_2_1243039e_1472796242994_68279_4256' name='titre'>
+		            </ownedAttribute>
+		            <ownedAttribute xmi:type='uml:Property' xmi:id='_18_2_1243039e_1472796312808_937081_4302' name='null'>
+		            </ownedAttribute>
+		            <ownedAttribute xmi:type='uml:Property' xmi:id='_18_2_1243039e_1499890301039_741320_4322' name='null'>
+		            </ownedAttribute>
+		        </packagedElement>
+		        <packagedElement xmi:type='uml:Class' xmi:id='_18_2_1243039e_1472796250736_768322_4259' name='Question'>
+		            <ownedAttribute xmi:type='uml:Property' xmi:id='_18_2_1243039e_1472796256222_748572_4285' name='wording'>
+		            </ownedAttribute>
+		            <ownedAttribute xmi:type='uml:Property' xmi:id='_18_2_1243039e_1472796263464_381089_4287' name='nbPoints'>
+		            </ownedAttribute>
+		            <ownedAttribute xmi:type='uml:Property' xmi:id='_18_2_1243039e_1472796270830_975469_4289' name='mandatory'>
+		            </ownedAttribute>
+		            <ownedAttribute xmi:type='uml:Property' xmi:id='_18_2_1243039e_1472796292210_797471_4291' name='number'>
+		            </ownedAttribute>
+		        </packagedElement>
+		    </packagedElement>
+		</packagedElement>
+		<packagedElement xmi:type='uml:Package' xmi:id='_9_0_be00301_1108050582343_527400_10847'>
+		    <packagedElement xmi:type='uml:Stereotype' xmi:id='magicdraw_1046861421236_601240_36' name='Metamodel'>
+		    </packagedElement>
+		</packagedElement>
+		<packagedElement xmi:type='uml:Class' xmi:id='_18_2_1243039e_1472796250736_768322_4259' name='Question'>
+		    <ownedAttribute xmi:type='uml:Property' xmi:id='_18_2_1243039e_1472796256222_748572_4285' name='wording'>
+		    </ownedAttribute>
+		    <ownedAttribute xmi:type='uml:Property' xmi:id='_18_2_1243039e_1472796263464_381089_4287' name='nbPoints'>
+		    </ownedAttribute>
+		    <ownedAttribute xmi:type='uml:Property' xmi:id='_18_2_1243039e_1472796270830_975469_4289' name='mandatory'>
+		    </ownedAttribute>
+		    <ownedAttribute xmi:type='uml:Property' xmi:id='_18_2_1243039e_1472796292210_797471_4291' name='number'>
+		    </ownedAttribute>
+		</packagedElement>
+		<packagedElement xmi:type='uml:Association' xmi:id='_18_2_1243039e_1472796312808_266831_4301'>
+		</packagedElement>
+		<packagedElement xmi:type='uml:Package' xmi:id='_12_0EAPbeta_be00301_1157529392394_202602_1'>
+		</packagedElement>
+		<packagedElement xmi:type='uml:Package' xmi:id='_18_2_1243039e_1472796210720_758420_4195'>
+		    <packagedElement xmi:type='uml:Enumeration' xmi:id='_18_2_1243039e_1499889846787_19294_4192' name='QuestionKind'>
+		    </packagedElement>
+		    <packagedElement xmi:type='uml:Class' xmi:id='_18_2_1243039e_1472796238403_783003_4230' name='MCQ'>
+		        <ownedAttribute xmi:type='uml:Property' xmi:id='_18_2_1243039e_1472796242994_68279_4256' name='titre'>
+		        </ownedAttribute>
+		        <ownedAttribute xmi:type='uml:Property' xmi:id='_18_2_1243039e_1472796312808_937081_4302' name='null'>
+		        </ownedAttribute>
+		        <ownedAttribute xmi:type='uml:Property' xmi:id='_18_2_1243039e_1499890301039_741320_4322' name='null'>
+		        </ownedAttribute>
+		    </packagedElement>
+		    <packagedElement xmi:type='uml:Class' xmi:id='_18_2_1243039e_1472796250736_768322_4259' name='Question'>
+		        <ownedAttribute xmi:type='uml:Property' xmi:id='_18_2_1243039e_1472796256222_748572_4285' name='wording'>
+		        </ownedAttribute>
+		        <ownedAttribute xmi:type='uml:Property' xmi:id='_18_2_1243039e_1472796263464_381089_4287' name='nbPoints'>
+		        </ownedAttribute>
+		        <ownedAttribute xmi:type='uml:Property' xmi:id='_18_2_1243039e_1472796270830_975469_4289' name='mandatory'>
+		        </ownedAttribute>
+		        <ownedAttribute xmi:type='uml:Property' xmi:id='_18_2_1243039e_1472796292210_797471_4291' name='number'>
+		        </ownedAttribute>
+		    </packagedElement>
+		</packagedElement>
+		<packagedElement xmi:type='uml:Stereotype' xmi:id='_12_1_8f90291_1173963323875_662612_98' name='auxiliaryResource'>
+		</packagedElement>
+    </uml:Model>
+</xmi:XMI>

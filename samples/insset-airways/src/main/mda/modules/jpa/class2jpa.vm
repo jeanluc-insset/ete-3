@@ -99,30 +99,14 @@ public class ${current.name}Jpa extends AbstractJpa<${current.name}> {
         return query.getResultList();
     }
 
-/*
-    public void selectPlaneModelForCaptainMustBeCertified(CriteriaQuery cq,
-                                Root<PlaneModel> root,
-                                Flight inFor) {
-        CriteriaBuilder cb = getCriteriaBuilder();
-        Optional<List<Certificate>> certificatesInCaptainMustBeCertified2Opt = inFor.getCaptain$().flatMap(p -> p.getCertificates$());
-        if (! certificatesInCaptainMustBeCertified2Opt.isPresent()) {
-            return;
-        }
-        Expression<List<Certificate>> certificatesInCaptainMustBeCertified2 = cb.literal(certificatesInCaptainMustBeCertified2Opt.get());
-        cq.where(root.in(certificatesInCaptainMustBeCertified2));
-    }
-*/
 
-#foreach ($aQuery in $current.support.get(${aProperty}))
-// $aQuery
-// ${aQuery.invariant}
-// ${aQuery.invariant.clientClass}
+
+#foreach ($aQuery in $current.support.get($aProperty))
     public void select${dialect.i2uc($aProperty.name)}For${dialect.i2uc($aQuery.invariant.name)}(CriteriaQuery cq,
                                 Root<${current.name}> root,
                                 ${aQuery.clientClass.name} inFor) {
         CriteriaBuilder cb = getCriteriaBuilder();
 #foreach ($aVariable in $aQuery.variables)
-##        ${dialect.getPredicate($aQuery)};
         Optional<${dialect.mt2lt($aVariable.type)}> ${aVariable.name}Opt = ${dialect.addChecking($aVariable.initValue)};
         if (! ${aVariable.name}Opt.isPresent()) {
             return;

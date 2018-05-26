@@ -10,44 +10,44 @@
 
     <ui:composition template="/template.xhtml">
         <ui:define name="title">
-            <h:outputText value="\#{bundle.List${symbol_dollar}{current.name}Title}"></h:outputText>
+            <h:outputText value="List"></h:outputText>
         </ui:define>
         <ui:define name="body">
             <h:form styleClass="jsfcrud_list_form">
                 <h:panelGroup id="messagePanel" layout="block">
                     <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
                 </h:panelGroup>
-                <h:outputText escape="false" value="\#{bundle.List${symbol_dollar}{current.name}Empty}" rendered="\#{${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller.items.rowCount == 0}"/>
+                <h:outputText escape="false" value="(No ${symbol_dollar}{current.name} Items Found)" rendered="\#{${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller.items.rowCount == 0}"/>
                 <h:panelGroup rendered="\#{${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller.items.rowCount > 0}">
                     <h:outputText value="\#{${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller.pagination.pageFirstItem + 1}..\#{${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller.pagination.pageLastItem + 1}/\#{${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller.pagination.itemsCount}"/>&nbsp;
-                    <h:commandLink action="\#{${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller.previous}" value="\#{bundle.Previous} \#{${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller.pagination.pageSize}" rendered="\#{${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller.pagination.hasPreviousPage}"/>&nbsp;
-                    <h:commandLink action="\#{${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller.next}" value="\#{bundle.Next} \#{${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller.pagination.pageSize}" rendered="\#{${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller.pagination.hasNextPage}"/>&nbsp;
+                    <h:commandLink action="\#{${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller.previous}" value="Previous \#{${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller.pagination.pageSize}" rendered="\#{${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller.pagination.hasPreviousPage}"/>&nbsp;
+                    <h:commandLink action="\#{${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller.next}" value="Next \#{${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller.pagination.pageSize}" rendered="\#{${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller.pagination.hasNextPage}"/>&nbsp;
                     <h:dataTable value="\#{${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller.items}" var="item" border="0" cellpadding="2" cellspacing="0" rowClasses="jsfcrud_odd_row,jsfcrud_even_row" rules="all" style="border:solid 1px">
 \#foreach (${symbol_dollar}aProperty in ${symbol_dollar}current.ownedAttribute)
                         <h:column>
                             <f:facet name="header">
-                                <h:outputText value="\#{bundle.List${symbol_dollar}{current.name}Title_${symbol_dollar}{aProperty.name}}"/>
+                                <h:outputText value="${symbol_dollar}{aProperty.name}"/>
                             </f:facet>
-                            <h:outputText value="\#{item.${symbol_dollar}{aProperty.name}}"/>
+                            <h:outputText value="\#{item.${symbol_dollar}{aProperty.name}"/>
                         </h:column>
 \#end
                         <h:column>
                             <f:facet name="header">
                                 <h:outputText value="&nbsp;"/>
                             </f:facet>
-                            <h:commandLink action="\#{${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller.prepareView}" value="\#{bundle.List${symbol_dollar}{current.name}ViewLink}"/>
+                            <h:commandLink action="\#{${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller.prepareView}" value="View"/>
                             <h:outputText value=" "/>
-                            <h:commandLink action="\#{${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller.prepareEdit}" value="\#{bundle.List${symbol_dollar}{current.name}EditLink}"/>
+                            <h:commandLink action="\#{${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller.prepareEdit}" value="Edit"/>
                             <h:outputText value=" "/>
-                            <h:commandLink action="\#{${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller.destroy}" value="\#{bundle.List${symbol_dollar}{current.name}DestroyLink}"/>
+                            <h:commandLink action="\#{${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller.destroy}" value="Destroy"/>
                         </h:column>
                     </h:dataTable>
                 </h:panelGroup>
                 <br />
-                <h:commandLink action="\#{${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller.prepareCreate}" value="\#{bundle.List${symbol_dollar}{current.name}CreateLink}"/>
+                <h:commandLink action="\#{${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller.prepareCreate}" value="Create New ${symbol_dollar}{current.name}"/>
                 <br />
                 <br />
-                <h:link outcome="/index" value="\#{bundle.List${symbol_dollar}{current.name}IndexLink}"/>
+                <h:link outcome="/index" value="Index"/>
             </h:form>
         </ui:define>
     </ui:composition>

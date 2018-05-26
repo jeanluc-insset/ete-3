@@ -12,6 +12,10 @@ import java.util.Collection;
 public interface MofParameter extends MultiplicityElement, TypedElement {
 
 
+    public  default String              getXmiType() {
+        return "uml:Parameter";
+    }
+
     public final static String  MOF_PARAMETER = "parameter";
 
 

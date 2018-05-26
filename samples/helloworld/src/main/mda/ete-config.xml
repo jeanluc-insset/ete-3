@@ -9,10 +9,6 @@
         <!--<model  url="models/EssentialOCL.emof"/>-->
         <model  url="HelloWorld.xml"/>
 
-        <!--
-          - The context parameter specifies which context to use when
-          - resolving an identifier
-        -->
         <transformation-set>
 
             <velocity items="${classes}"

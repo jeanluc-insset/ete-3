@@ -14,6 +14,10 @@ public interface MofProperty extends StructuralFeature {
     public final static String      MOF_PROPERTY = "property";
 
 
+    public  default String              getXmiType() {
+        return "uml:Property";
+    }
+
     public  AggregationKind         getAggregationKind();
     public  void                    setAggregationKind(AggregationKind inAggregationKind);
 

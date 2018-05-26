@@ -9,7 +9,7 @@
 
     <transformation-set>
 
-        <register name="add-visitor-action" action="${package}.ete.api.impl.AddVisitorAction"/>
+        <register name="add-visitor-action" action="fr.insset.jeanluc.ete.api.impl.AddVisitorAction"/>
 
         <model  url="Model.xml">
             <add-visitor class="${package}.action.semantics.builder.ConditionVisitor"/>
@@ -17,11 +17,8 @@
 
         <transformation-set jsf="true" jaxrs="true">
 
-            <velocity template="pojo-with-operations.vm"
-                    items="${symbol_dollar}{classes}"
-                    dialect="${package}.as2java.JavaGenerator"
-                    target="generated-sources/ete/${symbol_dollar}{current.owningPackage.name.replace('.', '/')}/${symbol_dollar}{current.name}.java"
-                    />
+            <module src="modules/web/ete-config.xml"/>
+
         </transformation-set>
 
 
