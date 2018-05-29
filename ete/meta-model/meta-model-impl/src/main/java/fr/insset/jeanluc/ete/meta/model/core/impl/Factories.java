@@ -49,6 +49,9 @@ import static fr.insset.jeanluc.ete.meta.model.emof.instance.InstanceSpecificati
 import static fr.insset.jeanluc.ete.meta.model.emof.instance.Slot.SLOT;
 import fr.insset.jeanluc.ete.meta.model.emof.instance.impl.InstanceSpecificationImpl;
 import fr.insset.jeanluc.ete.meta.model.emof.instance.impl.SlotImpl;
+import fr.insset.jeanluc.ete.meta.model.types.PrimitiveType;
+import static fr.insset.jeanluc.ete.meta.model.types.PrimitiveType.PRIMITIVE_TYPE;
+import fr.insset.jeanluc.ete.meta.model.types.impl.PrimitiveTypeImpl;
 import fr.insset.jeanluc.util.factory.AbstractFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -62,6 +65,7 @@ public abstract class Factories {
     public static void init() {
         Logger.getGlobal().finer("Registration of default factories");
         FactoryRegistry registry = FactoryRegistry.getRegistry();
+        registry.registerDefaultFactory(PRIMITIVE_TYPE, PrimitiveTypeImpl.class);
         registry.registerDefaultFactory(MOF_TYPE, MofTypeImpl.class);
         registry.registerDefaultFactory(MODEL, EteModelImpl.class);
         registry.registerDefaultFactory(MOF_PACKAGE, MofPackageImpl.class);

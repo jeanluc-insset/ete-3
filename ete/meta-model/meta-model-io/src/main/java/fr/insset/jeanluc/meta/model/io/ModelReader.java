@@ -100,6 +100,7 @@ public interface ModelReader {
      */
     public default void doReadModel(Object inDocument, EteModel inoutModel) throws IOException  {
         beforeReading(inDocument, inoutModel);
+        readPrimitiveTypes(inDocument, inoutModel);
         readPackages(inDocument, inoutModel);
         readClasses(inDocument, inoutModel);
         readEnumerations(inDocument, inoutModel);
@@ -122,6 +123,9 @@ public interface ModelReader {
     public default void beforeReading(Object inDocument, EteModel inoutModel) throws IOException {
     }
 
+    public  default Collection<NamedElement> readPrimitiveTypes(Object inDocument, EteModel inoutModel) throws IOException {
+        return null;
+    }
 
     public  default Collection<NamedElement> readPackages(Object inDocument, EteModel inoutModel) throws IOException {
         return null;

@@ -40,6 +40,7 @@ import static fr.insset.jeanluc.ete.meta.model.emof.MofOperation.MOF_OPERATION;
 import static fr.insset.jeanluc.ete.meta.model.emof.MofProperty.MOF_PROPERTY;
 import static fr.insset.jeanluc.ete.meta.model.emof.instance.InstanceSpecification.INSTANCE_SPECIFICATION;
 import static fr.insset.jeanluc.ete.meta.model.emof.instance.Slot.SLOT;
+import static fr.insset.jeanluc.ete.meta.model.types.PrimitiveType.PRIMITIVE_TYPE;
 import fr.insset.jeanluc.util.visit.DynamicVisitor;
 import static fr.insset.jeanluc.xmi.io.impl.XmlUtilities.getElements;
 import static fr.insset.jeanluc.xmi.io.impl.XmlUtilities.getElementsByType;
@@ -60,10 +61,6 @@ import java.io.IOException;
 public class XmlModelReader implements ModelReader, XmlPaths {
 
 
-
-
-
-
     public XmlModelReader() throws InstantiationException {
         FactoryRegistry registry = FactoryRegistry.getRegistry();
         registry.registerDefaultFactory(READER_VISITOR, XmlModelReaderVisitor.class);
@@ -76,6 +73,11 @@ public class XmlModelReader implements ModelReader, XmlPaths {
         return ModelReader.super.readModel(inDocument, inParent); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public Collection<NamedElement> readPrimitiveTypes(Object inDocument, EteModel inoutModel) throws IOException {
+        Collection<NamedElement> result = readElementsByPath((Document) inDocument, inoutModel, getPrimitiveTypePath(), PRIMITIVE_TYPE);
+        return result;
+    }
 
     @Override
     public Collection<NamedElement> readPackages(Object inDocument, EteModel inoutModel) throws IOException {
