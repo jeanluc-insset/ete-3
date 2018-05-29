@@ -1,0 +1,94 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<xmi:XMI xmlns:uml='http://www.omg.org/spec/UML/20131001' xmlns:xmi='http://www.omg.org/spec/XMI/20131001'
+         xmlns:StandardProfile='http://www.omg.org/spec/UML/20131001/StandardProfile'
+     >
+	<uml:Model xmi:type='uml:Model' xmi:id='null' name='Model'>
+		<packagedElement xmi:type='uml:Package' xmi:id='_9_0_2_be00301_1111670217596_336168_627' name='datatypes'>
+		</packagedElement>
+		<packagedElement xmi:type='uml:Package' xmi:id='_18_5_2_1243039e_1517676867453_300607_4908' name='meta'>
+		    <packagedElement xmi:type='uml:Stereotype' xmi:id='_18_5_2_1243039e_1517676875363_270882_4909' name='ignore'>
+		    </packagedElement>
+		    <packagedElement xmi:type='uml:Stereotype' xmi:id='_18_5_2_1243039e_1517677189345_845646_4950' name='pk'>
+		    </packagedElement>
+		</packagedElement>
+		<packagedElement xmi:type='uml:Package' xmi:id='_9_0_be00301_1108050582343_527400_10847' name='StandardProfile'>
+		    <packagedElement xmi:type='uml:Stereotype' xmi:id='magicdraw_1046861421236_601240_36' name='Metamodel'>
+		    </packagedElement>
+		    <packagedElement xmi:type='uml:Stereotype' xmi:id='magicdraw_1046861421226_813777_19' name='Entity'>
+		    </packagedElement>
+		</packagedElement>
+		<packagedElement xmi:type='uml:Package' xmi:id='_18_5_2_1243039e_1517675990913_942635_4666' name='fr.insset.jeanluc.ete.example.airways'>
+		    <packagedElement xmi:type='uml:Class' xmi:id='_18_5_2_1243039e_1524899927714_172567_5322' name='Airport'>
+		    </packagedElement>
+		    <packagedElement xmi:type='uml:Class' xmi:id='_18_5_2_1243039e_1524899234000_103185_5062' name='Certificate'>
+		        <ownedAttribute xmi:type='uml:Property' xmi:id='_18_5_2_1243039e_1524899770112_371997_5088' name='certificationDate'>
+		        </ownedAttribute>
+		        <ownedAttribute xmi:type='uml:Property' xmi:id='_18_5_2_1243039e_1524899837781_649846_5170' name='planeModel'>
+		        </ownedAttribute>
+		    </packagedElement>
+		    <packagedElement xmi:type='uml:Class' xmi:id='_18_5_2_1243039e_1517676053388_124487_4713' name='Flight'>
+		        <ownedRule xmi:type='uml:Constraint' xmi:id='_18_5_2_1243039e_1524900093695_640872_5373' name='crew'>
+		            <constrainedElement xmi:idref='_18_5_2_1243039e_1517676053388_124487_4713'/>
+		                <specification xmi:type='uml:OpaqueExpression' xmi:id='_18_5_2_1243039e_1524900093695_640872_5373'>
+		                    <body>captain &lt;&gt copilot</body>
+		                </specification>
+		        </ownedRule>
+		        <ownedAttribute xmi:type='uml:Property' xmi:id='_18_5_2_1243039e_1517676183268_547155_4841' name='captain'>
+		        </ownedAttribute>
+		        <ownedAttribute xmi:type='uml:Property' xmi:id='_18_5_2_1243039e_1517677201487_364898_4957' name='flightDate'>
+		        </ownedAttribute>
+		        <ownedAttribute xmi:type='uml:Property' xmi:id='_18_5_2_1243039e_1524899167446_991396_5033' name='copilot'>
+		        </ownedAttribute>
+		        <ownedAttribute xmi:type='uml:Property' xmi:id='_18_5_2_1243039e_1524899900322_167622_5263' name='flightDescription'>
+		        </ownedAttribute>
+		        <ownedAttribute xmi:type='uml:Property' xmi:id='_18_5_2_1243039e_1524899906594_206549_5284' name='plane'>
+		        </ownedAttribute>
+		    </packagedElement>
+		    <packagedElement xmi:type='uml:Class' xmi:id='_18_5_2_1243039e_1517676058413_961274_4740' name='Pilot'>
+		        <ownedAttribute xmi:type='uml:Property' xmi:id='_18_5_2_1243039e_1517676151075_470224_4834' name='lastName'>
+		        </ownedAttribute>
+		        <ownedAttribute xmi:type='uml:Property' xmi:id='_18_5_2_1243039e_1524899090380_641267_5022' name='firstName'>
+		        </ownedAttribute>
+		        <ownedAttribute xmi:type='uml:Property' xmi:id='_18_5_2_1243039e_1517676066656_862293_4766' name='birthDate'>
+		        </ownedAttribute>
+		        <ownedAttribute xmi:type='uml:Property' xmi:id='_18_5_2_1243039e_1524899788106_71259_5095' name='certificates'>
+		        </ownedAttribute>
+		    </packagedElement>
+		    <packagedElement xmi:type='uml:Class' xmi:id='_18_5_2_1243039e_1524899886616_476525_5232' name='FlightDescription'>
+		        <ownedAttribute xmi:type='uml:Property' xmi:id='_18_5_2_1243039e_1524899935453_353084_5353' name='departure'>
+		        </ownedAttribute>
+		        <ownedAttribute xmi:type='uml:Property' xmi:id='_18_5_2_1243039e_1524900235071_619841_5436' name='arrival'>
+		        </ownedAttribute>
+		    </packagedElement>
+		    <packagedElement xmi:type='uml:Class' xmi:id='_18_5_2_1243039e_1524899856008_135845_5203' name='Plane'>
+		        <ownedAttribute xmi:type='uml:Property' xmi:id='_18_5_2_1243039e_1524899861891_389810_5229' name='number'>
+		        </ownedAttribute>
+		        <ownedAttribute xmi:type='uml:Property' xmi:id='_18_5_2_1243039e_1524899914118_279029_5305' name='planeModel'>
+		        </ownedAttribute>
+		    </packagedElement>
+		    <packagedElement xmi:type='uml:Class' xmi:id='_18_5_2_1243039e_1524899825411_771669_5139' name='PlaneModel'>
+		        <ownedAttribute xmi:type='uml:Property' xmi:id='_18_5_2_1243039e_1525251130920_219938_5482' name='designation'>
+		        </ownedAttribute>
+		        <ownedAttribute xmi:type='uml:Property' xmi:id='_18_5_2_1243039e_1525251116047_582971_5478' name='range'>
+		        </ownedAttribute>
+		        <ownedAttribute xmi:type='uml:Property' xmi:id='_18_5_2_1243039e_1525251121988_902829_5480' name='capacity'>
+		        </ownedAttribute>
+		    </packagedElement>
+		</packagedElement>
+		<packagedElement xmi:type='uml:Package' xmi:id='_18_5_2_1243039e_1517740873144_937640_4976' name='java.lang'>
+		    <packagedElement xmi:type='uml:Class' xmi:id='_18_5_2_1243039e_1517676728581_290957_4875' name='Exception'>
+		    </packagedElement>
+		</packagedElement>
+		<packagedElement xmi:type='uml:Package' xmi:id='_be00301_1073394351331_445580_2' name='MagicDraw Profile'>
+		    <packagedElement xmi:type='uml:Stereotype' xmi:id='_9_0_be00301_1108044721245_236588_411' name='InvisibleStereotype'>
+		    </packagedElement>
+		    <packagedElement xmi:type='uml:Stereotype' xmi:id='_12_1_8f90291_1173963323875_662612_98' name='auxiliaryResource'>
+		    </packagedElement>
+		    <packagedElement xmi:type='uml:Stereotype' xmi:id='_9_0_be00301_1108044380615_150487_0' name='DiagramInfo'>
+		    </packagedElement>
+		</packagedElement>
+		<packagedElement xmi:type='uml:Package' xmi:id='_12_0EAPbeta_be00301_1157529392394_202602_1' name='PrimitiveTypes'>
+		</packagedElement>
+    </uml:Model>
+</xmi:XMI>

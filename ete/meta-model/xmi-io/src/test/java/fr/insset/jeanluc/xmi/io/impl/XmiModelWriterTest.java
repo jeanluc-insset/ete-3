@@ -29,7 +29,7 @@ import static org.junit.Assert.*;
  */
 public class XmiModelWriterTest {
 
-    public final static String  PATH = "output_model.xml";
+    public final static String  outputPath = "output_model.xml";
 
     public XmiModelWriterTest() {
     }
@@ -51,25 +51,38 @@ public class XmiModelWriterTest {
     }
 
     @Test
-    public void testSomeMethod() throws InstantiationException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        System.out.println("readSimpleModel");
+    public void testQCM() throws InstantiationException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        System.out.println("write QCM Model");
+        String  url = "../../../src/test/mda/models/MCQ.xml";
+        run(url, "output_model.xml");
+    }
+
+
+    @Test
+    public void testAirways() throws InstantiationException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        System.out.println("write Airways Model");
+        String url = "../../../samples/insset-airways/src/main/mda/Model.xml";
+        run(url, "airways.xml");
+    }
+
+
+    public void run(String url, String outputPath) throws InstantiationException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         // 1- Initialize framework and read a model
         Factories.init();
 
         XmlModelReader  reader = new XmlModelReader();
-        String  url = "../../../src/test/mda/models/MCQ.xml";
         EteModel parent = new EteModelImpl();
         EteModel result = reader.readModel(url, parent);
 
         // 2- call the operation
         ModelWriter instance = new ModelWriter();
-        instance.writeModel(result, new File(PATH));
+        instance.writeModel(result, new File(outputPath));
 
         // 3- check result
         // Actually, we read the previous output and check whether some
         // properties have been saved
         parent = new EteModelImpl();
-        result = reader.readModel(PATH, parent);
+        result = reader.readModel(outputPath, parent);
         Map<String, Integer>    properties = new HashMap<>();
         properties.put("Question", 4);
         properties.put("MCQ", 3);

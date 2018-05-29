@@ -57,28 +57,9 @@ import java.io.IOException;
  *
  * @author jldeleage
  */
-public class XmlModelReader implements ModelReader {
+public class XmlModelReader implements ModelReader, XmlPaths {
 
 
-
-    public final static String     PACKAGE_PATH            = "uml:Package";
-    public final static String     CLASS_PATH              = "//*[@*='uml:Package']/*[@*='uml:Class']";
-    public final static String     ENUM_PATH               = "//*[@*='uml:Package']/*[@*='uml:Enumeration']";
-    public final static String     ASSOCIATION_PATH        = "uml:Association";
-    public final static String     PROPERTY_PATH           = "uml:Property";
-    public final static String     OPERATION_PATH          = "uml:Operation";
-    public final static String     INSTANCE_PATH           = "uml:InstanceSpecification";
-    public final static String     SLOT_PATH               = "//slot";
-    public final static String     INVARIANT_PATH          = ".//packagedElement/ownedRule";
-    public final static String     PRECONDITION_PATH       = ".//ownedOperation/ownedRule[@*=../precondition/@*]";
-    public final static String     POSTCONDITION_PATH      = ".//ownedOperation/ownedRule[@*=../postcondition/@*]";
-    public final static String     CONSTRAINT_PATH         = ".//ownedOperation/ownedRule";
-    public final static String     PROFILE_PATH            = "uml:Profile";
-    public final static String     PROFILE                 = MOF_PACKAGE;
-    public final static String     STEREOTYPE_PATH         = "uml:Stereotype";
-    public final static String     APPLIED_STEREOTYPE_PATH = ".//*[@base_Class]";
-    public final static String     READER_VISITOR          = "reader_visitor";
-    public final static String     XLIST                   = "xlist";
 
 
 
@@ -98,7 +79,7 @@ public class XmlModelReader implements ModelReader {
 
     @Override
     public Collection<NamedElement> readPackages(Object inDocument, EteModel inoutModel) throws IOException {
-        Collection<NamedElement> result = readElements((Document) inDocument, inoutModel, PACKAGE_PATH, MOF_PACKAGE);
+        Collection<NamedElement> result = readElements((Document) inDocument, inoutModel, getPackagePath(), MOF_PACKAGE);
         return result;
     }
 
@@ -108,19 +89,19 @@ public class XmlModelReader implements ModelReader {
         FactoryRegistry registry = FactoryRegistry.getRegistry();
         AbstractFactory factory = registry.getFactory(MOF_CLASS);
         Class builtClass = factory.getBuiltClass();
-        Collection<NamedElement> result = readElementsByPath((Document) inDocument, inoutModel, CLASS_PATH, MOF_CLASS);
+        Collection<NamedElement> result = readElementsByPath((Document) inDocument, inoutModel, getClassPath(), MOF_CLASS);
         return result;
     }
 
     @Override
     public Collection<NamedElement> readEnumerations(Object inDocument, EteModel inoutModel) throws IOException {
-        Collection<NamedElement> result = readElementsByPath((Document) inDocument, inoutModel, ENUM_PATH, MOF_ENUMERATION);
+        Collection<NamedElement> result = readElementsByPath((Document) inDocument, inoutModel, getEnumPath(), MOF_ENUMERATION);
         return result;
     }
 
     @Override
     public Collection<NamedElement> readAssociations(Object inDocument, EteModel inoutModel) throws IOException {
-        Collection<NamedElement> result = readElements((Document) inDocument, inoutModel, ASSOCIATION_PATH, ASSOCIATION);
+        Collection<NamedElement> result = readElements((Document) inDocument, inoutModel, getAssociationPath(), ASSOCIATION);
 
         return result;
     }
@@ -128,14 +109,14 @@ public class XmlModelReader implements ModelReader {
 
     @Override
     public Collection<NamedElement> readProperties(Object inDocument, EteModel inoutModel) throws IOException {
-        Collection<NamedElement> result = readElements((Document) inDocument, inoutModel, PROPERTY_PATH, MOF_PROPERTY);
+        Collection<NamedElement> result = readElements((Document) inDocument, inoutModel, getPropertyPath(), MOF_PROPERTY);
         return result;
     }
 
 
     @Override
     public Collection<NamedElement> readOperations(Object inDocument, EteModel inoutModel) throws IOException {
-        Collection<NamedElement> result = readElements((Document) inDocument, inoutModel, OPERATION_PATH, MOF_OPERATION);
+        Collection<NamedElement> result = readElements((Document) inDocument, inoutModel, getOperationPath(), MOF_OPERATION);
         return result;
     }
 
@@ -171,37 +152,37 @@ public class XmlModelReader implements ModelReader {
     public Collection<NamedElement>  readInstances(Object inDocument, EteModel inoutModel) throws IOException {
         Logger  logger = Logger.getGlobal();
         logger.log(Level.FINER, "Reading instances");
-        Collection<NamedElement> result = readElements((Document) inDocument, inoutModel, INSTANCE_PATH, INSTANCE_SPECIFICATION);
+        Collection<NamedElement> result = readElements((Document) inDocument, inoutModel, getInstancePath(), INSTANCE_SPECIFICATION);
         readSlots(inDocument, inoutModel);
         return result;        
     }
 
     public Collection<NamedElement> readSlots(Object inDocument, EteModel inoutModel) throws IOException {
-        Collection<NamedElement> result = readElementsByPath((Document) inDocument, inoutModel, SLOT_PATH, SLOT);
+        Collection<NamedElement> result = readElementsByPath((Document) inDocument, inoutModel, getSlotPath(), SLOT);
 //        Collection<NamedElement> result = readElements((Document) inDocument, inoutModel, SLOT_PATH, SLOT);
         return result;        
     }
 
     @Override
     public Collection<NamedElement> readInvariants(Object inDocument, EteModel inoutModel) throws IOException {
-        Collection<NamedElement> result = readElementsByPath((Document) inDocument, inoutModel, INVARIANT_PATH, INVARIANT);
+        Collection<NamedElement> result = readElementsByPath((Document) inDocument, inoutModel, getInvariantPath(), INVARIANT);
         return result;
     }
 
 
     @Override
     public Collection<NamedElement> readSpecifications(Object inDocument, EteModel inoutModel) throws IOException {
-        Collection<NamedElement> result = readElementsByPath((Document) inDocument, inoutModel, PRECONDITION_PATH, PRECONDITION);
-        Collection<NamedElement> others = readElementsByPath((Document) inDocument, inoutModel, CONSTRAINT_PATH, CONSTRAINT);
+        Collection<NamedElement> result = readElementsByPath((Document) inDocument, inoutModel, getPreconditionPath(), PRECONDITION);
+        Collection<NamedElement> others = readElementsByPath((Document) inDocument, inoutModel, getConstraintPath(), CONSTRAINT);
         result.addAll(others);
-        Collection<NamedElement> post = readElementsByPath((Document) inDocument, inoutModel, POSTCONDITION_PATH, POSTCONDITION);
+        Collection<NamedElement> post = readElementsByPath((Document) inDocument, inoutModel, getPostconditionPath(), POSTCONDITION);
         result.addAll(post);
         return result;
     }
 
     @Override
     public Collection<NamedElement> readProfiles(Object inDocument, EteModel inoutModel) throws IOException {
-        Collection<NamedElement> result = readElements((Document) inDocument, inoutModel, PROFILE_PATH, PROFILE);
+        Collection<NamedElement> result = readElements((Document) inDocument, inoutModel, getProfilePath(), PROFILE);
         return result;
     }
 
@@ -209,7 +190,7 @@ public class XmlModelReader implements ModelReader {
 
     @Override
     public Collection<NamedElement> readStereotypes(Object inDocument, EteModel inoutModel) throws IOException {
-        Collection<NamedElement> result = readElements((Document) inDocument, inoutModel, STEREOTYPE_PATH, STEREOTYPE);
+        Collection<NamedElement> result = readElements((Document) inDocument, inoutModel, getStereotypePath(), STEREOTYPE);
         return result;
     }
 

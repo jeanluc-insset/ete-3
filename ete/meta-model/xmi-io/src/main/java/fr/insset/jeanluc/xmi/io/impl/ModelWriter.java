@@ -6,6 +6,9 @@ import fr.insset.jeanluc.ete.api.ActionSupport;
 import fr.insset.jeanluc.ete.api.EteException;
 import fr.insset.jeanluc.ete.meta.model.constraint.Invariant;
 import fr.insset.jeanluc.ete.meta.model.core.NamedElement;
+import fr.insset.jeanluc.ete.meta.model.emof.AggregationKind;
+import static fr.insset.jeanluc.ete.meta.model.emof.AggregationKind.AGGREGATION;
+import static fr.insset.jeanluc.ete.meta.model.emof.AggregationKind.COMPOSITION;
 import fr.insset.jeanluc.ete.meta.model.emof.Association;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
@@ -54,6 +57,9 @@ public class ModelWriter extends DynamicVisitorSupport {
                 + inPackage.getId()
                 + "' name='Model'>\n");
         for (PackageableElement anElement : inPackage.getPackagedElementAsCollection()) {
+            if (! (anElement instanceof MofPackage)) {
+                continue;
+            }
             System.out.println("Visiting : " + anElement.getName() + " (" + anElement.getClass().getName() + ")");
             genericVisit(anElement, output, "		", "    ");
         }
@@ -103,8 +109,7 @@ public class ModelWriter extends DynamicVisitorSupport {
         PrintWriter output              = (PrintWriter) inParameters[0];
         String      initialIndentation  = (String) inParameters[1];
         String      indentation         = (String) inParameters[2];
-        output.print(initialIndentation);
-        output.println("<packagedElement xmi:type='uml:Package' xmi:id='" + inPackage.getId() + "'>");
+        printStart(inPackage, output, initialIndentation, "packagedElement", "uml:Package");
         for (NamedElement aNamedElement : inPackage.getPackagedElementAsCollection()) {
             genericVisit(aNamedElement, output, initialIndentation + indentation, indentation);
         }
@@ -117,11 +122,8 @@ public class ModelWriter extends DynamicVisitorSupport {
     public Object writeMofClass(MofClass inElement, Object... inParameters) {
         PrintWriter output              = (PrintWriter) inParameters[0];
         String      initialIndentation  = (String) inParameters[1];
-        String      indentation         = (String) inParameters[2];
-        output.print(initialIndentation);
-        output.println("<packagedElement xmi:type='uml:Class' xmi:id='"
-                + inElement.getId()
-                + "' name='" + inElement.getName() + "'>");
+        String      indentation                 = (String) inParameters[2];
+        printStart(inElement, output, initialIndentation, "packagedElement", "uml:Class");
         for (Invariant anInvariant : inElement.getInvariants()) {
             writeInvariant(anInvariant, output, initialIndentation + indentation, indentation);
         }
@@ -141,11 +143,9 @@ public class ModelWriter extends DynamicVisitorSupport {
         PrintWriter output              = (PrintWriter) inParameters[0];
         String      initialIndentation  = (String) inParameters[1];
         String      indentation         = (String) inParameters[2];
+        printStart(inElement, output, initialIndentation, "packagedElement", "uml:Association");
         output.print(initialIndentation);
-        output.println("<packagedElement xmi:type='uml:Association' xmi:id='"
-                + inElement.getId()
-                + "' name='" + inElement.getName() + "'>");
-        
+        output.print("</packagedElement>");
         return inElement;
     }
 
@@ -154,18 +154,26 @@ public class ModelWriter extends DynamicVisitorSupport {
         PrintWriter output              = (PrintWriter) inParameters[0];
         String      initialIndentation  = (String) inParameters[1];
         String      indentation         = (String) inParameters[2];
-        output.print(initialIndentation);
-        output.println("<ownedAttribute xmi:type='uml:Property' xmi:id='"
-                + inElement.getId());
-        String name = inElement.getName();
-        if (name != null) {
-            output.print("' name='" + inElement.getName());
-        }
-        output.println("'>");
+        printUncompleteStart(inElement, output, initialIndentation, "ownedAttribute", "uml:Property");
         MofType type = inElement.getType();
         if (type instanceof MofClass) {
-            
+            AggregationKind aggregationKind = inElement.getAggregationKind();
+            if (COMPOSITION.equals(aggregationKind)) {
+                    output.print("' aggregation='composition");
+            } else if (AGGREGATION.equals(aggregationKind)) {
+                    output.print("' aggregation='aggregation");
+            }
         }
+        if (inElement.isOrdered()) {
+            output.print("' isOrdered='true");
+        }
+        if (inElement.isStatic()) {
+            output.print("' static='true");
+        }
+        if (inElement.isDerived()) {
+            // TODO : derived attributes
+        }
+        output.println("'>");
         output.print(initialIndentation);
         output.println("</ownedAttribute>");
         return inElement;
@@ -176,10 +184,7 @@ public class ModelWriter extends DynamicVisitorSupport {
         PrintWriter output              = (PrintWriter) inParameters[0];
         String      initialIndentation  = (String) inParameters[1];
         String      indentation         = (String) inParameters[2];
-        output.print(initialIndentation);
-        output.println("<ownedOperation xmi:type='uml:Property' xmi:id='"
-                + inElement.getId()
-                + "' name='" + inElement.getName() + "'>");
+        printStart(inElement, output, initialIndentation, "ownedOperation", "uml:Operation");
         output.print(initialIndentation);
         output.println("</ownedOperation>");
         return inElement;
@@ -196,10 +201,7 @@ public class ModelWriter extends DynamicVisitorSupport {
         PrintWriter output              = (PrintWriter) inParameters[0];
         String      initialIndentation  = (String) inParameters[1];
         String      indentation         = (String) inParameters[2];
-        output.print(initialIndentation);
-        output.println("<ownedRule xmi:type='uml:Constraint' xmi:id='"
-                + inElement.getId()
-                + "' name='" + inElement.getName() + "'>");
+        printStart(inElement, output, initialIndentation, "ownedRule", "uml:Constraint");
         output.print(initialIndentation);
         output.print(indentation);
         output.println("<constrainedElement xmi:idref='" + inElement.getContext().getId() + "'/>");
@@ -211,7 +213,7 @@ public class ModelWriter extends DynamicVisitorSupport {
         output.print(indentation);
         output.print(indentation);
         output.print(indentation);
-        output.println("<body>" + inElement.getSpecificationAsString() + "</body>");
+        output.println("<body>" + inElement.getSpecificationAsString().replace("<", "&lt;").replace(">", "&gt") + "</body>");
         output.print(initialIndentation);
         output.print(indentation);
         output.print(indentation);
@@ -222,9 +224,23 @@ public class ModelWriter extends DynamicVisitorSupport {
     }
 
 
-
-    public void printStart(NamedElement inElement, Object... inParameters) {
-        
+    public void printUncompleteStart(NamedElement inElement, PrintWriter output, String initialIndentation, String xmlType, String xmiType) {
+        output.print(initialIndentation);
+        output.print('<');
+        output.print(xmlType);
+        output.print(" xmi:type='" + xmiType + "' xmi:id='"
+                + inElement.getId());
+        String name = inElement.getName();
+        if (name != null) {
+            output.print("' name='" + name);
+        }
     }
+
+    public void printStart(NamedElement inElement, PrintWriter output, String initialIndentation, String xmlType, String xmiType) {
+        printUncompleteStart(inElement, output, initialIndentation, xmlType, xmiType);
+        output.println("'>");
+    }
+
+
 }
 

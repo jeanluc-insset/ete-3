@@ -511,7 +511,7 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
             
             // 3- Look for usages ?
             // TODO : maybe this should be done in another method so we could
-            // create the profile in on basic model and then use it in another
+            // create the profile in a basic model and then use it in another
             // model
             
             // 3-a : create the local name of the tag
