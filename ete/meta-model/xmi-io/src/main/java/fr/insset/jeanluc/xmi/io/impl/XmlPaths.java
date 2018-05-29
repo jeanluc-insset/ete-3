@@ -10,6 +10,7 @@ import static fr.insset.jeanluc.ete.meta.model.mofpackage.MofPackage.MOF_PACKAGE
  */
 public interface XmlPaths {
 
+    public final static String     PRIMITIVE_TYPE_PATH     = "//*[@*='uml:Package']/*[@*='uml:PrimitiveType']";
     public final static String     PACKAGE_PATH            = "uml:Package";
     public final static String     CLASS_PATH              = "//*[@*='uml:Package']/*[@*='uml:Class']";
     public final static String     ENUM_PATH               = "//*[@*='uml:Package']/*[@*='uml:Enumeration']";
@@ -28,6 +29,12 @@ public interface XmlPaths {
     public final static String     APPLIED_STEREOTYPE_PATH = ".//*[@base_Class]";
     public final static String     READER_VISITOR          = "reader_visitor";
     public final static String     XLIST                   = "xlist";
+
+
+    public default String getPrimitiveTypePath() {
+        return PRIMITIVE_TYPE_PATH;
+    }
+
 
     public default String getPackagePath() {
         return PACKAGE_PATH;

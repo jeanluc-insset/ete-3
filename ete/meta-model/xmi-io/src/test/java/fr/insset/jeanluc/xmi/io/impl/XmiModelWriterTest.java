@@ -50,7 +50,7 @@ public class XmiModelWriterTest {
     public void tearDown() {
     }
 
-    @Test
+//    @Test
     public void testQCM() throws InstantiationException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         System.out.println("write QCM Model");
         String  url = "../../../src/test/mda/models/MCQ.xml";
@@ -58,7 +58,7 @@ public class XmiModelWriterTest {
     }
 
 
-    @Test
+//    @Test
     public void testAirways() throws InstantiationException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         System.out.println("write Airways Model");
         String url = "../../../samples/insset-airways/src/main/mda/Model.xml";
