@@ -5,6 +5,7 @@ package fr.insset.jeanluc.ete.meta.model.mofpackage;
 import fr.insset.jeanluc.ete.meta.model.core.NamedElement;
 import fr.insset.jeanluc.ete.meta.model.emof.Enumeration;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
+import fr.insset.jeanluc.ete.meta.model.types.PrimitiveType;
 import fr.insset.jeanluc.ete.util.XList;
 import fr.insset.jeanluc.util.coll.CompositeCollection;
 import java.util.Collection;
@@ -51,7 +52,10 @@ public interface MofPackage extends PackageableElement {
         Collection<MofClass>    result = new CompositeCollection<>(getClasses());
         return result;
     }
-
+    public default Collection<PrimitiveType>        getPrimitiveTypes() {
+        Collection<PrimitiveType>   result = getPrimitiveTypesAsStream().collect(Collectors.toCollection(XList::new));
+        return result;
+    }
     public default Collection<Enumeration>          getEnumerations() {
         return getEnumerationsAsStream().collect(Collectors.toCollection(XList::new));
     }
@@ -76,5 +80,8 @@ public interface MofPackage extends PackageableElement {
         return getAllClasses().stream();
     }
 
+    public default Stream<PrimitiveType>           getPrimitiveTypesAsStream() {
+        return getPackagedElement().filter(pt -> pt instanceof PrimitiveType).map(pt -> (PrimitiveType)pt);
+    }
 
 }
