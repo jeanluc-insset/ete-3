@@ -50,6 +50,7 @@ import static fr.insset.jeanluc.ete.meta.model.emof.MofParameter.MOF_PARAMETER;
 import fr.insset.jeanluc.ete.meta.model.emof.instance.InstanceSpecification;
 import fr.insset.jeanluc.ete.meta.model.emof.instance.Slot;
 import fr.insset.jeanluc.ete.meta.model.types.Classifier;
+import fr.insset.jeanluc.ete.meta.model.types.PrimitiveType;
 import fr.insset.jeanluc.ete.meta.model.types.TypedElement;
 import fr.insset.jeanluc.ete.util.XList;
 import static fr.insset.jeanluc.xmi.io.impl.XmlUtilities.getElements;
@@ -100,9 +101,10 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
 //                    "fr.insset.jeanluc.ete.meta.model.emof",
 //                    "fr.insset.jeanluc.ete.meta.model.mofpackage",
 //                    "fr.insset.jeanluc.ete.meta.model.constraint");
-        this.register(Package.class, "visitPackage");
+        this.register(MofPackage.class, "visitMofPackage");
         this.register(PackageableElement.class, "visitPackageableElement");
         this.register(MofClass.class, "visitMofClass");
+        this.register(PrimitiveType.class, "visitPrimitiveType");
         this.register(Enumeration.class, "visitEnumeration");
         this.register(MofProperty.class, "visitProperty");
         this.register(Association.class, "visitAssociation");
@@ -122,6 +124,13 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
 
 
     //========================================================================//
+
+
+    public Object visitMofPackage(MofPackage inElement, Object... inParam) {
+        System.out.println("VISITING PACKAGE " + inElement.getName());
+        return inElement;
+    }
+
 
 
     public Object   visitPackageableElement(PackageableElement inElement, Object... inParam) {
@@ -158,6 +167,15 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
         }
         else {
             logger.log(Level.WARNING, "the item " + packageable + " is not put into any package");
+            if (null == parentElement) {
+                logger.log(Level.INFO, "because there is no parent element");
+            }
+            else if (null == parentElement.getName()) {
+                logger.log(Level.INFO, "because the parent element has no name");
+            }
+            else {
+                logger.log(Level.INFO, "because the parent element is not a package : " + parentElement.getClass().getName());
+            }
         }
         EteModel    inoutModel = (EteModel) inParam[1];
         inoutModel.addPackagedElement(packageable);
@@ -172,7 +190,36 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
         return inElement;
     }
 
-    
+
+    public Object   visitPrimitiveType(PrimitiveType inElement, Object... inParam) {
+        PackageableElement packageable = (PackageableElement) inElement;
+        NamedElement       parentElement = (NamedElement) inParam[0];
+        Logger             logger = Logger.getGlobal();
+        if (parentElement instanceof MofPackage) {
+            MofPackage parentPackage = (MofPackage) parentElement;
+            parentPackage.addPackagedElement(packageable);
+            packageable.setOwningPackage(parentPackage);
+            logger.log(Level.INFO, "the item {0} is put into package {1}", new Object[]{packageable.getName(), parentPackage.getName()});
+        }
+        else {
+            logger.log(Level.WARNING, "the item " + packageable.getName() + " is not put into any package");
+            if (null == parentElement) {
+                logger.log(Level.INFO, "because there is no parent element");
+            }
+            else if (null == parentElement.getName()) {
+                logger.log(Level.INFO, "because the parent element has no name");
+            }
+            else {
+                logger.log(Level.INFO, "because the parent element is not a package : " + parentElement.getClass().getName());
+            }
+        }
+        EteModel    inoutModel = (EteModel) inParam[1];
+        inoutModel.addPackagedElement(packageable);
+
+        return inElement;
+    }
+
+
     public Object visitEnumeration(Enumeration inElement, Object... inParam) throws InstantiationException, IllegalAccessException {
         PackageableElement packageable = (PackageableElement) inElement;
         NamedElement       parentElement = (NamedElement) inParam[0];

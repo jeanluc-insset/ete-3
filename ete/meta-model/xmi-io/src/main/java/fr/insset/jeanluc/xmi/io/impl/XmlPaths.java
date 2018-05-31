@@ -10,7 +10,7 @@ import static fr.insset.jeanluc.ete.meta.model.mofpackage.MofPackage.MOF_PACKAGE
  */
 public interface XmlPaths {
 
-    public final static String     PRIMITIVE_TYPE_PATH     = "//*[@*='uml:PrimitiveType']";
+    public final static String     PRIMITIVE_TYPE_PATH     = "//packagedElement[@*='uml:PrimitiveType']";
     public final static String     PACKAGE_PATH            = "uml:Package";
     public final static String     CLASS_PATH              = "//*[@*='uml:Package']/*[@*='uml:Class']";
     public final static String     ENUM_PATH               = "//*[@*='uml:Package']/*[@*='uml:Enumeration']";

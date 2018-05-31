@@ -100,8 +100,8 @@ public interface ModelReader {
      */
     public default void doReadModel(Object inDocument, EteModel inoutModel) throws IOException  {
         beforeReading(inDocument, inoutModel);
-        readPrimitiveTypes(inDocument, inoutModel);
         readPackages(inDocument, inoutModel);
+        readPrimitiveTypes(inDocument, inoutModel);
         readClasses(inDocument, inoutModel);
         readEnumerations(inDocument, inoutModel);
         readProperties(inDocument, inoutModel);
