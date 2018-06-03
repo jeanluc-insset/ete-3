@@ -11,6 +11,8 @@ import static fr.insset.jeanluc.ete.meta.model.core.PrimitiveDataTypes.UNLIMITED
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
+import fr.insset.jeanluc.ete.meta.model.mofpackage.MofPackage;
+import fr.insset.jeanluc.ete.meta.model.mofpackage.PackageableElement;
 //import fr.insset.jeanluc.ete.meta.model.datatype.UnlimitedNatural;
 import fr.insset.jeanluc.ete.meta.model.types.MofType;
 import fr.insset.jeanluc.ete.meta.model.types.collections.MofCollection;
@@ -101,15 +103,29 @@ public interface JavaDialect extends Dialect {
     }
 
 
-    public default String getQualifiedName(NamedElement inNamedObject) {
-        if (inNamedObject == null) {
+    public default void addQualifiedName(PackageableElement inElement, StringBuilder inoutBuilder) {
+        MofPackage owningPackage = inElement.getOwningPackage();
+        if (owningPackage != null) {
+            addQualifiedName(owningPackage, inoutBuilder);
+            inoutBuilder.append(".");
+        }
+        inoutBuilder.append(inElement.getName());
+    }
+
+
+    public default String getQualifiedName(NamedElement inElement) {
+        System.out.println("getQualifiedName in " + getClass().getName() + " for " + inElement.getName());
+        if (inElement == null) {
             return "void";
         }
+        if ("String".equals(inElement.getName())) {
+            return "String";
+        }
         Logger  logger = Logger.getLogger(getClass().getName());
-        logger.log(Level.FINE, "JavaDialect.getQualifiedName(" + inNamedObject.getName() + ")");
-        if (inNamedObject instanceof MofCollection) {
+        logger.log(Level.FINE, "JavaDialect.getQualifiedName(" + inElement.getName() + ")");
+        if (inElement instanceof MofCollection) {
             logger.log(Level.FINER, "Collection");
-            MofCollection coll = (MofCollection) inNamedObject;
+            MofCollection coll = (MofCollection) inElement;
             if (coll instanceof MofSequence) {
                 String result = "List<" + getQualifiedName(coll.getBaseType()) + ">";
                 logger.log(Level.FINER, "Sequence -> " + result);
@@ -125,9 +141,12 @@ public interface JavaDialect extends Dialect {
                 return "List<" + getQualifiedName(coll.getBaseType()) + ">";
             }
         }
-        String qualifiedName = moft2lt(inNamedObject.getQualifiedName());
-        Logger.getLogger("fr.insset.jeanluc.el.dialect.JavaDialect").fine("Qualified name of " + inNamedObject.getName() + " -> " + qualifiedName);
-        return moft2lt(qualifiedName).replace("::", ".");
+        if (inElement instanceof PackageableElement) {
+            StringBuilder builder = new StringBuilder();
+            addQualifiedName((PackageableElement) inElement, builder);
+            return builder.toString().replace("::", ".");
+        }
+        return inElement.getQualifiedName();
     }
 
     public default String getOperationBody(MofOperation inOperation) {

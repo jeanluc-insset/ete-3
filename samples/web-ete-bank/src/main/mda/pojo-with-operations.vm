@@ -11,7 +11,7 @@ import javax.annotation.Generated;
 
 
 @Generated("ete - jean-luc@insset.fr  src/test/mda/templates/pojo-with-operations.vm")
-public class ${current.name} #if (${current.superClass.size()} > 0) extends ${current.superClass.get(0).package.name}.${current.superClass.get(0)} #end {
+public class ${current.name} #if (${current.superClass.size()} > 0) extends ${current.superClass.get(0).package.name}.${current.superClass.get(0).name} #end {
 
 #if ($current.hasStereotype("singleton"))
     private ${current.name}() {
@@ -42,16 +42,16 @@ public class ${current.name} #if (${current.superClass.size()} > 0) extends ${cu
 #foreach ($aProperty in $current.ownedAttribute)
     #if($aProperty.name && $aProperty.type.name)
 
-    public #if ($aProperty.type.package) ${aProperty.type.qualifiedName.replace("::", ".")}#else${dialect.mt2lt($aProperty.type)}#end get${aProperty.name.substring(0,1).toUpperCase()}${aProperty.name.substring(1)}() {
+    public ${dialect.mt2lt($aProperty.type)} get${dialect.i2uc($aProperty.name)}() {
         return ${aProperty.name};
     }
 
-    public void set${aProperty.name.substring(0,1).toUpperCase()}${aProperty.name.substring(1)}(#if ($aProperty.type.package) ${aProperty.type.qualifiedName.replace("::", ".")}#else${dialect.mt2lt($aProperty.type)}#end inValue) {
+    public void set${dialect.i2uc($aProperty.name)}(${dialect.mt2lt($aProperty.type)} inValue) {
         ${aProperty.name} = inValue;
     }
 
     #if($aProperty.type.collection)
-    public void add${aProperty.name.substring(0,1).toUpperCase()}${aProperty.name.substring(1)}(${dialect.mt2lt($aProperty.type.baseType)} inValue) {
+    public void add${dialect.i2uc($aProperty.name)}(${dialect.mt2lt($aProperty.type.baseType)} inValue) {
         ${aProperty.name}.add(inValue);
     }
     #end
@@ -94,7 +94,7 @@ ${dialect.getOperationBody($aMethod)}
 #if($aProperty.type.collection)
     private ${dialect.mt2lt($aProperty.type)} ${aProperty.name} = new LinkedList<>();
 #else
-    private #if ($aProperty.type.package) ${aProperty.type.qualifiedName.replace("::", ".")}#else${dialect.mt2lt($aProperty.type)}#end ${aProperty.name};
+    private ${dialect.mt2lt($aProperty.type)} ${aProperty.name};
 #end
 #end
 

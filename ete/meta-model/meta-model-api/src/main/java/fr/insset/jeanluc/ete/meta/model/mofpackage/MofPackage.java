@@ -56,6 +56,10 @@ public interface MofPackage extends PackageableElement {
         Collection<PrimitiveType>   result = getPrimitiveTypesAsStream().collect(Collectors.toCollection(XList::new));
         return result;
     }
+    public default Collection<PrimitiveType>        getAllPrimitiveTypes() {
+        Collection<PrimitiveType>   result = new CompositeCollection<>(getPrimitiveTypes());
+        return result;
+    }
     public default Collection<Enumeration>          getEnumerations() {
         return getEnumerationsAsStream().collect(Collectors.toCollection(XList::new));
     }

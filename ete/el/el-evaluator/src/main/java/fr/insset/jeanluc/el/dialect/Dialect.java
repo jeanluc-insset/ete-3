@@ -11,6 +11,7 @@ import fr.insset.jeanluc.ete.meta.model.types.collections.MofCollection;
 import java.util.HashSet;
 import java.util.Set;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
+import fr.insset.jeanluc.ete.meta.model.mofpackage.PackageableElement;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -382,7 +383,24 @@ public interface Dialect {
 
 
 
+    public default void addQualifiedName(PackageableElement inElement, StringBuilder inoutBuilder) {
+        MofPackage owningPackage = inElement.getOwningPackage();
+        if (owningPackage != null) {
+            addQualifiedName(owningPackage, inoutBuilder);
+            inoutBuilder.append("::");
+        }
+        inoutBuilder.append(inElement.getName());
+    }
+
+
+
+
     public default String getQualifiedName(NamedElement inElement) {
+        if (inElement instanceof PackageableElement) {
+            StringBuilder builder = new StringBuilder();
+            addQualifiedName((PackageableElement) inElement, builder);
+            return builder.toString();
+        }
         return inElement.getQualifiedName();
     }
 

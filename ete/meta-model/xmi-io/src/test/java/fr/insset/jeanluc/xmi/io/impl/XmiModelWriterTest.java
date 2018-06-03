@@ -87,7 +87,7 @@ public class XmiModelWriterTest {
         properties.put("Question", 4);
         properties.put("MCQ", 3);
         Collection<MofClass> allClasses = result.getAllClasses();
-        assertEquals(2, allClasses.size());
+        assertEquals(4, allClasses.size());
         Collection<MofClass> classes = result.getClasses();
         assertEquals(2, classes.size());
         Collection<Association> associations = new XList<>();

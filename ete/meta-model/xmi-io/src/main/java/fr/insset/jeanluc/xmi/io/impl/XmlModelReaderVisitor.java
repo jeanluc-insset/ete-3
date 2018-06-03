@@ -126,10 +126,14 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
     //========================================================================//
 
 
-    public Object visitMofPackage(MofPackage inElement, Object... inParam) {
-        System.out.println("VISITING PACKAGE " + inElement.getName());
-        return inElement;
-    }
+//    public Object visitMofPackage(MofPackage inElement, Object... inParam) {
+//        // THIS IS NOT CORRECT
+//        // We should read the name of the package "as is" and set it to
+//        // lowercase only on need.
+//        inElement.setName(inElement.getName().toLowerCase());
+//        System.out.println("VISITING PACKAGE " + inElement.getName());
+//        return inElement;
+//    }
 
 
 
