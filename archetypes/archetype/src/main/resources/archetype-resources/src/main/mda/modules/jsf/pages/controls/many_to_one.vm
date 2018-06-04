@@ -1,0 +1,7 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+                    <h:selectOneMenu value="${symbol_pound}{${symbol_dollar}{scope}${symbol_dollar}{varName}}">
+                        <f:selectItems value="${symbol_pound}{${symbol_dollar}{dialect.i2lc(${symbol_dollar}aProperty.type.name)}Controller.getItemsAvailableAs${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)}For${symbol_dollar}{aProperty.owningMofClass.name}SelectOne(${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller.selected)}"/>
+                        <f:ajax render="@form"/>
+                    </h:selectOneMenu>

@@ -1,0 +1,19 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+<h:outputText value="Declared fields of ${symbol_dollar}{current.name}"/>
+${symbol_pound}if (${symbol_dollar}current.superClass.name)
+<h:outputText value="There is a super class"/>
+${symbol_pound}set (${symbol_dollar}target = ${symbol_dollar}current.superClass)
+${symbol_pound}set (${symbol_dollar}current = ${symbol_dollar}current.superClass)
+<h:outputText value="Which is ${symbol_dollar}{current.name}"/>
+${symbol_pound}parse ("declared_fields.vm")
+${symbol_pound}set (${symbol_dollar}current = ${symbol_dollar}target)
+${symbol_pound}end
+${symbol_pound}foreach (${symbol_dollar}aProperty in ${symbol_dollar}current.ownedAttribute)
+${symbol_pound}set (${symbol_dollar}var = ${symbol_dollar}aProperty)
+${symbol_pound}set (${symbol_dollar}varName = ${symbol_dollar}aProperty.name)
+${symbol_pound}set (${symbol_dollar}scope = "cc.attrs.selection.")
+${symbol_pound}set (${symbol_dollar}title = ${symbol_dollar}current.name)
+${symbol_pound}parse ("controls/polymorphism.vm")
+${symbol_pound}end
