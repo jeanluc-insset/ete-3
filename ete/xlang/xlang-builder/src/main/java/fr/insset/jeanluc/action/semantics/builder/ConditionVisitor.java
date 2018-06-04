@@ -162,7 +162,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
 
         EnhancedMofOperationImpl    context = (EnhancedMofOperationImpl)inParameters[0];
 //        context.getPostconditions().add(inCondition);
-        List<Statement>             statements    = getStatements(context, "body");
+        List<Statement>             statements    = context.getBody();
 
         EteModel        model               = (EteModel)inParameters[1];
         Map<String, VariableDefinition> variables  = FactoryMethods.newMap(String.class, VariableDefinition.class);
@@ -305,17 +305,6 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         inoutVariables.put(inIdentifier, resultVariable);
     }
 
-
-    protected List<Statement> getStatements(EnhancedMofOperationImpl inOperation, String inKey) throws InstantiationException {
-        List<Statement> statements = inOperation.getBody();
-        return statements;
-    }
-
-
-    //========================================================================//
-
-
-    
 
     //========================================================================//
 

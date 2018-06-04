@@ -14,6 +14,7 @@
     <cc:implementation>
         <h:panelGrid columns="2">
 #foreach ($aProperty in $current.ownedParameter)
+#set ($isParameter="true")
 #set ($var = $aProperty)
 #set ($varName = $dialect.i2uc($aProperty.name))
 #set ($scope = "" + $dialect.i2lc($current.owningMofClass.name) + "Controller." + ${current.name})

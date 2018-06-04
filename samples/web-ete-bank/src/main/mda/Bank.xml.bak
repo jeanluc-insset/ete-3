@@ -16,7 +16,7 @@
 						<xmi:Extension extender='MagicDraw UML 18.5'>
 							<diagramRepresentation>
 								<diagram:DiagramRepresentationObject ID='_18_5_2_1243039e_1517676027305_953938_4688' diagramStyleID='_18_5_2_1243039e_1528039897019_405330_5008' initialFrameSizeSet='true' requiredFeature=';UML_Standard_Profile.mdzip^UML_FEATURE' type='Class Diagram' umlType='Class Diagram' xmi:id='_8GvZkAkAEeiqNZWDQ2X_aQ' xmi:version='2.0' xmlns:binary='http://www.nomagic.com/ns/cameo/client/binary/1.0' xmlns:diagram='http://www.nomagic.com/ns/magicdraw/core/diagram/1.0' xmlns:xmi='http://www.omg.org/XMI' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
-									<diagramContents contentHash='c303710f-673d-43db-9970-077b90314b71' exporterName='MagicDraw UML' exporterVersion='18.5' xmi:id='_8GvZkQkAEeiqNZWDQ2X_aQ'>
+									<diagramContents contentHash='394c96ae-745e-4b7e-ae1f-9dba949f48ca' exporterName='MagicDraw UML' exporterVersion='18.5' xmi:id='_8GvZkQkAEeiqNZWDQ2X_aQ'>
 										<binaryObject streamContentID='BINARY-ec9778d6-1fb8-4f7b-9516-3c24bef50011' xmi:id='_8GvZkgkAEeiqNZWDQ2X_aQ' xsi:type='binary:StreamIdentityBinaryObject'/>
 										<usedObjects href='#_18_5_2_1243039e_1517676887046_34937_4917'/>
 										<usedObjects href='#_18_5_2_1243039e_1517676183268_36578_4840'/>
@@ -69,7 +69,7 @@
 					<precondition xmi:idref='_18_5_2_1243039e_1519911140361_107306_4903'/>
 					<ownedRule xmi:type='uml:Constraint' xmi:id='_18_5_2_1243039e_1519909927217_616302_4897' name='withdraw'>
 						<specification xmi:type='uml:OpaqueExpression' xmi:id='_18_5_2_1243039e_1519909927218_993792_4898'>
-							<body>fromAccount.balance = fromAccount.balance@pre - amount</body>
+							<body>self.balance = self.balance@pre - amount</body>
 						</specification>
 					</ownedRule>
 					<ownedRule xmi:type='uml:Constraint' xmi:id='_18_5_2_1243039e_1519910028197_107398_4899' name='deposit'>
@@ -86,6 +86,18 @@
 					<ownedRule xmi:type='uml:Constraint' xmi:id='_18_5_2_1243039e_1519911140361_107306_4903' name='toAccount belongs to the customer'>
 						<specification xmi:type='uml:OpaqueExpression' xmi:id='_18_5_2_1243039e_1519911140361_953115_4904'>
 							<body>self.accounts-&gt;includes(toAccount)</body>
+						</specification>
+					</ownedRule>
+					<ownedRule xmi:type='uml:Constraint' xmi:id='_18_5_2_1243039e_1528053593694_343928_5015' name='depositToAccount'>
+						<specification xmi:type='uml:OpaqueExpression' xmi:id='_18_5_2_1243039e_1528053593694_732459_5016'>
+							<body>toAccount.balance = toAccount.balance@pre + inAmount</body>
+							<language>OCL2.0</language>
+						</specification>
+					</ownedRule>
+					<ownedRule xmi:type='uml:Constraint' xmi:id='_18_5_2_1243039e_1528053656743_522727_5017' name='withdrawFromSelf'>
+						<specification xmi:type='uml:OpaqueExpression' xmi:id='_18_5_2_1243039e_1528053656744_553471_5018'>
+							<body>self.balance = self.balance@pre - inAmount</body>
+							<language>OCL2.0</language>
 						</specification>
 					</ownedRule>
 					<ownedParameter xmi:type='uml:Parameter' xmi:id='_18_5_2_1243039e_1519909020778_634786_4889' name='amount' visibility='public'>
@@ -146,6 +158,16 @@
 					</ownedParameter>
 				</ownedOperation>
 				<ownedOperation xmi:type='uml:Operation' xmi:id='_18_5_2_1243039e_1523799762989_330274_5007' name='transfer' visibility='public'>
+					<xmi:Extension extender='MagicDraw UML 18.5'>
+						<modelExtension/>
+					</xmi:Extension>
+					<ownedRule xmi:type='uml:Constraint' xmi:id='_18_5_2_1243039e_1528053524568_117010_5013' name='specification'>
+						<constrainedElement xmi:idref='_18_5_2_1243039e_1523799762989_330274_5007'/>
+						<specification xmi:type='uml:OpaqueExpression' xmi:id='_18_5_2_1243039e_1528053524568_785068_5014'>
+							<body>toAccount.balance = toAccount.balance@pre + inAmount</body>
+							<language>OCL2.0</language>
+						</specification>
+					</ownedRule>
 					<ownedParameter xmi:type='uml:Parameter' xmi:id='_18_5_2_1243039e_1523799791088_414562_5009' name='inToAccount' visibility='public' type='_18_5_2_1243039e_1517676058413_961274_4740'/>
 					<ownedParameter xmi:type='uml:Parameter' xmi:id='_18_5_2_1243039e_1523799791090_9477_5010' name='inAmount' visibility='public'>
 						<type href='UML_Standard_Profile.mdzip#eee_1045467100323_385364_62'>
@@ -230,9 +252,9 @@
 	</xmi:Extension>
 	<StandardProfile:Entity xmi:id='_18_5_2_1243039e_1517677272104_821094_4961' base_Class='_18_5_2_1243039e_1517676053388_124487_4713'/>
 	<meta:pk xmi:id='_18_5_2_1243039e_1517677196186_537291_4956' base_Element='_18_5_2_1243039e_1517676151075_470224_4834'/>
-	<StandardProfile:Entity xmi:id='_18_5_2_1243039e_1517677343927_917184_4964' base_Class='_18_5_2_1243039e_1517676058413_961274_4740'/>
 	<meta:ignore xmi:id='_18_5_2_1243039e_1517676880077_504388_4915' base_Element='_18_5_2_1243039e_1517676728581_290957_4875'/>
-	<MagicDraw_Profile:DiagramInfo xmi:id='_18_5_2_1243039e_1517676027298_683129_4679' base_Diagram='_18_5_2_1243039e_1517676027284_477323_4667' Creation_date='03/02/18 17:40' Modification_date='15/04/18 15:42' Author='jldeleage' Last_modified_by='jldeleage'/>
+	<StandardProfile:Entity xmi:id='_18_5_2_1243039e_1517677343927_917184_4964' base_Class='_18_5_2_1243039e_1517676058413_961274_4740'/>
+	<MagicDraw_Profile:DiagramInfo xmi:id='_18_5_2_1243039e_1517676027298_683129_4679' base_Diagram='_18_5_2_1243039e_1517676027284_477323_4667' Creation_date='03/02/18 17:40' Modification_date='03/06/18 21:18' Author='jldeleage' Last_modified_by='jldeleage'/>
 	<xmi:Extension extender='MagicDraw UML 18.5'>
 		<filePart name='proxy.local__PROJECT$h877558e9224f114d50dea1f39a1c119_resource_com$dnomagic$dci$dmetamodel$dproject$dsnapshot' type='XML' header='&lt;?xml version=&quot;1.0&quot; encoding=&quot;ASCII&quot;?&gt;'>
 <project:Project xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:project="http://www.nomagic.com/ns/cameo/client/project/1.0" xmi:id="_VWTUgU_TEeCNOP_jel_PNg" description="" id="PROJECT-877558e9224f114d50dea1f39a1c119">
@@ -369,7 +391,7 @@
 	<xmi:Extension extender='MagicDraw UML 18.5'>
 		<filePart name='com.nomagic.ci.persistence.local.proxy.privatedependencylist' type='XML' header='&lt;?xml version=&quot;1.0&quot; encoding=&quot;ASCII&quot;?&gt;'>
 <snapshot:PrivateDependenciesContainer xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:snapshot="http://www.nomagic.com/ns/cameo/client/snapshot/1.0" xmi:id="_XfkCsAJHEeKcqJgnVU4y2Q">
-  <referencedResources xmi:id="_cB9PUGdDEei9uPpbsinrSQ" originalResourceURI="local:/PROJECT-877558e9224f114d50dea1f39a1c119?resource=com.nomagic.magicdraw.uml_umodel.shared_umodel">
+  <referencedResources xmi:id="_AwH9YGdlEei9uPpbsinrSQ" originalResourceURI="local:/PROJECT-877558e9224f114d50dea1f39a1c119?resource=com.nomagic.magicdraw.uml_umodel.shared_umodel">
     <referencedObjects>_be00301_1073306188629_537791_2</referencedObjects>
     <referencedObjects>_9_0_62a020a_1105704884807_371561_7741</referencedObjects>
     <referencedObjects>_9_0_2_91a0295_1110274713995_297054_0</referencedObjects>
@@ -381,7 +403,7 @@
     <referencedObjects>magicdraw_1046861421226_813777_19</referencedObjects>
     <referencedObjects>_be00301_1073394345322_922552_1</referencedObjects>
   </referencedResources>
-  <referencedResources xmi:id="_cB9PUWdDEei9uPpbsinrSQ" originalResourceURI="local:/PROJECT-1bd8ae6a-a14b-4a32-bd6a-53032c05a0ff?resource=com.nomagic.magicdraw.uml_umodel.model">
+  <referencedResources xmi:id="_AwH9YWdlEei9uPpbsinrSQ" originalResourceURI="local:/PROJECT-1bd8ae6a-a14b-4a32-bd6a-53032c05a0ff?resource=com.nomagic.magicdraw.uml_umodel.model">
     <referencedObjects>eee_1045467100313_135436_1</referencedObjects>
   </referencedResources>
 </snapshot:PrivateDependenciesContainer>
@@ -411,7 +433,7 @@
     <mountPoints xmi:id="_HBun4FYDEeCyhsLctII43A" sharePointID="magicdraw_uml_standard_profile_v_0001" containmentFeatureID="61" featureName="UML Model" containmentIndex="-1" containmentFeatureName="packagedElement">
       <mountedPoint href="PROJECT-877558e9224f114d50dea1f39a1c119?resource=com.nomagic.magicdraw.uml_umodel.shared_umodel#magicdraw_uml_standard_profile_v_0001"/>
       <mountedOn href="PROJECT-1bd8ae6a-a14b-4a32-bd6a-53032c05a0ff?resource=com.nomagic.magicdraw.uml_umodel.model#eee_1045467100313_135436_1"/>
-      <options xmi:id="_cBfVQGdDEei9uPpbsinrSQ" key="preferredPath" value="::"/>
+      <options xmi:id="_AvkjwGdlEei9uPpbsinrSQ" key="preferredPath" value="::"/>
     </mountPoints>
     <properties xmi:id="_HBzgYFYDEeCyhsLctII43A" key="usedVersion" value="18.5"/>
     <properties xmi:id="_I2i0cFYDEeCyhsLctII43A" key="LOCAL_PROJECT_ID" value="PROJECT-877558e9224f114d50dea1f39a1c119"/>
@@ -423,12 +445,12 @@
   <properties xmi:id="_GPLwoFYDEeCyhsLctII43A" key="standardProfile" value="false"/>
   <properties xmi:id="_GPLwoVYDEeCyhsLctII43A" key="internalVersion" value="-1"/>
   <properties xmi:id="_I3t5IFYDEeCyhsLctII43A" key="MODULES_DIRS" value="&lt;project.dir>&lt;>&lt;install.root>/profiles&lt;>&lt;install.root>/modelLibraries"/>
-  <properties xmi:id="_4iLt4JjZEeCrL4EC3xSIEw" key="fileVersion" value="114"/>
+  <properties xmi:id="_4iLt4JjZEeCrL4EC3xSIEw" key="fileVersion" value="118"/>
   <properties xmi:id="_4ieo0JjZEeCrL4EC3xSIEw" key="exporterDescription" value="ac ed 0 5 73 72 0 2e 63 6f 6d 2e 6e 6f 6d 61 67 69 63 2e 70 65 72 73 69 73 74 65 6e 63 65 2e 58 6d 69 45 78 70 6f 72 74 65 72 44 65 73 63 72 69 70 74 69 6f 6e f5 3e fd c8 e7 3c 3b d7 2 0 5 4c 0 5 6d 4e 61 6d 65 74 0 12 4c 6a 61 76 61 2f 6c 61 6e 67 2f 53 74 72 69 6e 67 3b 4c 0 12 6d 52 65 71 75 69 72 65 64 50 6c 75 67 69 6e 4d 61 70 74 0 f 4c 6a 61 76 61 2f 75 74 69 6c 2f 4d 61 70 3b 4c 0 12 6d 52 65 71 75 69 72 65 64 52 65 73 6f 75 72 63 65 73 74 0 10 4c 6a 61 76 61 2f 75 74 69 6c 2f 4c 69 73 74 3b 4c 0 10 6d 55 4d 4c 4e 61 6d 65 73 70 61 63 65 55 52 49 71 0 7e 0 1 4c 0 8 6d 56 65 72 73 69 6f 6e 71 0 7e 0 1 78 70 74 0 d 4d 61 67 69 63 44 72 61 77 20 55 4d 4c 73 72 0 11 6a 61 76 61 2e 75 74 69 6c 2e 48 61 73 68 4d 61 70 5 7 da c1 c3 16 60 d1 3 0 2 46 0 a 6c 6f 61 64 46 61 63 74 6f 72 49 0 9 74 68 72 65 73 68 6f 6c 64 78 70 3f 40 0 0 0 0 0 0 77 8 0 0 0 10 0 0 0 0 78 73 72 0 13 6a 61 76 61 2e 75 74 69 6c 2e 41 72 72 61 79 4c 69 73 74 78 81 d2 1d 99 c7 61 9d 3 0 1 49 0 4 73 69 7a 65 78 70 0 0 0 0 77 4 0 0 0 0 78 70 74 0 4 31 38 2e 35 "/>
   <properties xmi:id="_4ieo0ZjZEeCrL4EC3xSIEw" key="MODEL_ROOT_HREF" value="local:/PROJECT-1bd8ae6a-a14b-4a32-bd6a-53032c05a0ff?resource=com.nomagic.magicdraw.uml_umodel.model#eee_1045467100313_135436_1"/>
   <properties xmi:id="_Xf1vgAJHEeKcqJgnVU4y2Q" key="CI_VERSION" value="V1702_SP1"/>
   <properties xmi:id="_WHDv8NnXEeSt1dUa3K1eOA" key="fileFormatVersion" value="18.1 beta.esi"/>
-  <properties xmi:id="_oI378G6KEeWoxPthTK0iTA" key="saveID" value="10fceb8f-7ebc-4bda-88e0-011d0735765d"/>
+  <properties xmi:id="_oI378G6KEeWoxPthTK0iTA" key="saveID" value="89654cbd-c623-4abf-8c8f-1e1d6493fb8b"/>
   <projectUsers xmi:id="_zRtSwZjZEeCrL4EC3xSIEw" userId="default"/>
 </project:Project>
 </filePart>
@@ -577,10 +599,10 @@
 </filePart>
 	</xmi:Extension>
 	<xmi:Extension extender='MagicDraw UML 18.5'>
-		<filePart name='Binaries.properties' type='BINARY'>H4sIAAAAAAAAAFPmUg4uzVPwAmIDYwVDcytjYytDcwVn1+AQBSMDQwuu5Pxcvbz83MT0zGQ9MJlSlFiuV5qbE5+bn5KaowcmbZ08/RyDInVTky3NzS1SzHQN05IsdE3SzJN0LU0NzXSNk41MklLTTA0MDA25ALqNDxxzAAAA</filePart>
+		<filePart name='Binaries.properties' type='BINARY'>H4sIAAAAAAAAAFPmUg4uzVPwAmIDYwUjQytjYytjcwVn1+AQBSMDQwuu5Pxcvbz83MT0zGQ9MJlSlFiuV5qbE5+bn5KaowcmbZ08/RyDInVTky3NzS1SzHQN05IsdE3SzJN0LU0NzXSNk41MklLTTA0MDA25AO2J1n5zAAAA</filePart>
 	</xmi:Extension>
 	<xmi:Extension extender='MagicDraw UML 18.5'>
-		<filePart name='personal-Binaries.properties' type='BINARY'>H4sIAAAAAAAAAFPmUg4uzVPwAmIDYwVDcytjYytDcwVn1+AQBSMDQwsuAHnTe9IhAAAA</filePart>
+		<filePart name='personal-Binaries.properties' type='BINARY'>H4sIAAAAAAAAAFPmUg4uzVPwAmIDYwUjQytjYytjcwVn1+AQBSMDQwsuAB5cDR8hAAAA</filePart>
 	</xmi:Extension>
 	<xmi:Extension extender='MagicDraw UML 18.5'>
 		<filePart name='proxy.local__PROJECT$h1bd8ae6a$ha14b$h4a32$hbd6a$h53032c05a0ff_resource_com$dnomagic$dmagicdraw$duml_umodel$dmodel$dsnapshot' type='XML' header='&lt;?xml version=&quot;1.0&quot; encoding=&quot;ASCII&quot;?&gt;'>
@@ -598,6 +620,6 @@
 </filePart>
 	</xmi:Extension>
 	<xmi:Extension extender='MagicDraw UML 18.5'>
-		<filePart name='Records.properties' type='BINARY'>H4sIAAAAAAAAAMVUS2+cMBC+8yuQwtUI81ggEodmlUNySKokl5yQsYfFFdjI9rbZf1+zC8lqszRFTdQDxh5/8/TMd7GWXU8Mr3jLzc4FYdTOuXjcCvfWfkHk4vQyii5x6q6vH5/cMMCZ04PSUpAWUdn5QnZkw6m/X5kiv3wqFfi9kj+AGl/2hkuh/UlnlI/i4vNMOfb4svNbSUlblt8f7m+v109egyuWEVgRryE4rrwmJlHoNRUbJEkURCENEhLUdalAy62iUNpIPDaG4rHXWDy27dpy20kGrRUfflqQXjfSFP/TuXNcO8r9DgzZQ6bKFR8BTi0cspns+ww0Vbw3Uh1t9anVv1KaeaUsTZMkgzwM4xrjmCUBA4LrKCeYYpzP1YdyW4wpGY+N2Xz4LF/k7W0urrggioMeamKFxm6LP106Vzd33x6eEdA8TTO2QriuMhTXaYXyBK9QRMO4gjoJAoyLBVhnZqrADlbXSUFtJiA2XAAoLjbFMvi7rrEZcm1AWIV9yceW6BX/SQww6EEwe7trLepd9yxR/twumpky3RAF7O34JT21zPfce55jycOTndDtP+o75xr7XD+f9zNkeOCd/ToTzQnKGUuMJjJFA5eigUrRwKTomEiLJWDnN/bfo/n8BgAA</filePart>
+		<filePart name='Records.properties' type='BINARY'>H4sIAAAAAAAAAMVUS2+cMBC+8yuQwtUI81ggEodmlUNySKokl5yQsYfFFdjI9rbZf1+zC8lqszRFTdQDxh5/8/TMd7GWXU8Mr3jLzc4FYdTOuXjcCvfWfkHkhvgyii6j1F1fPz65YYAzpwelpSAtorLzhezIhlN/vzJFfvlUKvB7JX8ANb7sDZdC+5POKB/FxeeZcuzxZee3kpK2LL8/3N9er5+8BlcsI7AiXkNwXHlNTKLQayo2SJIoiEIaJCSo61KBlltFobSReGwMxWOvsXhs27XltpMMWis+/LQgvW6kKf6nc+e4dpT7HRiyh0yVKz4CnFo4ZDPZ9xloqnhvpDra6lOrf6U080pZmiZJBnkYxjXGMUsCBgTXUU4wxTifqw/lthhTMh4bs/nwWb7I29tcXHFBFAc91MQKjd0Wf7p0rm7uvj08I6B5mmZshXBdZSiu0wrlCV6hiIZxBXUSBBgXC7DOzFSBHayuk4LaTEBsuABQXGyKZfB3XWMz5NqAsAr7ko8t0Sv+kxhg0INg9nbXWtS77lmi/LldNDNluiEK2NvxS3pqme+59zzHkocnO6Hbf9R3zjX2uX4+72fI8MA7+3UmmhOUM5YYTWSKBi5FA5WigUnRMZEWS8DOb5HJylr8BgAA</filePart>
 	</xmi:Extension>
 </xmi:XMI>

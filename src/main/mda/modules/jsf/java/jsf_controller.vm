@@ -252,6 +252,13 @@ ${aMethod.name}${dialect.i2uc($aParameter.name)}#if( $foreach.hasNext ), #end
         return JsfUtil.getSelectItems(ejbFacade.findAll(), true);
     }
 
+#foreach ($aProperty in ${current.support.keySet()})
+    public SelectItem[] getItemsAvailableAs${dialect.i2uc($aProperty.name)}For${aProperty.owningMofClass.name}SelectOne(${aProperty.owningMofClass.name} inFor) {
+        return JsfUtil.getSelectItems(ejbFacade.findAll(), false);
+    }
+#end
+
+
     public ${current.name} get${current.name}(java.lang.Long id) {
         return ejbFacade.find(id);
     }
@@ -271,7 +278,7 @@ ${aMethod.name}${dialect.i2uc($aParameter.name)}#if( $foreach.hasNext ), #end
                 return null;
             }
             ${current.name}Controller controller = (${current.name}Controller) facesContext.getApplication().getELResolver().
-                    getValue(facesContext.getELContext(), null, "addressController");
+                    getValue(facesContext.getELContext(), null, "${dialect.i2lc($current.name)}Controller");
             return controller.get${current.name}(getKey(value));
         }
 

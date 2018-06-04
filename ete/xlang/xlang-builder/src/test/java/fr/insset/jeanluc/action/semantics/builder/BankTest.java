@@ -3,12 +3,17 @@ package fr.insset.jeanluc.action.semantics.builder;
 
 import fr.insset.jeanluc.ete.meta.model.core.PrimitiveDataTypes;
 import fr.insset.jeanluc.ete.meta.model.core.impl.Factories;
+import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
+import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
+import fr.insset.jeanluc.ete.meta.model.mofpackage.PackageableElement;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.impl.EteModelImpl;
+import fr.insset.jeanluc.ete.xlang.Statement;
 import fr.insset.jeanluc.xmi.io.impl.XmlModelReader;
 import fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -66,12 +71,17 @@ public class BankTest {
         EteModel result = instance.readModel(MODEL_PATH);
         new StatementDumper().dumpModel(result);
 
-        // 4- let's build the statements of an operation of an operation
-        // this should have been done by the visitor
-        // 5- generate the resulting code
-
-        // 6- check results
-
+        // 4- check results : the XLang statements should have been built by
+        // the visitor
+        MofClass accountClass = (MofClass) result.getElementByName("Account");
+        EnhancedMofOperationImpl transfer = (EnhancedMofOperationImpl) accountClass.getOwnedOperation("transfer");
+        List<Statement> statements = transfer.getStatements();
+        System.out.println("Transfer statements : " + statements);
+        System.out.println("    begin");
+        for (Statement s : statements) {
+            System.out.println("    " + s);
+        }
+        System.out.println("    end");
     }
 
 
