@@ -5,23 +5,13 @@ import fr.insset.jeanluc.ete.api.ActionReader;
 import fr.insset.jeanluc.ete.api.ActionSupport;
 import fr.insset.jeanluc.ete.api.EteException;
 import static fr.insset.jeanluc.ete.api.impl.ModuleAction.MODULE_DEFINITION_ACTION;
-import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.MofPackage;
-import fr.insset.jeanluc.util.factory.AbstractFactory;
 import fr.insset.jeanluc.util.factory.FactoryRegistry;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
 
 /**
  * <div>
@@ -59,7 +49,6 @@ public class ModuleCallAction extends ActionSupport {
                 // Should we log the missing attribute or provide a default
                 // value ?
                 Logger.getGlobal().log(Level.WARNING, "Pas de fichier de configuration...");
-//                src = "ete-config.xml";
                 return inModel;
             }
 
@@ -73,30 +62,29 @@ public class ModuleCallAction extends ActionSupport {
 
             resource = getFullUrl(src);
             URL url = new URL(resource);
-            InputStream inputStream = url.openStream();
+            try (InputStream inputStream = url.openStream()) {
+                // 3- try to read the configuration file
+                ActionReader actionReader = (ActionReader) getParameter(ACTION_READER);
+                if (actionReader == null) {
+                    actionReader = (ActionReader) FactoryRegistry.newInstance(ACTION_READER);
+                }
+                addParameter(ACTION_READER, actionReader);
+                Object  rootElement = actionReader.readConfiguration(inputStream);
 
-            // 3- try to read the configuration file
-            ActionReader actionReader = (ActionReader) getParameter(ACTION_READER);
-            if (actionReader == null) {
-                actionReader = (ActionReader) FactoryRegistry.newInstance(ACTION_READER);
-            }
-            addParameter(ACTION_READER, actionReader);
-            Object  rootElement = actionReader.readConfiguration(inputStream);
+                Action action = (Action)FactoryRegistry.newInstance(MODULE_DEFINITION_ACTION);
+                if (action instanceof ActionSupport) {
+                    ((ActionSupport) action).setDefinition(rootElement);
+                    ((ActionSupport) action).setReader(actionReader);
+                }
 
-            Action action = (Action)FactoryRegistry.newInstance(MODULE_DEFINITION_ACTION);
-            if (action instanceof ActionSupport) {
-                ((ActionSupport) action).setDefinition(rootElement);
-                ((ActionSupport) action).setReader(actionReader);
+                action.addParameter(BASE_DIR, localBaseDir);
+                // the module will be processed among the children of
+                // the call
+                addChild(action);
             }
-            
-            action.addParameter(BASE_DIR, localBaseDir);
-            // the module will be processed among the children of
-            // the call
-            addChild(action);
             
             return inModel;
         } catch (InstantiationException | IOException | IllegalAccessException ex) {
-//            Logger.getLogger(ModuleCallAction.class.getName()).log(Level.SEVERE, null, ex);
             throw new EteException(ex);
         }
     }

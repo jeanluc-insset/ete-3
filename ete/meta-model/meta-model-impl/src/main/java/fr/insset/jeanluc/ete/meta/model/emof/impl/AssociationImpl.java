@@ -48,7 +48,7 @@ public class AssociationImpl extends PackageableElementImpl implements Associati
     @Override
     public void addOwnedEnd(MofProperty inProperty) {
         Collection<MofProperty> localOwnedEnd = getOwnedEnd();
-        if (localOwnedEnd.contains(this)) {
+        if (localOwnedEnd.contains(inProperty)) {
             return;
         }
         ownedEnd.add(inProperty);

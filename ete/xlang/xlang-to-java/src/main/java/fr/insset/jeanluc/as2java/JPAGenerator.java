@@ -195,7 +195,8 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
             buffer.append("root");
         }
         else {
-            buffer.append(inDeclaration.getName());
+            String name = inDeclaration.getName();
+            buffer.append(name);
         }
         return inDeclaration;
     }

@@ -268,7 +268,7 @@ public class FilterBuilder extends DynamicVisitorSupport {
         GelExpression result = aClass.newInstance();
         List<GelExpression> operand = inExpression.getOperand();
         if (operand != null) {
-            List<GelExpression> resultOperands = FactoryMethods.newList(GelExpression.class);
+             List<GelExpression> resultOperands = FactoryMethods.newList(GelExpression.class);
             result.setOperand(resultOperands);
             result.setType(inExpression.getType());
             for (GelExpression anExpression : operand) {

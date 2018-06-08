@@ -8,13 +8,13 @@ import ${dialect.getQualifiedName($aDependance)};
 import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
 import fr.insset.jeanluc.ete.meta.model.types.MofType;
 #end
+import fr.insset.jeanluc.ete.meta.model.types.TypedElement;
 import java.util.List;
 import java.util.Set;
 import javax.annotation.Generated;
 
-
 @Generated("jean-luc@insset.fr template : ete/src/main/mda/modules/from-spec/class2interface.vm")
-public interface $current.name #if ($current.superClass && $current.superClass.size()>0) extends ${dialect.getQualifiedName($current.superClass.get(0))} #end {
+public interface $current.name #if ($current.superClass && $current.superClass.size()>0) extends ${dialect.mt2lt($current.superClass.get(0))} #end {
 
 
 #foreach ($aProperty in $current.ownedAttribute)

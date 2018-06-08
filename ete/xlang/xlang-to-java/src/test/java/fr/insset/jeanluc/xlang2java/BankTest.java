@@ -4,6 +4,7 @@ package fr.insset.jeanluc.xlang2java;
 
 import fr.insset.jeanluc.action.semantics.builder.ConditionVisitor;
 import fr.insset.jeanluc.action.semantics.builder.EnhancedMofOperation;
+import static fr.insset.jeanluc.el.dialect.Dialect.DIALECT;
 import static fr.insset.jeanluc.ete.api.Action.BASE_DIR;
 import fr.insset.jeanluc.ete.api.EteException;
 import fr.insset.jeanluc.ete.api.impl.VelocityAction;
@@ -140,7 +141,7 @@ public class BankTest {
         VelocityAction    action = new VelocityAction();
         action.setModel(model);
         action.addParameter(BASE_DIR, "src/test/mda/");
-        action.addParameter("dialect", "fr.insset.jeanluc.as2java.JavaGenerator");
+        action.addParameter(DIALECT, "fr.insset.jeanluc.as2java.JavaGenerator");
 //        action.addParameter("output_base", "target/test/generated-sources/ete/");
         action.addParameter("output_base", SRC_DIR);
         action.addParameter("items", "${classes}");
@@ -238,7 +239,7 @@ public class BankTest {
         VelocityAction    action = new VelocityAction();
         action.setModel(model);
         action.addParameter(BASE_DIR, "src/test/mda/");
-        action.addParameter("dialect", "fr.insset.jeanluc.as2java.JavaGenerator");
+        action.addParameter(DIALECT, "fr.insset.jeanluc.as2java.JavaGenerator");
 //        action.addParameter("output_base", "target/test/generated-sources/ete/");
         action.addParameter("output_base", SRC_DIR);
         action.addParameter("items", "${classes}");

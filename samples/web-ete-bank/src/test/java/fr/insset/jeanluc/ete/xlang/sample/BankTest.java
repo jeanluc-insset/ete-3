@@ -94,7 +94,7 @@ public class BankTest {
 //        VelocityAction    action = new VelocityAction();
 //        action.setModel(model);
 //        action.addParameter(BASE_DIR, "src/test/mda/c/");
-//        action.addParameter("dialect", "fr.insset.jeanluc.xlang.to.c.CGenerator");
+//        action.addParameter(DIALECT, "fr.insset.jeanluc.xlang.to.c.CGenerator");
 ////        action.addParameter("output_base", "target/test/generated-sources/ete/");
 //        action.addParameter("output_base", SRC_DIR);
 //        action.addParameter("items", "${classes}");

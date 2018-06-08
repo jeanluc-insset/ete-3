@@ -1,6 +1,7 @@
 package fr.insset.jeanluc.el.evaluator;
 
 import fr.insset.jeanluc.el.dialect.BasicJavaDialect;
+import static fr.insset.jeanluc.el.dialect.Dialect.DIALECT;
 import fr.insset.jeanluc.ete.api.EteException;
 import fr.insset.jeanluc.ete.meta.model.core.impl.Factories;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
@@ -246,9 +247,9 @@ public class ELEvaluatorTest {
 
     @Test
     public void testDialect() {
-        System.out.println("dialect");
+        System.out.println(DIALECT);
         Object      dialect = new BasicJavaDialect();
-        instance.addParameter("dialect", dialect);
+        instance.addParameter(DIALECT, dialect);
         Object result = instance.evaluate("${dialect}");
         assertEquals(dialect, result);
     }
@@ -256,18 +257,18 @@ public class ELEvaluatorTest {
 
     @Test
     public void testQualifiedName() {
-        System.out.println("dialect");
+        System.out.println(DIALECT);
         Object      dialect = new BasicJavaDialect();
-        instance.addParameter("dialect", dialect);
+        instance.addParameter(DIALECT, dialect);
         Object result = instance.evaluate("${choice.getQualifiedName()}");
         assertEquals("model::sub1::sub2::Choice", result);        
     }
 
     @Test
     public void testDialectQualifiedName() {
-        System.out.println("dialect");
+        System.out.println(DIALECT);
         Object      dialect = new BasicJavaDialect();
-        instance.addParameter("dialect", dialect);
+        instance.addParameter(DIALECT, dialect);
         Object result = instance.evaluate("${dialect.getQualifiedName(choice)}");
         assertEquals("model.sub1.sub2.Choice", result);        
     }
@@ -276,7 +277,7 @@ public class ELEvaluatorTest {
     public void testFilter() {
         System.out.println("filter");
         Object      dialect = new BasicJavaDialect();
-        instance.addParameter("dialect", dialect);
+        instance.addParameter(DIALECT, dialect);
 
         List<MofClass>  classes = new XList();
         classes.add(choice);
@@ -293,7 +294,7 @@ public class ELEvaluatorTest {
     public void testFilter2() throws InstantiationException, IOException, IllegalAccessException {
         System.out.println("filter 2");
         Object      dialect = new BasicJavaDialect();
-        instance.addParameter("dialect", dialect);
+        instance.addParameter(DIALECT, dialect);
         XList result = (XList) instance.evaluate("${classes.filter(c -> c.hasStereotype(\"Entity\"))}");
         assertEquals(2, result.size());        
     }
@@ -303,7 +304,7 @@ public class ELEvaluatorTest {
     public void testMap() {
         System.out.println("map");
         Object      dialect = new BasicJavaDialect();
-        instance.addParameter("dialect", dialect);
+        instance.addParameter(DIALECT, dialect);
         List<String>    expectedResult = new LinkedList<>();
         expectedResult.add("Question");
         expectedResult.add("MCQ");

@@ -3,6 +3,7 @@ package fr.insset.jeanluc.action.semantics.builder;
 
 
 
+import static fr.insset.jeanluc.el.dialect.Dialect.DIALECT;
 import static fr.insset.jeanluc.ete.api.Action.BASE_DIR;
 import fr.insset.jeanluc.ete.api.EteException;
 import fr.insset.jeanluc.ete.api.impl.VelocityAction;
@@ -102,7 +103,6 @@ public class FilterBuilderTest {
             for (EteQuery aQuery : queries) {
                 try {
                     System.out.println(aQuery.getExpression().getClass());
-//                    System.out.println(jpaGenerator.getJpa(aQuery));
                 }
                 catch (Exception ex) {
                     System.out.println(ex.getMessage() + " (" + ex.getClass() + ")");
@@ -116,7 +116,7 @@ public class FilterBuilderTest {
         System.out.println(new File(".").getAbsolutePath());
         action.setModel(model);
         action.addParameter(BASE_DIR, "src/test/mda/");
-        action.addParameter("dialect", "fr.insset.jeanluc.xlang.to.c.CGenerator");
+        action.addParameter(DIALECT, "fr.insset.jeanluc.xlang.to.c.CGenerator");
 //        action.addParameter("output_base", "target/test/generated-sources/ete/");
         action.addParameter("output_base", SRC_DIR);
         action.addParameter("items", "${classes}");

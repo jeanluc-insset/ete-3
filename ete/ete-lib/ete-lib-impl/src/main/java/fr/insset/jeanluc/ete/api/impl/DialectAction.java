@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 public class DialectAction extends ActionSupport {
 
 
-    public final static String  DIALECT = "dialect-action";
+    public static final String  DIALECT_ACTION = "dialect-action";
 
 
     /**

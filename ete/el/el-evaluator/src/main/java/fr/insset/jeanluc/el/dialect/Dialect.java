@@ -28,9 +28,10 @@ import java.util.regex.Pattern;
  */
 public interface Dialect {
 
+    public final static String  DIALECT                 = "dialect";
 
     public final static String  INPUT                   = "input",
-                                PASSWORD                = "password",
+                                SECRET                  = "password",
                                 SELECT_ONE              = "select_one",
                                 SELECT_MANY             = "select_many",
                                 CALENDAR                = "calendar",
@@ -263,7 +264,7 @@ public interface Dialect {
         }
         if ("String".equals(typeName) || "StringType".equals(typeName)) {
             if (inProperty.hasStereotype("password")) {
-                return PASSWORD;
+                return SECRET;
             }
             return INPUT;
         }

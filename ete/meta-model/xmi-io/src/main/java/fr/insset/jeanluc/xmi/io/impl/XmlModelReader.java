@@ -139,6 +139,7 @@ public class XmlModelReader implements ModelReader, XmlPaths {
                     if (subClass != null && superClass != null) {
                         Logger.getGlobal().log(Level.FINE, "Adding inheritance {0} -> {1}", new Object[]{subClass, superClass});
                         subClass.addSuperType(superClass);
+                        subClass.addDependance(superClass);
                     }
                 }
                 catch (Exception ex) {

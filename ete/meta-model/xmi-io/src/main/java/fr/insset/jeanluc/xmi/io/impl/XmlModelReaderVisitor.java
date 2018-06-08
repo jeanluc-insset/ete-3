@@ -24,13 +24,11 @@ import static fr.insset.jeanluc.ete.meta.model.emof.TagValueDeclaration.TAG_VALU
 import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.MofPackage;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.PackageableElement;
-import fr.insset.jeanluc.ete.meta.model.types.Generalization;
 import fr.insset.jeanluc.ete.meta.model.types.MofType;
 import fr.insset.jeanluc.ete.meta.model.types.collections.MofCollection;
 import fr.insset.jeanluc.util.factory.FactoryRegistry;
 import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.xpath.XPath;
@@ -41,7 +39,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import static fr.insset.jeanluc.ete.meta.model.types.collections.MofSequence.MOF_SEQUENCE;
 import javax.xml.xpath.XPathConstants;
-import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
 import fr.insset.jeanluc.ete.meta.model.emof.MofParameter;
@@ -51,12 +48,9 @@ import fr.insset.jeanluc.ete.meta.model.emof.instance.InstanceSpecification;
 import fr.insset.jeanluc.ete.meta.model.emof.instance.Slot;
 import fr.insset.jeanluc.ete.meta.model.types.Classifier;
 import fr.insset.jeanluc.ete.meta.model.types.PrimitiveType;
-import fr.insset.jeanluc.ete.meta.model.types.TypedElement;
 import fr.insset.jeanluc.ete.util.XList;
 import static fr.insset.jeanluc.xmi.io.impl.XmlUtilities.getElements;
 import static fr.insset.jeanluc.xmi.io.impl.XmlUtilities.getStringValue;
-import java.lang.reflect.Method;
-import javax.lang.model.element.PackageElement;
 
 
 
@@ -79,7 +73,7 @@ import javax.lang.model.element.PackageElement;
  * </div>
  * 
  * <div>
- * TODO : there are two responsibilities in this class<ul>
+ * Todo : there are two responsibilities in this class<ul>
  * <li>to complete the read process</li>
  * <li>to deal with XML specifics</li>
  * </ul>
@@ -96,11 +90,15 @@ import javax.lang.model.element.PackageElement;
 public class XmlModelReaderVisitor extends DynamicVisitorSupport {
 
 
-    public XmlModelReaderVisitor() {
+    /**
 //        this.register("visit",
 //                    "fr.insset.jeanluc.ete.meta.model.emof",
 //                    "fr.insset.jeanluc.ete.meta.model.mofpackage",
 //                    "fr.insset.jeanluc.ete.meta.model.constraint");
+//        this.register(TagValueDefinition.class, "visitTagValueDefinition");
+//        this.register(TagValue.class, "visitTagValue");
+    */
+    public XmlModelReaderVisitor() {
         this.register(MofPackage.class, "visitMofPackage");
         this.register(PackageableElement.class, "visitPackageableElement");
         this.register(MofClass.class, "visitMofClass");
@@ -116,8 +114,6 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
         this.register(Stereotype.class, "visitStereotype");
         this.register(InstanceSpecification.class, "visitInstanceSpecification");
         this.register(Slot.class, "visitSlot");
-//        this.register(TagValueDefinition.class, "visitTagValueDefinition");
-//        this.register(TagValue.class, "visitTagValue");
     }
 
 
@@ -126,51 +122,32 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
     //========================================================================//
 
 
-//    public Object visitMofPackage(MofPackage inElement, Object... inParam) {
-//        // THIS IS NOT CORRECT
-//        // We should read the name of the package "as is" and set it to
-//        // lowercase only on need.
-//        inElement.setName(inElement.getName().toLowerCase());
-//        System.out.println("VISITING PACKAGE " + inElement.getName());
-//        return inElement;
-//    }
+    public Object visitMofPackage(MofPackage inElement, Object... inParam) {
+        // A previous version translated the name of the package to lowercase
+        // to match the java notations.
+        // THIS WAS NOT CORRECT
+        // We must leave the name of the package "as is" and set it to
+        // lowercase only on need.
+        return inElement;
+    }
 
 
 
     public Object   visitPackageableElement(PackageableElement inElement, Object... inParam) {
-        PackageableElement packageable = (PackageableElement) inElement;
         // This method can be called for a whole model. In such a case, there
         // is no parameters.
         if (inParam.length < 2) {
             return inElement;
         }
         NamedElement       parentElement = (NamedElement) inParam[0];
-        if (parentElement instanceof MofPackage) {
-            MofPackage parentPackage = (MofPackage) parentElement;
-            parentPackage.addPackagedElement(packageable);
-            packageable.setOwningPackage(parentPackage);
-        }
-        EteModel            inModel = (EteModel) inParam[1];
-        inModel.addPackagedElement(packageable);
-        return inElement;
-    }
-
-
-    //------------------------------------------------------------------------//
-
-
-    public Object   visitMofClass(MofClass inElement, Object... inParam) {
-        PackageableElement packageable = (PackageableElement) inElement;
-        NamedElement       parentElement = (NamedElement) inParam[0];
         Logger             logger = Logger.getGlobal();
         if (parentElement instanceof MofPackage) {
             MofPackage parentPackage = (MofPackage) parentElement;
-            parentPackage.addPackagedElement(packageable);
-            packageable.setOwningPackage(parentPackage);
-            logger.log(Level.FINER, "the item {0} is put into package {1}", new Object[]{packageable, parentPackage});
+            parentPackage.addPackagedElement(inElement);
+            inElement.setOwningPackage(parentPackage);
         }
         else {
-            logger.log(Level.WARNING, "the item " + packageable + " is not put into any package");
+            logger.log(Level.WARNING, "the item " + inElement + " is not put into any package");
             if (null == parentElement) {
                 logger.log(Level.INFO, "because there is no parent element");
             }
@@ -181,12 +158,22 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
                 logger.log(Level.INFO, "because the parent element is not a package : " + parentElement.getClass().getName());
             }
         }
-        EteModel    inoutModel = (EteModel) inParam[1];
-        inoutModel.addPackagedElement(packageable);
+        EteModel            inModel = (EteModel) inParam[1];
+        inModel.addPackagedElement(inElement);
+        return inElement;
+    }
+
+
+    //------------------------------------------------------------------------//
+
+
+    public Object   visitMofClass(MofClass inElement, Object... inParam) {
+        visitPackageableElement(inElement, inParam);
 
         Element elt = (Element) inParam[2];
         String isAbstract = elt.getAttribute("isAbstract");
         if ("true".equals(isAbstract)) {
+            Logger             logger = Logger.getGlobal();
             logger.log(Level.FINER, "The class " + inElement.getName() + " is abstract");
             inElement.setAbstract(true);
         }
@@ -196,17 +183,16 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
 
 
     public Object   visitPrimitiveType(PrimitiveType inElement, Object... inParam) {
-        PackageableElement packageable = (PackageableElement) inElement;
         NamedElement       parentElement = (NamedElement) inParam[0];
         Logger             logger = Logger.getGlobal();
         if (parentElement instanceof MofPackage) {
             MofPackage parentPackage = (MofPackage) parentElement;
-            parentPackage.addPackagedElement(packageable);
-            packageable.setOwningPackage(parentPackage);
-            logger.log(Level.INFO, "the item {0} is put into package {1}", new Object[]{packageable.getName(), parentPackage.getName()});
+            parentPackage.addPackagedElement(inElement);
+            inElement.setOwningPackage(parentPackage);
+            logger.log(Level.INFO, "the item {0} is put into package {1}", new Object[]{inElement.getName(), parentPackage.getName()});
         }
         else {
-            logger.log(Level.WARNING, "the item " + packageable.getName() + " is not put into any package");
+            logger.log(Level.WARNING, "the item " + inElement.getName() + " is not put into any package");
             if (null == parentElement) {
                 logger.log(Level.INFO, "because there is no parent element");
             }
@@ -218,27 +204,26 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
             }
         }
         EteModel    inoutModel = (EteModel) inParam[1];
-        inoutModel.addPackagedElement(packageable);
+        inoutModel.addPackagedElement(inElement);
 
         return inElement;
     }
 
 
     public Object visitEnumeration(Enumeration inElement, Object... inParam) throws InstantiationException, IllegalAccessException {
-        PackageableElement packageable = (PackageableElement) inElement;
         NamedElement       parentElement = (NamedElement) inParam[0];
         Logger             logger = Logger.getGlobal();
         if (parentElement instanceof MofPackage) {
             MofPackage parentPackage = (MofPackage) parentElement;
-            parentPackage.addPackagedElement(packageable);
-            packageable.setOwningPackage(parentPackage);
-            logger.log(Level.FINER, "the item {0} is put in package {1}", new Object[]{packageable, parentPackage});
+            parentPackage.addPackagedElement(inElement);
+            inElement.setOwningPackage(parentPackage);
+            logger.log(Level.FINER, "the item {0} is put in package {1}", new Object[]{inElement, parentPackage});
         }
         else {
-            logger.log(Level.WARNING, "the item " + packageable + " is not put in any package");
+            logger.log(Level.WARNING, "the item " + inElement + " is not put in any package");
         }
         EteModel    inoutModel = (EteModel) inParam[1];
-        inoutModel.addPackagedElement(packageable);
+        inoutModel.addPackagedElement(inElement);
 
         Element     element = (Element) inParam[2];
         NodeList childNodes = element.getChildNodes();
@@ -292,16 +277,16 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
         MofClass    parentClass = (MofClass) inParam[0];
         if (parentClass != null) {
             parentClass.addOwnedAttribute((MofProperty) inProperty);
-            logger.log(Level.FINEST, inProperty.getName() + " added to " + parentClass.getName());
+            logger.log(Level.FINEST, "{0} added to {1}", new Object[]{inProperty.getName(), parentClass.getName()});
         }
         if (inProperty.getType() == null) {
             inProperty.setType(readType((Element)inParam[2], (EteModel)inParam[1]));
         }
-        logger.log(Level.FINER, "Type of " + inProperty.getName() + " is " + inProperty.getType());
+        logger.log(Level.FINER, "Type of {0} is {1}", new Object[]{inProperty.getName(), inProperty.getType()});
 
         String stringValue = getStringValue("defaultValue/@value", elt);
         if (stringValue != null && ! "".equals(stringValue)) {
-            logger.log(Level.FINE, "Setting " + inProperty.getName() + " to " + stringValue);
+            logger.log(Level.FINE, "Setting {0} to {1}", new Object[]{inProperty.getName(), stringValue});
             inProperty.setDefaultValue(stringValue);
         }
         NodeList elements = XmlUtilities.getElements("qualifier", elt);
@@ -330,7 +315,7 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
         EteModel    model = (EteModel)inParam[1];
         Element     element = (Element)inParam[2];
         NodeList    paramElements = element.getElementsByTagName("ownedParameter");
-        global.fine("Visiting operation " + inOperation.getName() + " with " + paramElements + " parameter(s)");
+        global.log(Level.FINE, "Visiting operation {0} with {1} parameter(s)", new Object[]{inOperation.getName(), paramElements});
         for (int i=0 ; i<paramElements.getLength() ; i++) {
             Element aParamElement = (Element)paramElements.item(i);
             String  direction = aParamElement.getAttribute("direction");
@@ -342,10 +327,10 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
                 try {
                     global.finest("    \"true\" parameter");
                     MofParameter   parameter = (MofParameter)FactoryRegistry.newInstance(MOF_PARAMETER);
-                    global.finer("    Instanciated : " + parameter + " (" + parameter.getClass() + ")");
+                    global.log(Level.FINER, "    Instanciated : {0} ({1})", new Object[]{parameter, parameter.getClass()});
                     String      parameterName = aParamElement.getAttribute("name");
                         parameter.setName(parameterName);
-                        global.finer("Parameter : " + parameterName);
+                        global.log(Level.FINER, "Parameter : {0}", parameterName);
                         MofType     type = readType(aParamElement, model);
                         parameter.setType(type);
                         inOperation.addOwnedParameter(parameter);
@@ -535,7 +520,7 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
             }
             
             Logger globalLogger = Logger.getGlobal();
-            globalLogger.log(Level.FINE, "Visiting stereotype " + inStereotype.getName());
+            globalLogger.log(Level.FINE, "Visiting stereotype {0}", inStereotype.getName());
             // add the sterotype to the profile
             MofPackage  profile = (MofPackage)inParam[0];
             profile.addPackagedElement(inStereotype);
@@ -571,33 +556,33 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
             String tagName = parentName + ":" + stereotypeName;
             
             // 3-b : get all the tags with that name
-            globalLogger.log(Level.FINER, "Looking for " + tagName);
+            globalLogger.log(Level.FINER, "Looking for {0}", tagName);
             EteModel    model       = (EteModel) inParam[1];
             Element     domElement  = (Element) inParam[2];
             path        = "//*[name()='" + tagName + "']";
-            globalLogger.log(Level.FINE, "path : " +  path);
+            globalLogger.log(Level.FINE, "path : {0}", path);
             evaluate = (NodeList) xPath.evaluate(path, domElement.getOwnerDocument(), XPathConstants.NODESET);
-            globalLogger.log(Level.FINE, tagName  + " -> " + evaluate + " " + evaluate.getLength() + " elements");
+            globalLogger.log(Level.FINE, "{0} -> {1} {2} elements", new Object[]{tagName, evaluate, evaluate.getLength()});
             
             // 3-c : link the stereotype and the element
             extern : for (int i=0 ; i<evaluate.getLength() ; i++) {
                 // 3-c-1 : find the setereotyped element
                 NamedElement stereotypedElement = null;
                 Element next = (Element)evaluate.item(i);
-                globalLogger.log(Level.FINE, "examining " + next);
+                globalLogger.log(Level.FINE, "examining {0}", next);
                 NamedNodeMap attributes = next.getAttributes();
                 for (int j=0 ; j<attributes.getLength() ; j++) {
                     Node item = attributes.item(j);
                     String  attributeName = item.getNodeName();
-                    globalLogger.log(Level.FINER, "looking at attribute " + attributeName);
+                    globalLogger.log(Level.FINER, "looking at attribute {0}", attributeName);
                     String nodeValue = item.getNodeValue();
                     if (attributeName.startsWith("base_")) {
-                        globalLogger.log(Level.FINE, "looking for element with id " + nodeValue);
+                        globalLogger.log(Level.FINE, "looking for element with id {0}", nodeValue);
                         stereotypedElement = model.getElementById(nodeValue);
                         if (stereotypedElement == null) {
                             continue extern;
                         }
-                        globalLogger.log(Level.FINE, "found " + nodeValue);
+                        globalLogger.log(Level.FINE, "found {0}", nodeValue);
                         stereotypedElement.addStereotype(inStereotype);
                         globalLogger.log(Level.FINE,
                                 "Element st\u00e9r\u00e9otyp\u00e9 : {0} -> {1}", new Object[]{inStereotype, stereotypedElement});
@@ -609,7 +594,6 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
                     Node attributeNode = attributes.item(j);
                     String  attributeName = attributeNode.getNodeName();
                     if (attributeName.startsWith("base_")) {
-                        continue;
                     }
                     else if (! attributeName.equals("xmi:id")) {
                         // read the "tag value" (actually, they are provided as
@@ -640,7 +624,7 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
         logger.finer("Reading type");
         if (attribute != null && ! "".equals(attribute)) {
             result = (MofType)inModel.getElementById(attribute);
-            logger.log(Level.FINER, "In readType, attribute = " + result);
+            logger.log(Level.FINER, "In readType, attribute = {0}", result);
         }
         else {
             try {
@@ -648,9 +632,9 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
                 int index = typeAsString.lastIndexOf("::");
                 typeAsString = typeAsString.substring(index+2);
                 result = (MofType)inModel.getElementByName(typeAsString + TYPE_SUFFIX);
-                logger.log(Level.FINER, "In readType, typeAsString = " + typeAsString + " -> " + result);
+                logger.log(Level.FINER, "In readType, typeAsString = {0} -> {1}", new Object[]{typeAsString, result});
             } catch (java.lang.StringIndexOutOfBoundsException ex) {
-                logger.log(Level.WARNING, "StringIndexOutOfBoundsException while extracting type from " + attribute);
+                logger.log(Level.WARNING, "StringIndexOutOfBoundsException while extracting type from {0}", attribute);
             } catch (XPathExpressionException ex) {
                 Logger.getLogger(XmlModelReaderVisitor.class.getName()).log(Level.SEVERE, null, ex);
                 throw new EteException(ex);
@@ -663,10 +647,10 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
                 try {
                     // TODO : check properties of the association to derive the
                     // true nature of the collection
-                    logger.log(Level.FINE, "The type is a collection of " + result + "s");
+                    logger.log(Level.FINE, "The type is a collection of {0}s", result);
                     MofCollection sequence = (MofCollection) FactoryRegistry.newInstance(MOF_SEQUENCE);
                     sequence.setBaseType(result);
-                    logger.log(Level.FINER, "After wrapping : " + sequence.getName() + " (" + sequence.getClass() + ")");
+                    logger.log(Level.FINER, "After wrapping : {0} ({1})", new Object[]{sequence.getName(), sequence.getClass()});
                     result = sequence;
                 } catch (InstantiationException ex) {
                     throw new EteException(ex);
@@ -708,7 +692,7 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
         catch (NumberFormatException e) {
             // There is no lower value for multiplicity. Let's take 1 instead
             inoutElement.setLower(
-                UNBOUND.equals(inoutElement.getUpper()) ?0:1
+                UNBOUND.equals(inoutElement.getUpper()) ? 0:1
             );
         }
     }   // readMultiplicity
