@@ -231,6 +231,7 @@ public class JavaGenerator extends CBasedGenerator implements Generator, JavaDia
             if (notTheFirstOne) {
                 output.print(", ");
             }
+            notTheFirstOne = true;
             genericVisit(aParameter, inParameters);
         }
         return inMethod;

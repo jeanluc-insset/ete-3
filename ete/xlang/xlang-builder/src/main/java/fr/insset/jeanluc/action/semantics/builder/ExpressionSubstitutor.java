@@ -33,7 +33,7 @@ public class ExpressionSubstitutor extends DynamicVisitorSupport {
 
     public GelExpression visitGelExpression(GelExpression inExpression, Object... inParameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         GelExpression what = (GelExpression) inParameters[0];
-        if (ExpressionUtility.equal(inExpression, what)) {
+        if (ExpressionUtility.areEqual(inExpression, what)) {
             return (GelExpression) inParameters[1];
         }
         GelExpression result = inExpression.getClass().newInstance();

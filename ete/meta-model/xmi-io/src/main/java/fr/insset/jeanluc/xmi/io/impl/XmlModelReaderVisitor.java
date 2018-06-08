@@ -90,13 +90,13 @@ import static fr.insset.jeanluc.xmi.io.impl.XmlUtilities.getStringValue;
 public class XmlModelReaderVisitor extends DynamicVisitorSupport {
 
 
-    /**
-//        this.register("visit",
-//                    "fr.insset.jeanluc.ete.meta.model.emof",
-//                    "fr.insset.jeanluc.ete.meta.model.mofpackage",
-//                    "fr.insset.jeanluc.ete.meta.model.constraint");
-//        this.register(TagValueDefinition.class, "visitTagValueDefinition");
-//        this.register(TagValue.class, "visitTagValue");
+    /* This code has been removed from the constructor
+        this.register("visit",
+                    "fr.insset.jeanluc.ete.meta.model.emof",
+                    "fr.insset.jeanluc.ete.meta.model.mofpackage",
+                    "fr.insset.jeanluc.ete.meta.model.constraint");
+        this.register(TagValueDefinition.class, "visitTagValueDefinition");
+        this.register(TagValue.class, "visitTagValue");
     */
     public XmlModelReaderVisitor() {
         this.register(MofPackage.class, "visitMofPackage");
@@ -168,7 +168,7 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
 
 
     public Object   visitMofClass(MofClass inElement, Object... inParam) {
-        visitPackageableElement(inElement, inParam);
+        inElement = (MofClass) visitPackageableElement(inElement, inParam);
 
         Element elt = (Element) inParam[2];
         String isAbstract = elt.getAttribute("isAbstract");
@@ -183,47 +183,12 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
 
 
     public Object   visitPrimitiveType(PrimitiveType inElement, Object... inParam) {
-        NamedElement       parentElement = (NamedElement) inParam[0];
-        Logger             logger = Logger.getGlobal();
-        if (parentElement instanceof MofPackage) {
-            MofPackage parentPackage = (MofPackage) parentElement;
-            parentPackage.addPackagedElement(inElement);
-            inElement.setOwningPackage(parentPackage);
-            logger.log(Level.INFO, "the item {0} is put into package {1}", new Object[]{inElement.getName(), parentPackage.getName()});
-        }
-        else {
-            logger.log(Level.WARNING, "the item " + inElement.getName() + " is not put into any package");
-            if (null == parentElement) {
-                logger.log(Level.INFO, "because there is no parent element");
-            }
-            else if (null == parentElement.getName()) {
-                logger.log(Level.INFO, "because the parent element has no name");
-            }
-            else {
-                logger.log(Level.INFO, "because the parent element is not a package : " + parentElement.getClass().getName());
-            }
-        }
-        EteModel    inoutModel = (EteModel) inParam[1];
-        inoutModel.addPackagedElement(inElement);
-
-        return inElement;
+        return visitPackageableElement(inElement, inParam);
     }
 
 
     public Object visitEnumeration(Enumeration inElement, Object... inParam) throws InstantiationException, IllegalAccessException {
-        NamedElement       parentElement = (NamedElement) inParam[0];
-        Logger             logger = Logger.getGlobal();
-        if (parentElement instanceof MofPackage) {
-            MofPackage parentPackage = (MofPackage) parentElement;
-            parentPackage.addPackagedElement(inElement);
-            inElement.setOwningPackage(parentPackage);
-            logger.log(Level.FINER, "the item {0} is put in package {1}", new Object[]{inElement, parentPackage});
-        }
-        else {
-            logger.log(Level.WARNING, "the item " + inElement + " is not put in any package");
-        }
-        EteModel    inoutModel = (EteModel) inParam[1];
-        inoutModel.addPackagedElement(inElement);
+        inElement = (Enumeration) visitPackageableElement(inElement, inParam);
 
         Element     element = (Element) inParam[2];
         NodeList childNodes = element.getChildNodes();
@@ -514,6 +479,7 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
      */
     public Object visitStereotype(Stereotype inStereotype, Object... inParam) throws EteException, IllegalAccessException {
         try {
+            // 1- read the standard information
             Element     element = (Element)inParam[2];
             if (inParam[0] == null || !(inParam[0] instanceof MofPackage)) {
                 return inStereotype;
@@ -526,24 +492,8 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
             profile.addPackagedElement(inStereotype);
             
             // 2- Read the TagValue declarations
-            String      path = "ownedAttribute";
-            NodeList    evaluate = (NodeList) xPath.evaluate(path, element, XPathConstants.NODESET);
-            for (int i=0 ; i<evaluate.getLength() ; i++) {
-                Element tagValueDomElement = (Element) evaluate.item(i);
-                TagValueDeclaration declaration = (TagValueDeclaration) FactoryRegistry.newInstance(TAG_VALUE_DECLARATION);
-                String tagValueName = tagValueDomElement.getAttribute("name");
-                declaration.setName(tagValueName);
-                try {
-                    MofType readType = readType(tagValueDomElement, (EteModel) inParam[1]);
-                    declaration.setValueType(readType);
-                    inStereotype.addTagValueDeclaration(declaration);
-                }
-                catch (Exception ex) {
-                    // The exception is not harmful : the property is not
-                    // a tag value description
-                    Logger.getGlobal().log(Level.INFO, "Unable to read " + tagValueName);
-                }
-            }
+            EteModel model = (EteModel) inParam[1];
+            readTags(inStereotype, element, (EteModel)model);
             
             // 3- Look for usages ?
             // TODO : maybe this should be done in another method so we could
@@ -557,14 +507,54 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
             
             // 3-b : get all the tags with that name
             globalLogger.log(Level.FINER, "Looking for {0}", tagName);
-            EteModel    model       = (EteModel) inParam[1];
-            Element     domElement  = (Element) inParam[2];
-            path        = "//*[name()='" + tagName + "']";
+            String path        = "//*[name()='" + tagName + "']";
             globalLogger.log(Level.FINE, "path : {0}", path);
-            evaluate = (NodeList) xPath.evaluate(path, domElement.getOwnerDocument(), XPathConstants.NODESET);
+            NodeList evaluate = (NodeList) xPath.evaluate(path, element.getOwnerDocument(), XPathConstants.NODESET);
             globalLogger.log(Level.FINE, "{0} -> {1} {2} elements", new Object[]{tagName, evaluate, evaluate.getLength()});
             
-            // 3-c : link the stereotype and the element
+            // 3-c : link the stereotype and elements
+            linkStereotype(inStereotype, evaluate, model);
+            
+            return inStereotype;
+        } catch (XPathExpressionException | InstantiationException ex) {
+            Logger.getLogger(XmlModelReaderVisitor.class.getName()).log(Level.SEVERE, null, ex);
+            throw new EteException(ex);
+        }
+    }
+
+
+    protected void readTags(Stereotype inStereotype, Element element, EteModel inModel) throws InstantiationException, IllegalAccessException, XPathExpressionException {
+            String      path = "ownedAttribute";
+            NodeList    evaluate = (NodeList) xPath.evaluate(path, element, XPathConstants.NODESET);
+            for (int i=0 ; i<evaluate.getLength() ; i++) {
+                Element tagValueDomElement = (Element) evaluate.item(i);
+                TagValueDeclaration declaration = (TagValueDeclaration) FactoryRegistry.newInstance(TAG_VALUE_DECLARATION);
+                String tagValueName = tagValueDomElement.getAttribute("name");
+                declaration.setName(tagValueName);
+                try {
+                    MofType readType = readType(tagValueDomElement, inModel);
+                    declaration.setValueType(readType);
+                    inStereotype.addTagValueDeclaration(declaration);
+                }
+                catch (Exception ex) {
+                    // The exception is not harmful : the property is not
+                    // a tag value description
+                    Logger.getGlobal().log(Level.INFO, "Unable to read " + tagValueName);
+                }
+            }
+        
+    }
+
+    /**
+     * Look for items in the model corresponding to the elements in the node
+     * list
+     * 
+     * @param inStereotype : stereotype to add to items
+     * @param evaluate : node list of XMI elements of the stereotyped items
+     * @param model : model the elements belong to
+     */
+    protected void linkStereotype(Stereotype inStereotype, NodeList evaluate, EteModel model) {
+        Logger globalLogger = Logger.getGlobal();
             extern : for (int i=0 ; i<evaluate.getLength() ; i++) {
                 // 3-c-1 : find the setereotyped element
                 NamedElement stereotypedElement = null;
@@ -605,13 +595,7 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
                         globalLogger.log(Level.FINER, "Tag value on " + stereotypedElement + " : " + tagValueDeclaration + "=" + attributeValue);
                     }
                 }       //
-            }       // loop on the XMI tags of sterotypes
-            
-            return inStereotype;
-        } catch (XPathExpressionException | InstantiationException ex) {
-            Logger.getLogger(XmlModelReaderVisitor.class.getName()).log(Level.SEVERE, null, ex);
-            throw new EteException(ex);
-        }
+            }       // loop on the XMI tags of sterotypes        
     }
 
     //+=======================================================================//

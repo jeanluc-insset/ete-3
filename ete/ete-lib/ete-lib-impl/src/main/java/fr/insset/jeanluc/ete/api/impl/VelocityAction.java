@@ -22,6 +22,7 @@ import org.apache.velocity.exception.MethodInvocationException;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.runtime.RuntimeConstants;
 import static fr.insset.jeanluc.ete.api.impl.DialectAction.DIALECT_ACTION;
+import java.io.IOException;
 
 
 
@@ -87,7 +88,6 @@ public class VelocityAction extends GenericTemplate {
 
     protected   Class   loadClass(String inName) throws ClassNotFoundException, MalformedURLException {
         String[] parameter = (String[]) getParameter("extraPaths");
-        ClassLoader classLoader;
         if (parameter != null && parameter.length > 0) {
             URL[]       urls = new URL[parameter.length];
             int         index = 0;
@@ -95,12 +95,17 @@ public class VelocityAction extends GenericTemplate {
                 URI toURI = new File(aParam).toURI();
                 urls[index++] = toURI.toURL();
             }
-            classLoader = new URLClassLoader(urls);
+            try (URLClassLoader classLoader = new URLClassLoader(urls)) {
+                return classLoader.loadClass(inName);
+            } catch (IOException ex) {
+                throw new ClassNotFoundException(inName + " (IOException)");
+            }
         }
         else {
+            ClassLoader classLoader;
             classLoader = getClass().getClassLoader();
+            return classLoader.loadClass(inName);
         }
-        return classLoader.loadClass(inName);
     }
 
 

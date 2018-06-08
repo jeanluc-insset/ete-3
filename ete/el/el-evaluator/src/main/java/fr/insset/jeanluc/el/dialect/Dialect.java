@@ -122,7 +122,7 @@ public interface Dialect {
 
 
     public default String p2d(String inString) {
-        return inString.replaceAll("::", "/").replaceAll(".", "/");
+        return inString.replaceAll("::", "/").replaceAll("\\.", "/");
     }
 
 

@@ -114,10 +114,10 @@ public interface JavaDialect extends Dialect {
 
 
     public default String getQualifiedName(NamedElement inElement) {
-        System.out.println("getQualifiedName in " + getClass().getName() + " for " + inElement.getName());
         if (inElement == null) {
             return "void";
         }
+        Logger.getGlobal().log(Level.FINER, "getQualifiedName in {0} for {1}", new Object[]{getClass().getName(), inElement.getName()});
         if ("String".equals(inElement.getName())) {
             return "String";
         }
