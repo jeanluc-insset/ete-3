@@ -91,12 +91,11 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
 
 
     /* This code has been removed from the constructor
-        this.register("visit",
-                    "fr.insset.jeanluc.ete.meta.model.emof",
+        registering "visit" with "fr.insset.jeanluc.ete.meta.model.emof",
                     "fr.insset.jeanluc.ete.meta.model.mofpackage",
-                    "fr.insset.jeanluc.ete.meta.model.constraint");
-        this.register(TagValueDefinition.class, "visitTagValueDefinition");
-        this.register(TagValue.class, "visitTagValue");
+                    "fr.insset.jeanluc.ete.meta.model.constraint"
+        registering TagValueDefinition.class with "visitTagValueDefinition"
+        registering TagValue.class with "visitTagValue"
     */
     public XmlModelReaderVisitor() {
         this.register(MofPackage.class, "visitMofPackage");
@@ -147,7 +146,7 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
             inElement.setOwningPackage(parentPackage);
         }
         else {
-            logger.log(Level.WARNING, "the item " + inElement + " is not put into any package");
+            logger.log(Level.WARNING, "the item {0} is not put into any package", inElement);
             if (null == parentElement) {
                 logger.log(Level.INFO, "because there is no parent element");
             }
@@ -155,7 +154,7 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
                 logger.log(Level.INFO, "because the parent element has no name");
             }
             else {
-                logger.log(Level.INFO, "because the parent element is not a package : " + parentElement.getClass().getName());
+                logger.log(Level.INFO, "because the parent element is not a package : {0}", parentElement.getClass().getName());
             }
         }
         EteModel            inModel = (EteModel) inParam[1];
@@ -174,7 +173,7 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
         String isAbstract = elt.getAttribute("isAbstract");
         if ("true".equals(isAbstract)) {
             Logger             logger = Logger.getGlobal();
-            logger.log(Level.FINER, "The class " + inElement.getName() + " is abstract");
+            logger.log(Level.FINER, "The class {0} is abstract", inElement.getName());
             inElement.setAbstract(true);
         }
 
@@ -202,7 +201,6 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
             }
             Element aChildElement = (Element) aChildNode;
             if ("ownedLiteral".equals(aChildElement.getNodeName())) {
-                String  value = aChildElement.getAttribute("name");
                 Literal  newLiteral = (Literal) FactoryRegistry.newInstance("literal");
                 inElement.addLiteral(newLiteral);
             }
@@ -219,11 +217,13 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
      * @param inProperty
      * @param inParam
      * @return
+     * @throws fr.insset.jeanluc.ete.api.EteException
      * @throws XPathExpressionException 
+     * @throws java.lang.IllegalAccessException 
      */
     public Object   visitProperty(MofProperty inProperty, Object... inParam) throws EteException, XPathExpressionException, IllegalAccessException {
         Logger  logger = Logger.getLogger(getClass().getName());
-        logger.log(Level.FINE, "visiting " + inProperty.getName() + " property");
+        logger.log(Level.FINE, "visiting {0} property", inProperty.getName());
         Element elt = (Element) inParam[2];
         String attribute = elt.getAttribute("readOnly");
         inProperty.setReadOnly("true".equals(attribute));
@@ -263,7 +263,7 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
             logger.log(Level.FINE, "QUALIFICATION - {0} : {1}", new Object[]{qualifierElement.getAttribute("name"), qualifierType});
         }
         
-//        readMultiplicity(inProperty, (Element)inParam[2], (EteModel)inParam[1]);
+//        We should read multiplicity
         return inProperty;
     }
 
@@ -357,7 +357,7 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
         MofType classifier = (MofType) model.getElementById(classifierId);
         if (classifier != null) {
             Logger logger = Logger.getGlobal();
-            logger.log(Level.FINE, "Setting instance type to " + classifier.getName());
+            logger.log(Level.FINE, "Setting instance type to {0}", classifier.getName());
             inInstance.setType(classifier);
             classifier.addInstance(inInstance);
         }
@@ -474,8 +474,9 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
      * 
      * @param inStereotype
      * @param inParam
-     * @return the visited object, actually the first parameter
-     * @throws XPathExpressionException 
+     * @return the visited object, actually the first parameter 
+     * @throws fr.insset.jeanluc.ete.api.EteException 
+     * @throws java.lang.IllegalAccessException 
      */
     public Object visitStereotype(Stereotype inStereotype, Object... inParam) throws EteException, IllegalAccessException {
         try {
@@ -511,10 +512,15 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
             globalLogger.log(Level.FINE, "path : {0}", path);
             NodeList evaluate = (NodeList) xPath.evaluate(path, element.getOwnerDocument(), XPathConstants.NODESET);
             globalLogger.log(Level.FINE, "{0} -> {1} {2} elements", new Object[]{tagName, evaluate, evaluate.getLength()});
-            
+
             // 3-c : link the stereotype and elements
-            linkStereotype(inStereotype, evaluate, model);
-            
+            for (int i=0 ; i<evaluate.getLength() ; i++) {
+                // 3-c-1 : find the setereotyped element
+                Element next = (Element)evaluate.item(i);
+                globalLogger.log(Level.FINE, "examining {0}", next);
+                NamedNodeMap attributes = next.getAttributes();
+                linkStereotype(inStereotype, attributes, model);
+            }      
             return inStereotype;
         } catch (XPathExpressionException | InstantiationException ex) {
             Logger.getLogger(XmlModelReaderVisitor.class.getName()).log(Level.SEVERE, null, ex);
@@ -525,78 +531,74 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
 
     protected void readTags(Stereotype inStereotype, Element element, EteModel inModel) throws InstantiationException, IllegalAccessException, XPathExpressionException {
             String      path = "ownedAttribute";
-            NodeList    evaluate = (NodeList) xPath.evaluate(path, element, XPathConstants.NODESET);
-            for (int i=0 ; i<evaluate.getLength() ; i++) {
-                Element tagValueDomElement = (Element) evaluate.item(i);
-                TagValueDeclaration declaration = (TagValueDeclaration) FactoryRegistry.newInstance(TAG_VALUE_DECLARATION);
-                String tagValueName = tagValueDomElement.getAttribute("name");
-                declaration.setName(tagValueName);
-                try {
-                    MofType readType = readType(tagValueDomElement, inModel);
-                    declaration.setValueType(readType);
-                    inStereotype.addTagValueDeclaration(declaration);
-                }
-                catch (Exception ex) {
-                    // The exception is not harmful : the property is not
-                    // a tag value description
-                    Logger.getGlobal().log(Level.INFO, "Unable to read " + tagValueName);
-                }
+        NodeList    evaluate = (NodeList) xPath.evaluate(path, element, XPathConstants.NODESET);
+        for (int i=0 ; i<evaluate.getLength() ; i++) {
+            Element tagValueDomElement = (Element) evaluate.item(i);
+            TagValueDeclaration declaration = (TagValueDeclaration) FactoryRegistry.newInstance(TAG_VALUE_DECLARATION);
+            String tagValueName = tagValueDomElement.getAttribute("name");
+            declaration.setName(tagValueName);
+            try {
+                MofType readType = readType(tagValueDomElement, inModel);
+                declaration.setValueType(readType);
+                inStereotype.addTagValueDeclaration(declaration);
             }
-        
-    }
+            catch (EteException | IllegalAccessException ex) {
+                // The exception is not harmful : the property is not
+                // a tag value description
+                Logger.getGlobal().log(Level.INFO, "Unable to read {0}", tagValueName);
+            }
+        }
+    }       // readTags
+
 
     /**
      * Look for items in the model corresponding to the elements in the node
      * list
      * 
      * @param inStereotype : stereotype to add to items
-     * @param evaluate : node list of XMI elements of the stereotyped items
+     * @param attributes : attributes of the element defining the stereotype
      * @param model : model the elements belong to
      */
-    protected void linkStereotype(Stereotype inStereotype, NodeList evaluate, EteModel model) {
+    protected void linkStereotype(Stereotype inStereotype, NamedNodeMap attributes, EteModel model) {
+        NamedElement stereotypedElement = null;
         Logger globalLogger = Logger.getGlobal();
-            extern : for (int i=0 ; i<evaluate.getLength() ; i++) {
-                // 3-c-1 : find the setereotyped element
-                NamedElement stereotypedElement = null;
-                Element next = (Element)evaluate.item(i);
-                globalLogger.log(Level.FINE, "examining {0}", next);
-                NamedNodeMap attributes = next.getAttributes();
-                for (int j=0 ; j<attributes.getLength() ; j++) {
-                    Node item = attributes.item(j);
-                    String  attributeName = item.getNodeName();
-                    globalLogger.log(Level.FINER, "looking at attribute {0}", attributeName);
-                    String nodeValue = item.getNodeValue();
-                    if (attributeName.startsWith("base_")) {
-                        globalLogger.log(Level.FINE, "looking for element with id {0}", nodeValue);
-                        stereotypedElement = model.getElementById(nodeValue);
-                        if (stereotypedElement == null) {
-                            continue extern;
-                        }
-                        globalLogger.log(Level.FINE, "found {0}", nodeValue);
-                        stereotypedElement.addStereotype(inStereotype);
-                        globalLogger.log(Level.FINE,
-                                "Element st\u00e9r\u00e9otyp\u00e9 : {0} -> {1}", new Object[]{inStereotype, stereotypedElement});
-                        break;
-                    }
+        for (int j = 0; j < attributes.getLength(); j++) {
+            Node item = attributes.item(j);
+            String attributeName = item.getNodeName();
+            globalLogger.log(Level.FINER, "looking at attribute {0}", attributeName);
+            String nodeValue = item.getNodeValue();
+            if (attributeName.startsWith("base_")) {
+                globalLogger.log(Level.FINE, "looking for element with id {0}", nodeValue);
+                stereotypedElement = model.getElementById(nodeValue);
+                if (stereotypedElement == null) {
+                    return;
                 }
-                // 3-c-2 : apply tag values
-                for (int j=0 ; j<attributes.getLength() ; j++) {
-                    Node attributeNode = attributes.item(j);
-                    String  attributeName = attributeNode.getNodeName();
-                    if (attributeName.startsWith("base_")) {
-                    }
-                    else if (! attributeName.equals("xmi:id")) {
-                        // read the "tag value" (actually, they are provided as
-                        // attributes of the tag)
-                        String attributeValue = attributeNode.getNodeValue();
-                        TagValueDeclaration tagValueDeclaration = inStereotype.getTagValueDeclaration(attributeName);
-                        // TODO : manage type conversion
-                        stereotypedElement.addTagValue(tagValueDeclaration, attributeValue);
-                        globalLogger.log(Level.FINER, "Tag value on " + stereotypedElement + " : " + tagValueDeclaration + "=" + attributeValue);
-                    }
-                }       //
-            }       // loop on the XMI tags of sterotypes        
+                globalLogger.log(Level.FINE, "found {0}", nodeValue);
+                stereotypedElement.addStereotype(inStereotype);
+                globalLogger.log(Level.FINE,
+                        "Element st\u00e9r\u00e9otyp\u00e9 : {0} -> {1}", new Object[]{inStereotype, stereotypedElement});
+                break;
+            }
+        }
+        // 3-c-2 : apply tag values
+        for (int j = 0; j < attributes.getLength(); j++) {
+            Node attributeNode = attributes.item(j);
+            String attributeName = attributeNode.getNodeName();
+            if (! attributeName.startsWith("base_") && !attributeName.equals("xmi:id")) {
+                // read the "tag value" (actually, they are provided as
+                // attributes of the tag)
+                String attributeValue = attributeNode.getNodeValue();
+                TagValueDeclaration tagValueDeclaration = inStereotype.getTagValueDeclaration(attributeName);
+                // TODO : manage type conversion
+                if (stereotypedElement != null) {
+                    stereotypedElement.addTagValue(tagValueDeclaration, attributeValue);
+                }
+                globalLogger.log(Level.FINER, "Tag value on {0} : {1}={2}", new Object[]{stereotypedElement, tagValueDeclaration, attributeValue});
+            }
+        }
+
     }
+
 
     //+=======================================================================//
 
@@ -675,9 +677,7 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
         }
         catch (NumberFormatException e) {
             // There is no lower value for multiplicity. Let's take 1 instead
-            inoutElement.setLower(
-                UNBOUND.equals(inoutElement.getUpper()) ? 0:1
-            );
+            inoutElement.setLower(1);
         }
     }   // readMultiplicity
 

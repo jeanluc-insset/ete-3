@@ -275,6 +275,7 @@ public class CGenerator extends CBasedGenerator  {
             if (notTheFirstOne) {
                 output.print(", ");
             }
+            notTheFirstOne = true;
             genericVisit(aParameter, inParameters);
         }
         output.print(")");

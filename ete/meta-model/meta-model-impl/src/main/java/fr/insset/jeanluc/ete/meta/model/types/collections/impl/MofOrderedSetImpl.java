@@ -28,6 +28,14 @@ public class MofOrderedSetImpl extends MofCollectionImpl implements MofOrderedSe
         return true;
     }
 
+
+
+    @Override
+    public int hashCode() {
+        return this.getBaseType().hashCode() * 27;
+    }
+
+
     @Override
     public String getSymbol() {
         return MOF_ORDERED_SET;

@@ -37,5 +37,9 @@ public class MofBagImpl extends MofCollectionImpl implements MofBag {
     }
 
 
+    @Override
+    public int hashCode() {
+        return this.getBaseType().hashCode() * 27;
+    }
 
 }

@@ -28,6 +28,13 @@ public class MofSetImpl extends MofCollectionImpl implements MofSet {
         return true;
     }
 
+
+    @Override
+    public int hashCode() {
+        return this.getBaseType().hashCode() * 27;
+    }
+
+
     @Override
     public String getSymbol() {
         return MOF_SET;
