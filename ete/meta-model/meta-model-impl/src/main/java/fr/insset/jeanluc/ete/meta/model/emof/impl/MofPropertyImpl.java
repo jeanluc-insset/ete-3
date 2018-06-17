@@ -1,6 +1,7 @@
 package fr.insset.jeanluc.ete.meta.model.emof.impl;
 
 
+import static fr.insset.jeanluc.ete.defs.Constants.NOT_IMPLEMENTED_YET;
 import fr.insset.jeanluc.ete.meta.model.datatype.UnlimitedNatural;
 import static fr.insset.jeanluc.ete.meta.model.datatype.UnlimitedNatural.UNLIMITED_NATURAL;
 import fr.insset.jeanluc.ete.meta.model.emof.AggregationKind;
@@ -8,7 +9,6 @@ import fr.insset.jeanluc.ete.meta.model.emof.Association;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 import fr.insset.jeanluc.ete.meta.model.types.MofType;
 import fr.insset.jeanluc.ete.meta.model.types.collections.MofCollection;
-import fr.insset.jeanluc.ete.meta.model.types.impl.TypedElementImpl;
 import fr.insset.jeanluc.util.factory.FactoryRegistry;
 import java.util.Collection;
 import java.util.logging.Level;
@@ -56,7 +56,7 @@ public class MofPropertyImpl extends FeatureImpl implements MofProperty {
 
     @Override
     public Collection<String> getDefault() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET); //To change body of generated methods, choose Tools | Templates.
     }
 
 

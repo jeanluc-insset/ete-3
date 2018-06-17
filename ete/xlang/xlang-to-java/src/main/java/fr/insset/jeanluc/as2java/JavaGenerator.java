@@ -3,6 +3,7 @@ package fr.insset.jeanluc.as2java;
 
 import fr.insset.jeanluc.action.semantics.builder.EnhancedMofOperationImpl;
 import fr.insset.jeanluc.el.dialect.JavaDialect;
+import fr.insset.jeanluc.ete.defs.EteException;
 import fr.insset.jeanluc.ete.gel.AtPre;
 import fr.insset.jeanluc.ete.gel.AttributeNav;
 import fr.insset.jeanluc.ete.gel.Collect;
@@ -12,7 +13,6 @@ import fr.insset.jeanluc.ete.gel.OclOperation;
 import fr.insset.jeanluc.ete.gel.Self;
 import fr.insset.jeanluc.ete.gel.Step;
 import fr.insset.jeanluc.ete.gel.StringLiteral;
-import fr.insset.jeanluc.ete.gel.Sub;
 import fr.insset.jeanluc.ete.gel.Sum;
 import fr.insset.jeanluc.ete.gel.VariableDefinition;
 import fr.insset.jeanluc.ete.gel.VariableReference;
@@ -94,10 +94,6 @@ import java.util.logging.Logger;
  */
 public class JavaGenerator extends CBasedGenerator implements Generator, JavaDialect  {
 
-    private enum LEFT_RIGHT {
-        LEFT, RIGHT
-    };
-
 
 
     public JavaGenerator() throws InstantiationException {
@@ -142,14 +138,14 @@ public class JavaGenerator extends CBasedGenerator implements Generator, JavaDia
                 genericVisit(aStatement, output, inIndentation);
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                 Logger.getLogger(JavaGenerator.class.getName()).log(Level.SEVERE, null, ex);
-                throw new RuntimeException("Unable to generate code for " + aStatement, ex);
+                throw new EteException("Unable to generate code for " + aStatement, ex);
             }
         }
         output.flush();
         String  result = buffer.toString();
-        System.out.println("---------------------------");
-        System.out.println("Generated instructions :");
-        System.out.println(result);
+        Logger global = Logger.getGlobal();
+        global.fine("Generated instructions :");
+        global.fine(result);
         return result;
     }
 
@@ -183,8 +179,10 @@ public class JavaGenerator extends CBasedGenerator implements Generator, JavaDia
      * the third parameter to true. Any visit should set back to false that
      * parameter 
      * 
+     * @param inAssignment
+     * @param parameters
      */
-    public Object xlangVisitAssignment(Assignment inAssignment, Object... parameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    public Object xlangVisitAssignment(Assignment inAssignment, Object... parameters) throws IllegalAccessException, InvocationTargetException {
         PrintWriter output = (PrintWriter) parameters[0];
         String      indent = (String) parameters[1];
         output.print(indent);

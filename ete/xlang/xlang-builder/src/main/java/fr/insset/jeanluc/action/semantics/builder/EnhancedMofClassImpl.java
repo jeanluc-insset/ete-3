@@ -1,7 +1,7 @@
 package fr.insset.jeanluc.action.semantics.builder;
 
 
-import fr.insset.jeanluc.ete.api.EteException;
+import fr.insset.jeanluc.ete.defs.EteException;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
 import fr.insset.jeanluc.ete.meta.model.emof.impl.MofClassImpl;
 import fr.insset.jeanluc.ete.xlang.Statement;
@@ -20,24 +20,24 @@ import java.util.Map;
 public class EnhancedMofClassImpl extends MofClassImpl {
 
 
-    public EnhancedMofClassImpl() throws EteException, InstantiationException {
-        Map     map = FactoryMethods.newMap(String.class, List.class);
-        statements = map;
+    public EnhancedMofClassImpl() throws InstantiationException {
     }
 
 
-    public EnhancedMofClassImpl(Map<String, List<Statement>> statements) throws EteException, InstantiationException {
-        this.statements = statements;
+    public EnhancedMofClassImpl(Map<String, List<Statement>> statements) {
     }
 
 
-    public void addQuery(EteQuery inFilter) throws InstantiationException {
+    public void addQuery(EteQuery inFilter) {
         MofProperty filteredProperty = inFilter.getFilteredProperty();
-        List<EteQuery> filters = support.get(filteredProperty);
-        if (filters == null) {
-            filters = FactoryMethods.newList(EteQuery.class);
-            support.put(filteredProperty, filters);
-        }
+        
+        List<EteQuery> filters = support.computeIfAbsent(filteredProperty, f -> {
+            try {
+                return FactoryMethods.newList(EteQuery.class);
+            } catch (InstantiationException ex) {
+                throw new EteException(ex);
+            }
+        });
         filters.add(inFilter);
     }
 
@@ -51,18 +51,6 @@ public class EnhancedMofClassImpl extends MofClassImpl {
 
     //========================================================================//
 
-
-    /**
-     * The key (a String) denotes the purpose of the associated list of
-     * statements.<br>
-     * For example the statements associated to the key "__check__yyy" are
-     * instructions which check whether <code>this</code> is OK regarding to the
-     * class invariant "yyy".<br>
-     * The statements associate to the key "__find_available_xxxx__" are
-     * instructions retrieving objects able to fulfill the role of xxxx
-     * regarding to this.
-     */
-    private Map<String, List<Statement>>                statements;
 
 
     /**

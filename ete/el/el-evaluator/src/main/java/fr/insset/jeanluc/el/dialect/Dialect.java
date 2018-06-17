@@ -40,6 +40,10 @@ public interface Dialect {
                                 SUBCOMPONENT            = "subcomponent";
 
 
+    public final static String  ENTITY                  = "Entity",
+                                ENTITY_PACKAGE          = "entitypackage";
+
+
     public final static String  SIMPLE                  = "simple",
                                 MANY_SIMPLE             = "many_simple",
                                 DATE                    = "date",
@@ -131,16 +135,15 @@ public interface Dialect {
 
     public default Set<MofType> getDependencies(MofClass inClass) {
         Set<MofType>    result = new HashSet<>();
-        for (MofProperty p : inClass.getOwnedAttribute()) {
+        inClass.getOwnedAttribute().stream().forEach((p) -> {
             addDependency(p.getType(), result);
-        }
+        });
         return result;
     }
 
     public default void addDependency(MofType inType, Set<MofType> inoutDependencies) {
         if (inType.isCollection()) {
             addDependency(((MofCollection)inType).getBaseType(), inoutDependencies);
-            return;
         }
         else {
             if (inType instanceof MofClass) {
@@ -247,7 +250,7 @@ public interface Dialect {
      * The map is&nbsp;:<ul>
      * </ul>
      * 
-     * @param inType
+     * @param inProperty
      * @return 
      */
     public default String   prop2comp(MofProperty inProperty) {
@@ -288,8 +291,7 @@ public interface Dialect {
      * @return 
      */
     public default String converter(String inValue, String inMofType) {
-//        return inValue
-        throw new UnsupportedOperationException("Not supported yet.");
+        return inValue;
     }
 
 
@@ -305,7 +307,7 @@ public interface Dialect {
      * @return 
      */
     public default boolean isEntity(MofClass inClass) {
-        if (inClass.hasStereotype("Entity")) {
+        if (inClass.hasStereotype(ENTITY)) {
             return true;
         }
         MofPackage owningPackage = inClass.getOwningPackage();
@@ -319,7 +321,7 @@ public interface Dialect {
     public default boolean isEntityPackage(MofPackage inPackage) {
         MofPackage current = inPackage;
         while (current != null) {
-            if (current.hasStereotype("entitypackage")) {
+            if (current.hasStereotype(ENTITY_PACKAGE)) {
                 return true;
             }
             current = current.getOwningPackage();
@@ -371,7 +373,8 @@ public interface Dialect {
      * Returns the symbol associated to the named element. If the named element
      * has a tag symbol named "symbol", that value is returned. Otherwise, the
      * method builds a constant from the name of the element.
-     * @param NamedElement inElement : the elelement we need a symbol for.
+     * 
+     * @param inElement
      * @return : the associated symbol
      */
     public default String   getSymbol(NamedElement inElement) {

@@ -27,6 +27,7 @@ public class AssociationImpl extends PackageableElementImpl implements Associati
     @Override
     public void addMemberEnd(MofProperty inProperty) {
         Collection<MofProperty> localMemberEnd = getMemberEnd();
+        // Should we use a set instead ?
         if (localMemberEnd.contains(inProperty)) {
             return;
         }

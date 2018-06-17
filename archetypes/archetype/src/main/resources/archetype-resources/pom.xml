@@ -12,6 +12,10 @@
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <database.jndi.name>${database_jndi_name}</database.jndi.name>
+        <database.url>${urldatabase}</database.url>
+        <database.login>${logindatabase}</database.login>
+        <database.password>${passworddatabase}</database.password>
     </properties>
     
     <dependencies>

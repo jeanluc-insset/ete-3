@@ -1,11 +1,10 @@
 package fr.insset.jeanluc.ete.meta.model.emof.impl;
 
 
+import static fr.insset.jeanluc.ete.defs.Constants.NOT_IMPLEMENTED_YET;
 import fr.insset.jeanluc.ete.meta.model.datatype.UnlimitedNatural;
 import fr.insset.jeanluc.ete.meta.model.emof.ParameterDirectionKind;
-import fr.insset.jeanluc.ete.meta.model.types.MofType;
 import fr.insset.jeanluc.ete.meta.model.types.impl.TypedElementImpl;
-import java.util.Collection;
 import fr.insset.jeanluc.ete.meta.model.emof.MofParameter;
 
 /**
@@ -51,17 +50,17 @@ public class MofParameterImpl extends TypedElementImpl implements MofParameter {
 
     @Override
     public void setLower(int inLower) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void setUpper(UnlimitedNatural inUpper) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void setUpper(int inUpper) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override

@@ -1,6 +1,7 @@
 package fr.insset.jeanluc.ete.meta.model.emof.impl;
 
 
+import fr.insset.jeanluc.ete.defs.EteException;
 import fr.insset.jeanluc.ete.meta.model.constraint.Invariant;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 import fr.insset.jeanluc.ete.meta.model.types.MofType;
@@ -27,7 +28,7 @@ public class MofClassImpl extends ClassifierImpl implements MofClass {
         try {
             this.invariants = FactoryMethods.newList(Invariant.class);
         } catch (InstantiationException ex) {
-            throw new RuntimeException(ex);
+            throw new EteException(ex);
         }
     }
 

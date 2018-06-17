@@ -107,3 +107,11 @@
 /ete/el/target/
 /ete/ete-lib/target/
 /ete/xlang/xlang-spec/target/
+/ete/meta-model/meta-model-impl/nbproject/
+/ete/defs/target/
+/ete/methodeb/methodeb-api/target/
+/ete/methodeb/methodeb-impl/target/
+/ete/methodeb/target/
+/ete/methodeb/methodeb-spec/target/
+/samples/micro_services/spec/target/
+/samples/micro_services/api/target/

@@ -7,13 +7,11 @@ import fr.insset.jeanluc.ete.gel.impl.IntegerLiteralImpl;
 import fr.insset.jeanluc.ete.meta.model.constraint.Invariant;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
-import fr.insset.jeanluc.ete.xlang.Statement;
 import fr.insset.jeanluc.ete.xlang.VariableDeclaration;
-import fr.insset.jeanluc.util.factory.FactoryMethods;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * A EteQuery aims to be translated to filter expressions in a stream
@@ -80,15 +78,13 @@ public class EteQuery {
     }
 
     public GelExpression getVariableValue(String inVariable) {
-        System.out.println("getVariableValue for " + inVariable);
+        final String    QUARANTE_DEUX = "42";
+        Logger.getGlobal().log(Level.FINE, "getVariableValue for {0}", inVariable);
         IntegerLiteralImpl result = new IntegerLiteralImpl();
-        result.setValueAsString("42");
+        result.setValueAsString(QUARANTE_DEUX);
         return result;
     }
 
-    public String getVariableValue2(String inVariable) {
-        return "42";
-    }
 
 
 

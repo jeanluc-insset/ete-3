@@ -7,6 +7,8 @@ import fr.insset.jeanluc.util.factory.FactoryMethods;
 import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 
@@ -26,12 +28,17 @@ public class ExpressionSubstitutor extends DynamicVisitorSupport {
     }
     
 
-    public GelExpression substitute(GelExpression inWhat, GelExpression inWhere, GelExpression inBy) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        return (GelExpression) genericVisit(inWhere, inWhat, inBy);
+    public GelExpression substitute(GelExpression inWhat, GelExpression inWhere, GelExpression inBy) throws IllegalAccessException {
+        try {
+            return (GelExpression) genericVisit(inWhere, inWhat, inBy);
+        } catch (InvocationTargetException ex) {
+            Logger.getLogger(ExpressionSubstitutor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return inWhat;
     }
 
 
-    public GelExpression visitGelExpression(GelExpression inExpression, Object... inParameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    public GelExpression visitGelExpression(GelExpression inExpression, Object... inParameters) throws InstantiationException, IllegalAccessException, InvocationTargetException {
         GelExpression what = (GelExpression) inParameters[0];
         if (ExpressionUtility.areEqual(inExpression, what)) {
             return (GelExpression) inParameters[1];

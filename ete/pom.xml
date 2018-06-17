@@ -17,5 +17,7 @@
         <module>xlang</module>
         <module>xlang-to-sql</module>
         <module>database</module>
+        <module>defs</module>
+        <module>methodeb</module>
     </modules>
 </project>

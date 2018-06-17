@@ -13,7 +13,11 @@ import java.util.List;
  *
  * @author jldeleage
  */
-public class ExpressionUtility {
+public final class ExpressionUtility {
+
+    private ExpressionUtility() {
+    }
+
 
     public static boolean areEqual(GelExpression e1, GelExpression e2) {
         Class<? extends GelExpression> class1 = e1.getClass();
@@ -78,7 +82,7 @@ public class ExpressionUtility {
 
         @Override
         public Couple<T,U> next() {
-            return new Couple<T,U>(first.next(), second.next());
+            return new Couple<>(first.next(), second.next());
         }
         
         Iterator<T>     first;
