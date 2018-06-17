@@ -4,6 +4,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
 
+
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
 ${symbol_pound}if (${symbol_dollar}jsf == true)
     <context-param>
         <param-name>javax.faces.PROJECT_STAGE</param-name>
@@ -17,6 +21,11 @@ ${symbol_pound}if (${symbol_dollar}jsf == true)
     </context-param>
 -->
 
+${symbol_pound}end
+
+
+${symbol_pound}if (${symbol_dollar}jsf == true)
+
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>
         <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
@@ -24,11 +33,36 @@ ${symbol_pound}if (${symbol_dollar}jsf == true)
     </servlet>
 ${symbol_pound}end
 
+
+${symbol_pound}if (${symbol_dollar}jaxrs == true)
+    <servlet>
+        <servlet-name>Jersey Web Application</servlet-name>
+        <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+        <init-param>
+            <param-name>com.sun.jersey.config.property.packages</param-name>
+            <param-value>fr.insset.jeanluc.ete.api</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+${symbol_pound}end
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+
 ${symbol_pound}if (${symbol_dollar}jsf == true)
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
         <url-pattern>/faces/*</url-pattern>
         <url-pattern>*.xhtml</url-pattern>
+    </servlet-mapping>
+${symbol_pound}end
+
+
+${symbol_pound}if (${symbol_dollar}jaxrs == true)
+    <servlet-mapping>
+        <servlet-name>Jersey Web Application</servlet-name>
+        <url-pattern>/webresources/*</url-pattern>
     </servlet-mapping>
 ${symbol_pound}end
 
