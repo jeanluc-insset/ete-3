@@ -12,9 +12,11 @@
         <module>helloworld</module>
         <module>web-ete-bank</module>
         <module>linked_list</module>
+        <module>composition_sample</module>
     <module>modeleur</module>
     <module>dsl</module>
     <module>insset-airways</module>
         <module>micro_services</module>
-    </modules>
+    <module>composition_sample</module>
+  </modules>
 </project>

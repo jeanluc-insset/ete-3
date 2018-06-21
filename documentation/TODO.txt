@@ -1,6 +1,7 @@
 
 
 Infrastructure
+    - default naming
     - generation of "queries"
     - use of OCL defined functions
     - full support of OCL

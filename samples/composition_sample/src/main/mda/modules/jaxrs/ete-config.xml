@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  This module generates the Jersey facade.
+  It DOES NOT generate the JPA stuff.
+  -->
+
+<mda>
+
+    <transformation-set  output_base="generated-sources/ete">
+
+            <!-- JPA -->
+            <!--    <module href="../jpa/ete-config.xml"/>-->
+
+        <velocity items='${classes.filter(c -> c.hasStereotype("Entity"))}'
+                        dialect="fr.insset.jeanluc.as2java.JavaGenerator"
+                        template="entity2jersey.vm"
+                        target="fr/insset/jeanluc/ete/api/${current.name}Resource.java"/> 
+
+    </transformation-set>
+
+</mda>
+
+
+
