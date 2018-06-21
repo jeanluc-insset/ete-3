@@ -37,7 +37,7 @@ public class MofTypeImpl extends PackageableElementImpl implements MofType {
             try {
                 superTypes = FactoryMethods.newSet(MofType.class);
             } catch (InstantiationException ex) {
-                Logger.getLogger(MofTypeImpl.class.getName()).log(Level.SEVERE, null, ex);
+                throw new RuntimeException(ex);
             }
         }
         superTypes.add(inSuperType);

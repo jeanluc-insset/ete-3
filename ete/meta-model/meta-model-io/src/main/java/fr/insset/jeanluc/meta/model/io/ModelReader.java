@@ -11,17 +11,14 @@ import fr.insset.jeanluc.util.factory.AbstractFactory;
 import static fr.insset.jeanluc.util.factory.FactoryMethods.LIST;
 import fr.insset.jeanluc.util.factory.FactoryRegistry;
 import fr.insset.jeanluc.util.visit.DynamicVisitor;
-import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Stream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -98,9 +95,10 @@ public interface ModelReader {
      * @param inoutModel the model which will be populated.
      * @throws IOException 
      */
-    public default void doReadModel(Object inDocument, EteModel inoutModel) throws IOException  {
+    public default void doReadModel(Object inDocument, EteModel inoutModel) throws IOException, InstantiationException, IllegalAccessException  {
         beforeReading(inDocument, inoutModel);
         readPackages(inDocument, inoutModel);
+        readPrimitiveTypes(inDocument, inoutModel);
         readClasses(inDocument, inoutModel);
         readEnumerations(inDocument, inoutModel);
         readProperties(inDocument, inoutModel);
@@ -122,6 +120,9 @@ public interface ModelReader {
     public default void beforeReading(Object inDocument, EteModel inoutModel) throws IOException {
     }
 
+    public  default Collection<NamedElement> readPrimitiveTypes(Object inDocument, EteModel inoutModel) throws IOException, InstantiationException, IllegalAccessException {
+        return (Collection<NamedElement>) FactoryRegistry.newInstance(LIST);
+    }
 
     public  default Collection<NamedElement> readPackages(Object inDocument, EteModel inoutModel) throws IOException {
         return null;

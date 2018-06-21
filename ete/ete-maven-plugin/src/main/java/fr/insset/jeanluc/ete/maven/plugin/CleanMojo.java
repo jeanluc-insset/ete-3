@@ -1,6 +1,7 @@
 package fr.insset.jeanluc.ete.maven.plugin;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.maven.plugin.AbstractMojo;
@@ -29,16 +30,20 @@ public class CleanMojo extends AbstractMojo {
         for (String dir1 : dirs) {
             String aDirName = dir1.trim();
             File aDir = new File("target/" + aDirName);
-            delete(aDir, "");
+            try {
+                delete(aDir, "");
+            } catch (IOException ex) {
+                throw new MojoExecutionException(ex.getMessage());
+            }
         }
     }
 
 
-    private void delete(File aFile, String inIndent) {
+    private void delete(File aFile, String inIndent) throws IOException {
         Logger logger = Logger.getGlobal();
         logger.log(Level.FINER, "{0}deleting {1}", new Object[]{inIndent, aFile.getAbsolutePath()});
         if (!aFile.isDirectory()) {
-            aFile.delete();
+            java.nio.file.Files.delete(aFile.toPath());
             return;
         }
         File[] listFiles = aFile.listFiles();

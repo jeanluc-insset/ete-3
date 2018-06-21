@@ -1,31 +1,16 @@
 package fr.insset.jeanluc.action.semantics.builder;
 
 
-import fr.insset.jeanluc.ete.xlang.builder.*;
 import fr.insset.jeanluc.ete.xlang.impl.*;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
-import fr.insset.jeanluc.action.semantics.builder.EnhancedMofOperation;
-import fr.insset.jeanluc.action.semantics.builder.EnhancedPostcondition;
 import fr.insset.jeanluc.ete.gel.*;
 import fr.insset.jeanluc.ete.gel.impl.*;
 import fr.insset.jeanluc.ete.meta.model.constraint.Invariant;
-import fr.insset.jeanluc.ete.meta.model.constraint.Postcondition;
 import fr.insset.jeanluc.ete.meta.model.emof.Feature;
-import fr.insset.jeanluc.ete.meta.model.emof.impl.FeatureImpl;
-import fr.insset.jeanluc.ete.meta.model.emof.impl.MofParameterImpl;
-import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
 import fr.insset.jeanluc.ete.meta.model.types.MofType;
-import fr.insset.jeanluc.ete.meta.model.types.collections.impl.MofBagImpl;
-import fr.insset.jeanluc.ete.meta.model.types.collections.impl.MofCollectionImpl;
-import fr.insset.jeanluc.ete.meta.model.types.collections.impl.MofOrderedSetImpl;
-import fr.insset.jeanluc.ete.meta.model.types.collections.impl.MofSequenceImpl;
-import fr.insset.jeanluc.ete.meta.model.types.collections.impl.MofSetImpl;
-import fr.insset.jeanluc.ete.meta.model.types.impl.TypedElementImpl;
-import fr.insset.jeanluc.ete.xlang.Allocation;
 import fr.insset.jeanluc.ete.xlang.Assignment;
-import fr.insset.jeanluc.ete.xlang.Statement;
 import fr.insset.jeanluc.ete.xlang.VariableDeclaration;
 import fr.insset.jeanluc.ete.xlang.impl.AssignmentImpl;
 import fr.insset.jeanluc.ete.xlang.impl.VariableDeclarationImpl;
@@ -35,11 +20,7 @@ import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -159,7 +140,7 @@ public class FilterBuilder extends DynamicVisitorSupport {
     //========================================================================//
 
 
-    public void buildQueries(EteModel inModel) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    public void buildQueries(EteModel inModel) throws InstantiationException, IllegalAccessException, InvocationTargetException {
         Collection<MofClass> allClasses = inModel.getAllClasses();
 
         for (MofClass aMofClass : allClasses) {
@@ -177,7 +158,7 @@ public class FilterBuilder extends DynamicVisitorSupport {
     }
 
 
-    public void buildQueries(MofClass inMofClass) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    public void buildQueries(MofClass inMofClass) throws InstantiationException, IllegalAccessException, InvocationTargetException {
         Collection<Invariant> invariants = inMofClass.getInvariants();
         for (Invariant anInvariant : invariants) {
             // We should build a query for each navigation in this invariant
@@ -186,55 +167,59 @@ public class FilterBuilder extends DynamicVisitorSupport {
             // The variables are registered in the result inout parameter
             List<VariableDeclaration>  result = FactoryMethods.newList(VariableDeclaration.class);
             GelExpression copy = buildQueries((EnhancedInvariantImpl) anInvariant, inMofClass, result);
-            // 
-            String      invariantName = anInvariant.getName();
-            invariantName = invariantName.substring(0,1).toUpperCase() + invariantName.substring(1);
             // Now the result contains all the variables found across the invariants
             // of this class
             // For each variable, we must build a query in the TARGET class
             for (VariableDeclaration aDeclaration : result) {
-                System.out.println("Variable found : " + aDeclaration.getName()
-                        + " (" + aDeclaration.getType().getName() + ")"
-                        + " = " + aDeclaration.getInitValue().getClass()
-                        + " in " + anInvariant.getSpecificationAsString());
+                Logger.getGlobal().log(Level.FINER,"Variable found : {0} ({1}) = {2} in {3}",
+                        new Object[]{
+                            aDeclaration.getName(),
+                            aDeclaration.getType().getName(),
+                            aDeclaration.getInitValue().getClass(),
+                            anInvariant.getSpecificationAsString()
+                        });
                 MofType type = aDeclaration.getType();
                 if (type instanceof EnhancedMofClassImpl) {
-                    EnhancedMofClassImpl    targetClass = (EnhancedMofClassImpl) type;
-                    EteQuery query = new EteQuery();
-                    query.setClientClass(inMofClass);
-                    AttributeNav nav = (AttributeNav) aDeclaration.getInitValue();
-                    MofProperty toFeature = (MofProperty) nav.getToFeature();
-                    String name = toFeature.getName();
-                    name += "For" + invariantName;
-                    query.setFilteredProperty(toFeature);
-                    query.setExpression(copy);
-                    query.setPropertyName(name);
-                    query.setTargetVariable(aDeclaration);
-                    query.setInvariant(anInvariant);
-                    for (VariableDeclaration other : result) {
-                        if (other.equals(aDeclaration)) continue;
-                        query.addVariable(other);
-                    }
-                    targetClass.addQuery(query);
+                    buildOneQuery(inMofClass, (EnhancedMofClassImpl) type,
+                            aDeclaration, anInvariant, copy, result);
                 }
                 else {
-                    System.out.println("That navigation is not a MofClass");
+                    Logger.getGlobal().info("That navigation is not a MofClass");
                 }
             }       // loop on variables
         }       // loop on invariants
     }       // buildQueries(MofClass)
 
 
+    protected void buildOneQuery(MofClass inMofClass,
+        EnhancedMofClassImpl targetClass, VariableDeclaration aDeclaration,
+        Invariant anInvariant, GelExpression copy, List<VariableDeclaration> result) {
+        EteQuery query = new EteQuery();
+        query.setClientClass(inMofClass);
+        AttributeNav nav = (AttributeNav) aDeclaration.getInitValue();
+        MofProperty toFeature = (MofProperty) nav.getToFeature();
+        String name = toFeature.getName();
+        String      invariantName = anInvariant.getName();
+        invariantName = invariantName.substring(0,1).toUpperCase() + invariantName.substring(1);
+        name += "For" + invariantName;
+        query.setFilteredProperty(toFeature);
+        query.setExpression(copy);
+        query.setPropertyName(name);
+        query.setTargetVariable(aDeclaration);
+        query.setInvariant(anInvariant);
+        result.stream().filter(other -> !(other.equals(aDeclaration))).forEach(query::addVariable);
+        targetClass.addQuery(query);
+    }
+
+
     /**
-     * Create
      * 
      * @param anInvariant
      * @throws IllegalAccessException
      * @throws IllegalArgumentException
      * @throws InvocationTargetException 
      */
-    private GelExpression buildQueries(EnhancedInvariantImpl anInvariant, MofClass inMofClass, List<VariableDeclaration> inoutVariables) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        EnhancedMofClassImpl mofClass = (EnhancedMofClassImpl) anInvariant.getContext();
+    private GelExpression buildQueries(EnhancedInvariantImpl anInvariant, MofClass inMofClass, List<VariableDeclaration> inoutVariables) throws IllegalAccessException, InvocationTargetException {
         // Looks for "top level" roles
         Object specification = anInvariant.getExpression();
         if (specification == null) {
@@ -246,15 +231,14 @@ public class FilterBuilder extends DynamicVisitorSupport {
         // The returned GelExpression uses these variables instead of
         // navigations.
         // Each query is about one of these variables.
-        GelExpression copy = (GelExpression) genericVisit(specification, anInvariant, inMofClass, inoutVariables);
-        return copy;
+        return (GelExpression) genericVisit(specification, anInvariant, inMofClass, inoutVariables);
     }
 
     //========================================================================//
 
 
     public Object examineObject(Object obj, Object... inParameters) {
-        System.out.println("This object has been visited without any specific treatment : " + obj);
+        Logger.getGlobal().log(Level.INFO, "This object has been visited without any specific treatment : {0}", obj);
         return null;
     }
 
@@ -263,12 +247,12 @@ public class FilterBuilder extends DynamicVisitorSupport {
 
 
 
-    public GelExpression visitGelExpression(GelExpression inExpression, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException {
+    public GelExpression visitGelExpression(GelExpression inExpression, Object... inParameters) throws IllegalAccessException, InvocationTargetException, InstantiationException {
         Class<? extends GelExpression> aClass = inExpression.getClass();
         GelExpression result = aClass.newInstance();
         List<GelExpression> operand = inExpression.getOperand();
         if (operand != null) {
-            List<GelExpression> resultOperands = FactoryMethods.newList(GelExpression.class);
+             List<GelExpression> resultOperands = FactoryMethods.newList(GelExpression.class);
             result.setOperand(resultOperands);
             result.setType(inExpression.getType());
             for (GelExpression anExpression : operand) {
@@ -282,7 +266,7 @@ public class FilterBuilder extends DynamicVisitorSupport {
     }
 
 
-    public GelExpression visitAttributeNav(AttributeNav inNav, Object... inParameters) throws InstantiationException {
+    public GelExpression visitAttributeNav(AttributeNav inNav, Object... inParameters) {
         VariableDeclaration  definition = new VariableDeclarationImpl();
         definition.setInitValue(inNav);
         definition.setType(inNav.getType());

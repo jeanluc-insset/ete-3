@@ -58,7 +58,7 @@ public class ActualEnhancedOperationImpl extends EnhancedOperationImpl {
 
         @Override
         public int compare(EnhancedPostconditionImpl o1, EnhancedPostconditionImpl o2) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET); //To change body of generated methods, choose Tools | Templates.
         }
     }           // class PostconditionComparator
 

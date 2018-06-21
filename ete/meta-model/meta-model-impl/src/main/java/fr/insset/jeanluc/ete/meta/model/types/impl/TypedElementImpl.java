@@ -16,6 +16,8 @@ import java.util.HashSet;
  */
 public class TypedElementImpl extends NamedElementImpl implements TypedElement {
 
+
+
     @Override
     public MofType getType() {
         return mofType;
@@ -46,7 +48,10 @@ public class TypedElementImpl extends NamedElementImpl implements TypedElement {
         instances.remove(inInstance);
     }
 
+
+
     private MofType                             mofType;
     private Collection<InstanceSpecification>   instances = new HashSet<>();
+
 
 }

@@ -1,0 +1,30 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:cc="http://xmlns.jcp.org/jsf/composite">
+
+    <!-- INTERFACE -->
+    <cc:interface>
+        <cc:attribute name="selection" class="${symbol_dollar}{current.owningPackage.name}.${symbol_dollar}{current.name}"/>
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+        <h:panelGrid columns="2">
+${symbol_pound}foreach (${symbol_dollar}aProperty in ${symbol_dollar}current.allAttributes)
+${symbol_pound}set (${symbol_dollar}var = ${symbol_dollar}aProperty)
+${symbol_pound}set (${symbol_dollar}varName = ${symbol_dollar}aProperty.name)
+${symbol_pound}set (${symbol_dollar}scope = "cc.attrs.selection.")
+${symbol_pound}set (${symbol_dollar}title = ${symbol_dollar}current.name)
+${symbol_pound}parse ("controls/polymorphism.vm")
+${symbol_pound}end
+        </h:panelGrid>
+    </cc:implementation>
+</html>
+

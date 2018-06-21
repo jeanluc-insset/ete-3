@@ -3,18 +3,13 @@ package fr.insset.jeanluc.action.semantics.builder;
 
 import fr.insset.jeanluc.ete.api.ActionSupport;
 import fr.insset.jeanluc.ete.api.EteException;
-import fr.insset.jeanluc.ete.gel.GelParserBaseVisitor;
 import static fr.insset.jeanluc.ete.meta.model.constraint.Invariant.INVARIANT;
 import static fr.insset.jeanluc.ete.meta.model.constraint.Postcondition.POSTCONDITION;
 import static fr.insset.jeanluc.ete.meta.model.constraint.Precondition.PRECONDITION;
 import static fr.insset.jeanluc.ete.meta.model.emof.MofClass.MOF_CLASS;
 import static fr.insset.jeanluc.ete.meta.model.emof.MofOperation.MOF_OPERATION;
-import static fr.insset.jeanluc.ete.meta.model.emof.MofProperty.MOF_PROPERTY;
-import fr.insset.jeanluc.ete.meta.model.emof.impl.MofOperationImpl;
-import fr.insset.jeanluc.ete.meta.model.emof.impl.MofPropertyImpl;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.MofPackage;
 import fr.insset.jeanluc.util.factory.FactoryRegistry;
-import fr.insset.jeanluc.xmi.io.impl.XmlModelReader;
 
 
 /**
@@ -39,7 +34,6 @@ public class XLangAction extends ActionSupport {
         registry.registerFactory(INVARIANT, EnhancedInvariantImpl.class);
         registry.registerFactory(POSTCONDITION, EnhancedPostcondition.class);
         registry.registerFactory(PRECONDITION, EnhancedPrecondition.class);
-//        registry.registerFactory(XmlModelReader.READER_VISITOR, ConditionVisitor.class);
     }
 
     @Override

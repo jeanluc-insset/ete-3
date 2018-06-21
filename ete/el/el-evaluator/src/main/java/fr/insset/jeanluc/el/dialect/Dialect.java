@@ -11,6 +11,7 @@ import fr.insset.jeanluc.ete.meta.model.types.collections.MofCollection;
 import java.util.HashSet;
 import java.util.Set;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
+import fr.insset.jeanluc.ete.meta.model.mofpackage.PackageableElement;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,15 +28,20 @@ import java.util.regex.Pattern;
  */
 public interface Dialect {
 
+    public final static String  DIALECT                 = "dialect";
 
     public final static String  INPUT                   = "input",
-                                PASSWORD                = "password",
+                                SECRET                  = "password",
                                 SELECT_ONE              = "select_one",
                                 SELECT_MANY             = "select_many",
                                 CALENDAR                = "calendar",
                                 MANY_CALENDARS          = "many_calendars",
                                 CHECKBOX                = "checkbox",
                                 SUBCOMPONENT            = "subcomponent";
+
+
+    public final static String  ENTITY                  = "Entity",
+                                ENTITY_PACKAGE          = "entitypackage";
 
 
     public final static String  SIMPLE                  = "simple",
@@ -120,7 +126,7 @@ public interface Dialect {
 
 
     public default String p2d(String inString) {
-        return inString.replaceAll("::", "/").replaceAll(".", "/");
+        return inString.replaceAll("::", "/").replaceAll("\\.", "/");
     }
 
 
@@ -129,16 +135,15 @@ public interface Dialect {
 
     public default Set<MofType> getDependencies(MofClass inClass) {
         Set<MofType>    result = new HashSet<>();
-        for (MofProperty p : inClass.getOwnedAttribute()) {
+        inClass.getOwnedAttribute().stream().forEach((p) -> {
             addDependency(p.getType(), result);
-        }
+        });
         return result;
     }
 
     public default void addDependency(MofType inType, Set<MofType> inoutDependencies) {
         if (inType.isCollection()) {
             addDependency(((MofCollection)inType).getBaseType(), inoutDependencies);
-            return;
         }
         else {
             if (inType instanceof MofClass) {
@@ -245,7 +250,7 @@ public interface Dialect {
      * The map is&nbsp;:<ul>
      * </ul>
      * 
-     * @param inType
+     * @param inProperty
      * @return 
      */
     public default String   prop2comp(MofProperty inProperty) {
@@ -262,7 +267,7 @@ public interface Dialect {
         }
         if ("String".equals(typeName) || "StringType".equals(typeName)) {
             if (inProperty.hasStereotype("password")) {
-                return PASSWORD;
+                return SECRET;
             }
             return INPUT;
         }
@@ -286,8 +291,7 @@ public interface Dialect {
      * @return 
      */
     public default String converter(String inValue, String inMofType) {
-//        return inValue
-        throw new UnsupportedOperationException("Not supported yet.");
+        return inValue;
     }
 
 
@@ -303,7 +307,7 @@ public interface Dialect {
      * @return 
      */
     public default boolean isEntity(MofClass inClass) {
-        if (inClass.hasStereotype("Entity")) {
+        if (inClass.hasStereotype(ENTITY)) {
             return true;
         }
         MofPackage owningPackage = inClass.getOwningPackage();
@@ -317,7 +321,7 @@ public interface Dialect {
     public default boolean isEntityPackage(MofPackage inPackage) {
         MofPackage current = inPackage;
         while (current != null) {
-            if (current.hasStereotype("entitypackage")) {
+            if (current.hasStereotype(ENTITY_PACKAGE)) {
                 return true;
             }
             current = current.getOwningPackage();
@@ -369,7 +373,8 @@ public interface Dialect {
      * Returns the symbol associated to the named element. If the named element
      * has a tag symbol named "symbol", that value is returned. Otherwise, the
      * method builds a constant from the name of the element.
-     * @param NamedElement inElement : the elelement we need a symbol for.
+     * 
+     * @param inElement
      * @return : the associated symbol
      */
     public default String   getSymbol(NamedElement inElement) {
@@ -382,7 +387,24 @@ public interface Dialect {
 
 
 
+    public default void addQualifiedName(PackageableElement inElement, StringBuilder inoutBuilder) {
+        MofPackage owningPackage = inElement.getOwningPackage();
+        if (owningPackage != null) {
+            addQualifiedName(owningPackage, inoutBuilder);
+            inoutBuilder.append("::");
+        }
+        inoutBuilder.append(inElement.getName());
+    }
+
+
+
+
     public default String getQualifiedName(NamedElement inElement) {
+        if (inElement instanceof PackageableElement) {
+            StringBuilder builder = new StringBuilder();
+            addQualifiedName((PackageableElement) inElement, builder);
+            return builder.toString();
+        }
         return inElement.getQualifiedName();
     }
 

@@ -1,0 +1,15 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+                    <h:outputLabel value="${symbol_pound}{bundle.${symbol_dollar}{title}Label_${symbol_dollar}{var.name}}" for="${symbol_dollar}{var.name}" />
+${symbol_pound}set (${symbol_dollar}control = "controls/input.vm")
+${symbol_pound}if (${symbol_dollar}aProperty.type.hasStereotype("Entity"))
+${symbol_pound}set (${symbol_dollar}control = "controls/many_to_one.vm") 
+${symbol_pound}elseif (${symbol_dollar}aProperty.type.isCollection())
+${symbol_pound}if (${symbol_dollar}aProperty.type.baseType.hasStereotype("Entity"))
+${symbol_pound}set (${symbol_dollar}control = "controls/one_to_many.vm") 
+${symbol_pound}end
+${symbol_pound}elseif (${symbol_dollar}aProperty.type.name == "date")
+${symbol_pound}set (${symbol_dollar}control = "controls/calendar.vm")
+${symbol_pound}end
+${symbol_pound}parse(${symbol_dollar}control)

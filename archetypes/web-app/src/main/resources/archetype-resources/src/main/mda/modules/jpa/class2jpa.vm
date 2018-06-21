@@ -1,4 +1,4 @@
-#set( $symbol_pound = '#' )
+#set( $symbol_pound = '\#' )
 #set( $symbol_dollar = '$' )
 #set( $symbol_escape = '\' )
 package ${symbol_dollar}{current.owningPackage.name}.jpa;
@@ -62,6 +62,7 @@ public class ${symbol_dollar}{current.name}Jpa extends AbstractJpa<${symbol_doll
 \#foreach (${symbol_dollar}aProperty in ${symbol_dollar}current.ownedAttribute)
 \#if (${symbol_dollar}dialect.isEntity(${symbol_dollar}aProperty.type))
 
+/*
     public List<${symbol_dollar}aProperty.type> findAll${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)}For(${symbol_dollar}current.name item) {
         javax.persistence.criteria.CriteriaQuery cq = getEntityManager().getCriteriaBuilder().createQuery();
         cq.select(cq.from(${symbol_dollar}{aProperty.type.name}.class));
@@ -72,7 +73,7 @@ public class ${symbol_dollar}{current.name}Jpa extends AbstractJpa<${symbol_doll
         // finally we can fetch the data and return the result
         return query.getResultList();
     }
-
+*/
 
 
     public List<${symbol_dollar}{current.name}> findBy(${symbol_dollar}{dialect.mt2lt(${symbol_dollar}aProperty.type)} inValue) {
@@ -95,15 +96,52 @@ public class ${symbol_dollar}{current.name}Jpa extends AbstractJpa<${symbol_doll
 \#end
 
 
-//============================================================================//
+    //========================================================================//
+    //           Q U E R I E S   F O R   I N V A R I A N T S   O F            //
+    //            E V E N T U A L L Y   O T H E R   C L A S S E S             //
+    //========================================================================//
 
-// FILTERS
-\#foreach (${symbol_dollar}aFilter in ${symbol_dollar}current.filters)
-/*
-    public List<${symbol_dollar}{dialect.mt2lt(${symbol_dollar}aFilter.feature.type)}> filterAvailable${symbol_dollar}{dialect.mt2lt(${symbol_dollar}aFilter.feature.type)}As${symbol_dollar}{dialect.i2uc(${symbol_dollar}aFilter.feature.name)}(${symbol_dollar}{current.name} inSelf) {
-${symbol_dollar}{dialect.getBody(${symbol_dollar}aFilter)}
+
+
+\#foreach (${symbol_dollar}aFilter in ${symbol_dollar}current.support.keySet())
+    /**
+     * Should return all the instances of ${symbol_dollar}{current.name} which are acceptable
+     * as values of ${symbol_dollar}{dialect.i2uc($aProperty.name)} of ${symbol_dollar}{aProperty.owningMofClass.name}
+     * without violating any constraint on ${symbol_dollar}{aQuery.clientClass.name}
+     */
+    public List<${symbol_dollar}{current.name}> getAll${symbol_dollar}{current.name}As${symbol_dollar}{dialect.i2uc($aProperty.name)}For${symbol_dollar}{aProperty.owningMofClass.name}(${symbol_dollar}{aProperty.owningMofClass.name} inFor) {
+        CriteriaBuilder cb = getCriteriaBuilder();
+        CriteriaQuery<${symbol_dollar}{current.name}> cq = cb.createQuery(${symbol_dollar}{current.name}.class);
+        Root<${symbol_dollar}{current.name}> root = cq.from(${symbol_dollar}{current.name}.class);
+        cq.select(root);
+\#foreach (${symbol_dollar}aQuery in ${symbol_dollar}current.support.get(${symbol_dollar}aProperty))
+        select${symbol_dollar}{dialect.i2uc($aProperty.name)}For${symbol_dollar}{dialect.i2uc($aQuery.invariant.name)}(cq, root, inFor);
+\#end
+        TypedQuery<${symbol_dollar}{current.name}> query = em.createQuery(cq);
+        return query.getResultList();
     }
-*/
+
+
+
+\#foreach (${symbol_dollar}aQuery in ${symbol_dollar}current.support.get(${symbol_dollar}{aProperty}))
+    public void select${symbol_dollar}{dialect.i2uc($aProperty.name)}For${symbol_dollar}{dialect.i2uc($aQuery.invariant.name)}(CriteriaQuery cq,
+                                Root<${symbol_dollar}{current.name}> root,
+                                ${symbol_dollar}{aQuery.clientClass.name} inFor) {
+        CriteriaBuilder cb = getCriteriaBuilder();
+\#foreach ($aVariable in $aQuery.variables)
+        Optional<${symbol_dollar}{dialect.mt2lt($aVariable.type)}> ${symbol_dollar}{aVariable.name}Opt = ${symbol_dollar}{dialect.addChecking($aVariable.initValue)};
+        if (! ${symbol_dollar}{aVariable.name}Opt.isPresent()) {
+            return;
+        }
+\#end
+\#foreach ($aVariable in $aQuery.variables)
+        Expression<${symbol_dollar}{dialect.mt2lt($aVariable.type)}> ${symbol_dollar}{aVariable.name} = cb.literal(${symbol_dollar}{aVariable.name}Opt.get());
+        cq.where(${symbol_dollar}{dialect.getPredicate($aQuery)});
+\#end
+    }
+
+\#end
+
 \#end
 
 }

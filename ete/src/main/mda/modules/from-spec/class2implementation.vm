@@ -12,9 +12,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.Generated;
 
 
-
+@Generated ("ete - jean-luc@insset.fr - template : ete/src/main/mda/modules/from-spec/class2Implementation.vm")
 public#if($current.abstract) abstract#end class ${current.name}Impl #if (${current.superClass.size()} > 0) extends ${current.superClass.get(0).owningPackage.name}.impl.${current.superClass.get(0)}Impl #end implements ${current.name} {
 
 

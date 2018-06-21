@@ -18,6 +18,10 @@ import java.util.stream.Stream;
  */
 public interface MofClass extends Classifier {
     
+    public  default String              getXmiType() {
+        return "uml:Class";
+    }
+
 
     public final static String              MOF_CLASS = "mof-class";
 

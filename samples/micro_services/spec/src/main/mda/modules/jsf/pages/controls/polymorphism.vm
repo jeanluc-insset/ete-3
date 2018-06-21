@@ -1,0 +1,12 @@
+                    <h:outputLabel value="#{bundle.${title}Label_${var.name}}" for="${var.name}" />
+#set ($control = "controls/input.vm")
+#if ($aProperty.type.hasStereotype("Entity"))
+#set ($control = "controls/many_to_one.vm") 
+#elseif ($aProperty.type.isCollection())
+#if ($aProperty.type.baseType.hasStereotype("Entity"))
+#set ($control = "controls/one_to_many.vm") 
+#end
+#elseif ($aProperty.type.name == "date")
+#set ($control = "controls/calendar.vm")
+#end
+#parse($control)

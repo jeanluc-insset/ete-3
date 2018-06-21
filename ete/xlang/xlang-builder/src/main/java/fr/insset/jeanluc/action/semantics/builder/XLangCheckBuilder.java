@@ -1,11 +1,12 @@
 package fr.insset.jeanluc.action.semantics.builder;
 
 
+import fr.insset.jeanluc.ete.defs.Constants;
+import fr.insset.jeanluc.ete.defs.EteException;
 import fr.insset.jeanluc.ete.gel.And;
 import fr.insset.jeanluc.ete.gel.GelExpression;
 import fr.insset.jeanluc.ete.meta.model.constraint.Invariant;
 import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
-import java.util.LinkedList;
 import java.util.List;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
 import fr.insset.jeanluc.ete.xlang.Conditional;
@@ -13,7 +14,6 @@ import fr.insset.jeanluc.ete.xlang.Statement;
 import fr.insset.jeanluc.ete.xlang.XLangException;
 import fr.insset.jeanluc.ete.xlang.impl.XLangExceptionImpl;
 import fr.insset.jeanluc.util.factory.FactoryRegistry;
-import java.lang.reflect.InvocationTargetException;
 
 
 /**
@@ -39,8 +39,7 @@ public class XLangCheckBuilder extends DynamicVisitorSupport {
      * @return 
      */
     public List<Statement>  invariant2Checker(Invariant inInv) {
-        List<Statement>     result = new LinkedList<>();
-        return result;
+        throw new EteException(Constants.NOT_IMPLEMENTED_YET);
     }
 
 
@@ -48,18 +47,18 @@ public class XLangCheckBuilder extends DynamicVisitorSupport {
         return inExp;
     }
 
-    public void buildStatements(GelExpression inExpression, List<Statement> inoutStatements) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException {
+    public void buildStatements(GelExpression inExpression, List<Statement> inoutStatements) throws IllegalAccessException, InstantiationException {
         // create an if statement of the form :
         // if not inExpression throw new Exception(...)
-        Conditional condition = (Conditional) FactoryRegistry.newInstance(Conditional.class);
+        Conditional condition = FactoryRegistry.newInstance(Conditional.class);
         condition.setCondition(inExpression);
         XLangException eteException = new XLangExceptionImpl();
         condition.getOperand().add(eteException);
         inoutStatements.add(condition);
     }
+
     public List<Statement>  invariant2Select(MofProperty inTarget) {
-        List<Statement>     result = new LinkedList<>();
-        return result;
+        throw new EteException(Constants.NOT_IMPLEMENTED_YET);
     }
 
 }

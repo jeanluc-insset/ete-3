@@ -13,9 +13,13 @@ import java.util.List;
  *
  * @author jldeleage
  */
-public class ExpressionUtility {
+public final class ExpressionUtility {
 
-    public static boolean equal(GelExpression e1, GelExpression e2) {
+    private ExpressionUtility() {
+    }
+
+
+    public static boolean areEqual(GelExpression e1, GelExpression e2) {
         Class<? extends GelExpression> class1 = e1.getClass();
         Class<? extends GelExpression> class2 = e2.getClass();
         if (! class1.equals(class2)) {
@@ -33,7 +37,7 @@ public class ExpressionUtility {
             DoubleIterator<GelExpression, GelExpression> it = new DoubleIterator<>(operands1, operands2);
             while (it.hasNext()) {
                 Couple<GelExpression, GelExpression> next = it.next();
-                return equal(next.getT1(), next.getT2());
+                return areEqual(next.getT1(), next.getT2());
             }
         }
         catch (Exception ex) {
@@ -78,7 +82,7 @@ public class ExpressionUtility {
 
         @Override
         public Couple<T,U> next() {
-            return new Couple<T,U>(first.next(), second.next());
+            return new Couple<>(first.next(), second.next());
         }
         
         Iterator<T>     first;

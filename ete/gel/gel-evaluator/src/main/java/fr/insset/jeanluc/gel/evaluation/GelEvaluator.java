@@ -1,6 +1,7 @@
 package fr.insset.jeanluc.gel.evaluation;
 
 
+import static fr.insset.jeanluc.ete.defs.Constants.NOT_IMPLEMENTED_YET;
 import fr.insset.jeanluc.el.evaluator.Evaluator;
 import fr.insset.jeanluc.gel.*;
 import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
@@ -32,12 +33,12 @@ public class GelEvaluator extends DynamicVisitorSupport implements Evaluator {
 
     @Override
     public void addParameter(String inName, Object inValue) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public Object evaluate(String inExpression) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET); //To change body of generated methods, choose Tools | Templates.
     }
 
 

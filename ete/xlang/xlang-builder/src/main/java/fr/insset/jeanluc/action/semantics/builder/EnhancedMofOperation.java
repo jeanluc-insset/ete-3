@@ -9,7 +9,6 @@ import fr.insset.jeanluc.ete.gel.GelExpression;
 import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
 import fr.insset.jeanluc.ete.xlang.Statement;
 import fr.insset.jeanluc.ete.xlang.VariableDeclaration;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 
@@ -19,7 +18,6 @@ import java.util.Map;
  */
 public interface EnhancedMofOperation extends MofOperation {
 
-//    public List<Statement> buildBody() throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException;
 
     public List<Statement> getBody();
     public void            setBody(List<Statement> inStatements);

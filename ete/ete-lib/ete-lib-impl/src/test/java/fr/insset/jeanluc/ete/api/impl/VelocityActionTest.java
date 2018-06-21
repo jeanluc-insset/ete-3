@@ -1,5 +1,6 @@
 package fr.insset.jeanluc.ete.api.impl;
 
+import static fr.insset.jeanluc.el.dialect.Dialect.DIALECT;
 import static fr.insset.jeanluc.ete.api.Action.BASE_DIR;
 import static fr.insset.jeanluc.ete.api.Action.OUTPUT_BASE;
 import fr.insset.jeanluc.ete.api.EteException;
@@ -93,7 +94,7 @@ public class VelocityActionTest {
         instance.addParameter(TEMPLATE, "templates/umlclass2interface_with_dialect.vm");
         instance.addParameter(TARGET, "ete/${current.owningPackage.name.replace('.', '/')}/${packagename}/${current.name}WithDialect.java");
         instance.addParameter("project", "Project name");
-        instance.addParameter("dialect", "fr.insset.jeanluc.el.dialect.BasicJavaDialect");
+        instance.addParameter(DIALECT, "fr.insset.jeanluc.el.dialect.BasicJavaDialect");
         instance.process((MofPackage) model);
         File result = new File("target/test-generated/ete/mypackage/velocity/MyClassWithDialect.java");
         // TODO : make stronger assertions (on the content)

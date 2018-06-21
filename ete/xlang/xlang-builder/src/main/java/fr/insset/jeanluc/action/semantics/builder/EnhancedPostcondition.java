@@ -1,16 +1,14 @@
 package fr.insset.jeanluc.action.semantics.builder;
 
-import fr.insset.jeanluc.ete.gel.AtPre;
+import fr.insset.jeanluc.ete.defs.EteException;
 import fr.insset.jeanluc.ete.gel.GelExpression;
 import fr.insset.jeanluc.ete.meta.model.constraint.Postcondition;
 import fr.insset.jeanluc.ete.meta.model.constraint.impl.PostconditionImpl;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
 import fr.insset.jeanluc.ete.xlang.Statement;
-import fr.insset.jeanluc.ete.xlang.VariableDeclaration;
 import fr.insset.jeanluc.util.factory.FactoryMethods;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 /**
  *
@@ -53,7 +51,7 @@ public class EnhancedPostcondition extends PostconditionImpl implements Enhanced
     public int compareTo(Postcondition inOther) {
         if (isResult()) {
             return 1;
-        };
+        }
         if (! (inOther instanceof EnhancedPostcondition)) {
             return -1;
         }
@@ -64,7 +62,7 @@ public class EnhancedPostcondition extends PostconditionImpl implements Enhanced
 
         if (other.getFinalUsedValues().contains(definedProperty)) {
             if (finalUsedValues.contains(other.getDefinedProperty())) {
-                throw new RuntimeException("Circular definition in " + this.getSpecificationAsString()
+                throw new EteException("Circular definition in " + this.getSpecificationAsString()
                         + " between" + other.getDefinedProperty() + " and " + definedProperty);
             }
             return 1;

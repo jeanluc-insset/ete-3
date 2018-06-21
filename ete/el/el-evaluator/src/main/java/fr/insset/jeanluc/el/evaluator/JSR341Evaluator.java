@@ -1,6 +1,7 @@
 package fr.insset.jeanluc.el.evaluator;
 
 
+import static fr.insset.jeanluc.ete.defs.Constants.NOT_IMPLEMENTED_YET;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.MofPackage;
 import java.beans.FeatureDescriptor;
 import java.lang.reflect.InvocationTargetException;
@@ -94,27 +95,27 @@ public class JSR341Evaluator implements Evaluator {
 
             @Override
             public Class<?> getType(ELContext elc, Object o, Object o1) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET); //To change body of generated methods, choose Tools | Templates.
             }
 
             @Override
             public void setValue(ELContext elc, Object o, Object o1, Object o2) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET); //To change body of generated methods, choose Tools | Templates.
             }
 
             @Override
             public boolean isReadOnly(ELContext elc, Object o, Object o1) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET); //To change body of generated methods, choose Tools | Templates.
             }
 
             @Override
             public Iterator<FeatureDescriptor> getFeatureDescriptors(ELContext elc, Object o) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET); //To change body of generated methods, choose Tools | Templates.
             }
 
             @Override
             public Class<?> getCommonPropertyType(ELContext elc, Object o) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET); //To change body of generated methods, choose Tools | Templates.
             }
         });
     }

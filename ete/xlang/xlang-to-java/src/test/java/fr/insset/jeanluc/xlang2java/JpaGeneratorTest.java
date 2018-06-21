@@ -125,7 +125,7 @@ public class JpaGeneratorTest {
         PrimitiveDataTypes.init(parent);
         EteModel result = instance.readModel(MODEL_PATH);
 
-        // 4- check result
+        // 4- build a predicate
         EnhancedMofClassImpl pilotClass = (EnhancedMofClassImpl) result.getElementByName("Pilot");
         EnhancedMofClassImpl flightClass = (EnhancedMofClassImpl) result.getElementByName("Flight");        
         MofProperty          captain = flightClass.getOwnedAttribute("captain");
@@ -135,6 +135,8 @@ public class JpaGeneratorTest {
         List<VariableDeclaration> variables = aQuery.getVariables();
         JPAGenerator    generator = new JPAGenerator();
         String predicate = generator.getPredicate(aQuery);
+
+        // 5- check result
         System.out.println("Predicate : " + predicate);
 //        assertEquals("\n                cb.notEqual(root, copilotInCrew1)", predicate);
     }

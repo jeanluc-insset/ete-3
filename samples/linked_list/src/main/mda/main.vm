@@ -1,14 +1,18 @@
 #foreach ($aClass in $current.classes)
 #if ($aClass.hasStereotype("Entity"))
-\#include "${aClass.name.toUpperCase()}_H"
+#if ($aClass.name == "void")
+#else
+\#include "${aClass.name}.h"
 #end
 #end
+#end
+\#include <stdio.h>
 
 
 int main(int nbArgs, char **args) {
     int     choice;
     do {
-        scanf("%d"; &choice);
+        scanf("%d", &choice);
     } while (choice != 0);
     return 0;
 }

@@ -6,7 +6,6 @@ import fr.insset.jeanluc.ete.meta.model.mofpackage.MofPackage;
 import fr.insset.jeanluc.meta.model.io.ModelWriter;
 import fr.insset.jeanluc.util.factory.FactoryRegistry;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -25,29 +24,19 @@ public class DumpAction extends ActionSupport {
 
     @Override
     public MofPackage postProcess(MofPackage inPackage) throws EteException {
-        OutputStream output = null;
-        try {
-            String filePath = (String) getParameter("file");
-            if (filePath == null) {
-                output = System.out;
-            }
-            else {
-                int index = filePath.lastIndexOf('/');
-                if (index > 0) {
-                    File dir = new File(filePath.substring(0, index));
-                    dir.mkdirs();
-                    output = new FileOutputStream(filePath);
-                }
-            }
-            String format = (String) getParameter("format");
-            if (format == null) {
-                format = "text";
-            }
+        String filePath = (String) getParameter("file");
+        int index = filePath.lastIndexOf('/');
+        if (index > 0) {
+            File dir = new File(filePath.substring(0, index));
+            dir.mkdirs();
+        }
+        String format = (String) getParameter("format");
+        if (format == null) {
+            format = "text";
+        }
+        try (OutputStream output = new FileOutputStream(filePath)) {
             ModelWriter newInstance = (ModelWriter) FactoryRegistry.newInstance(format + "-writer");
             newInstance.writeModel(inPackage, output);
-            if (filePath != null) {
-                output.close();
-            }
             return inPackage;
         } catch (IOException | InstantiationException | IllegalAccessException ex) {
             Logger.getLogger(DumpAction.class.getName()).log(Level.SEVERE, null, ex);

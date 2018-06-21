@@ -3,43 +3,20 @@ package fr.insset.jeanluc.as2java;
 
 
 
-import fr.insset.jeanluc.action.semantics.builder.EnhancedMofClassImpl;
-import fr.insset.jeanluc.action.semantics.builder.EnhancedMofOperation;
 import fr.insset.jeanluc.action.semantics.builder.EteQuery;
 import fr.insset.jeanluc.el.dialect.JavaDialect;
 import fr.insset.jeanluc.ete.gel.AttributeNav;
-import fr.insset.jeanluc.ete.gel.Different;
 import fr.insset.jeanluc.ete.gel.GelExpression;
 import fr.insset.jeanluc.ete.gel.Includes;
-import fr.insset.jeanluc.ete.gel.Nav;
 import fr.insset.jeanluc.ete.gel.Self;
 import fr.insset.jeanluc.ete.gel.Step;
-import fr.insset.jeanluc.ete.gel.StringLiteral;
-import fr.insset.jeanluc.ete.gel.VariableDefinition;
 import fr.insset.jeanluc.ete.gel.impl.*;
-import fr.insset.jeanluc.ete.meta.model.constraint.Condition;
 import fr.insset.jeanluc.ete.meta.model.emof.Feature;
-import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
-import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
-import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
-import fr.insset.jeanluc.ete.meta.model.types.MofType;
-import fr.insset.jeanluc.ete.xlang.Assignment;
-import fr.insset.jeanluc.ete.xlang.Conditional;
-import fr.insset.jeanluc.ete.xlang.DoWhileLoop;
-import fr.insset.jeanluc.ete.xlang.ForLoop;
-import fr.insset.jeanluc.ete.xlang.Instanciation;
-import fr.insset.jeanluc.ete.xlang.MethodInvocation;
-import fr.insset.jeanluc.ete.xlang.Statement;
 import fr.insset.jeanluc.ete.xlang.VariableDeclaration;
-import fr.insset.jeanluc.ete.xlang.WhileDoLoop;
 import fr.insset.jeanluc.ete.xlang.to.xxx.Generator;
 import fr.insset.jeanluc.util.factory.FactoryMethods;
 import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -56,12 +33,6 @@ import java.util.logging.Logger;
  * @author jldeleage
  */
 public class JPAGenerator extends DynamicVisitorSupport implements Generator, JavaDialect  {
-
-
-    private enum LEFT_RIGHT {
-        LEFT, RIGHT
-    };
-
 
 
     public JPAGenerator() throws InstantiationException {
@@ -98,24 +69,25 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
     //========================================================================//
 
 
-    public String getPredicate(EteQuery inQuery) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        StringBuffer    buffer = new StringBuffer();
+    public String getPredicate(EteQuery inQuery) throws IllegalAccessException, InvocationTargetException {
+        StringBuilder    buffer = new StringBuilder();
         genericVisit(inQuery.getExpression(), buffer, indentation + indentation, inQuery);
         return buffer.toString();
     }
 
     public String addChecking(Step inStep) {
-        StringBuffer    buffer = new StringBuffer();
+        StringBuilder    buffer = new StringBuilder();
         addChecking(inStep, buffer);
         return buffer.toString();
     }
 
-    protected void addChecking(Step inStep, StringBuffer buffer) {
-        System.out.println("Dans addChecking : " + inStep + " (" + inStep.getClass().getName() + ")");
+
+    protected void addChecking(Step inStep, StringBuilder buffer) {
+        Logger.getGlobal().log(Level.FINE, "Dans addChecking : {0} ({1})", new Object[]{inStep, inStep.getClass().getName()});
         if (inStep instanceof AttributeNav) {
             AttributeNav nav = (AttributeNav) inStep;
             List<GelExpression> operand = inStep.getOperand();
-            if (operand != null && operand.size()>0)
+            if (operand != null && !operand.isEmpty())
                 addChecking((Step) operand.get(0), buffer);
             Feature toFeature = nav.getToFeature();
             buffer.append(".get");
@@ -129,14 +101,14 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
     
 
     public String getFilter(AttributeNav inNav, String start) {
-        StringBuffer buffer = new StringBuffer(start);
+        StringBuilder buffer = new StringBuilder(start);
         addNavInFilter(inNav, buffer);
         return buffer.toString();
     }
 
-    protected void addNavInFilter(Step inStep, StringBuffer inoutBuffer) {
+    protected void addNavInFilter(Step inStep, StringBuilder inoutBuffer) {
         List<GelExpression> operand = inStep.getOperand();
-        if (operand == null || operand.size() == 0) {
+        if (operand == null || operand.isEmpty()) {
             return;
         }
         AttributeNav nav = (AttributeNav) inStep;
@@ -150,9 +122,9 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
      * @param VariableDeclaration inDeclaration : variable waiting for its value
      * @return String : the expression getting the value of this variable
      */
-    public String getJpa(VariableDeclaration inDeclaration) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    public String getJpa(VariableDeclaration inDeclaration) throws IllegalAccessException, InvocationTargetException {
         GelExpression initValue = inDeclaration.getInitValue();
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         genericVisit(initValue, buffer);
         return buffer.toString();
     }
@@ -163,12 +135,12 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
     //========================================================================//
 
 
-    public GelExpression visitGelExpression(GelExpression inExpression, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        StringBuffer buffer = (StringBuffer) inParameters[0];
-        String indentation = (String) inParameters[1];
+    public GelExpression visitGelExpression(GelExpression inExpression, Object... inParameters) throws IllegalAccessException, InvocationTargetException {
+        StringBuilder buffer = (StringBuilder) inParameters[0];
+        String localIndentation = (String) inParameters[1];
         buffer.append("\n");
-        buffer.append(indentation);
-        buffer.append(indentation);
+        buffer.append(localIndentation);
+        buffer.append(localIndentation);
         String jpaOperator = operators.get(inExpression.getClass());
         if (jpaOperator != null) {
             buffer.append("cb.");
@@ -189,27 +161,28 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
 
 
     public VariableDeclaration visitVariableDeclaration(VariableDeclaration inDeclaration, Object... inParameters) {
-        StringBuffer buffer = (StringBuffer) inParameters[0];
+        StringBuilder buffer = (StringBuilder) inParameters[0];
         EteQuery query = (EteQuery) inParameters[2];
         if (inDeclaration == query.getTargetVariable()) {
             buffer.append("root");
         }
         else {
-            buffer.append(inDeclaration.getName());
+            String name = inDeclaration.getName();
+            buffer.append(name);
         }
         return inDeclaration;
     }
 
 
     public Self visitSelf(Self inSelf, Object... inParameters) {
-        StringBuffer buffer = (StringBuffer) inParameters[0];
+        StringBuilder buffer = (StringBuilder) inParameters[0];
         buffer.append("inFor");
         return inSelf;
     }
 
 
-    public AttributeNav visitAttributeNav(AttributeNav inNav, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        StringBuffer buffer = (StringBuffer) inParameters[0];
+    public AttributeNav visitAttributeNav(AttributeNav inNav, Object... inParameters) throws IllegalAccessException, InvocationTargetException {
+        StringBuilder buffer = (StringBuilder) inParameters[0];
         List<GelExpression> operand = inNav.getOperand();
         GelExpression firstOperand = operand.get(0);
         genericVisit(firstOperand, inParameters);

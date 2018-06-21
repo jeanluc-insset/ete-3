@@ -2,15 +2,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-    <artifactId>samples</artifactId>
-    <groupId>fr.insset.jeanluc</groupId>
-    <version>3.1</version>
-  </parent>
+        <artifactId>samples</artifactId>
+        <groupId>fr.insset.jeanluc</groupId>
+        <version>3.1</version>
+    </parent>
 
     <groupId>fr.insset.jeanluc</groupId>
     <artifactId>insset-airways</artifactId>
     <version>3.1</version>
     <packaging>war</packaging>
+
 
     <name>insset-airways</name>
 
@@ -18,13 +19,76 @@
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-    
+
+<!--
+    <profiles>
+        <profile>
+            <id>production</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+                <os>
+                    <arch>x86</arch>
+                    <family>linux</family>
+                </os>
+                <property>
+                    <name>profile</name>
+                    <value>production</value>
+                </property>
+                <file>
+                    <exists>
+                        ${glassfish.glassfishDirectory}/domains/${glassfish.domain.name}/config/domain.passwords
+                    </exists>
+                </file>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.glassfish.maven.plugin</groupId>
+                        <artifactId>maven-glassfish-plugin</artifactId>
+                        <configuration>
+                            <terse>true</terse>
+                            <echo>true</echo>
+                            <debug>true</debug>
+                            <glassfishDirectory>${glassfish.glassfishDirectory}</glassfishDirectory>
+                            <user>${glassfish.user}</user>
+                            <adminPassword>${glassfish.adminPassword}</adminPassword>
+                            <domain>
+                                <name>${glassfish.domain.name}</name>
+                                <host>${glassfish.domain.host}</host>
+                                <adminPort>${glassfish.domain.adminPort}</adminPort>
+                            </domain>
+                            <components>
+                                <component>
+                                    <name>${project.artifactId}</name>  
+                                    <artifact>${project.build.directory}/${project.build.finalName}.war</artifact>
+                                </component>
+                            </components>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>deploy</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+-->
+
     <dependencies>
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-servlet</artifactId>
+            <version>1.19.4</version>
+        </dependency>
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
             <version>7.0</version>
-            <scope>provided</scope>
+            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
@@ -196,6 +260,27 @@
 
             </plugin>
 
+<!--            <plugin>
+                <groupId>org.codehaus.cargo</groupId>
+                <artifactId>cargo-maven2-plugin</artifactId>
+                <configuration>
+                    <container>
+                        <containerId>glassfish5x</containerId>
+                        <type>remote</type>
+                    </container>
+                    <configuration>
+                        <type>runtime</type>
+                        <properties>
+                            <cargo.runtime.args>force=true</cargo.runtime.args>
+                            <cargo.hostname>127.0.0.1</cargo.hostname>
+                            <cargo.glassfish.admin.port>4888</cargo.glassfish.admin.port>
+                            <cargo.glassfish.domain.name>domain1</cargo.glassfish.domain.name>
+                            <cargo.remote.username>admin</cargo.remote.username>
+                            <cargo.remote.password>password</cargo.remote.password>
+                        </properties>
+                    </configuration>
+                </configuration>
+            </plugin>-->
 
         </plugins>
     </build>

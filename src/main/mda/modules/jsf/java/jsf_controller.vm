@@ -54,7 +54,7 @@ public class ${current.name}Controller implements Serializable {
         return current;
     }
 
-    private ${current.name}Jpa getFacade() {
+    public ${current.name}Jpa getFacade() {
         return ejbFacade;
     }
 
@@ -110,6 +110,16 @@ public class ${current.name}Controller implements Serializable {
 ${aMethod.name}${dialect.i2uc($aParameter.name)}#if( $foreach.hasNext ), #end
 #end
             );
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+#foreach ($aParameter in $aMethod.ownedParameter)
+            // ${aParameter.name} : ${aParameter.type.name} - ${aParameter.type.hasStereotype("Entity")}
+#if ($aParameter.type.hasStereotype("Entity"))
+            ${aParameter.type.name}Controller ${aParameter.name}Controller = (${aParameter.type.name}Controller)facesContext.getApplication().getELResolver().
+                    getValue(facesContext.getELContext(), null, "${dialect.i2lc($aParameter.type.name)}Controller");
+            ${aParameter.name}Controller.getFacade().edit(${aMethod.name}${dialect.i2uc($aParameter.name)});
+#end
+#end
+            getFacade().edit(current);
             JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("${current.name}Created"));
         }
         catch (Exception ex) {
@@ -252,6 +262,13 @@ ${aMethod.name}${dialect.i2uc($aParameter.name)}#if( $foreach.hasNext ), #end
         return JsfUtil.getSelectItems(ejbFacade.findAll(), true);
     }
 
+#foreach ($aProperty in ${current.support.keySet()})
+    public SelectItem[] getItemsAvailableAs${dialect.i2uc($aProperty.name)}For${aProperty.owningMofClass.name}SelectOne(${aProperty.owningMofClass.name} inFor) {
+        return JsfUtil.getSelectItems(ejbFacade.findAll(), false);
+    }
+#end
+
+
     public ${current.name} get${current.name}(java.lang.Long id) {
         return ejbFacade.find(id);
     }
@@ -271,7 +288,7 @@ ${aMethod.name}${dialect.i2uc($aParameter.name)}#if( $foreach.hasNext ), #end
                 return null;
             }
             ${current.name}Controller controller = (${current.name}Controller) facesContext.getApplication().getELResolver().
-                    getValue(facesContext.getELContext(), null, "addressController");
+                    getValue(facesContext.getELContext(), null, "${dialect.i2lc($current.name)}Controller");
             return controller.get${current.name}(getKey(value));
         }
 

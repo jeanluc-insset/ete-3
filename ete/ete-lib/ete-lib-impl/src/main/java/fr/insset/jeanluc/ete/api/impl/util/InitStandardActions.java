@@ -5,7 +5,6 @@ package fr.insset.jeanluc.ete.api.impl.util;
 
 import static fr.insset.jeanluc.ete.api.ActionSupport.ACTION_READER;
 import fr.insset.jeanluc.ete.api.impl.DialectAction;
-import static fr.insset.jeanluc.ete.api.impl.DialectAction.DIALECT;
 import fr.insset.jeanluc.ete.api.impl.DumpAction;
 import static fr.insset.jeanluc.ete.api.impl.DumpAction.DUMP_ACTION;
 import fr.insset.jeanluc.ete.api.impl.ForEachAction;
@@ -32,6 +31,7 @@ import static fr.insset.jeanluc.ete.api.impl.VelocityAction.VELOCITY_ACTION;
 import fr.insset.jeanluc.ete.api.impl.io.XmlActionReader;
 import fr.insset.jeanluc.util.factory.FactoryRegistry;
 import fr.insset.jeanluc.xmi.io.impl.XmlModelReader;
+import static fr.insset.jeanluc.ete.api.impl.DialectAction.DIALECT_ACTION;
 
 
 
@@ -62,7 +62,7 @@ public class InitStandardActions {
         FactoryRegistry.register(MODEL_READER, XmlModelReader.class);
         FactoryRegistry.register(PARAM, ParameterAction.class);
         FactoryRegistry.register(PARAMETER, ParameterAction.class);
-        FactoryRegistry.register(DIALECT, DialectAction.class);
+        FactoryRegistry.register(DIALECT_ACTION, DialectAction.class);
         register("text-writer", "fr.insset.jeanluc.plain.text.io.TextModelWriter");
     }
 

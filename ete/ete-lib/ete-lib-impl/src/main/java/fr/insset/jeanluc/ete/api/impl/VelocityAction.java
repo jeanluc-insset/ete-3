@@ -2,6 +2,7 @@ package fr.insset.jeanluc.ete.api.impl;
 
 
 
+import static fr.insset.jeanluc.el.dialect.Dialect.DIALECT;
 import fr.insset.jeanluc.el.evaluator.JSR341Evaluator;
 import static fr.insset.jeanluc.ete.api.impl.GenericTemplate.TEMPLATE;
 import fr.insset.jeanluc.ete.meta.model.core.NamedElement;
@@ -20,6 +21,8 @@ import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.MethodInvocationException;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.runtime.RuntimeConstants;
+import static fr.insset.jeanluc.ete.api.impl.DialectAction.DIALECT_ACTION;
+import java.io.IOException;
 
 
 
@@ -39,9 +42,9 @@ import org.apache.velocity.runtime.RuntimeConstants;
 public class VelocityAction extends GenericTemplate {
 
 
-    public final static String      VELOCITY_ACTION     = "velocity-action";
+    public static final String      VELOCITY_ACTION     = "velocity-action";
 
-    public final static Level       LEVEL               = Level.FINE;
+    public static final Level       LEVEL               = Level.FINE;
 
     @Override
     protected void initLoop() {
@@ -61,7 +64,7 @@ public class VelocityAction extends GenericTemplate {
         context.put("model", model);
         context.put("classes",model.getClasses());
         context.put("packages", model.getPackages());
-        String dialectName = (String)getParameter("dialect");
+        String dialectName = (String)getParameter(DIALECT);
 
         for (Map.Entry<String,Object> entry : getAllParameters().entrySet()) {
             logger.log(LEVEL, "Passing parameter " + entry.getKey() + " = " + entry.getValue());
@@ -74,14 +77,8 @@ public class VelocityAction extends GenericTemplate {
             Class dialectClass = loadClass(dialectName);
             Object dialect = dialectClass.newInstance();
             context.put("_d", dialect);
-            context.put("dialect", dialect);
-            Logger.getGlobal().log(Level.FINE, "Added dialect " + context.get("dialect"));
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(VelocityAction.class.getName()).log(Level.SEVERE, "Unable to load dialect " + dialectName, ex);
-        } catch (InstantiationException | IllegalAccessException ex) {
-            Logger.getLogger(VelocityAction.class.getName()).log(Level.SEVERE, "Unable to instanciate dialect " + dialectName, ex);
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(VelocityAction.class.getName()).log(Level.SEVERE, "Unable to find dialect " + dialectName, ex);
+            context.put(DIALECT, dialect);
+            Logger.getGlobal().log(Level.FINE, "Added dialect " + context.get(DIALECT));
         } catch (Exception ex) {
             Logger.getLogger(VelocityAction.class.getName()).log(Level.SEVERE, "Unable to instanciate dialect " + dialectName, ex);
         }
@@ -90,25 +87,25 @@ public class VelocityAction extends GenericTemplate {
 
 
     protected   Class   loadClass(String inName) throws ClassNotFoundException, MalformedURLException {
-        Map<String, Object> allParameters = this.getAllParameters();
         String[] parameter = (String[]) getParameter("extraPaths");
-        ClassLoader classLoader;
         if (parameter != null && parameter.length > 0) {
-            File workingDirectory = new File(".");
-            URI toURI = workingDirectory.toURI();
             URL[]       urls = new URL[parameter.length];
             int         index = 0;
             for (String aParam : parameter) {
-                toURI = new File(aParam).toURI();
+                URI toURI = new File(aParam).toURI();
                 urls[index++] = toURI.toURL();
             }
-            URLClassLoader urlCL = new URLClassLoader(urls);
-            classLoader = urlCL;
+            try (URLClassLoader classLoader = new URLClassLoader(urls)) {
+                return classLoader.loadClass(inName);
+            } catch (IOException ex) {
+                throw new ClassNotFoundException(inName + " (IOException)");
+            }
         }
         else {
+            ClassLoader classLoader;
             classLoader = getClass().getClassLoader();
+            return classLoader.loadClass(inName);
         }
-        return classLoader.loadClass(inName);
     }
 
 
@@ -124,11 +121,11 @@ public class VelocityAction extends GenericTemplate {
      * 
      * @return the result of the evaluation of the "template" parameter
      */
+    @Override
     protected   String  getTemplateUrl() {
         String  result = (String) getParameter(TEMPLATE);
         JSR341Evaluator elEvaluator = new JSR341Evaluator(getModel(), getAllParameters());
-        String evaluate = (String) elEvaluator.evaluate(result);
-        return evaluate;
+        return (String) elEvaluator.evaluate(result);
     }
 
 
@@ -139,13 +136,11 @@ public class VelocityAction extends GenericTemplate {
             Logger global = Logger.getGlobal();
             global.log(LEVEL, "----------------------------------------");
             for (Object aKey : keys) {
-                global.log(LEVEL, aKey + " -> " + context.get(aKey.toString()));
+                global.log(LEVEL, "{0} -> {1}", new Object[]{aKey, context.get(aKey.toString())});
             }
             global.log(LEVEL, "----------------------------------------");
             ve.mergeTemplate(inTemplateUrl, context, inoutOutput);
             global.log(LEVEL, "FIN DE VELOCITY [{0}]", inTemplateUrl);
-        } catch (ParseErrorException | MethodInvocationException ex) {
-            Logger.getLogger(VelocityAction.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(VelocityAction.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -161,17 +156,8 @@ public class VelocityAction extends GenericTemplate {
 
     @Override
     protected void copyAParameter(String inKey, Object inValue) {
-//        ve.addProperty(inKey, inValue);
         context.put(inKey, inValue);
     }       // copyParameters
-
-
-
-    @Override
-    protected void endLoop() {
-        super.endLoop();
-    }
-
 
 
     private VelocityEngine ve;

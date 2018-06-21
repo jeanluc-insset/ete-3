@@ -4,6 +4,7 @@ package fr.insset.jeanluc.ete.meta.model.mofpackage;
 import fr.insset.jeanluc.ete.meta.model.core.NamedElement;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.MofPackage;
+import fr.insset.jeanluc.ete.meta.model.types.PrimitiveType;
 import fr.insset.jeanluc.util.factory.AbstractFactory;
 import fr.insset.jeanluc.util.factory.FactoryMethods;
 import fr.insset.jeanluc.util.factory.FactoryRegistry;
@@ -63,6 +64,22 @@ public interface EteModel extends MofPackage {
             Logger.getLogger(EteModel.class.getName()).log(Level.SEVERE, null, ex);
         }
         return getClasses();
+    }
+
+    @Override
+    public default Collection<PrimitiveType> getAllPrimitiveTypes() {
+        try {
+            Collection<PrimitiveType> result = FactoryMethods.newList(PrimitiveType.class);
+            result.addAll(getPrimitiveTypes());
+            EteModel parent = getParent();
+            if (parent != null) {
+                result.addAll(parent.getAllPrimitiveTypes());
+            }
+            return result;
+        } catch (InstantiationException ex) {
+            Logger.getLogger(EteModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return getPrimitiveTypes();
     }
 
 

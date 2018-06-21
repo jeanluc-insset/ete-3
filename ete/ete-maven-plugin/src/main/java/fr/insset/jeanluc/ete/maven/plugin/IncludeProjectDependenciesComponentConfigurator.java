@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.codehaus.classworlds.ClassRealm;
+import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.component.configurator.AbstractComponentConfigurator;
 import org.codehaus.plexus.component.configurator.ComponentConfigurationException;
 import org.codehaus.plexus.component.configurator.ConfigurationListener;
@@ -34,11 +34,14 @@ public class IncludeProjectDependenciesComponentConfigurator extends AbstractCom
 
     private static final Logger LOGGER = Logger.getLogger("IncludeProjectDependenciesComponentConfigurator");
 
-    public void configureComponent( Object component, PlexusConfiguration configuration,
-                                    ExpressionEvaluator expressionEvaluator, ClassRealm containerRealm,
-                                    ConfigurationListener listener )
-        throws ComponentConfigurationException {
 
+
+
+
+    @Override
+    public void configureComponent(Object component, PlexusConfiguration configuration, ExpressionEvaluator expressionEvaluator, org.codehaus.plexus.classworlds.realm.ClassRealm containerRealm, ConfigurationListener listener) throws ComponentConfigurationException {
+
+        
         LOGGER.log(Level.FINEST, "******************************************************************\nIn the configurator\n             component : {0}         configuration : {1}  expression evaluator : {2}       container realm : {3}              listener : {4}******************************************************************", new Object[]{component, configuration, expressionEvaluator, containerRealm, listener});
         addProjectDependenciesToClassRealm(expressionEvaluator, containerRealm);
 
@@ -46,7 +49,7 @@ public class IncludeProjectDependenciesComponentConfigurator extends AbstractCom
 
         ObjectWithFieldsConverter converter = new ObjectWithFieldsConverter();
 
-        converter.processConfiguration( converterLookup, component, containerRealm.getClassLoader(), configuration,
+        converter.processConfiguration( converterLookup, component, containerRealm.getParentClassLoader(), configuration,
                                         expressionEvaluator, listener );
     }
 
@@ -62,7 +65,7 @@ public class IncludeProjectDependenciesComponentConfigurator extends AbstractCom
         // Add the project dependencies to the ClassRealm
         final URL[] urls = buildURLs(runtimeClasspathElements);
         for (URL url : urls) {
-            containerRealm.addConstituent(url);
+            containerRealm.addURL(url);
         }
     }
 

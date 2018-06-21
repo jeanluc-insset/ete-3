@@ -28,6 +28,13 @@ public class MofSequenceImpl extends MofCollectionImpl implements MofSequence {
         return true;
     }
 
+
+    @Override
+    public int hashCode() {
+        return this.getBaseType().hashCode() * 27;
+    }
+
+
     @Override
     public String getName() {
         return "Sequence<" + getBaseType().getName() + ">";

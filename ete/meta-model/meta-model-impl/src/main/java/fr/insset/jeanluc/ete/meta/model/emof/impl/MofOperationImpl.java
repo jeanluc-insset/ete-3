@@ -1,21 +1,18 @@
 package fr.insset.jeanluc.ete.meta.model.emof.impl;
 
 
+import fr.insset.jeanluc.ete.defs.Constants;
 import fr.insset.jeanluc.ete.meta.model.constraint.Postcondition;
 import fr.insset.jeanluc.ete.meta.model.constraint.Precondition;
-import fr.insset.jeanluc.ete.meta.model.core.PrimitiveDataTypes;
 import fr.insset.jeanluc.ete.meta.model.datatype.UnlimitedNatural;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 import fr.insset.jeanluc.ete.meta.model.types.MofType;
 import fr.insset.jeanluc.ete.meta.model.types.collections.MofCollection;
-import fr.insset.jeanluc.ete.meta.model.types.impl.TypedElementImpl;
 import fr.insset.jeanluc.util.factory.FactoryMethods;
 import java.util.Collection;
 import java.util.List;
 import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
 import fr.insset.jeanluc.ete.meta.model.emof.MofParameter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -109,7 +106,7 @@ public class MofOperationImpl extends FeatureImpl implements MofOperation {
 
     @Override
     public void setUpper(int inUpper) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException(Constants.NOT_IMPLEMENTED_YET); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
