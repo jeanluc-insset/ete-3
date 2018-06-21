@@ -115,3 +115,5 @@
 /ete/methodeb/methodeb-spec/target/
 /samples/micro_services/spec/target/
 /samples/micro_services/api/target/
+/samples/micro_services/react/target/
+/samples/micro_services/frontend/target/

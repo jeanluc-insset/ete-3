@@ -209,6 +209,7 @@ public class CGenerator extends CBasedGenerator  {
         String      indent = (String) parameters[1];
         VariableDefinition definitionExpression = inDeclaration.getDefinitionExpression();
         output.print(indent);
+        output.print("t_");
         output.print(definitionExpression.getType());
         output.print(" *");
         output.print(definitionExpression.getIdentifier());
@@ -254,7 +255,7 @@ public class CGenerator extends CBasedGenerator  {
                 output.print("->");
             }
             Feature feature = leftStep.getToFeature();
-            output.print(i2uc(feature.getName()));
+            output.print(i2lc(feature.getName()));
             output.print(" = ");
             genericVisit(inAssignment.getValue(), parameters);
         }
@@ -564,7 +565,7 @@ public class CGenerator extends CBasedGenerator  {
 
         Feature feature     = inAttributeNav.getToFeature();
         String  featureName = feature.getName();
-        output.print(featureName);
+        output.print(i2lc(featureName));
         if (feature.getType().isCollection()) {
             output.print("[");
             output.print("\n");

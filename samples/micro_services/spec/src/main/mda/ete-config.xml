@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<mda>
+
+
+    <transformation-set>
+
+        <register name="add-visitor-action" action="fr.insset.jeanluc.ete.api.impl.AddVisitorAction"/>
+
+        <model  url="Model.xml">
+            <add-visitor class="fr.insset.jeanluc.action.semantics.builder.ConditionVisitor"/>
+        </model>
+
+        <transformation-set jsf="true" jaxrs="true" output_base="../../api/target">
+            <module src="modules/web/ete-config.xml"/>
+        </transformation-set>
+
+
+    </transformation-set>
+
+</mda>
+
+
+

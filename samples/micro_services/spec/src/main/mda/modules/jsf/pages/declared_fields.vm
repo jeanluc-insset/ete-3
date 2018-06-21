@@ -1,0 +1,16 @@
+<h:outputText value="Declared fields of ${current.name}"/>
+#if ($current.superClass.name)
+<h:outputText value="There is a super class"/>
+#set ($target = $current.superClass)
+#set ($current = $current.superClass)
+<h:outputText value="Which is ${current.name}"/>
+#parse ("declared_fields.vm")
+#set ($current = $target)
+#end
+#foreach ($aProperty in $current.ownedAttribute)
+#set ($var = $aProperty)
+#set ($varName = $aProperty.name)
+#set ($scope = "cc.attrs.selection.")
+#set ($title = $current.name)
+#parse ("controls/polymorphism.vm")
+#end

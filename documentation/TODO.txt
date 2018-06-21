@@ -1,9 +1,10 @@
 
 
 Infrastructure
-    - generation of "filters"
+    - generation of "queries"
     - use of OCL defined functions
     - full support of OCL
+    - derived properties
 
 Projects
     - Ete 4.0
@@ -23,9 +24,15 @@ Templates and modules
 
 Dialects
     - SQL
+    - JavaScript
+    - TypeScript
 
 Miscellaneous
+    - Cucumber
     - archetypes
+        - OK JSF
+        - React
+        - microservices
     - User Manual
     - Developper Manual
 
