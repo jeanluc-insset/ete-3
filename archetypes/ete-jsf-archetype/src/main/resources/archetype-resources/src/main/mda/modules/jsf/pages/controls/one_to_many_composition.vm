@@ -1,0 +1,8 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+                <ete:${symbol_dollar}{var.type.baseType.name}_form
+                           selection="${symbol_pound}{${symbol_dollar}{dialect.i2lc($current.name)}Controller.new${symbol_dollar}{dialect.i2uc($varName)}}"
+                />
+                <h:outputText value=" "/>value
+                <h:commandButton action="${symbol_pound}{${symbol_dollar}{dialect.i2lc($current.name)}Controller.addNew${symbol_dollar}{dialect.i2uc($varName)}}" value="Add"/>

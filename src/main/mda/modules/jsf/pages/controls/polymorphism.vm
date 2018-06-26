@@ -4,7 +4,11 @@
 #set ($control = "controls/many_to_one.vm") 
 #elseif ($aProperty.type.isCollection())
 #if ($aProperty.type.baseType.hasStereotype("Entity"))
-#set ($control = "controls/one_to_many.vm") 
+#if ($aProperty.aggregationKind == fr.insset.jeanluc.ete.meta.model.emof.AggregationKind.COMPOSITION)
+#set ($control = "controls/one_to_many_composition.vm")
+#else
+#set ($control = "controls/one_to_many.vm")
+#end
 #else
 #set ($control = "not_handled")
 #end

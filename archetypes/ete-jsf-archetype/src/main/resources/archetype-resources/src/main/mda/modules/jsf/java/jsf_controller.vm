@@ -39,6 +39,13 @@ public class ${symbol_dollar}{current.name}Controller implements Serializable {
     private ${symbol_dollar}{current.name}Jpa ejbFacade;
     private PaginationHelper pagination;
     private int selectedItemIndex;
+${symbol_pound}foreach (${symbol_dollar}aProperty in ${symbol_dollar}current.ownedAttribute)
+${symbol_pound}if (${symbol_dollar}aProperty.aggregationKind.toString().equals("COMPOSITION"))
+${symbol_pound}if (${symbol_dollar}aProperty.type.isCollection())
+    private ${symbol_dollar}{aProperty.type.baseType}      new${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)} = new ${symbol_dollar}{aProperty.type.baseType}();      
+${symbol_pound}end    ${symbol_pound}${symbol_pound} isCollection
+${symbol_pound}end    ${symbol_pound}${symbol_pound} aggregationKind
+${symbol_pound}end
 ${symbol_pound}foreach (${symbol_dollar}aMethod in ${symbol_dollar}current.ownedOperation)
 ${symbol_pound}foreach (${symbol_dollar}aParameter in ${symbol_dollar}aMethod.ownedParameter)
     private ${symbol_dollar}{dialect.mt2lt(${symbol_dollar}aParameter.type)}  ${symbol_dollar}{aMethod.name}${symbol_dollar}{dialect.i2uc(${symbol_dollar}aParameter.name)};
@@ -63,6 +70,30 @@ ${symbol_pound}end
     private ${symbol_dollar}{current.name}Jpa getFacade() {
         return ejbFacade;
     }
+
+
+${symbol_pound}foreach (${symbol_dollar}aProperty in ${symbol_dollar}current.ownedAttribute)
+${symbol_pound}if (${symbol_dollar}aProperty.aggregationKind.toString().equals("COMPOSITION"))
+${symbol_pound}if (${symbol_dollar}aProperty.type.isCollection())
+    //------------------------------------------------------------------------//
+
+    public ${symbol_dollar}{aProperty.type.baseType.name}      getNew${symbol_dollar}{dialect.i2uc($aProperty.name)}() {
+        return new${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)};
+    }
+
+    public void setNew${symbol_dollar}{dialect.i2uc($aProperty.name)}(${symbol_dollar}{aProperty.type.baseType.name} inValue) {
+        new${symbol_dollar}{dialect.i2uc($aProperty.name)} = inValue;
+    }
+
+    public void addNew${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)}() {
+        getSelected().get${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)}().add(new${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)});
+        new${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)} = new ${symbol_dollar}{aProperty.type.baseType}();
+    }
+
+${symbol_pound}end    ${symbol_pound}${symbol_pound} isCollection
+${symbol_pound}end    ${symbol_pound}${symbol_pound} aggregationKind
+${symbol_pound}end
+
 
     //========================================================================//
     //                          P A G I N A T I O N                           //

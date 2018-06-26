@@ -41,6 +41,9 @@
             <velocity items='${classes.filter(c -> c.hasStereotype("Entity"))}'
                       template="form.vm"
                       target="resources/ete/${current.name}_form.xhtml"/>
+            <velocity items='${classes.filter(c -> c.hasStereotype("Entity"))}'
+                      template="list_component.vm"
+                      target="resources/ete/${current.name}_list_component.xhtml"/>
             <velocity items='${classes.filter(c -> c.hasStereotype("Entity")).flatmap(c -> c.ownedOperation)}'
                       template="operation.vm"
                       target="resources/ete/${current.owningMofClass.name}_${current.name}_form.xhtml"/>            

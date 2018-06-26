@@ -8,4 +8,7 @@
     </parent>
     <artifactId>archetypes</artifactId>
     <packaging>pom</packaging>
+    <modules>
+        <module>ete-jsf-archetype</module>
+    </modules>
 </project>

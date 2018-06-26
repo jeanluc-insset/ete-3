@@ -7,7 +7,11 @@ ${symbol_pound}if (${symbol_dollar}aProperty.type.hasStereotype("Entity"))
 ${symbol_pound}set (${symbol_dollar}control = "controls/many_to_one.vm") 
 ${symbol_pound}elseif (${symbol_dollar}aProperty.type.isCollection())
 ${symbol_pound}if (${symbol_dollar}aProperty.type.baseType.hasStereotype("Entity"))
+${symbol_pound}if (${symbol_dollar}aProperty.aggregationKind.toString() == "COMPOSITION")
+${symbol_pound}set (${symbol_dollar}control = "controls/one_to_many_composition.vm")
+${symbol_pound}else
 ${symbol_pound}set (${symbol_dollar}control = "controls/one_to_many.vm") 
+${symbol_pound}end
 ${symbol_pound}end
 ${symbol_pound}elseif (${symbol_dollar}aProperty.type.name == "date")
 ${symbol_pound}set (${symbol_dollar}control = "controls/calendar.vm")

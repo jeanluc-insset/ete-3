@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -79,9 +80,17 @@ public class ${current.name} #if (${current.superClass.size()}>0)extends ${curre
 
 #foreach ($aProperty in $current.ownedAttribute)
     public $dialect.mt2lt($aProperty.type) get${dialect.i2uc($aProperty.name)}() {
+#if ($aProperty.type.collection)
+        if (${aProperty.name} == null) {
+            ${aProperty.name} = new LinkedList<>();
+        }
+#end
         return ${aProperty.name};
     }
 
+    /**
+     * The reverse navigation is not handled
+     */
     public void set${dialect.i2uc($aProperty.name)}(${dialect.mt2lt($aProperty.type)} inValue) {
         ${aProperty.name} = inValue;
     }
@@ -133,7 +142,8 @@ ${dialect.getOperationBody($aMethod, "    ")}
     #end
     #if ($aProperty.type.isCollection())
     #if ($aProperty.type.baseType.hasStereotype("Entity"))
-    @OneToMany 
+    @OneToMany#if ($aProperty.aggregationKind.toString().equals("COMPOSITION"))(cascade = CascadeType.ALL)
+#end
     #end
     #elseif ($aProperty.type.name == "date")
     @javax.persistence.Temporal(javax.persistence.TemporalType.DATE)

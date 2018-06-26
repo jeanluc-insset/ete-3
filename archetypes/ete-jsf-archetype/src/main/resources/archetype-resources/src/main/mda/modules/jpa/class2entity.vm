@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -82,6 +83,11 @@ ${symbol_pound}end
 
 ${symbol_pound}foreach (${symbol_dollar}aProperty in ${symbol_dollar}current.ownedAttribute)
     public ${symbol_dollar}dialect.mt2lt(${symbol_dollar}aProperty.type) get${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)}() {
+${symbol_pound}if (${symbol_dollar}aProperty.type.collection)
+        if (${symbol_dollar}{aProperty.name} == null) {
+            ${symbol_dollar}{aProperty.name} = new LinkedList<>();
+        }
+${symbol_pound}end
         return ${symbol_dollar}{aProperty.name};
     }
 
@@ -136,7 +142,8 @@ ${symbol_pound}foreach (${symbol_dollar}aProperty in ${symbol_dollar}current.own
     ${symbol_pound}end
     ${symbol_pound}if (${symbol_dollar}aProperty.type.isCollection())
     ${symbol_pound}if (${symbol_dollar}aProperty.type.baseType.hasStereotype("Entity"))
-    @OneToMany 
+    @OneToMany${symbol_pound}if (${symbol_dollar}aProperty.aggregationKind.toString().equals("COMPOSITION"))(cascade = CascadeType.ALL)
+${symbol_pound}end
     ${symbol_pound}end
     ${symbol_pound}elseif (${symbol_dollar}aProperty.type.name == "date")
     @javax.persistence.Temporal(javax.persistence.TemporalType.DATE)

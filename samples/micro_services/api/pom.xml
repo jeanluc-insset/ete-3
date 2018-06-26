@@ -100,11 +100,11 @@
                 <version>2.3</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
-                    <webResources> 
+<!--                    <webResources> 
                         <resource> 
                             <directory>target/generated-web-pages/ete</directory>
                         </resource>
-                    </webResources> 
+                    </webResources> -->
                 </configuration>
             </plugin>
         </plugins>

@@ -50,7 +50,7 @@ public class XLangCheckBuilder extends DynamicVisitorSupport {
     public void buildStatements(GelExpression inExpression, List<Statement> inoutStatements) throws IllegalAccessException, InstantiationException {
         // create an if statement of the form :
         // if not inExpression throw new Exception(...)
-        Conditional condition = FactoryRegistry.newInstance(Conditional.class);
+        Conditional condition = (Conditional) FactoryRegistry.newInstance(Conditional.class);
         condition.setCondition(inExpression);
         XLangException eteException = new XLangExceptionImpl();
         condition.getOperand().add(eteException);
