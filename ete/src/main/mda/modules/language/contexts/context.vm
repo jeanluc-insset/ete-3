@@ -49,8 +49,8 @@ import javax.annotation.Generated;
  * </div>
  * @author jldeleage
  */
-@Generated("ete - jean-luc@insset.fr  ete/src/main/mda/modules/language/context.vm")
-public interface GelContext<T> {
+@Generated("ete - jean-luc@insset.fr  ete/src/main/mda/modules/language/contexts/context.vm")
+public interface ${dialect.i2uc($projectName)}Context<T> {
 
 
     public final static String      MODEL        = "model";

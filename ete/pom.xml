@@ -19,5 +19,7 @@
         <module>database</module>
         <module>defs</module>
         <module>methodeb</module>
+        <module>cucumber</module>
+        <module>natural_language</module>
     </modules>
 </project>

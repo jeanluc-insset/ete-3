@@ -119,3 +119,7 @@
 /samples/micro_services/frontend/target/
 /samples/composition_sample/target/
 /archetypes/ete-jsf-archetype/target/
+/ete/cucumber/cucumber-spec/target/
+/ete/natural_language/nl-spec/target/
+/ete/natural_language/nl-api/target/
+/archetypes/language-archetype/target/

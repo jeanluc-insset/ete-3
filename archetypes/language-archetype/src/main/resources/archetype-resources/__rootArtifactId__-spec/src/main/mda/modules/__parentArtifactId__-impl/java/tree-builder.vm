@@ -1,0 +1,147 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}
+${symbol_pound}${symbol_pound}                                                                            ${symbol_pound}${symbol_pound}
+${symbol_pound}${symbol_pound} Generates an abstract tree builder.                                        ${symbol_pound}${symbol_pound}
+${symbol_pound}${symbol_pound} An instance of this class is a visitor for GelExpressions. It takes any    ${symbol_pound}${symbol_pound}
+${symbol_pound}${symbol_pound} GelExpression concrete tree and returns the matching abstract tree.        ${symbol_pound}${symbol_pound}
+${symbol_pound}${symbol_pound}                                                                            ${symbol_pound}${symbol_pound}
+${symbol_pound}${symbol_pound} Usage :                                                                    ${symbol_pound}${symbol_pound}
+${symbol_pound}${symbol_pound}  GelParser             parser  = GelParserFactory.newParser(inExpression); ${symbol_pound}${symbol_pound}
+${symbol_pound}${symbol_pound}  GelExpressionContext  ctx          = parser.${parentArtifactId}Expression();              ${symbol_pound}${symbol_pound}
+${symbol_pound}${symbol_pound}  TreeBuilder           treeBuilder  = new TreeBuilder(inContext);          ${symbol_pound}${symbol_pound}
+${symbol_pound}${symbol_pound}  GelExpression         expression   = treeBuilder.visitGelExpression(ctx); ${symbol_pound}${symbol_pound}
+${symbol_pound}${symbol_pound}                                                                            ${symbol_pound}${symbol_pound}
+${symbol_pound}${symbol_pound}                                                                            ${symbol_pound}${symbol_pound}
+${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}${symbol_pound}
+package ${package}.ete.${parentArtifactId}.impl;
+
+
+
+import ${package}.ete.meta.model.emof.MofClass;
+import ${package}.ete.meta.model.emof.MofParameter;
+import ${package}.ete.meta.model.emof.MofProperty;
+import ${package}.ete.meta.model.mofpackage.MofPackage;
+import ${package}.ete.meta.model.mofpackage.PackageableElement;
+import ${package}.ete.meta.model.types.Classifier;
+import ${package}.ete.meta.model.types.MofType;
+import ${package}.ete.meta.model.types.TypedElement;
+import ${package}.ete.meta.model.types.collections.MofCollection;
+import ${package}.${parentArtifactId}.GelParser;
+import ${package}.${parentArtifactId}.GelParserBaseVisitor;
+import ${package}.${parentArtifactId}.CollectionOperationExpression;
+import ${package}.${parentArtifactId}.GelExpression;
+import ${package}.${parentArtifactId}.Literal;
+import ${package}.${parentArtifactId}.Navigable;
+import ${package}.${parentArtifactId}.Navigation;
+// import static ${package}.${parentArtifactId}.api.Navigation.NAVIGATION;
+import ${package}.${parentArtifactId}.Operation;
+import ${package}.${parentArtifactId}.Self;
+import ${package}.${parentArtifactId}.VariableDefinition;
+import ${package}.${parentArtifactId}.VariableReference;
+import ${package}.${parentArtifactId}.impl.*;
+import ${package}.util.factory.FactoryRegistry;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Stack;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.Generated;
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.RuleNode;
+
+
+/**
+ * Generates an abstract tree builder.
+ * An instance of this class is a visitor for GelExpressions. It takes any
+ * GelExpression concrete tree and returns the matching abstract tree.
+ *
+ * Usage : <code><pre>
+GelParser            parser             = GelParserFactory.newParser(aString);
+GelExpressionContext ctx                = parser.${parentArtifactId}Expression();
+TreeBuilder          treeBuilder        = new TreeBuilder(inContext);
+GelExpression        abstractExpression = treeBuilder.visitGelExpression(ctx);
+</pre></code>
+ *
+ */
+@Generated("ete - jean-luc@insset.fr  modules/maven-project/${parentArtifactId}-impl/java/tree-builder.vm")
+public class TreeBuilder extends GelParserBaseVisitor<GelExpression> {
+
+
+
+    public TreeBuilder(MofPackage inModel, TypedElement inContext) {
+        this(inModel, inContext, new HashMap<>());
+    }
+    
+    public TreeBuilder(MofPackage inModel, TypedElement inContext, Map<String, VariableDefinition> inVariables) {
+        variables = inVariables;
+        model = inModel;
+        context = inContext;
+        if (context instanceof ${package}.ete.meta.model.emof.MofOperation) {
+            ${package}.ete.meta.model.emof.MofOperation operation
+                    = (${package}.ete.meta.model.emof.MofOperation)context;
+            contextClass.push(operation.getOwningMofClass());
+            for (MofParameter aParameter : operation.getOwnedParameter()) {
+                // TODO : use a factory
+                VariableDefinition  parameterDefinition = new VariableDefinitionImpl();
+                parameterDefinition.setIdentifier(aParameter.getName());
+                parameterDefinition.setType(aParameter.getType());
+                variables.put(aParameter.getName(), parameterDefinition);
+            }
+        }
+        else {
+            contextClass.push((MofClass)context);
+        }
+
+        FactoryRegistry registry = FactoryRegistry.getRegistry();
+${symbol_pound}foreach(${symbol_dollar}aClass in ${symbol_dollar}current.classes)
+${symbol_pound}if (${symbol_dollar}{aClass.getValueOf("literalType")})
+        registry.registerDefaultFactory("${symbol_dollar}{aClass.getValueOf("literalType")}", ${symbol_dollar}{aClass.name}Impl.class);
+${symbol_pound}elseif (${symbol_dollar}{aClass.getValueOf("symbol")})
+        registry.registerDefaultFactory("${symbol_dollar}{aClass.getValueOf("symbol")}", ${symbol_dollar}{aClass.name}Impl.class);
+${symbol_pound}end
+${symbol_pound}end
+        registry.registerDefaultFactory("self", SelfImpl.class);
+        registry.registerDefaultFactory("Navigation", NavigationImpl.class);
+        registry.registerDefaultFactory(CollectionOperationExpression.class, CollectionOperationExpressionImpl.class);
+        registry.registerDefaultFactory(VariableReference.class, VariableReferenceImpl.class);
+    }
+
+
+    @Override
+    public GelExpression visitGelExpression(GelParser.GelExpressionContext ctx) {
+        navigable = new Stack<>();
+        return super.visitGelExpression(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+
+    //========================================================================//
+
+    private     MofPackage                              model;
+
+    /**
+     *  Should be an instance of MofClass or (Mof)Operation.
+     */
+    private     TypedElement                            context;
+
+    /**
+     * An expression can contains sub-expressions. For example<br>
+     * <code>pilot[</code>
+     * The first item of the stack is defined by :<br><code>
+     * context instanceof MofClass ==&gt; context == contextClass<br>
+     * context instanceof Operation ==&gt; context.getOwningMofClass() == contextClass</code>
+     */
+    private     Stack<Classifier>                       contextClass = new Stack<>();
+
+    private     Stack<Navigable>                        navigable;
+
+    private     Map<String, VariableDefinition>         variables = new HashMap<>();
+
+    private     String                                  currentNavOperator;
+
+}
+

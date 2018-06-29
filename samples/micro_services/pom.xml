@@ -11,6 +11,7 @@
     <modules>
         <module>spec</module>
         <module>api</module>
+        <module>react</module>
         <module>frontend</module>
   </modules>
 </project>

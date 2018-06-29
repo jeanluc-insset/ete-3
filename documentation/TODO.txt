@@ -24,6 +24,7 @@ Templates and modules
     - React
     - Angular
     - other languages
+    - Design Patterns
 
 Dialects
     - SQL
@@ -31,9 +32,10 @@ Dialects
     - TypeScript
 
 Miscellaneous
-    - Cucumber
+    - Cucumber / Natural language
     - archetypes
-        - OK JSF
+        - OK JSF some little cosmetic bugs with Ajax. Bidirectional associations
+            are not handled at all. Composition is not perfect
         - React
         - microservices
     - User Manual
