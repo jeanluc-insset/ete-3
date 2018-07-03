@@ -42,14 +42,14 @@
                     <execution>
                         <!--Run our version calculation script--> 
                         <id>Npm start</id>
-                        <phase>install</phase>
+                        <phase>generate-resources</phase>
                         <goals>
                             <goal>exec</goal>
                         </goals>
                         <configuration>
                             <executable>/usr/local/bin/yarn</executable>
                             <arguments>
-                                <argument>start</argument>
+                                <argument>build</argument>
                             </arguments>
                         </configuration>
                     </execution>

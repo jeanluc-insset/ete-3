@@ -12,10 +12,18 @@
             <add-visitor class="fr.insset.jeanluc.action.semantics.builder.ConditionVisitor"/>
         </model>
 
-        <transformation-set jsf="true" jaxrs="true" output_base="../../api/target">
-            <module src="modules/web/ete-config.xml"/>
+        <!-- API server -->
+        <transformation-set jaxrs="true" output_base="../../api/target">
+            <velocity template="modules/web/web_xml.vm" target="generated-web-pages/ete/WEB-INF/web.xml"/>
+            <velocity template="modules/web/index_html.vm" target="generated-web-pages/ete/index.html"/>
+            <module src="modules/jaxrs/ete-config.xml"/>
+            <module src="modules/jpa/ete-config.xml"/>
         </transformation-set>
 
+        <!-- API REACT client -->
+        <transformation-set output_base="../../react/src/main/react/">
+            <module src="modules/react/ete-config.xml"/>
+        </transformation-set>
 
     </transformation-set>
 

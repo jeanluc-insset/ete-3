@@ -10,4 +10,15 @@
     <groupId>${groupId}</groupId>
     <packaging>pom</packaging>
     <version>${version}</version>
+    
+    <properties>
+        <ete.version>3.1</ete.version>
+    </properties>
+
+    <modules>
+        <module>${rootArtifactId}-spec</module>
+        <module>${rootArtifactId}-api</module>
+        <module>${rootArtifactId}-impl</module>
+    </modules>
+
 </project>

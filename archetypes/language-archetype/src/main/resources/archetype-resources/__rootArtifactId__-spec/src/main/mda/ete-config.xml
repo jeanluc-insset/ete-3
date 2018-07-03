@@ -10,7 +10,7 @@
     <transformation-set >
                               read the model
         <!--<model  url="models/EssentialOCL.emof"/>-->
-        <model  url="models/Gel.xml"/>
+        <model  url="models/${artifactId}.xml"/>
 
         <!--
           - The context parameter specifies which context to use when
@@ -21,8 +21,8 @@
 
                     <!--API and default implementation generation--> 
             <module src="../../../../../src/main/mda/modules/language/ete-config.xml"
-                    dialect="${package}.el.dialect.BasicJavaDialect"
-                    projectName="${parentArtifactId}"/>
+                    dialect="fr.insset.ete.el.dialect.BasicJavaDialect"
+                    projectName="${rootArtifactId}"/>
 
         </transformation-set>
 

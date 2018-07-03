@@ -74,6 +74,8 @@
 #if ($jsf == true)
         <welcome-file>faces/index.xhtml</welcome-file>
         <welcome-file>index.xhtml</welcome-file>
+#else
+        <welcome-file>index.html</welcome-file>
 #end
     </welcome-file-list>
 </web-app>

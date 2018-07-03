@@ -23,13 +23,13 @@
         <dependency>
             <groupId>fr.insset.jeanluc</groupId>
             <artifactId>meta-model-api</artifactId>
-            <version>${project.version}</version>
+            <version>${ete.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>fr.insset.jeanluc</groupId>
             <artifactId>meta-model-impl</artifactId>
-            <version>${project.version}</version>
+            <version>${ete.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
@@ -42,7 +42,7 @@
         <dependency>
             <groupId>fr.insset.jeanluc</groupId>
             <artifactId>xmi-io</artifactId>
-            <version>${project.version}</version>
+            <version>${ete.version}</version>
             <type>jar</type>
             <scope>test</scope>
         </dependency>

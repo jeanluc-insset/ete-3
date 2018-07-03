@@ -13,6 +13,9 @@
     <artifactId>${artifactId}</artifactId>
     <packaging>jar</packaging>
 
+    <properties>
+        <ete.version>3.1</ete.version>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -23,7 +26,7 @@
         <dependency>
             <groupId>fr.insset.jeanluc</groupId>
             <artifactId>meta-model-api</artifactId>
-            <version>${project.version}</version>
+            <version>${ete.version}</version>
             <type>jar</type>
         </dependency>
 

@@ -21,5 +21,6 @@
         <module>methodeb</module>
         <module>cucumber</module>
         <module>natural_language</module>
-    </modules>
+    <module>tutu</module>
+  </modules>
 </project>

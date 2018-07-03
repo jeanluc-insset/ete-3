@@ -12,37 +12,82 @@
     <version>3.1</version>
     <packaging>jar</packaging>
 
-    <name>React.js Blank Project (from https://github.com/making/maven-reactjs-blank)</name>
+    <name>react</name>
+
+    <description>
+        React.js Blank Project (from https://github.com/making/maven-reactjs-blank)
+    </description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+
     <build>
         <plugins>
+
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.8</version>
+                <artifactId>exec-maven-plugin</artifactId>
+                <groupId>org.codehaus.mojo</groupId>
+                <version>1.6.0</version>
                 <executions>
                     <execution>
-                        <id>gulp</id>
+                        <id>clean react</id>
+                        <phase>clean</phase>
+                        <configuration>
+                            <executable>rm</executable>
+                            <arguments>
+                                <argument>-rf</argument>
+                                <argument>build</argument>
+                            </arguments>
+                            <workingDirectory>src/main/react</workingDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>clean 2</id>
+                        <phase>clean</phase>
+                        <configuration>
+                            <executable>echo</executable>
+                            <arguments>
+                                <argument>-rf</argument>
+                                <argument>build</argument>
+                            </arguments>
+                            <workingDirectory>src/main/react</workingDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <!--Run our version calculation script--> 
+                        <id>Yarn install</id>
                         <phase>generate-resources</phase>
                         <goals>
-                            <goal>run</goal>
+                            <goal>exec</goal>
                         </goals>
                         <configuration>
-                            <target>
-                                <echo message="Gulp!" />
-                                <exec executable="/usr/local/bin/gulp">
-                                    <arg value="build" />
-                                </exec>
-                            </target>
+                            <executable>/usr/local/bin/yarn</executable>
+                            <workingDirectory>src/main/react</workingDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <!--Run our version calculation script--> 
+                        <id>Yarn build</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>/usr/local/bin/yarn</executable>
+                            <arguments>
+                                <argument>build</argument>
+                            </arguments>
+                            <workingDirectory>src/main/react</workingDirectory>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
+                <version>3.1.0</version>
                 <executions>
                     <execution>
                         <id>copy-resources</id>
@@ -62,6 +107,8 @@
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
     </build>
+
 </project>
