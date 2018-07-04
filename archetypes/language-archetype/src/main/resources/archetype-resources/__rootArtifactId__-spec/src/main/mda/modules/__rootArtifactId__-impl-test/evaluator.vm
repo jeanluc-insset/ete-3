@@ -1,0 +1,156 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+package ${package}.${parentArtifactId}.impl;
+
+
+
+import ${package}.ete.meta.model.emof.Feature;
+import ${package}.ete.meta.model.emof.MofClass;
+import ${package}.ete.meta.model.mofpackage.MofPackage;
+${symbol_pound}${symbol_pound} ${symbol_pound}foreach (${symbol_dollar}aClass in ${symbol_dollar}classes)
+${symbol_pound}${symbol_pound} ${symbol_pound}if (${symbol_dollar}aClass.hasStereotype("operation"))
+${symbol_pound}${symbol_pound} import ${package}.${parentArtifactId}.${symbol_dollar}{aClass.name};
+${symbol_pound}${symbol_pound} ${symbol_pound}end
+${symbol_pound}${symbol_pound} ${symbol_pound}end
+import ${package}.${parentArtifactId}.*;
+import ${package}.util.visit.DynamicVisitorSupport;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+
+
+public class GelEvaluator extends DynamicVisitorSupport {
+
+
+
+
+    public GelEvaluator() {
+        this.register("visit", "${package}.${parentArtifactId}");
+    }
+
+/*
+    public Object visitOperationCallExpression(OperationCallExpression inExpression, Object... inContext) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        // 1- Collect the values of the operands
+        System.out.println("Visiting " + inExpression);
+        List<Object>    operandValues = new LinkedList<>();
+        for (GelExpression operand : inExpression.getOperand()) {
+            Object operandValue = genericVisit(operand, inContext);
+            operandValues.add(operandValue);
+        }
+        // 2- Build an UELExpression from these values
+        StringBuilder   builder = new StringBuilder();
+        switch (operandValues.size()) {
+            case 1:
+                break;
+            case 2:
+                break;
+        }
+        // 3- Evaluate the UELExpression and return the value
+        return null;
+    }
+*/
+
+
+    public Object visitLiteral(Literal inLiteral, Object... inContext) {
+        Logger      logger = Logger.getGlobal();
+        logger.log(Level.FINE, "Visiting " + inLiteral);
+        return null;
+    }
+
+
+    public MofClass visitSelf(Self inSelf, Object... inContext) {
+        MofClass result = (MofClass) inSelf.getType();
+        return result;
+    }
+ 
+
+    public Feature visitNavigation(Navigation inNavigation, Object... inContext) {
+        return inNavigation.getToFeature();
+    }
+
+
+${symbol_pound}foreach(${symbol_dollar}aClass in ${symbol_dollar}classes)
+${symbol_pound}if (${symbol_dollar}{aClass.hasStereotype("literal")})
+${symbol_pound}set(${symbol_dollar}effectiveType = ${symbol_dollar}{dialect.moft2lt(${symbol_dollar}aClass.getValueOf("literalType"))})
+    public ${symbol_dollar}{effectiveType} visit${symbol_dollar}{aClass.name}(${symbol_dollar}{aClass.name} inLiteral, Object... inContext) {
+        return (${symbol_dollar}{effectiveType})inLiteral.getValue();
+    }
+${symbol_pound}elseif (${symbol_dollar}{aClass.getValueOf("symbol")})
+/*
+    public Object visit${symbol_dollar}{aClass.name}(${symbol_dollar}{aClass.name} inOperation, Object... inContext)
+                 throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        List<Object> operandValues = getOperandValues(inOperation, inContext);
+        Object result = null;
+        ${symbol_pound}if (${symbol_dollar}{aClass.getValueOf("arity")} == 1)
+        // arity = 1
+        ${symbol_pound}elseif (${symbol_dollar}{aClass.getValueOf("arity")} == 2)
+        // arity = 2
+        ${symbol_pound}end
+        return result;
+    }
+*/
+${symbol_pound}end
+${symbol_pound}end
+
+
+
+
+    //========================================================================//
+
+    public Integer visitAdd(Add inOperation, Object... inContext)
+                 throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        List    rawOperands = getOperandValues(inOperation, inContext);
+        List<Integer>   operands = rawOperands;
+        Integer result = operands.get(0) + operands.get(1);
+        return result; 
+    }
+
+
+    public Integer visitMult(Mult inOperation, Object... inContext)
+                 throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        List    rawOperands = getOperandValues(inOperation, inContext);
+        List<Integer>   operands = rawOperands;
+        Integer result = operands.get(0) * operands.get(1);
+        return result; 
+    }
+
+    public Integer visitMinus(Minus inOperation, Object... inContext)
+                 throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        List    rawOperands = getOperandValues(inOperation, inContext);
+        List<Integer>   operands = rawOperands;
+        Integer result = operands.get(0) - operands.get(1);
+        return result; 
+    }
+
+    public Boolean visitGreaterThan(GreaterThan inOperation, Object... inContext)
+                 throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        List    rawOperands = getOperandValues(inOperation, inContext);
+        List<Integer>   operands = rawOperands;
+        Boolean result = operands.get(0) > operands.get(1);
+        return result; 
+    }
+
+    protected List<Object> getOperandValues(Operation inOperation, Object inContext)
+                                throws IllegalAccessException,
+                                        IllegalArgumentException,
+                                        InvocationTargetException {
+        List<Object>    operandValues = new LinkedList<>();
+        for (GelExpression operand : inOperation.getOperand()) {
+            Object operandValue = genericVisit(operand, inContext);
+            operandValues.add(operandValue);
+        }
+        return operandValues;
+    }
+
+
+
+}
+
+

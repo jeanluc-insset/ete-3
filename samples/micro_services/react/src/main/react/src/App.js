@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import logo from './ete_centre.svg';
 import './App.css';
 import Details from './Details';
 import EntityList from './EntityList';
