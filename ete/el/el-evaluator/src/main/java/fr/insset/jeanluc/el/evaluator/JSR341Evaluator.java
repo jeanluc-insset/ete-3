@@ -63,7 +63,7 @@ public class JSR341Evaluator implements Evaluator {
                 if (o == null) {
                     String propertyName = o1.toString();
                     Logger  logger = Logger.getLogger(getClass().getName());
-                    logger.log(Level.FINE, "Resolving root variable " + propertyName);
+                    logger.log(Level.FINER, "Resolving root variable " + propertyName);
                     String postfix = propertyName.substring(0,1).toUpperCase() + propertyName.substring(1);
                     Object result = getValue("get" + postfix);
                     if (result != null) {
@@ -92,6 +92,17 @@ public class JSR341Evaluator implements Evaluator {
                 }
             }
 
+            private Object getValue(Object inRoot, String inAccessorName) {
+                try {
+                    Method method = inRoot.getClass().getMethod(inAccessorName, new Class[0]);
+                    Object result = method.invoke(model, new Object[0]);
+                    return result;
+                } catch (NoSuchMethodException | SecurityException
+                        | IllegalAccessException | IllegalArgumentException
+                        | InvocationTargetException ex) {
+                    return null;
+                }
+            }
 
             @Override
             public Class<?> getType(ELContext elc, Object o, Object o1) {
@@ -121,18 +132,25 @@ public class JSR341Evaluator implements Evaluator {
     }
 
 
-    protected Object    applyAccessor(Object inObj, Class inClass, String inAccessorName) {
-        try {
-            Method method = inClass.getMethod(inAccessorName, new Class[0]);
-            return method.invoke(inObj, new Object[0]);
-        } catch (NoSuchMethodException | SecurityException
-                    | IllegalAccessException | IllegalArgumentException
-                    | InvocationTargetException ex) {
-            return null;
-        }
-    }
+//    protected Object    applyAccessor(Object inObj, Class inClass, String inAccessorName) {
+//        try {
+//            Method method = inClass.getMethod(inAccessorName, new Class[0]);
+//            return method.invoke(inObj, new Object[0]);
+//        } catch (NoSuchMethodException | SecurityException
+//                    | IllegalAccessException | IllegalArgumentException
+//                    | InvocationTargetException ex) {
+//            return null;
+//        }
+//    }
 
 
+    /**
+     * Splits the initial expression following the EL expressions and
+     * replaces every such EL expression with its value
+     * 
+     * @param inExpression
+     * @return 
+     */
     @Override
     public Object   evaluate(String inExpression) {
         Pattern         pattern     = Pattern.compile("[#$]\\{[^\\}]*\\}");
@@ -170,7 +188,7 @@ public class JSR341Evaluator implements Evaluator {
     @Override
     public void addParameter(String inName, Object inValue) {
         try {
-//            Logger.getLogger(this.getClass().getName()).log(Level.FINER, "Adding to el [" + inName + "=" + inValue + "]");
+            Logger.getLogger(this.getClass().getName()).log(Level.FINER, "Adding to el [" + inName + "=" + inValue + "]");
             processor.setValue(inName, inValue);
         }
         catch (Exception ex) {
@@ -183,9 +201,6 @@ public class JSR341Evaluator implements Evaluator {
         manager.addBeanNameResolver(inResolver);
     }
 
-//    public void defineBean(String inName, Object inValue) {
-//        
-//    }
 
 
     ELProcessor         processor   = new ELProcessor();
