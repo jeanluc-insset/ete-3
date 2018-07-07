@@ -1,5 +1,7 @@
-lexer grammar NLLexer;
+lexer grammar FrenchLexer;
 
+
+import NLLexer;
 
 
 
@@ -363,18 +365,59 @@ MOD             : 'mod';
 //============================================================================//
 
 
-FEATURE         : 'FEATURE' | 'Feature' | 'feature';
-BACKGROUND      : 'BACKGROUND' | 'Background' |'background';
+FEATURE         : 'FONCTIONNALITÉ' | 'Fonctionnalité' | 'fonctionnalité';
+BACKGROUND      : 'CONTEXTE' | 'Contexte' |'contexte';
 SCENARIO        : 'SCENARIO' | 'Scenario' | 'scenario';
-OUTLINE         : 'OUTLINE' | 'Outline' | 'outline';
+OUTLINE         : 'RÉSUMÉ' | 'Résumé' | 'résumé';
 
-GIVEN           : 'GIVEN' | 'Given' | 'given';
-WHEN            : 'WHEN' | 'When' | 'when';
-THEN            : 'THEN' | 'Then' | 'then';
-BUT             : 'BUT' | 'But' | 'but';
+GIVEN           : ETANT DONNE;
+ETANT           : 'ÉTANT' | 'Étant' | 'étant';
+DONNE           : 'DONNÉ' | 'Donné' |'donné';
+WHEN            : 'QUAND' | 'Quand' | 'quand';
+THEN            : 'ALORS' | 'Alors' | 'alors';
+BUT             : 'MAIS' | 'Mais' | 'mais';
 
-OF              : 'OF' | 'Of' | 'of';
+OF              : 'DE' | 'De' | 'de' | 'DES' | 'Des' | 'des' | 'DU' | 'Du' | 'du' | 'D\'' | 'd\'';
 
+
+
+
+
+//============================================================================//
+//                                                                            //
+//                         M I S C E L L A N E O U S                          //
+//                                                                            //
+//============================================================================//
+
+
+//
+// Additional symbols not defined in the lexical specification
+//
+
+
+ATPRE    : '@pre';
+ELLIPSIS : '...';
+
+
+INITIAL  : 'INITIAL' | 'Initial' | 'initial';
+IS       : 'IS' | 'Is' | 'is';
+NEW      : 'NEW' | 'New' | 'new';
+THE      : 'THE' | 'The' | 'the';
+THIS     : 'THIS' | 'This' | 'this';
+A        : 'A' | 'a' | 'AN' | 'An' | 'an';
+WITH     : 'WITH' | 'With' | 'with';
+
+TYPE     : 'TYPE' | 'Type' | 'type';
+KIND     : 'KIND' | 'Kind' | 'kind';
+
+AS       : 'AS'| 'As' | 'as';
+
+ORDERED  : 'ORDERED' | 'Ordered' | 'ordered';
+UNORDERED: 'UNORDERED' | 'Unordered' | 'unordered';
+
+SEQUENCE : 'SEQUENCE' | 'Sequence' | 'sequence';
+BAG      : 'BAG' | 'Bag' | 'bag';
+SET      : 'SET' | 'Set' | 'set';
 
 
 //============================================================================//
@@ -416,39 +459,11 @@ JavaLetterOrDigit
 
 //============================================================================//
 //                                                                            //
-//                         M I S C E L L A N E O U S                          //
+//                          W H I T E   S P A C E S                           //
 //                                                                            //
 //============================================================================//
 
 
-//
-// Additional symbols not defined in the lexical specification
-//
-
-
-ATPRE    : '@pre';
-ELLIPSIS : '...';
-
-
-INITIAL  : 'INITIAL' | 'Initial' | 'initial';
-IS       : 'IS' | 'Is' | 'is';
-NEW      : 'NEW' | 'New' | 'new';
-THE      : 'THE' | 'The' | 'the';
-THIS     : 'THIS' | 'This' | 'this';
-A        : 'A' | 'a' | 'AN' | 'An' | 'an';
-WITH     : 'WITH' | 'With' | 'with';
-
-TYPE     : 'TYPE' | 'Type' | 'type';
-KIND     : 'KIND' | 'Kind' | 'kind';
-
-AS       : 'AS'| 'As' | 'as';
-
-ORDERED  : 'ORDERED' | 'Ordered' | 'ordered';
-UNORDERED: 'UNORDERED' | 'Unordered' | 'unordered';
-
-SEQUENCE : 'SEQUENCE' | 'Sequence' | 'sequence';
-BAG      : 'BAG' | 'Bag' | 'bag';
-SET      : 'SET' | 'Set' | 'set';
 
 //
 // Whitespace and comments
@@ -464,3 +479,6 @@ COMMENT
 LINE_COMMENT
     :   '--' ~[\r\n]* -> skip
     ;
+
+
+

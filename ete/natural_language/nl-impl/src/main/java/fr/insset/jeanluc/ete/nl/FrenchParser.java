@@ -1,4 +1,4 @@
-// Generated from fr/insset/jeanluc/ete/nl/NLParser.g4 by ANTLR 4.5.3
+// Generated from fr/insset/jeanluc/ete/nl/FrenchParser.g4 by ANTLR 4.5.3
 package fr.insset.jeanluc.ete.nl;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
@@ -10,7 +10,7 @@ import java.util.Iterator;
 import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
-public class NLParser extends Parser {
+public class FrenchParser extends Parser {
 	static { RuntimeMetaData.checkVersion("4.5.3", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
@@ -23,10 +23,11 @@ public class NLParser extends Parser {
 		LEFT_ARROW=18, PIPE=19, GT=20, LT=21, NOT=22, TILDE=23, QUESTION=24, COLON=25, 
 		DOUBLE_COLON=26, EQUAL=27, LE=28, GE=29, NOTEQUAL=30, AND=31, OR=32, XOR=33, 
 		ADD=34, SUB=35, MUL=36, DIV=37, MOD_PERCENT=38, CARET=39, MOD=40, FEATURE=41, 
-		BACKGROUND=42, SCENARIO=43, OUTLINE=44, GIVEN=45, WHEN=46, THEN=47, BUT=48, 
-		OF=49, Identifier=50, ATPRE=51, ELLIPSIS=52, INITIAL=53, IS=54, NEW=55, 
-		THE=56, THIS=57, A=58, WITH=59, TYPE=60, KIND=61, AS=62, ORDERED=63, UNORDERED=64, 
-		SEQUENCE=65, BAG=66, SET=67, WS=68, COMMENT=69, LINE_COMMENT=70;
+		BACKGROUND=42, SCENARIO=43, OUTLINE=44, GIVEN=45, ETANT=46, DONNE=47, 
+		WHEN=48, THEN=49, BUT=50, OF=51, ATPRE=52, ELLIPSIS=53, INITIAL=54, IS=55, 
+		NEW=56, THE=57, THIS=58, A=59, WITH=60, TYPE=61, KIND=62, AS=63, ORDERED=64, 
+		UNORDERED=65, SEQUENCE=66, BAG=67, SET=68, Identifier=69, WS=70, COMMENT=71, 
+		LINE_COMMENT=72;
 	public static final int
 		RULE_nlExpression = 0, RULE_xorExpression = 1, RULE_orExpression = 2, 
 		RULE_andExpression = 3, RULE_notOrNotNotExpression = 4, RULE_notExpression = 5, 
@@ -69,7 +70,7 @@ public class NLParser extends Parser {
 		"'}'", "'['", "']'", "';'", "','", "'.'", "'->'", "'<-'", "'|'", "'>'", 
 		"'<'", "'not'", "'~'", "'?'", "':'", "'::'", "'='", "'<='", "'>='", "'<>'", 
 		"'and'", "'or'", "'xor'", "'+'", "'-'", "'*'", "'/'", "'%'", "'^'", "'mod'", 
-		null, null, null, null, null, null, null, null, null, null, "'@pre'", 
+		null, null, null, null, null, null, null, null, null, null, null, "'@pre'", 
 		"'...'"
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
@@ -79,10 +80,10 @@ public class NLParser extends Parser {
 		"PIPE", "GT", "LT", "NOT", "TILDE", "QUESTION", "COLON", "DOUBLE_COLON", 
 		"EQUAL", "LE", "GE", "NOTEQUAL", "AND", "OR", "XOR", "ADD", "SUB", "MUL", 
 		"DIV", "MOD_PERCENT", "CARET", "MOD", "FEATURE", "BACKGROUND", "SCENARIO", 
-		"OUTLINE", "GIVEN", "WHEN", "THEN", "BUT", "OF", "Identifier", "ATPRE", 
+		"OUTLINE", "GIVEN", "ETANT", "DONNE", "WHEN", "THEN", "BUT", "OF", "ATPRE", 
 		"ELLIPSIS", "INITIAL", "IS", "NEW", "THE", "THIS", "A", "WITH", "TYPE", 
-		"KIND", "AS", "ORDERED", "UNORDERED", "SEQUENCE", "BAG", "SET", "WS", 
-		"COMMENT", "LINE_COMMENT"
+		"KIND", "AS", "ORDERED", "UNORDERED", "SEQUENCE", "BAG", "SET", "Identifier", 
+		"WS", "COMMENT", "LINE_COMMENT"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -118,7 +119,7 @@ public class NLParser extends Parser {
 	}
 
 	@Override
-	public String getGrammarFileName() { return "NLParser.g4"; }
+	public String getGrammarFileName() { return "FrenchParser.g4"; }
 
 	@Override
 	public String[] getRuleNames() { return ruleNames; }
@@ -129,7 +130,7 @@ public class NLParser extends Parser {
 	@Override
 	public ATN getATN() { return _ATN; }
 
-	public NLParser(TokenStream input) {
+	public FrenchParser(TokenStream input) {
 		super(input);
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
@@ -143,15 +144,15 @@ public class NLParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_nlExpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterNlExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterNlExpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitNlExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitNlExpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitNlExpression(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitNlExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -184,9 +185,9 @@ public class NLParser extends Parser {
 		public OrExpressionContext orExpression(int i) {
 			return getRuleContext(OrExpressionContext.class,i);
 		}
-		public List<TerminalNode> XOR() { return getTokens(NLParser.XOR); }
+		public List<TerminalNode> XOR() { return getTokens(FrenchParser.XOR); }
 		public TerminalNode XOR(int i) {
-			return getToken(NLParser.XOR, i);
+			return getToken(FrenchParser.XOR, i);
 		}
 		public XorExpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -194,15 +195,15 @@ public class NLParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_xorExpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterXorExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterXorExpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitXorExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitXorExpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitXorExpression(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitXorExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -254,9 +255,9 @@ public class NLParser extends Parser {
 		public AndExpressionContext andExpression(int i) {
 			return getRuleContext(AndExpressionContext.class,i);
 		}
-		public List<TerminalNode> OR() { return getTokens(NLParser.OR); }
+		public List<TerminalNode> OR() { return getTokens(FrenchParser.OR); }
 		public TerminalNode OR(int i) {
-			return getToken(NLParser.OR, i);
+			return getToken(FrenchParser.OR, i);
 		}
 		public OrExpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -264,15 +265,15 @@ public class NLParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_orExpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterOrExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterOrExpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitOrExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitOrExpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitOrExpression(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitOrExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -324,9 +325,9 @@ public class NLParser extends Parser {
 		public NotOrNotNotExpressionContext notOrNotNotExpression(int i) {
 			return getRuleContext(NotOrNotNotExpressionContext.class,i);
 		}
-		public List<TerminalNode> AND() { return getTokens(NLParser.AND); }
+		public List<TerminalNode> AND() { return getTokens(FrenchParser.AND); }
 		public TerminalNode AND(int i) {
-			return getToken(NLParser.AND, i);
+			return getToken(FrenchParser.AND, i);
 		}
 		public AndExpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -334,15 +335,15 @@ public class NLParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_andExpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterAndExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterAndExpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitAndExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitAndExpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitAndExpression(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitAndExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -400,15 +401,15 @@ public class NLParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_notOrNotNotExpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterNotOrNotNotExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterNotOrNotNotExpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitNotOrNotNotExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitNotOrNotNotExpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitNotOrNotNotExpression(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitNotOrNotNotExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -434,11 +435,11 @@ public class NLParser extends Parser {
 			case NullLiteral:
 			case LPAREN:
 			case SUB:
-			case Identifier:
 			case THE:
 			case THIS:
 			case A:
 			case AS:
+			case Identifier:
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(147);
@@ -461,7 +462,7 @@ public class NLParser extends Parser {
 	}
 
 	public static class NotExpressionContext extends ParserRuleContext {
-		public TerminalNode NOT() { return getToken(NLParser.NOT, 0); }
+		public TerminalNode NOT() { return getToken(FrenchParser.NOT, 0); }
 		public AffirmativeExpressionContext affirmativeExpression() {
 			return getRuleContext(AffirmativeExpressionContext.class,0);
 		}
@@ -471,15 +472,15 @@ public class NLParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_notExpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterNotExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterNotExpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitNotExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitNotExpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitNotExpression(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitNotExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -529,15 +530,15 @@ public class NLParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_affirmativeExpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterAffirmativeExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterAffirmativeExpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitAffirmativeExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitAffirmativeExpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitAffirmativeExpression(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitAffirmativeExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -604,22 +605,22 @@ public class NLParser extends Parser {
 		public CompareExpressionContext compareExpression(int i) {
 			return getRuleContext(CompareExpressionContext.class,i);
 		}
-		public TerminalNode GT() { return getToken(NLParser.GT, 0); }
+		public TerminalNode GT() { return getToken(FrenchParser.GT, 0); }
 		public GreaterThanExpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_greaterThanExpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterGreaterThanExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterGreaterThanExpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitGreaterThanExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitGreaterThanExpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitGreaterThanExpression(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitGreaterThanExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -656,22 +657,22 @@ public class NLParser extends Parser {
 		public CompareExpressionContext compareExpression(int i) {
 			return getRuleContext(CompareExpressionContext.class,i);
 		}
-		public TerminalNode GE() { return getToken(NLParser.GE, 0); }
+		public TerminalNode GE() { return getToken(FrenchParser.GE, 0); }
 		public GreaterOrEqualExpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_greaterOrEqualExpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterGreaterOrEqualExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterGreaterOrEqualExpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitGreaterOrEqualExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitGreaterOrEqualExpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitGreaterOrEqualExpression(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitGreaterOrEqualExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -708,22 +709,22 @@ public class NLParser extends Parser {
 		public CompareExpressionContext compareExpression(int i) {
 			return getRuleContext(CompareExpressionContext.class,i);
 		}
-		public TerminalNode LT() { return getToken(NLParser.LT, 0); }
+		public TerminalNode LT() { return getToken(FrenchParser.LT, 0); }
 		public LessThanExpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_lessThanExpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterLessThanExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterLessThanExpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitLessThanExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitLessThanExpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitLessThanExpression(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitLessThanExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -760,22 +761,22 @@ public class NLParser extends Parser {
 		public CompareExpressionContext compareExpression(int i) {
 			return getRuleContext(CompareExpressionContext.class,i);
 		}
-		public TerminalNode LE() { return getToken(NLParser.LE, 0); }
+		public TerminalNode LE() { return getToken(FrenchParser.LE, 0); }
 		public LessOrEqualExpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_lessOrEqualExpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterLessOrEqualExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterLessOrEqualExpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitLessOrEqualExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitLessOrEqualExpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitLessOrEqualExpression(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitLessOrEqualExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -821,15 +822,15 @@ public class NLParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_compareExpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterCompareExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterCompareExpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitCompareExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitCompareExpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitCompareExpression(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitCompareExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -882,22 +883,22 @@ public class NLParser extends Parser {
 		public AddOrSubExpressionContext addOrSubExpression(int i) {
 			return getRuleContext(AddOrSubExpressionContext.class,i);
 		}
-		public TerminalNode EQUAL() { return getToken(NLParser.EQUAL, 0); }
+		public TerminalNode EQUAL() { return getToken(FrenchParser.EQUAL, 0); }
 		public EqualExpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_equalExpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterEqualExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterEqualExpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitEqualExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitEqualExpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitEqualExpression(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitEqualExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -934,22 +935,22 @@ public class NLParser extends Parser {
 		public AddOrSubExpressionContext addOrSubExpression(int i) {
 			return getRuleContext(AddOrSubExpressionContext.class,i);
 		}
-		public TerminalNode NOTEQUAL() { return getToken(NLParser.NOTEQUAL, 0); }
+		public TerminalNode NOTEQUAL() { return getToken(FrenchParser.NOTEQUAL, 0); }
 		public DifferentExpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_differentExpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterDifferentExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterDifferentExpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitDifferentExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitDifferentExpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitDifferentExpression(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitDifferentExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1001,15 +1002,15 @@ public class NLParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_addOrSubExpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterAddOrSubExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterAddOrSubExpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitAddOrSubExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitAddOrSubExpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitAddOrSubExpression(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitAddOrSubExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1066,7 +1067,7 @@ public class NLParser extends Parser {
 	}
 
 	public static class AddExpressionContext extends ParserRuleContext {
-		public TerminalNode ADD() { return getToken(NLParser.ADD, 0); }
+		public TerminalNode ADD() { return getToken(FrenchParser.ADD, 0); }
 		public MultOrDivExpressionContext multOrDivExpression() {
 			return getRuleContext(MultOrDivExpressionContext.class,0);
 		}
@@ -1076,15 +1077,15 @@ public class NLParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_addExpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterAddExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterAddExpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitAddExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitAddExpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitAddExpression(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitAddExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1113,7 +1114,7 @@ public class NLParser extends Parser {
 	}
 
 	public static class SubExpressionContext extends ParserRuleContext {
-		public TerminalNode SUB() { return getToken(NLParser.SUB, 0); }
+		public TerminalNode SUB() { return getToken(FrenchParser.SUB, 0); }
 		public MultOrDivExpressionContext multOrDivExpression() {
 			return getRuleContext(MultOrDivExpressionContext.class,0);
 		}
@@ -1123,15 +1124,15 @@ public class NLParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_subExpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterSubExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterSubExpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitSubExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitSubExpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitSubExpression(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitSubExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1187,15 +1188,15 @@ public class NLParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_multOrDivExpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterMultOrDivExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterMultOrDivExpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitMultOrDivExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitMultOrDivExpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitMultOrDivExpression(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitMultOrDivExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1258,7 +1259,7 @@ public class NLParser extends Parser {
 	}
 
 	public static class MultExpressionContext extends ParserRuleContext {
-		public TerminalNode MUL() { return getToken(NLParser.MUL, 0); }
+		public TerminalNode MUL() { return getToken(FrenchParser.MUL, 0); }
 		public OperandContext operand() {
 			return getRuleContext(OperandContext.class,0);
 		}
@@ -1268,15 +1269,15 @@ public class NLParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_multExpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterMultExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterMultExpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitMultExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitMultExpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitMultExpression(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitMultExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1305,7 +1306,7 @@ public class NLParser extends Parser {
 	}
 
 	public static class DivExpressionContext extends ParserRuleContext {
-		public TerminalNode DIV() { return getToken(NLParser.DIV, 0); }
+		public TerminalNode DIV() { return getToken(FrenchParser.DIV, 0); }
 		public OperandContext operand() {
 			return getRuleContext(OperandContext.class,0);
 		}
@@ -1315,15 +1316,15 @@ public class NLParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_divExpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterDivExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterDivExpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitDivExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitDivExpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitDivExpression(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitDivExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1352,7 +1353,7 @@ public class NLParser extends Parser {
 	}
 
 	public static class ModExpressionContext extends ParserRuleContext {
-		public TerminalNode MOD() { return getToken(NLParser.MOD, 0); }
+		public TerminalNode MOD() { return getToken(FrenchParser.MOD, 0); }
 		public OperandContext operand() {
 			return getRuleContext(OperandContext.class,0);
 		}
@@ -1362,15 +1363,15 @@ public class NLParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_modExpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterModExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterModExpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitModExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitModExpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitModExpression(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitModExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1417,15 +1418,15 @@ public class NLParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_operand; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterOperand(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterOperand(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitOperand(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitOperand(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitOperand(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitOperand(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1443,11 +1444,11 @@ public class NLParser extends Parser {
 				oppExpression();
 				}
 				break;
-			case Identifier:
 			case THE:
 			case THIS:
 			case A:
 			case AS:
+			case Identifier:
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(222);
@@ -1489,26 +1490,26 @@ public class NLParser extends Parser {
 	}
 
 	public static class ParenthesisExpressionContext extends ParserRuleContext {
-		public TerminalNode LPAREN() { return getToken(NLParser.LPAREN, 0); }
+		public TerminalNode LPAREN() { return getToken(FrenchParser.LPAREN, 0); }
 		public NlExpressionContext nlExpression() {
 			return getRuleContext(NlExpressionContext.class,0);
 		}
-		public TerminalNode RPAREN() { return getToken(NLParser.RPAREN, 0); }
+		public TerminalNode RPAREN() { return getToken(FrenchParser.RPAREN, 0); }
 		public ParenthesisExpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_parenthesisExpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterParenthesisExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterParenthesisExpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitParenthesisExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitParenthesisExpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitParenthesisExpression(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitParenthesisExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1548,9 +1549,9 @@ public class NLParser extends Parser {
 		public StepContext step(int i) {
 			return getRuleContext(StepContext.class,i);
 		}
-		public List<TerminalNode> OF() { return getTokens(NLParser.OF); }
+		public List<TerminalNode> OF() { return getTokens(FrenchParser.OF); }
 		public TerminalNode OF(int i) {
-			return getToken(NLParser.OF, i);
+			return getToken(FrenchParser.OF, i);
 		}
 		public FinalStepContext finalStep() {
 			return getRuleContext(FinalStepContext.class,0);
@@ -1561,15 +1562,15 @@ public class NLParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_navExpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterNavExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterNavExpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitNavExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitNavExpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitNavExpression(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitNavExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1646,15 +1647,15 @@ public class NLParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_step; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterStep(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterStep(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitStep(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitStep(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitStep(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitStep(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1730,15 +1731,15 @@ public class NLParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_finalStep; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterFinalStep(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterFinalStep(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitFinalStep(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitFinalStep(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitFinalStep(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitFinalStep(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1785,23 +1786,23 @@ public class NLParser extends Parser {
 	}
 
 	public static class OclIsNewContext extends ParserRuleContext {
-		public TerminalNode IS() { return getToken(NLParser.IS, 0); }
-		public TerminalNode NEW() { return getToken(NLParser.NEW, 0); }
+		public TerminalNode IS() { return getToken(FrenchParser.IS, 0); }
+		public TerminalNode NEW() { return getToken(FrenchParser.NEW, 0); }
 		public OclIsNewContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_oclIsNew; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterOclIsNew(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterOclIsNew(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitOclIsNew(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitOclIsNew(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitOclIsNew(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitOclIsNew(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1830,9 +1831,9 @@ public class NLParser extends Parser {
 	}
 
 	public static class OclIsTypeOfContext extends ParserRuleContext {
-		public TerminalNode IS() { return getToken(NLParser.IS, 0); }
-		public TerminalNode OF() { return getToken(NLParser.OF, 0); }
-		public TerminalNode TYPE() { return getToken(NLParser.TYPE, 0); }
+		public TerminalNode IS() { return getToken(FrenchParser.IS, 0); }
+		public TerminalNode OF() { return getToken(FrenchParser.OF, 0); }
+		public TerminalNode TYPE() { return getToken(FrenchParser.TYPE, 0); }
 		public NlExpressionContext nlExpression() {
 			return getRuleContext(NlExpressionContext.class,0);
 		}
@@ -1842,15 +1843,15 @@ public class NLParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_oclIsTypeOf; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterOclIsTypeOf(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterOclIsTypeOf(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitOclIsTypeOf(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitOclIsTypeOf(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitOclIsTypeOf(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitOclIsTypeOf(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1883,9 +1884,9 @@ public class NLParser extends Parser {
 	}
 
 	public static class OclIsKindOfContext extends ParserRuleContext {
-		public TerminalNode IS() { return getToken(NLParser.IS, 0); }
-		public TerminalNode OF() { return getToken(NLParser.OF, 0); }
-		public TerminalNode KIND() { return getToken(NLParser.KIND, 0); }
+		public TerminalNode IS() { return getToken(FrenchParser.IS, 0); }
+		public TerminalNode OF() { return getToken(FrenchParser.OF, 0); }
+		public TerminalNode KIND() { return getToken(FrenchParser.KIND, 0); }
 		public NlExpressionContext nlExpression() {
 			return getRuleContext(NlExpressionContext.class,0);
 		}
@@ -1895,15 +1896,15 @@ public class NLParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_oclIsKindOf; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterOclIsKindOf(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterOclIsKindOf(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitOclIsKindOf(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitOclIsKindOf(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitOclIsKindOf(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitOclIsKindOf(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1951,15 +1952,15 @@ public class NLParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_primitive; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterPrimitive(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterPrimitive(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitPrimitive(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitPrimitive(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitPrimitive(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitPrimitive(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2009,22 +2010,22 @@ public class NLParser extends Parser {
 		public IdentifierContext identifier() {
 			return getRuleContext(IdentifierContext.class,0);
 		}
-		public TerminalNode OF() { return getToken(NLParser.OF, 0); }
+		public TerminalNode OF() { return getToken(FrenchParser.OF, 0); }
 		public AttributeNavExpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_attributeNavExpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterAttributeNavExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterAttributeNavExpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitAttributeNavExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitAttributeNavExpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitAttributeNavExpression(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitAttributeNavExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2053,27 +2054,27 @@ public class NLParser extends Parser {
 	}
 
 	public static class AtPreExpressionContext extends ParserRuleContext {
-		public TerminalNode INITIAL() { return getToken(NLParser.INITIAL, 0); }
+		public TerminalNode INITIAL() { return getToken(FrenchParser.INITIAL, 0); }
 		public IdentifierContext identifier() {
 			return getRuleContext(IdentifierContext.class,0);
 		}
-		public TerminalNode THE() { return getToken(NLParser.THE, 0); }
-		public TerminalNode A() { return getToken(NLParser.A, 0); }
+		public TerminalNode THE() { return getToken(FrenchParser.THE, 0); }
+		public TerminalNode A() { return getToken(FrenchParser.A, 0); }
 		public AtPreExpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_atPreExpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterAtPreExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterAtPreExpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitAtPreExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitAtPreExpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitAtPreExpression(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitAtPreExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2110,8 +2111,8 @@ public class NLParser extends Parser {
 	}
 
 	public static class AsTypeExpressionContext extends ParserRuleContext {
-		public TerminalNode AS() { return getToken(NLParser.AS, 0); }
-		public TerminalNode TYPE() { return getToken(NLParser.TYPE, 0); }
+		public TerminalNode AS() { return getToken(FrenchParser.AS, 0); }
+		public TerminalNode TYPE() { return getToken(FrenchParser.TYPE, 0); }
 		public NlExpressionContext nlExpression() {
 			return getRuleContext(NlExpressionContext.class,0);
 		}
@@ -2121,15 +2122,15 @@ public class NLParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_asTypeExpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterAsTypeExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterAsTypeExpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitAsTypeExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitAsTypeExpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitAsTypeExpression(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitAsTypeExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2163,22 +2164,22 @@ public class NLParser extends Parser {
 		public FunctionCallContext functionCall() {
 			return getRuleContext(FunctionCallContext.class,0);
 		}
-		public TerminalNode OF() { return getToken(NLParser.OF, 0); }
+		public TerminalNode OF() { return getToken(FrenchParser.OF, 0); }
 		public MethodNavExpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_methodNavExpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterMethodNavExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterMethodNavExpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitMethodNavExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitMethodNavExpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitMethodNavExpression(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitMethodNavExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2210,22 +2211,22 @@ public class NLParser extends Parser {
 		public FunctionCallContext functionCall() {
 			return getRuleContext(FunctionCallContext.class,0);
 		}
-		public TerminalNode OF() { return getToken(NLParser.OF, 0); }
+		public TerminalNode OF() { return getToken(FrenchParser.OF, 0); }
 		public CollectionMethodNavExpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_collectionMethodNavExpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterCollectionMethodNavExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterCollectionMethodNavExpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitCollectionMethodNavExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitCollectionMethodNavExpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitCollectionMethodNavExpression(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitCollectionMethodNavExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2254,7 +2255,7 @@ public class NLParser extends Parser {
 	}
 
 	public static class VariableOrMemberContext extends ParserRuleContext {
-		public TerminalNode THE() { return getToken(NLParser.THE, 0); }
+		public TerminalNode THE() { return getToken(FrenchParser.THE, 0); }
 		public IdentifierContext identifier() {
 			return getRuleContext(IdentifierContext.class,0);
 		}
@@ -2264,15 +2265,15 @@ public class NLParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_variableOrMember; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterVariableOrMember(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterVariableOrMember(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitVariableOrMember(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitVariableOrMember(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitVariableOrMember(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitVariableOrMember(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2301,8 +2302,8 @@ public class NLParser extends Parser {
 	}
 
 	public static class VariableOrMemberAtPreContext extends ParserRuleContext {
-		public TerminalNode THE() { return getToken(NLParser.THE, 0); }
-		public TerminalNode INITIAL() { return getToken(NLParser.INITIAL, 0); }
+		public TerminalNode THE() { return getToken(FrenchParser.THE, 0); }
+		public TerminalNode INITIAL() { return getToken(FrenchParser.INITIAL, 0); }
 		public IdentifierContext identifier() {
 			return getRuleContext(IdentifierContext.class,0);
 		}
@@ -2312,15 +2313,15 @@ public class NLParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_variableOrMemberAtPre; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterVariableOrMemberAtPre(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterVariableOrMemberAtPre(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitVariableOrMemberAtPre(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitVariableOrMemberAtPre(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitVariableOrMemberAtPre(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitVariableOrMemberAtPre(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2354,26 +2355,26 @@ public class NLParser extends Parser {
 		public IdentifierContext identifier() {
 			return getRuleContext(IdentifierContext.class,0);
 		}
-		public TerminalNode LPAREN() { return getToken(NLParser.LPAREN, 0); }
+		public TerminalNode LPAREN() { return getToken(FrenchParser.LPAREN, 0); }
 		public ParameterListContext parameterList() {
 			return getRuleContext(ParameterListContext.class,0);
 		}
-		public TerminalNode RPAREN() { return getToken(NLParser.RPAREN, 0); }
+		public TerminalNode RPAREN() { return getToken(FrenchParser.RPAREN, 0); }
 		public FunctionCallContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_functionCall; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterFunctionCall(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterFunctionCall(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitFunctionCall(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitFunctionCall(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitFunctionCall(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitFunctionCall(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2409,7 +2410,7 @@ public class NLParser extends Parser {
 		public IdentifierContext identifier() {
 			return getRuleContext(IdentifierContext.class,0);
 		}
-		public TerminalNode COLON() { return getToken(NLParser.COLON, 0); }
+		public TerminalNode COLON() { return getToken(FrenchParser.COLON, 0); }
 		public TypeExpressionContext typeExpression() {
 			return getRuleContext(TypeExpressionContext.class,0);
 		}
@@ -2419,15 +2420,15 @@ public class NLParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_variableDeclarationExpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterVariableDeclarationExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterVariableDeclarationExpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitVariableDeclarationExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitVariableDeclarationExpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitVariableDeclarationExpression(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitVariableDeclarationExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2487,15 +2488,15 @@ public class NLParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_typeExpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterTypeExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterTypeExpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitTypeExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitTypeExpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitTypeExpression(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitTypeExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2557,22 +2558,22 @@ public class NLParser extends Parser {
 	}
 
 	public static class AtomicTypeExpressionContext extends ParserRuleContext {
-		public TerminalNode Identifier() { return getToken(NLParser.Identifier, 0); }
+		public TerminalNode Identifier() { return getToken(FrenchParser.Identifier, 0); }
 		public AtomicTypeExpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_atomicTypeExpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterAtomicTypeExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterAtomicTypeExpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitAtomicTypeExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitAtomicTypeExpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitAtomicTypeExpression(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitAtomicTypeExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2599,27 +2600,27 @@ public class NLParser extends Parser {
 	}
 
 	public static class SequenceTypeExpressionContext extends ParserRuleContext {
-		public TerminalNode SEQUENCE() { return getToken(NLParser.SEQUENCE, 0); }
-		public TerminalNode LPAREN() { return getToken(NLParser.LPAREN, 0); }
+		public TerminalNode SEQUENCE() { return getToken(FrenchParser.SEQUENCE, 0); }
+		public TerminalNode LPAREN() { return getToken(FrenchParser.LPAREN, 0); }
 		public TypeExpressionContext typeExpression() {
 			return getRuleContext(TypeExpressionContext.class,0);
 		}
-		public TerminalNode RPAREN() { return getToken(NLParser.RPAREN, 0); }
+		public TerminalNode RPAREN() { return getToken(FrenchParser.RPAREN, 0); }
 		public SequenceTypeExpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_sequenceTypeExpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterSequenceTypeExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterSequenceTypeExpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitSequenceTypeExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitSequenceTypeExpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitSequenceTypeExpression(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitSequenceTypeExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2652,27 +2653,27 @@ public class NLParser extends Parser {
 	}
 
 	public static class BagTypeExpressionContext extends ParserRuleContext {
-		public TerminalNode BAG() { return getToken(NLParser.BAG, 0); }
-		public TerminalNode LPAREN() { return getToken(NLParser.LPAREN, 0); }
+		public TerminalNode BAG() { return getToken(FrenchParser.BAG, 0); }
+		public TerminalNode LPAREN() { return getToken(FrenchParser.LPAREN, 0); }
 		public TypeExpressionContext typeExpression() {
 			return getRuleContext(TypeExpressionContext.class,0);
 		}
-		public TerminalNode RPAREN() { return getToken(NLParser.RPAREN, 0); }
+		public TerminalNode RPAREN() { return getToken(FrenchParser.RPAREN, 0); }
 		public BagTypeExpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_bagTypeExpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterBagTypeExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterBagTypeExpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitBagTypeExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitBagTypeExpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitBagTypeExpression(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitBagTypeExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2705,27 +2706,27 @@ public class NLParser extends Parser {
 	}
 
 	public static class SetTypeExpressionContext extends ParserRuleContext {
-		public TerminalNode SET() { return getToken(NLParser.SET, 0); }
-		public TerminalNode LPAREN() { return getToken(NLParser.LPAREN, 0); }
+		public TerminalNode SET() { return getToken(FrenchParser.SET, 0); }
+		public TerminalNode LPAREN() { return getToken(FrenchParser.LPAREN, 0); }
 		public TypeExpressionContext typeExpression() {
 			return getRuleContext(TypeExpressionContext.class,0);
 		}
-		public TerminalNode RPAREN() { return getToken(NLParser.RPAREN, 0); }
+		public TerminalNode RPAREN() { return getToken(FrenchParser.RPAREN, 0); }
 		public SetTypeExpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_setTypeExpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterSetTypeExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterSetTypeExpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitSetTypeExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitSetTypeExpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitSetTypeExpression(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitSetTypeExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2758,28 +2759,28 @@ public class NLParser extends Parser {
 	}
 
 	public static class OrderedSetTypeExpressionContext extends ParserRuleContext {
-		public TerminalNode ORDERED() { return getToken(NLParser.ORDERED, 0); }
-		public TerminalNode SET() { return getToken(NLParser.SET, 0); }
-		public TerminalNode LPAREN() { return getToken(NLParser.LPAREN, 0); }
+		public TerminalNode ORDERED() { return getToken(FrenchParser.ORDERED, 0); }
+		public TerminalNode SET() { return getToken(FrenchParser.SET, 0); }
+		public TerminalNode LPAREN() { return getToken(FrenchParser.LPAREN, 0); }
 		public TypeExpressionContext typeExpression() {
 			return getRuleContext(TypeExpressionContext.class,0);
 		}
-		public TerminalNode RPAREN() { return getToken(NLParser.RPAREN, 0); }
+		public TerminalNode RPAREN() { return getToken(FrenchParser.RPAREN, 0); }
 		public OrderedSetTypeExpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_orderedSetTypeExpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterOrderedSetTypeExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterOrderedSetTypeExpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitOrderedSetTypeExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitOrderedSetTypeExpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitOrderedSetTypeExpression(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitOrderedSetTypeExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2814,7 +2815,7 @@ public class NLParser extends Parser {
 	}
 
 	public static class OppExpressionContext extends ParserRuleContext {
-		public TerminalNode SUB() { return getToken(NLParser.SUB, 0); }
+		public TerminalNode SUB() { return getToken(FrenchParser.SUB, 0); }
 		public OperandContext operand() {
 			return getRuleContext(OperandContext.class,0);
 		}
@@ -2824,15 +2825,15 @@ public class NLParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_oppExpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterOppExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterOppExpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitOppExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitOppExpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitOppExpression(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitOppExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2861,23 +2862,23 @@ public class NLParser extends Parser {
 	}
 
 	public static class SelfExpressionContext extends ParserRuleContext {
-		public TerminalNode THIS() { return getToken(NLParser.THIS, 0); }
-		public TerminalNode Identifier() { return getToken(NLParser.Identifier, 0); }
+		public TerminalNode THIS() { return getToken(FrenchParser.THIS, 0); }
+		public TerminalNode Identifier() { return getToken(FrenchParser.Identifier, 0); }
 		public SelfExpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_selfExpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterSelfExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterSelfExpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitSelfExpression(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitSelfExpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitSelfExpression(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitSelfExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2906,23 +2907,23 @@ public class NLParser extends Parser {
 	}
 
 	public static class VariableReferenceContext extends ParserRuleContext {
-		public TerminalNode THE() { return getToken(NLParser.THE, 0); }
-		public TerminalNode Identifier() { return getToken(NLParser.Identifier, 0); }
+		public TerminalNode THE() { return getToken(FrenchParser.THE, 0); }
+		public TerminalNode Identifier() { return getToken(FrenchParser.Identifier, 0); }
 		public VariableReferenceContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_variableReference; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterVariableReference(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterVariableReference(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitVariableReference(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitVariableReference(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitVariableReference(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitVariableReference(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2957,9 +2958,9 @@ public class NLParser extends Parser {
 		public NlExpressionContext nlExpression(int i) {
 			return getRuleContext(NlExpressionContext.class,i);
 		}
-		public List<TerminalNode> COMMA() { return getTokens(NLParser.COMMA); }
+		public List<TerminalNode> COMMA() { return getTokens(FrenchParser.COMMA); }
 		public TerminalNode COMMA(int i) {
-			return getToken(NLParser.COMMA, i);
+			return getToken(FrenchParser.COMMA, i);
 		}
 		public ParameterListContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -2967,15 +2968,15 @@ public class NLParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_parameterList; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterParameterList(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterParameterList(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitParameterList(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitParameterList(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitParameterList(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitParameterList(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2996,11 +2997,11 @@ public class NLParser extends Parser {
 			case LPAREN:
 			case NOT:
 			case SUB:
-			case Identifier:
 			case THE:
 			case THIS:
 			case A:
 			case AS:
+			case Identifier:
 				enterOuterAlt(_localctx, 1);
 				{
 				{
@@ -3074,15 +3075,15 @@ public class NLParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_literal; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterLiteral(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterLiteral(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitLiteral(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitLiteral(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitLiteral(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitLiteral(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3151,22 +3152,22 @@ public class NLParser extends Parser {
 	}
 
 	public static class IdentifierContext extends ParserRuleContext {
-		public TerminalNode Identifier() { return getToken(NLParser.Identifier, 0); }
+		public TerminalNode Identifier() { return getToken(FrenchParser.Identifier, 0); }
 		public IdentifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_identifier; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterIdentifier(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterIdentifier(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitIdentifier(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitIdentifier(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitIdentifier(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitIdentifier(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3193,22 +3194,22 @@ public class NLParser extends Parser {
 	}
 
 	public static class IntegerLiteralContext extends ParserRuleContext {
-		public TerminalNode IntegerLiteral() { return getToken(NLParser.IntegerLiteral, 0); }
+		public TerminalNode IntegerLiteral() { return getToken(FrenchParser.IntegerLiteral, 0); }
 		public IntegerLiteralContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_integerLiteral; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterIntegerLiteral(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterIntegerLiteral(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitIntegerLiteral(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitIntegerLiteral(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitIntegerLiteral(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitIntegerLiteral(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3235,22 +3236,22 @@ public class NLParser extends Parser {
 	}
 
 	public static class FloatingPointLiteralContext extends ParserRuleContext {
-		public TerminalNode FloatingPointLiteral() { return getToken(NLParser.FloatingPointLiteral, 0); }
+		public TerminalNode FloatingPointLiteral() { return getToken(FrenchParser.FloatingPointLiteral, 0); }
 		public FloatingPointLiteralContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_floatingPointLiteral; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterFloatingPointLiteral(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterFloatingPointLiteral(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitFloatingPointLiteral(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitFloatingPointLiteral(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitFloatingPointLiteral(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitFloatingPointLiteral(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3277,22 +3278,22 @@ public class NLParser extends Parser {
 	}
 
 	public static class DateLiteralContext extends ParserRuleContext {
-		public TerminalNode DateLiteral() { return getToken(NLParser.DateLiteral, 0); }
+		public TerminalNode DateLiteral() { return getToken(FrenchParser.DateLiteral, 0); }
 		public DateLiteralContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_dateLiteral; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterDateLiteral(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterDateLiteral(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitDateLiteral(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitDateLiteral(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitDateLiteral(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitDateLiteral(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3319,22 +3320,22 @@ public class NLParser extends Parser {
 	}
 
 	public static class CharacterLiteralContext extends ParserRuleContext {
-		public TerminalNode CharacterLiteral() { return getToken(NLParser.CharacterLiteral, 0); }
+		public TerminalNode CharacterLiteral() { return getToken(FrenchParser.CharacterLiteral, 0); }
 		public CharacterLiteralContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_characterLiteral; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterCharacterLiteral(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterCharacterLiteral(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitCharacterLiteral(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitCharacterLiteral(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitCharacterLiteral(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitCharacterLiteral(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3361,22 +3362,22 @@ public class NLParser extends Parser {
 	}
 
 	public static class StringLiteralContext extends ParserRuleContext {
-		public TerminalNode StringLiteral() { return getToken(NLParser.StringLiteral, 0); }
+		public TerminalNode StringLiteral() { return getToken(FrenchParser.StringLiteral, 0); }
 		public StringLiteralContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_stringLiteral; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterStringLiteral(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterStringLiteral(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitStringLiteral(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitStringLiteral(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitStringLiteral(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitStringLiteral(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3403,22 +3404,22 @@ public class NLParser extends Parser {
 	}
 
 	public static class NullLiteralContext extends ParserRuleContext {
-		public TerminalNode NullLiteral() { return getToken(NLParser.NullLiteral, 0); }
+		public TerminalNode NullLiteral() { return getToken(FrenchParser.NullLiteral, 0); }
 		public NullLiteralContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_nullLiteral; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).enterNullLiteral(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).enterNullLiteral(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof NLParserListener ) ((NLParserListener)listener).exitNullLiteral(this);
+			if ( listener instanceof FrenchParserListener ) ((FrenchParserListener)listener).exitNullLiteral(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof NLParserVisitor ) return ((NLParserVisitor<? extends T>)visitor).visitNullLiteral(this);
+			if ( visitor instanceof FrenchParserVisitor ) return ((FrenchParserVisitor<? extends T>)visitor).visitNullLiteral(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3445,7 +3446,7 @@ public class NLParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3H\u017f\4\2\t\2\4"+
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3J\u017f\4\2\t\2\4"+
 		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
 		"\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22"+
 		"\4\23\t\23\4\24\t\24\4\25\t\25\4\26\t\26\4\27\t\27\4\30\t\30\4\31\t\31"+
@@ -3472,7 +3473,7 @@ public class NLParser extends Parser {
 		"\62\f\62\16\62\u0163\13\62\3\62\3\62\5\62\u0167\n\62\3\63\3\63\3\63\3"+
 		"\63\3\63\3\63\5\63\u016f\n\63\3\64\3\64\3\65\3\65\3\66\3\66\3\67\3\67"+
 		"\38\38\39\39\3:\3:\3:\2\2;\2\4\6\b\n\f\16\20\22\24\26\30\32\34\36 \"$"+
-		"&(*,.\60\62\64\668:<>@BDFHJLNPRTVXZ\\^`bdfhjlnpr\2\3\4\2::<<\u016d\2t"+
+		"&(*,.\60\62\64\668:<>@BDFHJLNPRTVXZ\\^`bdfhjlnpr\2\3\4\2;;==\u016d\2t"+
 		"\3\2\2\2\4{\3\2\2\2\6\u0085\3\2\2\2\b\u008f\3\2\2\2\n\u0096\3\2\2\2\f"+
 		"\u0098\3\2\2\2\16\u00a0\3\2\2\2\20\u00a2\3\2\2\2\22\u00a6\3\2\2\2\24\u00aa"+
 		"\3\2\2\2\26\u00ae\3\2\2\2\30\u00b5\3\2\2\2\32\u00b7\3\2\2\2\34\u00bb\3"+
@@ -3521,7 +3522,7 @@ public class NLParser extends Parser {
 		"\u00e4\5\60\31\2\u00e1\u00e4\5d\63\2\u00e2\u00e4\5.\30\2\u00e3\u00df\3"+
 		"\2\2\2\u00e3\u00e0\3\2\2\2\u00e3\u00e1\3\2\2\2\u00e3\u00e2\3\2\2\2\u00e4"+
 		"-\3\2\2\2\u00e5\u00e6\7\t\2\2\u00e6\u00e7\5\2\2\2\u00e7\u00e8\7\n\2\2"+
-		"\u00e8/\3\2\2\2\u00e9\u00ea\5\62\32\2\u00ea\u00eb\7\63\2\2\u00eb\u00ed"+
+		"\u00e8/\3\2\2\2\u00e9\u00ea\5\62\32\2\u00ea\u00eb\7\65\2\2\u00eb\u00ed"+
 		"\3\2\2\2\u00ec\u00e9\3\2\2\2\u00ed\u00f0\3\2\2\2\u00ee\u00ec\3\2\2\2\u00ee"+
 		"\u00ef\3\2\2\2\u00ef\u00f1\3\2\2\2\u00f0\u00ee\3\2\2\2\u00f1\u00f3\5<"+
 		"\37\2\u00f2\u00f4\5\64\33\2\u00f3\u00f2\3\2\2\2\u00f3\u00f4\3\2\2\2\u00f4"+
@@ -3530,45 +3531,45 @@ public class NLParser extends Parser {
 		"\u00fa\u00f7\3\2\2\2\u00fa\u00f8\3\2\2\2\u00fa\u00f9\3\2\2\2\u00fb\63"+
 		"\3\2\2\2\u00fc\u0100\5\66\34\2\u00fd\u0100\58\35\2\u00fe\u0100\5:\36\2"+
 		"\u00ff\u00fc\3\2\2\2\u00ff\u00fd\3\2\2\2\u00ff\u00fe\3\2\2\2\u0100\65"+
-		"\3\2\2\2\u0101\u0102\78\2\2\u0102\u0103\79\2\2\u0103\67\3\2\2\2\u0104"+
-		"\u0105\78\2\2\u0105\u0106\7\63\2\2\u0106\u0107\7>\2\2\u0107\u0108\5\2"+
-		"\2\2\u01089\3\2\2\2\u0109\u010a\78\2\2\u010a\u010b\7\63\2\2\u010b\u010c"+
-		"\7?\2\2\u010c\u010d\5\2\2\2\u010d;\3\2\2\2\u010e\u0112\5^\60\2\u010f\u0112"+
+		"\3\2\2\2\u0101\u0102\79\2\2\u0102\u0103\7:\2\2\u0103\67\3\2\2\2\u0104"+
+		"\u0105\79\2\2\u0105\u0106\7\65\2\2\u0106\u0107\7?\2\2\u0107\u0108\5\2"+
+		"\2\2\u01089\3\2\2\2\u0109\u010a\79\2\2\u010a\u010b\7\65\2\2\u010b\u010c"+
+		"\7@\2\2\u010c\u010d\5\2\2\2\u010d;\3\2\2\2\u010e\u0112\5^\60\2\u010f\u0112"+
 		"\5H%\2\u0110\u0112\5J&\2\u0111\u010e\3\2\2\2\u0111\u010f\3\2\2\2\u0111"+
-		"\u0110\3\2\2\2\u0112=\3\2\2\2\u0113\u0114\5f\64\2\u0114\u0115\7\63\2\2"+
-		"\u0115?\3\2\2\2\u0116\u0117\t\2\2\2\u0117\u0118\7\67\2\2\u0118\u0119\5"+
-		"f\64\2\u0119A\3\2\2\2\u011a\u011b\7@\2\2\u011b\u011c\7>\2\2\u011c\u011d"+
-		"\5\2\2\2\u011dC\3\2\2\2\u011e\u011f\5L\'\2\u011f\u0120\7\63\2\2\u0120"+
-		"E\3\2\2\2\u0121\u0122\5L\'\2\u0122\u0123\7\63\2\2\u0123G\3\2\2\2\u0124"+
-		"\u0125\7:\2\2\u0125\u0126\5f\64\2\u0126I\3\2\2\2\u0127\u0128\7:\2\2\u0128"+
-		"\u0129\7\67\2\2\u0129\u012a\5f\64\2\u012aK\3\2\2\2\u012b\u012c\5f\64\2"+
-		"\u012c\u012d\7\t\2\2\u012d\u012e\5b\62\2\u012e\u012f\7\n\2\2\u012fM\3"+
-		"\2\2\2\u0130\u0133\5f\64\2\u0131\u0132\7\33\2\2\u0132\u0134\5P)\2\u0133"+
-		"\u0131\3\2\2\2\u0133\u0134\3\2\2\2\u0134O\3\2\2\2\u0135\u013b\5R*\2\u0136"+
-		"\u013b\5T+\2\u0137\u013b\5V,\2\u0138\u013b\5X-\2\u0139\u013b\5Z.\2\u013a"+
-		"\u0135\3\2\2\2\u013a\u0136\3\2\2\2\u013a\u0137\3\2\2\2\u013a\u0138\3\2"+
-		"\2\2\u013a\u0139\3\2\2\2\u013bQ\3\2\2\2\u013c\u013d\7\64\2\2\u013dS\3"+
-		"\2\2\2\u013e\u013f\7C\2\2\u013f\u0140\7\t\2\2\u0140\u0141\5P)\2\u0141"+
-		"\u0142\7\n\2\2\u0142U\3\2\2\2\u0143\u0144\7D\2\2\u0144\u0145\7\t\2\2\u0145"+
-		"\u0146\5P)\2\u0146\u0147\7\n\2\2\u0147W\3\2\2\2\u0148\u0149\7E\2\2\u0149"+
-		"\u014a\7\t\2\2\u014a\u014b\5P)\2\u014b\u014c\7\n\2\2\u014cY\3\2\2\2\u014d"+
-		"\u014e\7A\2\2\u014e\u014f\7E\2\2\u014f\u0150\7\t\2\2\u0150\u0151\5P)\2"+
-		"\u0151\u0152\7\n\2\2\u0152[\3\2\2\2\u0153\u0154\7%\2\2\u0154\u0155\5,"+
-		"\27\2\u0155]\3\2\2\2\u0156\u0157\7;\2\2\u0157\u0158\7\64\2\2\u0158_\3"+
-		"\2\2\2\u0159\u015a\7:\2\2\u015a\u015b\7\64\2\2\u015ba\3\2\2\2\u015c\u015d"+
-		"\5\2\2\2\u015d\u015e\7\21\2\2\u015e\u0160\3\2\2\2\u015f\u015c\3\2\2\2"+
-		"\u0160\u0163\3\2\2\2\u0161\u015f\3\2\2\2\u0161\u0162\3\2\2\2\u0162\u0164"+
-		"\3\2\2\2\u0163\u0161\3\2\2\2\u0164\u0167\5\2\2\2\u0165\u0167\3\2\2\2\u0166"+
-		"\u0161\3\2\2\2\u0166\u0165\3\2\2\2\u0167c\3\2\2\2\u0168\u016f\5h\65\2"+
-		"\u0169\u016f\5j\66\2\u016a\u016f\5l\67\2\u016b\u016f\5n8\2\u016c\u016f"+
-		"\5p9\2\u016d\u016f\5r:\2\u016e\u0168\3\2\2\2\u016e\u0169\3\2\2\2\u016e"+
-		"\u016a\3\2\2\2\u016e\u016b\3\2\2\2\u016e\u016c\3\2\2\2\u016e\u016d\3\2"+
-		"\2\2\u016fe\3\2\2\2\u0170\u0171\7\64\2\2\u0171g\3\2\2\2\u0172\u0173\7"+
-		"\3\2\2\u0173i\3\2\2\2\u0174\u0175\7\4\2\2\u0175k\3\2\2\2\u0176\u0177\7"+
-		"\5\2\2\u0177m\3\2\2\2\u0178\u0179\7\6\2\2\u0179o\3\2\2\2\u017a\u017b\7"+
-		"\7\2\2\u017bq\3\2\2\2\u017c\u017d\7\b\2\2\u017ds\3\2\2\2\27{\u0085\u008f"+
-		"\u0096\u00a0\u00b5\u00c2\u00c4\u00d1\u00d3\u00e3\u00ee\u00f3\u00fa\u00ff"+
-		"\u0111\u0133\u013a\u0161\u0166\u016e";
+		"\u0110\3\2\2\2\u0112=\3\2\2\2\u0113\u0114\5f\64\2\u0114\u0115\7\65\2\2"+
+		"\u0115?\3\2\2\2\u0116\u0117\t\2\2\2\u0117\u0118\78\2\2\u0118\u0119\5f"+
+		"\64\2\u0119A\3\2\2\2\u011a\u011b\7A\2\2\u011b\u011c\7?\2\2\u011c\u011d"+
+		"\5\2\2\2\u011dC\3\2\2\2\u011e\u011f\5L\'\2\u011f\u0120\7\65\2\2\u0120"+
+		"E\3\2\2\2\u0121\u0122\5L\'\2\u0122\u0123\7\65\2\2\u0123G\3\2\2\2\u0124"+
+		"\u0125\7;\2\2\u0125\u0126\5f\64\2\u0126I\3\2\2\2\u0127\u0128\7;\2\2\u0128"+
+		"\u0129\78\2\2\u0129\u012a\5f\64\2\u012aK\3\2\2\2\u012b\u012c\5f\64\2\u012c"+
+		"\u012d\7\t\2\2\u012d\u012e\5b\62\2\u012e\u012f\7\n\2\2\u012fM\3\2\2\2"+
+		"\u0130\u0133\5f\64\2\u0131\u0132\7\33\2\2\u0132\u0134\5P)\2\u0133\u0131"+
+		"\3\2\2\2\u0133\u0134\3\2\2\2\u0134O\3\2\2\2\u0135\u013b\5R*\2\u0136\u013b"+
+		"\5T+\2\u0137\u013b\5V,\2\u0138\u013b\5X-\2\u0139\u013b\5Z.\2\u013a\u0135"+
+		"\3\2\2\2\u013a\u0136\3\2\2\2\u013a\u0137\3\2\2\2\u013a\u0138\3\2\2\2\u013a"+
+		"\u0139\3\2\2\2\u013bQ\3\2\2\2\u013c\u013d\7G\2\2\u013dS\3\2\2\2\u013e"+
+		"\u013f\7D\2\2\u013f\u0140\7\t\2\2\u0140\u0141\5P)\2\u0141\u0142\7\n\2"+
+		"\2\u0142U\3\2\2\2\u0143\u0144\7E\2\2\u0144\u0145\7\t\2\2\u0145\u0146\5"+
+		"P)\2\u0146\u0147\7\n\2\2\u0147W\3\2\2\2\u0148\u0149\7F\2\2\u0149\u014a"+
+		"\7\t\2\2\u014a\u014b\5P)\2\u014b\u014c\7\n\2\2\u014cY\3\2\2\2\u014d\u014e"+
+		"\7B\2\2\u014e\u014f\7F\2\2\u014f\u0150\7\t\2\2\u0150\u0151\5P)\2\u0151"+
+		"\u0152\7\n\2\2\u0152[\3\2\2\2\u0153\u0154\7%\2\2\u0154\u0155\5,\27\2\u0155"+
+		"]\3\2\2\2\u0156\u0157\7<\2\2\u0157\u0158\7G\2\2\u0158_\3\2\2\2\u0159\u015a"+
+		"\7;\2\2\u015a\u015b\7G\2\2\u015ba\3\2\2\2\u015c\u015d\5\2\2\2\u015d\u015e"+
+		"\7\21\2\2\u015e\u0160\3\2\2\2\u015f\u015c\3\2\2\2\u0160\u0163\3\2\2\2"+
+		"\u0161\u015f\3\2\2\2\u0161\u0162\3\2\2\2\u0162\u0164\3\2\2\2\u0163\u0161"+
+		"\3\2\2\2\u0164\u0167\5\2\2\2\u0165\u0167\3\2\2\2\u0166\u0161\3\2\2\2\u0166"+
+		"\u0165\3\2\2\2\u0167c\3\2\2\2\u0168\u016f\5h\65\2\u0169\u016f\5j\66\2"+
+		"\u016a\u016f\5l\67\2\u016b\u016f\5n8\2\u016c\u016f\5p9\2\u016d\u016f\5"+
+		"r:\2\u016e\u0168\3\2\2\2\u016e\u0169\3\2\2\2\u016e\u016a\3\2\2\2\u016e"+
+		"\u016b\3\2\2\2\u016e\u016c\3\2\2\2\u016e\u016d\3\2\2\2\u016fe\3\2\2\2"+
+		"\u0170\u0171\7G\2\2\u0171g\3\2\2\2\u0172\u0173\7\3\2\2\u0173i\3\2\2\2"+
+		"\u0174\u0175\7\4\2\2\u0175k\3\2\2\2\u0176\u0177\7\5\2\2\u0177m\3\2\2\2"+
+		"\u0178\u0179\7\6\2\2\u0179o\3\2\2\2\u017a\u017b\7\7\2\2\u017bq\3\2\2\2"+
+		"\u017c\u017d\7\b\2\2\u017ds\3\2\2\2\27{\u0085\u008f\u0096\u00a0\u00b5"+
+		"\u00c2\u00c4\u00d1\u00d3\u00e3\u00ee\u00f3\u00fa\u00ff\u0111\u0133\u013a"+
+		"\u0161\u0166\u016e";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

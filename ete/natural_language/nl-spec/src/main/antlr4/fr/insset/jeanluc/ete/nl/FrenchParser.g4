@@ -1,9 +1,9 @@
-parser grammar NLParser;
+parser grammar FrenchParser;
 
-
+import NLParser;
 
 options {
-    tokenVocab = NLLexer;
+    tokenVocab = FrenchLexer;
 }
 
 

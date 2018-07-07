@@ -3,25 +3,15 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>fr.insset.jeanluc</groupId>
-        <artifactId>ete</artifactId>
+        <artifactId>natural_language</artifactId>
         <version>3.1</version>
     </parent>
-    <artifactId>natural_language</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>nl-spec</module>
-        <module>nl-impl</module>
-    </modules>
+    <artifactId>nl-impl</artifactId>
+    <packaging>jar</packaging>
     <dependencies>
         <dependency>
-            <groupId>fr.insset.jeanluc</groupId>
-            <artifactId>gel-impl</artifactId>
-            <version>3.1</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>gel-api</artifactId>
+            <artifactId>nl-api</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

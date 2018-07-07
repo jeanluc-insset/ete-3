@@ -7,17 +7,14 @@ lexer grammar NLLexer;
 //                                  L E X E R                                 //
 //============================================================================//
 //                                                                            //
-// This lexer is the default lexer for any natural language                   //
-//                                                                            //
-// It is a Java lexer borrowed from antlr documentation.                      //
+// This lexer is a Java lexer borrowed from antlr documentation.              //
 // The paragraph numbers reference the original grammar                       //
 //                                                                            //
 //============================================================================//
 //                                                                            //
-// The lexer must get rid of words such as "the", "a", "an".                  //
-// On the other hand, "this" denotes the contextual object, such as in        //
-// "the captain of this flight must be certified for the plane model of the   //
-// plane of this flight"                                                      //
+// The lexer returns a sequence of words and numbers.                         //
+// The TreeBuilder must get rid of non signficative words and detect          //
+// navigation sequences, verbs and literals                                   //
 //                                                                            //
 //============================================================================//
 
@@ -223,10 +220,11 @@ BinaryExponentIndicator
 
 // §3.10.3 Boolean Literals
 
-// BooleanLiteral
-//    :   'true'
-//    |   'false'
-//    ;
+
+BooleanLiteral
+    :   'true'
+    |   'false'
+    ;
 
 
 // Added by JL
@@ -354,8 +352,6 @@ MOD_PERCENT     : '%';
 CARET           : '^';
 MOD             : 'mod';
 
-
-
 //============================================================================//
 //                                                                            //
 //                         R E S E R V E D   W O R D S                        //
@@ -363,17 +359,18 @@ MOD             : 'mod';
 //============================================================================//
 
 
-FEATURE         : 'FEATURE' | 'Feature' | 'feature';
-BACKGROUND      : 'BACKGROUND' | 'Background' |'background';
-SCENARIO        : 'SCENARIO' | 'Scenario' | 'scenario';
-OUTLINE         : 'OUTLINE' | 'Outline' | 'outline';
+FEATURE         : 'Feature';
+BACKGROUND      : 'Background';
+SCENARIO        : 'Scenario';
+OUTLINE         : 'Outline';
 
-GIVEN           : 'GIVEN' | 'Given' | 'given';
-WHEN            : 'WHEN' | 'When' | 'when';
-THEN            : 'THEN' | 'Then' | 'then';
-BUT             : 'BUT' | 'But' | 'but';
+GIVEN           : 'Given';
+WHEN            : 'When';
+THEN            : 'Then';
+BUT             : 'But';
 
-OF              : 'OF' | 'Of' | 'of';
+OF              : 'of';
+
 
 
 
@@ -425,30 +422,9 @@ JavaLetterOrDigit
 // Additional symbols not defined in the lexical specification
 //
 
-
+// AT       : '@';
 ATPRE    : '@pre';
 ELLIPSIS : '...';
-
-
-INITIAL  : 'INITIAL' | 'Initial' | 'initial';
-IS       : 'IS' | 'Is' | 'is';
-NEW      : 'NEW' | 'New' | 'new';
-THE      : 'THE' | 'The' | 'the';
-THIS     : 'THIS' | 'This' | 'this';
-A        : 'A' | 'a' | 'AN' | 'An' | 'an';
-WITH     : 'WITH' | 'With' | 'with';
-
-TYPE     : 'TYPE' | 'Type' | 'type';
-KIND     : 'KIND' | 'Kind' | 'kind';
-
-AS       : 'AS'| 'As' | 'as';
-
-ORDERED  : 'ORDERED' | 'Ordered' | 'ordered';
-UNORDERED: 'UNORDERED' | 'Unordered' | 'unordered';
-
-SEQUENCE : 'SEQUENCE' | 'Sequence' | 'sequence';
-BAG      : 'BAG' | 'Bag' | 'bag';
-SET      : 'SET' | 'Set' | 'set';
 
 //
 // Whitespace and comments

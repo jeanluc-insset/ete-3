@@ -1,4 +1,4 @@
-lexer grammar NLLexer;
+lexer grammar CucumberLexer;
 
 
 

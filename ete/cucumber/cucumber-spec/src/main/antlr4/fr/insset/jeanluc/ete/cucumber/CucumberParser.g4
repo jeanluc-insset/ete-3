@@ -3,7 +3,7 @@ parser grammar CucumberParser;
 
 
 options {
-    tokenVocab = CucUmberLexer;
+    tokenVocab = CucumberLexer;
 }
 
 

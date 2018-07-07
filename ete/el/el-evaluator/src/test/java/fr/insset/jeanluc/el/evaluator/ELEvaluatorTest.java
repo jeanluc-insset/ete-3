@@ -254,19 +254,27 @@ public class ELEvaluatorTest {
         assertEquals(dialect, result);
     }
 
+    @Test
+    public void testI2uc() {
+        System.out.println("dialect : i2uc");
+        Object      dialect = new BasicJavaDialect();
+        instance.addParameter(DIALECT, dialect);
+        Object result = instance.evaluate("${dialect.i2uc(\"hello\")}");
+        assertEquals("Hello", result);
+    }
 
     @Test
     public void testQualifiedName() {
-        System.out.println(DIALECT);
+        System.out.println("qualified name");
         Object      dialect = new BasicJavaDialect();
-        instance.addParameter(DIALECT, dialect);
+//        instance.addParameter(DIALECT, dialect);
         Object result = instance.evaluate("${choice.getQualifiedName()}");
         assertEquals("model::sub1::sub2::Choice", result);        
     }
 
     @Test
     public void testDialectQualifiedName() {
-        System.out.println(DIALECT);
+        System.out.println("dialect : qualified name");
         Object      dialect = new BasicJavaDialect();
         instance.addParameter(DIALECT, dialect);
         Object result = instance.evaluate("${dialect.getQualifiedName(choice)}");
