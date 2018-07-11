@@ -1,0 +1,25 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<mda>
+
+    <!--
+        This module receives the ${symbol_dollar}{projectname} parameter.
+      -->
+
+    <transformation-set output_base="${symbol_dollar}{projectname}/src/test/java/">
+
+        <velocity template="test.vm"
+                target="fr/insset/jea${parentArtifactId}uc/ete/gel/impl/GelTest.java"/>
+        <velocity template="evaluator.vm"
+                dialect="${groupId}.el.dialect.BasicJavaDialect"
+                target="fr/insset/jea${parentArtifactId}uc/gel/impl/GelEvaluator.java"/>
+    </transformation-set>
+
+</mda>
+
+
+

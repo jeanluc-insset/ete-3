@@ -125,3 +125,9 @@
 /archetypes/language-archetype/target/
 /archetypes/lang-archetype/target/
 /ete/natural_language/nl-impl/target/
+/ete/nl/nl-api/target/
+/ete/nl/nl-impl/target/
+/ete/nl/nl-spec/target/
+/ete/nl/target/
+/archetypes/language/target/
+/archetypes/ete-constraint-natural-language-archetype/target/

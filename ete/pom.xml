@@ -20,7 +20,7 @@
         <module>defs</module>
         <module>methodeb</module>
         <module>cucumber</module>
-        <module>natural_language</module>
     <module>tutu</module>
-  </modules>
+        <module>nl</module>
+    </modules>
 </project>

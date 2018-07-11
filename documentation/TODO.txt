@@ -3,9 +3,14 @@
 Infrastructure
     - default naming
     - generation of "queries"
-    - use of OCL defined functions
+    - OCL custom functions
+        - definition
+        - usage
     - full support of OCL
+    - external OCL files
     - derived properties
+    - other constraint language
+    - XMI output
 
 Projects
     - Ete 4.0
@@ -31,13 +36,22 @@ Dialects
     - JavaScript
     - TypeScript
 
-Miscellaneous
-    - Cucumber / Natural language
-    - archetypes
-        - OK JSF some little cosmetic bugs with Ajax. Bidirectional associations
-            are not handled at all. Composition is not perfect
-        - React
-        - microservices
+Archetyoes
+    X JSF some little cosmetic bugs with Ajax. Bidirectional associations
+        are not handled at all. Composition is not perfect
+    - React
+    - microservices
+    - custom natural language
+
+Documentation
     - User Manual
     - Developper Manual
 
+Examples
+    X airways : webapp Java, JSF + JPA
+    X bank : webapp Java, OCL
+    X linked list : C library, OCL
+    - airways strike back : WASM, RUST
+    - Meteo : webapp Java, SVG, JS, undo, OCL
+
+Miscellaneous
