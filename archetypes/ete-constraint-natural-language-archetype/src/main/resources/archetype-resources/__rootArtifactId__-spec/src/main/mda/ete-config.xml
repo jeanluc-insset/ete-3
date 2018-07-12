@@ -14,13 +14,11 @@
           - The context parameter specifies which context to use when
           - resolving an identifier
         -->
-        <transformation-set output_base="../../"
-                            projectName="${parentArtifactId}"
+        <transformation-set projectName="${parentArtifactId}"
                             context="mof">
 
-                    <!--API and default implementation generation--> 
             <velocity template="modules/impl/java/tree-builder.vm"
-                target="${rootArtifactId}-impl/target/generated-sources/${package}/impl/${symbol_dollar}{dialect.i2uc(projectName)}TreeBuilder.java"/>
+                target="generated-sources/${rootArtifactId}/${package}/impl/${symbol_dollar}{dialect.i2uc(projectName)}TreeBuilder.java"/>
 
         </transformation-set>
 

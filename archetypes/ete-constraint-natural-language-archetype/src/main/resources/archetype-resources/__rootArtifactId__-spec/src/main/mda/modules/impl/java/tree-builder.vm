@@ -19,40 +19,62 @@ package ${package}.impl;
 
 
 
+
+
+import fr.insset.jeanluc.ete.gel.GelExpression;
+import fr.insset.jeanluc.ete.gel.Step;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 import fr.insset.jeanluc.ete.meta.model.emof.MofParameter;
-import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.MofPackage;
-import fr.insset.jeanluc.ete.meta.model.mofpackage.PackageableElement;
 import fr.insset.jeanluc.ete.meta.model.types.Classifier;
-import fr.insset.jeanluc.ete.meta.model.types.MofType;
 import fr.insset.jeanluc.ete.meta.model.types.TypedElement;
-import fr.insset.jeanluc.ete.meta.model.types.collections.MofCollection;
-import fr.insset.jeanluc.gel.GelParser;
-import fr.insset.jeanluc.gel.GelParserBaseVisitor;
-import fr.insset.jeanluc.gel.CollectionOperationExpression;
-import fr.insset.jeanluc.gel.GelExpression;
-import fr.insset.jeanluc.gel.Literal;
-import fr.insset.jeanluc.gel.Navigable;
-import fr.insset.jeanluc.gel.Navigation;
-// import static fr.insset.jeanluc.gel.api.Navigation.NAVIGATION;
-import fr.insset.jeanluc.gel.Operation;
-import fr.insset.jeanluc.gel.Self;
-import fr.insset.jeanluc.gel.VariableDefinition;
-import fr.insset.jeanluc.gel.VariableReference;
-import fr.insset.jeanluc.gel.impl.*;
-import fr.insset.jeanluc.util.factory.FactoryRegistry;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import fr.insset.jeanluc.ete.gel.VariableDefinition;
+import fr.insset.jeanluc.ete.gel.VariableReference;
+import fr.insset.jeanluc.ete.gel.impl.AddImpl;
+import fr.insset.jeanluc.ete.gel.impl.AndImpl;
+import fr.insset.jeanluc.ete.gel.impl.AtPreImpl;
+import fr.insset.jeanluc.ete.gel.impl.AttributeNavImpl;
+import fr.insset.jeanluc.ete.gel.impl.AverageImpl;
+import fr.insset.jeanluc.ete.gel.impl.BooleanLiteralImpl;
+import fr.insset.jeanluc.ete.gel.impl.CollectImpl;
+import fr.insset.jeanluc.ete.gel.impl.CollectionMethodNavImpl;
+import fr.insset.jeanluc.ete.gel.impl.DateLiteralImpl;
+import fr.insset.jeanluc.ete.gel.impl.DifferentImpl;
+import fr.insset.jeanluc.ete.gel.impl.DivImpl;
+import fr.insset.jeanluc.ete.gel.impl.EqualImpl;
+import fr.insset.jeanluc.ete.gel.impl.ExcludesImpl;
+import fr.insset.jeanluc.ete.gel.impl.FlatCollectImpl;
+import fr.insset.jeanluc.ete.gel.impl.FlattenImpl;
+import fr.insset.jeanluc.ete.gel.impl.FloatingPointLiteralImpl;
+import fr.insset.jeanluc.ete.gel.impl.GreaterOrEqualImpl;
+import fr.insset.jeanluc.ete.gel.impl.GreaterThanImpl;
+import fr.insset.jeanluc.ete.gel.impl.IncludesImpl;
+import fr.insset.jeanluc.ete.gel.impl.IntegerLiteralImpl;
+import fr.insset.jeanluc.ete.gel.impl.IsNewImpl;
+import fr.insset.jeanluc.ete.gel.impl.LambdaImpl;
+import fr.insset.jeanluc.ete.gel.impl.LessOrEqualImpl;
+import fr.insset.jeanluc.ete.gel.impl.LessThanImpl;
+import fr.insset.jeanluc.ete.gel.impl.MethodNavImpl;
+import fr.insset.jeanluc.ete.gel.impl.ModImpl;
+import fr.insset.jeanluc.ete.gel.impl.MultImpl;
+import fr.insset.jeanluc.ete.gel.impl.NotImpl;
+import fr.insset.jeanluc.ete.gel.impl.OppImpl;
+import fr.insset.jeanluc.ete.gel.impl.OrImpl;
+import fr.insset.jeanluc.ete.gel.impl.ResultImpl;
+import fr.insset.jeanluc.ete.gel.impl.SelectImpl;
+import fr.insset.jeanluc.ete.gel.impl.SelfImpl;
+import fr.insset.jeanluc.ete.gel.impl.StringLiteralImpl;
+import fr.insset.jeanluc.ete.gel.impl.SubImpl;
+import fr.insset.jeanluc.ete.gel.impl.SumImpl;
+import fr.insset.jeanluc.ete.gel.impl.VariableDefinitionImpl;
+import fr.insset.jeanluc.ete.gel.impl.VariableReferenceImpl;
+import fr.insset.jeanluc.ete.gel.impl.XorImpl;import fr.insset.jeanluc.util.factory.FactoryRegistry;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.Generated;
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.RuleNode;
+import ${package}.esperantoParser;
+
 
 
 /**
@@ -69,7 +91,7 @@ GelExpression        abstractExpression = treeBuilder.visitGelExpression(ctx);
  *
  */
 @Generated("ete - jean-luc@insset.fr  modules/maven-project/gel-impl/java/tree-builder.vm")
-public class ${dollar_symbol}{dialect.i2uc(${dollar_symbol}projectName)}TreeBuilder extends ${dollar_symbol}{projectName}ParserBaseVisitor<GelExpression> {
+public class ${dollar_symbol}{dialect.i2uc(${dollar_symbol}projectName)}TreeBuilder extends ${package}.${dollar_symbol}{projectName}ParserBaseVisitor<GelExpression> {
 
 
 
@@ -106,16 +128,16 @@ ${symbol_pound}elseif (${symbol_dollar}{aClass.getValueOf("symbol")})
 ${symbol_pound}end
 ${symbol_pound}end
         registry.registerDefaultFactory("self", SelfImpl.class);
-        registry.registerDefaultFactory("Navigation", NavigationImpl.class);
-        registry.registerDefaultFactory(CollectionOperationExpression.class, CollectionOperationExpressionImpl.class);
+//        registry.registerDefaultFactory("Navigation", NavigationImpl.class);
+//        registry.registerDefaultFactory(CollectionOperationExpression.class, CollectionOperationExpressionImpl.class);
         registry.registerDefaultFactory(VariableReference.class, VariableReferenceImpl.class);
     }
 
 
     @Override
-    public GelExpression visitGelExpression(GelParser.GelExpressionContext ctx) {
+    public GelExpression visitNlExpression(${rootArtifactId}Parser.NlExpressionContext ctx) {
         navigable = new Stack<>();
-        return super.visitGelExpression(ctx); //To change body of generated methods, choose Tools | Templates.
+        return super.visitNlExpression(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
 
@@ -137,7 +159,7 @@ ${symbol_pound}end
      */
     private     Stack<Classifier>                       contextClass = new Stack<>();
 
-    private     Stack<Navigable>                        navigable;
+    private     Stack<Step>                             navigable;
 
     private     Map<String, VariableDefinition>         variables = new HashMap<>();
 

@@ -76,7 +76,7 @@
                     <visitor>true</visitor>
                     <listener>true</listener>
                     <sourceDirectory>${basedir}/src/main/antlr4</sourceDirectory>
-                    <outputDirectory>${basedir}/../${rootArtifactId}-impl/src/main/java</outputDirectory>
+                    <outputDirectory>${basedir}/target/generated-sources/antlr4</outputDirectory>
                 </configuration>
                 <executions>
                     <execution>

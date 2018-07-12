@@ -33,12 +33,12 @@ options {
 // Right to Left is the rule for french, spanish, english using "of" keyword
 // Left to right is the rule for japanese ("no")
 
-/*
+
 navExpression :
     navExpressionRightToLeft
 ;
 
-*/
+
 
 
 /*

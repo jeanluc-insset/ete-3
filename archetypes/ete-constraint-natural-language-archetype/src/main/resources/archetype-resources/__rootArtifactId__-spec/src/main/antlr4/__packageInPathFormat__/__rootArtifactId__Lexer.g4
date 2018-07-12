@@ -9,10 +9,11 @@ import NLLexer;
 //                                  L E X E R                                 //
 //============================================================================//
 //                                                                            //
-// This lexer is the default lexer for any natural language                   //
+// This lexer is intented to be a language specific lexer.                    //
+// The provided example is for french                                         //
 //                                                                            //
-// It is a Java lexer borrowed from antlr documentation.                      //
-// The paragraph numbers reference the original grammar                       //
+// The tokens are in english, since the main grammar rules use english        //
+// keywords                                                                   //
 //                                                                            //
 //============================================================================//
 //                                                                            //
@@ -22,7 +23,6 @@ import NLLexer;
 // plane of this flight"                                                      //
 //                                                                            //
 //============================================================================//
-
 
 
 
@@ -47,8 +47,9 @@ WHEN            : 'QUAND' | 'Quand' | 'quand';
 THEN            : 'ALORS' | 'Alors' | 'alors';
 BUT             : 'MAIS' | 'Mais' | 'mais';
 
-OF              : 'DE' | 'De' | 'de' | 'DES' | 'Des' | 'des' | 'DU' | 'Du' | 'du' | 'D\'' | 'd\'';
-
+OF              : 'DE' | 'De' | 'de'
+                    | 'DES' | 'Des' | 'des'
+                    | 'DU' | 'Du' | 'du' | 'D\'' | 'd\'';
 
 
 
@@ -65,28 +66,48 @@ OF              : 'DE' | 'De' | 'de' | 'DES' | 'Des' | 'des' | 'DU' | 'Du' | 'du
 //
 
 
-ATPRE    : '@pre';
-ELLIPSIS : '...';
+ATPRE    : 'INITIAL' | 'Initial' | 'initial'
+            | 'INITIALE' | 'Initiale' | 'initiale'
+            | 'INITIAUX' | 'Initiaux' | 'initiaux'
+            | 'INITIALES' | 'Initiales' | 'initiales';
 
 
 INITIAL  : 'INITIAL' | 'Initial' | 'initial';
-IS       : 'IS' | 'Is' | 'is';
-NEW      : 'NEW' | 'New' | 'new';
-THE      : 'THE' | 'The' | 'the';
-THIS     : 'THIS' | 'This' | 'this';
-A        : 'A' | 'a' | 'AN' | 'An' | 'an';
-WITH     : 'WITH' | 'With' | 'with';
+IS       : 'EST' | 'Est' | 'est';
+NEW      : 'NOUVEAU' | 'Nouveau' | 'nouveau'
+            | 'NOUVELLE' | 'Nouvelle' | 'nouvelle'
+            | 'NOUVEAUX' | 'Nouveaux' | 'nouveaux'
+            | 'NOUVELLES' | 'Nouvelles' | 'nouvelles';
+THE      : 'LE' | 'Le' | 'le'
+            | 'LA' | 'La' | 'la'
+            | 'LES' | 'Les' | 'les';
+THIS     : 'CE' | 'Ce' | 'ce'
+            | 'CETTE' | 'Cette' | 'cette'
+            | 'CES' | 'Ces' | 'ces';
+A        : 'UN' | 'Un' | 'un'
+            | 'UNE' | 'Une' | 'une'
+            'DES' | 'Des' | 'des';
+WITH     : 'AVEC' | 'Avec' | 'avec';
 
 TYPE     : 'TYPE' | 'Type' | 'type';
-KIND     : 'KIND' | 'Kind' | 'kind';
+KIND     : 'SORTE' | 'Sorte' | 'sorte';
 
-AS       : 'AS'| 'As' | 'as';
+AS       : EN TANT QUE;
 
-ORDERED  : 'ORDERED' | 'Ordered' | 'ordered';
-UNORDERED: 'UNORDERED' | 'Unordered' | 'unordered';
+EN       : 'EN' | 'En' | 'en';
+TANT     : 'TANT' | 'Tant' | 'tant';
+QUE      : 'QUE' | 'Que' | 'que';
 
-SEQUENCE : 'SEQUENCE' | 'Sequence' | 'sequence';
-BAG      : 'BAG' | 'Bag' | 'bag';
-SET      : 'SET' | 'Set' | 'set';
+ORDERED  : 'ORDONNÉ' | 'Ordonné' | 'ordonné' 
+            | 'ORDONNÉE' | 'Ordonnée' | 'ordonnée'
+            | 'ORDONNÉS' | 'Ordonnés' | 'ordonnés'
+            | 'ORDONNÉES' | 'Ordonnées' | 'ordonnées';
+
+UNORDERED: NOT ORDERED;
+NOT      : 'NON' | 'Non' | 'non';
+
+SEQUENCE : 'SÉQUENCE' | 'Séquence' | 'séquence';
+BAG      : 'SAC' | 'Sac' | 'sac';
+SET      : 'Ensemble' | 'Ensemble' | 'ensemble';
 
 

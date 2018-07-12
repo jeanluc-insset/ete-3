@@ -2,40 +2,23 @@ package fr.insset.jeanluc.ete.gel.impl;
 
 
 
+import fr.insset.jeanluc.ete.gel.GelExpression;
+import fr.insset.jeanluc.ete.gel.GelParser;
+import fr.insset.jeanluc.ete.gel.GelParserBaseVisitor;
+import fr.insset.jeanluc.ete.gel.VariableDefinition;
+import fr.insset.jeanluc.ete.gel.VariableReference;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 import fr.insset.jeanluc.ete.meta.model.emof.MofParameter;
-import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.MofPackage;
-import fr.insset.jeanluc.ete.meta.model.mofpackage.PackageableElement;
 import fr.insset.jeanluc.ete.meta.model.types.Classifier;
-import fr.insset.jeanluc.ete.meta.model.types.MofType;
 import fr.insset.jeanluc.ete.meta.model.types.TypedElement;
-import fr.insset.jeanluc.ete.meta.model.types.collections.MofCollection;
-import fr.insset.jeanluc.gel.GelParser;
-import fr.insset.jeanluc.gel.GelParserBaseVisitor;
-import fr.insset.jeanluc.gel.CollectionOperationExpression;
-import fr.insset.jeanluc.gel.GelExpression;
-import fr.insset.jeanluc.gel.Literal;
-import fr.insset.jeanluc.gel.Navigable;
-import fr.insset.jeanluc.gel.Navigation;
+
 // import static fr.insset.jeanluc.gel.api.Navigation.NAVIGATION;
-import fr.insset.jeanluc.gel.Operation;
-import fr.insset.jeanluc.gel.Self;
-import fr.insset.jeanluc.gel.VariableDefinition;
-import fr.insset.jeanluc.gel.VariableReference;
-import fr.insset.jeanluc.gel.impl.*;
 import fr.insset.jeanluc.util.factory.FactoryRegistry;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.Generated;
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.RuleNode;
 
 
 /**
