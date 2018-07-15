@@ -1,0 +1,12 @@
+################################################################################
+##                                                                            ##
+## Fragment for TreeBuilder.vm                                                ##
+##                                                                            ##
+################################################################################
+            // right part of infix
+            $aClass result = ($aClass)FactoryRegistry.getRegistry().getFactory("${aClass.getValueOf("symbol")}").newInstance();
+            GelExpression right = children.get(1).accept(this);
+            List<GelExpression>  operands = FactoryMethods.newList(GelExpression.class);
+            operands.add(right);
+            result.setOperand(operands);
+            return result;

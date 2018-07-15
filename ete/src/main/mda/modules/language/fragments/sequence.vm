@@ -7,5 +7,5 @@
 ## stuff each time                                                            ##
 ################################################################################
             String text = children.get(1).getText();
-            ${dialect.i2uc($projectName)}Expression result = (${dialect.i2uc($projectName)}Expression) context.resolve(text);
+            GelExpressionExpression result = (GelExpressionExpression) context.resolve(text);
             return result;

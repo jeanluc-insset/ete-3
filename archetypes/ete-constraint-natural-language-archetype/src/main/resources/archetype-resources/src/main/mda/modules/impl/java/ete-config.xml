@@ -1,0 +1,22 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<mda>
+
+
+    <transformation-set >
+
+            <velocity template="tree-builder.vm"
+                target="generated-sources/${rootArtifactId}/${package}/impl/${symbol_dollar}{dialect.i2uc(projectName)}TreeBuilder.java"/>
+
+
+
+    </transformation-set>
+
+</mda>
+
+
+

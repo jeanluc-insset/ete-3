@@ -4,8 +4,8 @@
 ##                                                                            ##
 ################################################################################
             $aClass result = ($aClass)FactoryRegistry.getRegistry().getFactory("${aClass.getValueOf("symbol")}").newInstance();
-            ${dialect.i2uc($projectName)}Expression right = children.get(1).accept(this);
-            List<${dialect.i2uc($projectName)}Expression>  operands = FactoryMethods.newList(${dialect.i2uc($projectName)}Expression.class);
+            GelExpressionExpression right = children.get(1).accept(this);
+            List<GelExpressionExpression>  operands = FactoryMethods.newList(GelExpressionExpression.class);
             operands.add(right);
             result.setOperand(operands);
             return result;

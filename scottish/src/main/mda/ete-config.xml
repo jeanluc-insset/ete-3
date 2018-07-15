@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<mda>
+
+
+    <transformation-set >
+        <model  url="models/NaturalLanguage.xml"/>
+
+        <!--
+          - The context parameter specifies which context to use when
+          - resolving an identifier
+        -->
+        <transformation-set projectName="scottish"
+                            context="mof">
+
+            <velocity template="modules/impl/java/tree-builder.vm"
+                target="generated-sources/scottish/titi/impl/${dialect.i2uc(projectName)}TreeBuilder.java"/>
+
+        </transformation-set>
+
+
+    </transformation-set>
+
+</mda>
+
+
+

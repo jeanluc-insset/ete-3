@@ -1,0 +1,30 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<mda>
+
+
+    <transformation-set >
+        <model  url="models/NaturalLanguage.xml"/>
+
+        <!--
+          - The context parameter specifies which context to use when
+          - resolving an identifier
+        -->
+        <transformation-set projectName="${artifactId}"
+                            context="mof">
+
+            <module src="modules/impl/java/ete-config.xml"/>
+
+        </transformation-set>
+
+
+    </transformation-set>
+
+</mda>
+
+
+

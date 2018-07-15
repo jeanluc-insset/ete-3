@@ -5,10 +5,10 @@
 ## Used for the second operand of left associative operations                 ##
 ##                                                                            ##
 ################################################################################
-            ${dialect.i2uc($projectName)}Expression result = children.get(0).accept(this);
+            GelExpression result = children.get(0).accept(this);
             for (int i=1 ; i<children.size() ; i++) {
-                ${dialect.i2uc($projectName)}Expression next = children.get(i).accept(this);
-                List<${dialect.i2uc($projectName)}Expression> operands = next.getOperand();
+                GelExpression next = children.get(i).accept(this);
+                List<GelExpression> operands = next.getOperand();
                 operands.add(0, result);
                 result = next;
             }

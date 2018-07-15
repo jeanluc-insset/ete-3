@@ -17,6 +17,7 @@
         <module>ete</module>
         <module>archetypes</module>
         <module>samples</module>
-    </modules>
+    <module>scottish</module>
+  </modules>
 
 </project>
