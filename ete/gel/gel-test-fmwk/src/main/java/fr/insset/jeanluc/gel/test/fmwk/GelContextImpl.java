@@ -1,0 +1,603 @@
+package fr.insset.jeanluc.gel.test.fmwk;
+
+
+
+// import fr.insset.jeanluc.ete.gel.AttributeNav;
+// import fr.insset.jeanluc.ete.gel.GelContext;
+import fr.insset.jeanluc.ete.gel.*;
+import fr.insset.jeanluc.ete.gel.VariableDefinition;
+import fr.insset.jeanluc.ete.meta.model.core.NamedElement;
+import fr.insset.jeanluc.ete.meta.model.emof.Feature;
+import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
+import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
+import fr.insset.jeanluc.ete.meta.model.emof.MofParameter;
+import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
+import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
+import fr.insset.jeanluc.ete.meta.model.types.MofType;
+import fr.insset.jeanluc.ete.meta.model.types.TypedElement;
+import fr.insset.jeanluc.ete.meta.model.types.collections.MofCollection;
+import fr.insset.jeanluc.ete.meta.model.types.collections.MofSequence;
+import static fr.insset.jeanluc.ete.meta.model.types.collections.MofSequence.MOF_SEQUENCE;
+import fr.insset.jeanluc.util.factory.FactoryRegistry;
+import java.util.Collection;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.Generated;
+import fr.insset.jeanluc.ete.util.XList;
+import fr.insset.jeanluc.util.factory.FactoryMethods;
+import java.util.List;
+
+
+/**
+ *
+ * @author jldeleage
+ */
+@Generated("ete - jean-luc@insset.fr  ete/src/main/mda/modules/language/contexts/mofcontext.vm")
+public class GelContextImpl implements GelContext<GelExpression> {
+
+
+
+    public GelContextImpl(EteModel inModel, MofClass inContextualClass, NamedElement inContext) {
+        // We must start with at least a stack frame
+        push();
+        FactoryRegistry.getRegistry().registerDefaultFactory("let", VariableDefinitionImpl.class);
+        init(inModel , inContextualClass, inContext);
+    }
+
+
+    /**
+     * Sets the MODEL, SELF, CONTEXT and ROOT variables
+     */
+    public void init(EteModel inModel, MofClass inContextualClass, NamedElement inContext) {
+        // These three variables keep their values throughout the whole
+        // expression parsing
+        set(MODEL, inModel);
+        set(SELF, inContextualClass);
+        set(CONTEXT, inContext);
+        // The root variable is updated when we enter a subexpression
+        // In such a case it takes the value of CURRENT
+        // It takes the contextual class in the initial navigation
+//        set(ROOT, inContextualClass);
+        if (inContext instanceof MofOperation) {
+            MofOperation operation = (MofOperation) inContext;
+            MofType      resultType = operation.getType();
+            if (resultType == null) {
+                return;
+            }
+            VariableDefinition  result;
+            try {
+                result = (VariableDefinition) FactoryRegistry.newInstance("let");
+            } catch (InstantiationException | IllegalAccessException ex) {
+                throw new RuntimeException(ex);
+            }
+            result.setName("result");
+            result.setType(resultType);
+            set(RESULT, result);
+            Collection<MofParameter> ownedParameter = operation.getOwnedParameter();
+            for (MofParameter aParameter : ownedParameter) {
+                __set(aParameter.getName(), aParameter);
+            }
+        }   //inContext is a MofOperation
+    }
+
+
+    /**
+     * When the TreeBuilder has to handle an identifier, it can end with the
+     * following results&nbsp;:<ul>
+     * <li>a variable identifier</li>
+     * <li>a property identifier</li>
+     * <li>a method identifier</li>
+     * <li>a collection method identifier</li>
+     * </ul>
+     * The first two cases are handled by the resolve method since the grammar
+     * has only one rule for both.<br>
+     * The third case is handled by the resolveOperation method.<br>
+     * The last case is handled by the resolveCollOp method.
+     */
+    @Override
+    public GelExpression resolve(String inIdentifier) {
+        GelExpression   result = null;
+        try {
+            if ("self".equals(inIdentifier)) {
+                Logger logger = Logger.getGlobal();
+                logger.fine("Resolving SELF");
+                result = resolveSelf();
+            }
+            if ("result".equals(inIdentifier)) {
+                result = resolveResult();
+                result.setType(((MofOperation)get(CONTEXT)).getType());
+            }
+            if (result == null) {
+                // can we extend the current navigation ? or A current navigation ?
+                for (int i=0 ; i<stack.size() ; i++) {
+                    result = resolveInCurrent(inIdentifier, i);
+                    if (result != null) {
+                        break;
+                    }
+                }
+            }
+            if (result == null) {
+                result = resolveInContext(inIdentifier);
+            }
+            if (result != null) {
+                set(CURRENT, result);
+                return result;
+            }
+        }
+        catch (Exception ex) {
+            throw new RuntimeException("Unable to resolve " + inIdentifier + " " + ex.getMessage(), ex);
+        }
+        return null;
+    }
+
+    protected Self resolveSelf() throws InstantiationException, IllegalAccessException {
+        Self    self = (Self) FactoryRegistry.newInstance("self");
+        self.setName("self");
+        self.setType((MofType)get(SELF));
+        return self;        
+    }
+
+    protected Result resolveResult() throws InstantiationException, IllegalAccessException {
+        Result    result = (Result) FactoryRegistry.newInstance("result");
+        result.setName("result");
+        result.setType(((TypedElement)get(RESULT)).getType());
+        return result;        
+    }
+
+
+    public GelExpression resolveIsNew() {
+        IsNew   result;
+        try {
+            result = (IsNew) FactoryRegistry.newInstance("isnew");
+            Step current = (Step) get(CURRENT);
+            result.setOperand(FactoryMethods.newList(GelExpression.class));
+            result.setType(current.getType());
+        } catch (InstantiationException | IllegalAccessException ex) {
+            throw new RuntimeException("Unable to instantiate isNew ", ex);
+        }
+        return result;
+    }
+
+
+
+    public GelExpression resolveInContext(String inIdentifier) throws InstantiationException, IllegalAccessException {
+        Object context = get(CONTEXT);
+        MofClass    contextClass = null;
+        if (context instanceof MofOperation) {
+            MofOperation    operation = (MofOperation) context;
+            Collection<MofParameter> ownedParameter = operation.getOwnedParameter();
+            for (MofParameter aParameter : ownedParameter) {
+                String parameterName = aParameter.getName();
+                if (parameterName.equals(inIdentifier)) {
+                    VariableReference   result = (VariableReference) FactoryRegistry.newInstance("var");
+                    result.setName(inIdentifier);
+                    result.setType(aParameter.getType());
+                    set(CURRENT, result);
+                    return result;
+                }
+            }
+            contextClass = (MofClass)operation.getOwningMofClass();
+        }
+        else {
+            contextClass = (MofClass) context;
+        }
+        MofProperty ownedAttribute = contextClass.getOwnedAttribute(inIdentifier);
+        if (ownedAttribute != null) {
+            Self self = resolveSelf();
+            Step nav = buildStep(self, ownedAttribute);
+            nav.getOperand().add(self);
+            return nav;
+        }
+        return null;
+    }
+
+    @Override
+    public Object resolveVariable(String inString) throws InstantiationException, IllegalAccessException {
+        throw new UnsupportedOperationException("Not supported yet : " + inString); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public GelExpression resolveOperation(String inString, MofType inType) throws InstantiationException, IllegalAccessException {
+        throw new UnsupportedOperationException("Not supported yet : " + inString + " in " + inType.getName()); //To change body of generated methods, choose Tools | Templates.
+    }
+
+
+
+
+    /**
+     * Looks for an attribute in the current navigation.<br>
+     * The search is performed from CURRENT if it is not null, from ROOT
+     * otherwise.<br>
+     * It nothing is found, the same research is done recursively in the
+     * previous set of local variables.
+     * 
+     * @param inIdentifier
+     * @param inIndex
+     * @return
+     * @throws InstantiationException
+     * @throws IllegalAccessException 
+     */
+    public GelExpression resolveInCurrent(String inIdentifier, int inIndex) throws InstantiationException, IllegalAccessException {
+        if (inIndex >= stack.size()) {
+            return null;
+        }
+        Map<String, Object> currentVariables = ((List<Map<String, Object>>)stack).get(inIndex);
+        Step    current = (Step) currentVariables.get(CURRENT);
+        if (current == null) {
+            current = (Step) currentVariables.get(ROOT);
+        }
+        if (current == null) {
+            return null;
+        }
+        MofClass currentClass = (MofClass) current.getType().getRecBaseType();
+        MofProperty ownedAttribute = currentClass.getOwnedAttribute(inIdentifier);
+        if (ownedAttribute == null) {
+            return null;
+        }
+        return buildStep(current, ownedAttribute);
+    }
+
+    protected Step  buildStep(Step current, MofProperty ownedAttribute) throws InstantiationException, IllegalAccessException {
+        MofType type = current.getType();
+        Step nav = type.isCollection() ? (Step) FactoryRegistry.newInstance("collect") : (Step) FactoryRegistry.newInstance(".att");
+//        Step nav = (Step) FactoryRegistry.newInstance(".att");
+        List<GelExpression>     operands = FactoryMethods.newList(GelExpression.class);
+        nav.setOperand(operands);
+        nav.setToFeature(ownedAttribute);
+        MofType nextType;
+//        MofType type = current.getType();
+        if (type.isCollection()) {
+            nextType = clone(type, ownedAttribute.getType());
+        } else {
+            nextType = ownedAttribute.getType();
+        }
+        nav.setType(nextType);
+//        operands.add(current);
+        set(CURRENT, nav);
+        return nav;        
+    }
+
+
+    @Override
+    public GelExpression resolveCollOp(String inString) {
+        try {
+            // TODO : we should have the allowed selectors (the collection API
+            // should be checked without being hard coded)
+            CollectionMethodNav result = (CollectionMethodNav)FactoryRegistry.newInstance(inString);
+            Step current = (Step)get(CURRENT);
+            MofCollection   currentType = (MofCollection)current.getType();
+            MofType         baseType = currentType.getRecBaseType();
+            switch (inString) {
+                case "flatten": {
+                        MofSequence sequence = (MofSequence)FactoryRegistry.newInstance(MOF_SEQUENCE);
+                        sequence.setBaseType(baseType);
+                        result.setType(sequence);
+                        break;
+                    }
+                case "average":
+                case "sum":
+                case "max":
+                case "min":
+                    result.setType(baseType);
+                    break;
+                case "collect":
+                    // TODO : explicit collect is not handled
+                    break;
+                case "includes":
+                case "excludes":
+                case "includesAll":
+                case "excludesAll":
+                    EteModel model = (EteModel)get(MODEL);
+                    MofType booleanType = (MofType) model.getElementByName("boolean");
+                    result.setType(booleanType);
+                    break;
+                default:
+                    result.setType(currentType);
+                    break;
+            }
+            set(CURRENT, result);
+            return result;
+        } catch (InstantiationException | IllegalAccessException ex) {
+//            Logger.getLogger(GelContextImpl.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException(ex);
+        }
+    }
+
+    /**
+     * TODO : works with collections of depth 2 max :<br>
+     * does not handle a collection of collections of collections of Xxx.
+     * We should add a clone method to MofCollections
+     */
+//    protected GelExpression __resolve(String inString) throws InstantiationException, IllegalAccessException {
+//        GelExpression   result = null;
+//        Object context = resolveVariable(CONTEXT);
+//        if (context instanceof MofOperation) {
+//            result = resolveParameter(inString, (MofOperation)context);
+//            if (result != null) {
+//                return result;
+//            }
+//        }
+//        MofType   current = (MofType)resolveVariable(CURRENT);
+//        if (SELF.equals(inString)) {
+//            Logger logger = Logger.getGlobal();
+//            logger.fine("Resolving SELF");
+//            Self    self = FactoryRegistry.newInstance(Self.class);
+//            self.setName("self");
+//            self.setType(current);
+//        }
+//        if (current == null) {
+//            result = resolveProperty(inString, (MofClass)resolveVariable(ROOT), false);
+//            if (result != null) {
+//                return result;
+//            }
+//        }
+//        else {
+//            MofType baseType = current.getRecBaseType();
+//            GelExpression property = resolveProperty(inString, (MofClass)baseType, baseType.isCollection());
+//            if (property instanceof Step) {
+//                Step    step = (Step) property;
+//                if (current.isCollection()) {
+//                    MofSequence sequence = (MofSequence) FactoryRegistry.newInstance(MOF_SEQUENCE);
+//                    sequence.setBaseType(step.getToFeature().getType());
+//                    step.setType(sequence);
+//                }
+//                return step;
+//            }
+//            else {
+//                return property;
+//            }
+//        }
+//        Object variable = resolveVariable(inString);
+//        if (variable == null) {
+//            variable = resolveModelInstance(inString);
+//        }
+//        if (variable instanceof GelExpression) {
+//            return (GelExpression)variable;
+//        }
+//        if (result instanceof NamedElement) {
+//
+//        }
+//        return null;
+//    }
+
+
+
+    //========================================================================//
+
+/*
+    @Override
+    public void setGel(String inString, GelExpression inValue) {
+        set(inString, inValue);
+    }
+*/
+
+    public void __set(String inString, Object inValue) {
+        try {
+            VariableDefinition  variable = (VariableDefinition) FactoryRegistry.newInstance("let");
+            variable.setName(inString);
+            variable.setValue(inValue);
+            set(inString, variable);
+        } catch (InstantiationException | IllegalAccessException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
+    public void set(String inString, Object inValue) {
+        stack.peekFirst().put(inString, inValue);
+    }
+
+    @Override
+    public void remove(String inString) {
+        stack.peekFirst().remove(inString);
+    }
+
+
+
+    public Object get(String inString) {
+        Iterator<Map<String, Object>> iterator = stack.iterator();
+        while (iterator.hasNext()) {
+            Map<String, Object> next = iterator.next();
+            Object result = next.get(inString);
+            if (result != null) {
+                return result;
+            }
+        }
+        return null;
+    }
+
+
+    public Object getShallow(String inString) {
+        return stack.peekFirst().get(inString);
+    }
+
+
+    //========================================================================//
+
+
+    public final void push() {
+        
+        Map<String, Object> map = new HashMap<>();
+        stack.addFirst(map);
+    }
+
+    public void pop() {
+        stack.removeFirst();
+    }
+
+
+    //========================================================================//
+
+
+    public  TypedElement getContext() throws InstantiationException, IllegalAccessException {
+        return (TypedElement) get(CONTEXT);
+    }
+
+
+
+
+
+//
+//
+//    public GelExpression resolveParameter(String inString, MofOperation inOperation) throws InstantiationException, IllegalAccessException {
+//        Collection<MofParameter> ownedParameter = inOperation.getOwnedParameter();
+//        for (MofParameter aParameter : ownedParameter) {
+//            if (inString.equals(aParameter.getName())) {
+//                VariableReference   result = (VariableReference) FactoryRegistry.newInstance("var");
+//                result.setName(inString);
+//                result.setDefinition(aParameter);
+//                result.setType(aParameter.getType());
+//                set(CURRENT, aParameter.getType());
+//                return result;
+//            }
+//        }
+//        return null;
+//    }
+//
+//
+//    public   GelExpression resolveProperty(String inString, MofClass from, boolean fromCollection) {
+//        Feature feature = from.getOwnedAttribute(inString);
+//        if (feature != null) {
+//            try {
+//                Step nav;
+//                MofType current = (MofType) resolveVariable(CURRENT);
+//                if (current == null) current = from;
+//                if (current.isCollection()) {
+//                    nav = (Step)FactoryRegistry.newInstance("collect");
+//                }
+//                else {
+//                    nav = (Step) FactoryRegistry.newInstance(".att");
+//                }
+//                MofType navType = clone(current, feature.getType());
+//                nav.setType(navType);
+//                nav.setToFeature(feature);
+//                set(CURRENT, navType);
+//                return nav;
+//            } catch (InstantiationException | IllegalAccessException ex) {
+//                throw new RuntimeException(ex);
+//            }
+//        }
+//        return null;
+//    }
+//
+//
+//    public   GelExpression resolveOperation(String inString, MofType from) throws InstantiationException, IllegalAccessException {
+//        // TODO : we should allow methods on predefined types (at least on
+//        // String and date types)
+//        if (! (from instanceof MofClass)) {
+//            return null;
+//        }
+//        if ("isNew".equals(inString)) {
+//            return (GelExpression) FactoryRegistry.newInstance("isnew");
+//        }
+//        else if ("isDeleted".equals(inString)) {
+//            return (GelExpression) FactoryRegistry.newInstance("isdeleted");
+//        }
+//        Feature feature = ((MofClass)from).getOwnedOperation(inString);
+//        if (feature != null) {
+//            try {
+//                Step nav = (Step) FactoryRegistry.newInstance(".meth");
+//                nav.setToFeature(feature);
+//                nav.setType(feature.getType());
+//                set(CURRENT, feature.getType());
+//                return nav;
+//            } catch (InstantiationException | IllegalAccessException ex) {
+//                throw new RuntimeException(ex);
+//            }
+//        }
+//        return null;
+//    }
+//
+//    @Override
+//    public   Object resolveVariable(String inString) {
+//        Iterator<Map<String, Object>> iterator = stack.iterator();
+//        while (iterator.hasNext()) {
+//            Map<String, Object> map = iterator.next();
+//            Object expression = map.get(inString);
+//            if (expression != null) {
+//                return expression;
+//            }
+//        }        
+//        return null;
+//    }
+//
+//
+//
+//
+//    protected   Object resolveModelInstance(String inString) {
+//        EteModel    model = (EteModel)resolveVariable(MODEL);
+//        if (model != null) {
+//            return model.getElementByName(inString);
+//        }
+//        return null;
+//    }
+
+
+
+
+    //========================================================================//
+    //               C O L L E C T I O N   O P E R A T I O N S                //
+    //========================================================================//
+
+
+
+    public GelExpression flatten() {
+        try {
+            MofType current = (MofType) resolveVariable(CURRENT);
+            MofType baseType = current.getRecBaseType();
+            MofCollection resultType = (MofCollection) FactoryRegistry.newInstance(MOF_SEQUENCE);
+            resultType.setBaseType(baseType);
+            Flatten     result = (Flatten) FactoryRegistry.newInstance("flatten");
+            result.setType(resultType);
+            return result;
+        } catch (InstantiationException | IllegalAccessException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+
+
+    //========================================================================//
+    //                           U T I L I T I E S                            //
+    //========================================================================//
+
+
+    /**
+     * When collecting a property (i.e. navigating from a collection), the
+     * result is a collection of the target type elements, so the type is
+     * collection&lt;target type&gt;.<br>
+     * Unfortunately, this can be recursive in case the source is a collection
+     * of collections of&nbsp;...<br>
+     * As a consequence we need to clone the source type.
+     */
+    protected MofType clone(MofType inSrc, MofType inBaseType) {
+        if (inSrc.isCollection()) {
+            try {
+                MofCollection   srcColl = (MofCollection)inSrc;
+                MofCollection   result = (MofCollection)FactoryRegistry.newInstance(srcColl.getSymbol());
+                result.setBaseType(clone(srcColl.getBaseType(), inBaseType));
+                return result;
+            } catch (InstantiationException | IllegalAccessException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+        else {
+            return inBaseType;
+        }
+    }
+
+
+    //========================================================================//
+
+
+
+    private Deque<Map<String, Object>>     stack = new LinkedList<>();
+
+}
+
+

@@ -13,5 +13,6 @@
         <module>gel-api</module>
         <module>gel-impl</module>
         <module>gel-evaluator</module>
+        <module>gel-test-fmwk</module>
     </modules>
 </project>

@@ -1,6 +1,7 @@
 package fr.insset.jeanluc.ete.gel.impl;
 
 
+
 import fr.insset.jeanluc.ete.gel.AtPre;
 import fr.insset.jeanluc.ete.gel.AttributeNav;
 import fr.insset.jeanluc.ete.gel.Collect;
@@ -24,7 +25,9 @@ import fr.insset.jeanluc.ete.meta.model.types.MofType;
 import fr.insset.jeanluc.ete.meta.model.types.TypedElement;
 import fr.insset.jeanluc.ete.meta.model.types.collections.MofSequence;
 import fr.insset.jeanluc.ete.meta.model.types.collections.impl.MofSequenceImpl;
+import fr.insset.jeanluc.gel.test.fmwk.NavHelper;
 import fr.insset.jeanluc.util.factory.FactoryMethods;
+import fr.insset.jeanluc.util.factory.FactoryRegistry;
 import fr.insset.jeanluc.xmi.io.impl.XmlModelReader;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -75,6 +78,14 @@ public class TreeBuilderWithBankTest {
 
     @BeforeClass
     public static void setUpClass() {
+        FactoryRegistry registry = FactoryRegistry.getRegistry();
+        registry.registerDefaultFactory("self", SelfImpl.class);
+        registry.registerDefaultFactory("collect", CollectImpl.class);
+        registry.registerDefaultFactory("sequence", MofSequenceImpl.class);
+        registry.registerDefaultFactory("attribute_nav", fr.insset.jeanluc.ete.gel.impl.AttributeNavImpl.class);
+        registry.registerDefaultFactory("atpre", AtPreImpl.class);
+        registry.registerDefaultFactory("flatten", FlattenImpl.class);
+        registry.registerDefaultFactory("variable_reference", VariableReferenceImpl.class);
     }
 
     @AfterClass
