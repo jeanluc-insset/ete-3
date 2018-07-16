@@ -1,8 +1,8 @@
 package fr.insset.jeanluc.ete.gel;
 
 
-import fr.insset.jeanluc.ete.gel.GelExpression;
 import fr.insset.jeanluc.ete.meta.model.emof.Feature;
+import fr.insset.jeanluc.ete.gel.GelExpression;
 import fr.insset.jeanluc.ete.meta.model.types.TypedElement;
 import java.util.List;
 import java.util.Set;

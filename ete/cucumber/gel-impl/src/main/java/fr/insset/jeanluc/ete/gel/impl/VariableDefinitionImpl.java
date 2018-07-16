@@ -1,7 +1,7 @@
 package fr.insset.jeanluc.ete.gel.impl;
 
-import fr.insset.jeanluc.ete.gel.Identifier;
 import java.lang.Object;
+import fr.insset.jeanluc.ete.gel.Identifier;
 import fr.insset.jeanluc.ete.gel.*;
 import java.util.Collection;
 import java.util.List;

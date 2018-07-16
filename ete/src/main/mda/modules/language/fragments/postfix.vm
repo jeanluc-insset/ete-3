@@ -3,9 +3,9 @@
 ## Fragment for TreeBuilder.vm                                                ##
 ##                                                                            ##
 ################################################################################
-            GelExpressionExpression left = children.get(0).accept(this);        
+            GelExpression left = children.get(0).accept(this);        
             $aClass result = ($aClass)FactoryRegistry.getRegistry().getFactory("${aClass.getValueOf("symbol")}").newInstance();
-            List<GelExpressionExpression>  operands = FactoryMethods.newList(GelExpressionExpression.class);
+            List<GelExpression>  operands = FactoryMethods.newList(GelExpression.class);
             operands.add(left);
             result.setOperand(operands);
             return result;

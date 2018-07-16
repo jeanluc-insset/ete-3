@@ -19,8 +19,5 @@
         <module>database</module>
         <module>defs</module>
         <module>methodeb</module>
-        <module>cucumber</module>
-    <module>tutu</module>
-        <module>nl</module>
     </modules>
 </project>

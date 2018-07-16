@@ -7,5 +7,5 @@
 ## stuff each time                                                            ##
 ################################################################################
             String text = children.get(1).getText();
-            GelExpressionExpression result = (GelExpressionExpression) context.resolve(text);
+            GelExpression result = (GelExpression) context.resolve(text);
             return result;

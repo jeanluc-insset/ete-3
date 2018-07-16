@@ -43,7 +43,7 @@ import javax.annotation.Generated;
  * </div>
  * @author jldeleage
  */
-@Generated("ete - jean-luc@insset.fr  ete/src/main/mda/modules/language/context.vm")
+@Generated("ete - jean-luc@insset.fr  ete/src/main/mda/modules/language/contexts/context.vm")
 public interface GelContext<T> {
 
 

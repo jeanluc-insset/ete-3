@@ -56,46 +56,46 @@ public class TreeBuilder extends GelParserBaseVisitor<GelExpression> {
     public TreeBuilder(GelContext inContext) {
         context = inContext;
         FactoryRegistry registry = FactoryRegistry.getRegistry();
+        registry.registerDefaultFactory("String", StringLiteralImpl.class);
         registry.registerDefaultFactory("Boolean", BooleanLiteralImpl.class);
-        registry.registerDefaultFactory("Integer", IntegerLiteralImpl.class);
         registry.registerDefaultFactory("date", DateLiteralImpl.class);
         registry.registerDefaultFactory("Double", FloatingPointLiteralImpl.class);
-        registry.registerDefaultFactory("String", StringLiteralImpl.class);
-        registry.registerDefaultFactory("<", LessThanImpl.class);
-        registry.registerDefaultFactory("-", SubImpl.class);
+        registry.registerDefaultFactory("Integer", IntegerLiteralImpl.class);
+        registry.registerDefaultFactory("<=", LessOrEqualImpl.class);
+        registry.registerDefaultFactory("or", OrImpl.class);
+        registry.registerDefaultFactory("@pre", AtPreImpl.class);
+        registry.registerDefaultFactory(".att", AttributeNavImpl.class);
         registry.registerDefaultFactory("<>", DifferentImpl.class);
         registry.registerDefaultFactory("|", LambdaImpl.class);
-        registry.registerDefaultFactory("or", OrImpl.class);
-        registry.registerDefaultFactory("%", ModImpl.class);
-        registry.registerDefaultFactory(".meth", MethodNavImpl.class);
-        registry.registerDefaultFactory("isnew", IsNewImpl.class);
-        registry.registerDefaultFactory("->", CollectionMethodNavImpl.class);
-        registry.registerDefaultFactory("and", AndImpl.class);
-        registry.registerDefaultFactory("let", VariableDefinitionImpl.class);
-        registry.registerDefaultFactory("not", NotImpl.class);
-        registry.registerDefaultFactory(">=", GreaterOrEqualImpl.class);
-        registry.registerDefaultFactory("<=", LessOrEqualImpl.class);
-        registry.registerDefaultFactory("+", AddImpl.class);
-        registry.registerDefaultFactory("self", SelfImpl.class);
-        registry.registerDefaultFactory("xor", XorImpl.class);
-        registry.registerDefaultFactory("opp", OppImpl.class);
-        registry.registerDefaultFactory("->", FlatCollectImpl.class);
-        registry.registerDefaultFactory("*", MultImpl.class);
-        registry.registerDefaultFactory("result", ResultImpl.class);
         registry.registerDefaultFactory("var", VariableReferenceImpl.class);
         registry.registerDefaultFactory(">", GreaterThanImpl.class);
-        registry.registerDefaultFactory(".att", AttributeNavImpl.class);
         registry.registerDefaultFactory("=", EqualImpl.class);
+        registry.registerDefaultFactory("result", ResultImpl.class);
+        registry.registerDefaultFactory("-", SubImpl.class);
+        registry.registerDefaultFactory(".meth", MethodNavImpl.class);
+        registry.registerDefaultFactory("->", FlatCollectImpl.class);
+        registry.registerDefaultFactory("xor", XorImpl.class);
+        registry.registerDefaultFactory("and", AndImpl.class);
+        registry.registerDefaultFactory("isnew", IsNewImpl.class);
+        registry.registerDefaultFactory("+", AddImpl.class);
         registry.registerDefaultFactory("/", DivImpl.class);
-        registry.registerDefaultFactory("@pre", AtPreImpl.class);
+        registry.registerDefaultFactory("->", CollectionMethodNavImpl.class);
+        registry.registerDefaultFactory("let", VariableDefinitionImpl.class);
+        registry.registerDefaultFactory("<", LessThanImpl.class);
+        registry.registerDefaultFactory("self", SelfImpl.class);
+        registry.registerDefaultFactory("%", ModImpl.class);
+        registry.registerDefaultFactory("opp", OppImpl.class);
+        registry.registerDefaultFactory("not", NotImpl.class);
+        registry.registerDefaultFactory("*", MultImpl.class);
+        registry.registerDefaultFactory(">=", GreaterOrEqualImpl.class);
         registry.registerDefaultFactory("collect", CollectImpl.class);
-        registry.registerDefaultFactory("average", AverageImpl.class);
-        registry.registerDefaultFactory("select", SelectImpl.class);
+        registry.registerDefaultFactory("flatten", FlattenImpl.class);
+        registry.registerDefaultFactory("excludes", ExcludesImpl.class);
         registry.registerDefaultFactory("includes", IncludesImpl.class);
         registry.registerDefaultFactory("sum", SumImpl.class);
-        registry.registerDefaultFactory("excludes", ExcludesImpl.class);
         registry.registerDefaultFactory("flatCollect", FlatCollectImpl.class);
-        registry.registerDefaultFactory("flatten", FlattenImpl.class);
+        registry.registerDefaultFactory("average", AverageImpl.class);
+        registry.registerDefaultFactory("select", SelectImpl.class);
         registry.registerDefaultFactory(".",    AttributeNavImpl.class);
         registry.registerDefaultFactory(".att", AttributeNavImpl.class);
         registry.registerDefaultFactory(".op",  MethodNavImpl.class);
@@ -115,12 +115,12 @@ public class TreeBuilder extends GelParserBaseVisitor<GelExpression> {
 //============================================================================//
 
 
-    // LITERAL TYPE : Boolean
+    // LITERAL TYPE : String
     @Override
-    public GelExpression visitBooleanLiteral(GelParser.BooleanLiteralContext ctx) {
+    public GelExpression visitStringLiteral(GelParser.StringLiteralContext ctx) {
         try {
             String text = ctx.getText();
-            BooleanLiteral newInstance = (BooleanLiteral)FactoryRegistry.newInstance("Boolean");
+            StringLiteral newInstance = (StringLiteral)FactoryRegistry.newInstance("String");
             newInstance.setValueAsString(text);
             return newInstance;
         } catch (InstantiationException | IllegalAccessException ex) {
@@ -128,12 +128,12 @@ public class TreeBuilder extends GelParserBaseVisitor<GelExpression> {
         }
     }
 
-    // LITERAL TYPE : Integer
+    // LITERAL TYPE : Boolean
     @Override
-    public GelExpression visitIntegerLiteral(GelParser.IntegerLiteralContext ctx) {
+    public GelExpression visitBooleanLiteral(GelParser.BooleanLiteralContext ctx) {
         try {
             String text = ctx.getText();
-            IntegerLiteral newInstance = (IntegerLiteral)FactoryRegistry.newInstance("Integer");
+            BooleanLiteral newInstance = (BooleanLiteral)FactoryRegistry.newInstance("Boolean");
             newInstance.setValueAsString(text);
             return newInstance;
         } catch (InstantiationException | IllegalAccessException ex) {
@@ -167,12 +167,12 @@ public class TreeBuilder extends GelParserBaseVisitor<GelExpression> {
         }
     }
 
-    // LITERAL TYPE : String
+    // LITERAL TYPE : Integer
     @Override
-    public GelExpression visitStringLiteral(GelParser.StringLiteralContext ctx) {
+    public GelExpression visitIntegerLiteral(GelParser.IntegerLiteralContext ctx) {
         try {
             String text = ctx.getText();
-            StringLiteral newInstance = (StringLiteral)FactoryRegistry.newInstance("String");
+            IntegerLiteral newInstance = (IntegerLiteral)FactoryRegistry.newInstance("Integer");
             newInstance.setValueAsString(text);
             return newInstance;
         } catch (InstantiationException | IllegalAccessException ex) {
@@ -184,52 +184,7 @@ public class TreeBuilder extends GelParserBaseVisitor<GelExpression> {
 //============================================================================//
 
     @Override
-    public GelExpression visitLessThanExpression(GelParser.LessThanExpressionContext ctx) {
-        List<ParseTree> children = ctx.children;
-        if (children.size() == 1) {
-            GelExpression result = children.get(0).accept(this);
-            return result;
-        }
-        try {
-            GelExpression   result = children.get(0).accept(this);
-            int     index = 1;
-            while (index < children.size()) {
-                List<GelExpression>  operands = FactoryMethods.newList(GelExpression.class);
-                operands.add(result);
-                result = (GelExpression) FactoryRegistry.getRegistry().getFactory(children.get(index++).getText()).newInstance();
-                GelExpression right = children.get(index++).accept(this);
-                operands.add(right);
-                result.setOperand(operands);
-            }
-            return result;
-        }
-        catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    @Override
-    public GelExpression visitSubExpression(GelParser.SubExpressionContext ctx) {
-        List<ParseTree> children = ctx.children;
-        if (children.size() == 1) {
-            GelExpression result = children.get(0).accept(this);
-            return result;
-        }
-        try {
-            Sub result = (Sub)FactoryRegistry.getRegistry().getFactory("-").newInstance();
-            GelExpression right = children.get(1).accept(this);
-            List<GelExpression>  operands = FactoryMethods.newList(GelExpression.class);
-            operands.add(right);
-            result.setOperand(operands);
-            return result;
-        }
-        catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    @Override
-    public GelExpression visitDifferentExpression(GelParser.DifferentExpressionContext ctx) {
+    public GelExpression visitLessOrEqualExpression(GelParser.LessOrEqualExpressionContext ctx) {
         List<ParseTree> children = ctx.children;
         if (children.size() == 1) {
             GelExpression result = children.get(0).accept(this);
@@ -279,177 +234,93 @@ public class TreeBuilder extends GelParserBaseVisitor<GelExpression> {
     }
 
     @Override
-    public GelExpression visitModExpression(GelParser.ModExpressionContext ctx) {
+    public GelExpression visitDifferentExpression(GelParser.DifferentExpressionContext ctx) {
         List<ParseTree> children = ctx.children;
         if (children.size() == 1) {
             GelExpression result = children.get(0).accept(this);
             return result;
         }
         try {
-            Mod result = (Mod)FactoryRegistry.getRegistry().getFactory("%").newInstance();
+            GelExpression   result = children.get(0).accept(this);
+            int     index = 1;
+            while (index < children.size()) {
+                List<GelExpression>  operands = FactoryMethods.newList(GelExpression.class);
+                operands.add(result);
+                result = (GelExpression) FactoryRegistry.getRegistry().getFactory(children.get(index++).getText()).newInstance();
+                GelExpression right = children.get(index++).accept(this);
+                operands.add(right);
+                result.setOperand(operands);
+            }
+            return result;
+        }
+        catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
+    public GelExpression visitGreaterThanExpression(GelParser.GreaterThanExpressionContext ctx) {
+        List<ParseTree> children = ctx.children;
+        if (children.size() == 1) {
+            GelExpression result = children.get(0).accept(this);
+            return result;
+        }
+        try {
+            GelExpression   result = children.get(0).accept(this);
+            int     index = 1;
+            while (index < children.size()) {
+                List<GelExpression>  operands = FactoryMethods.newList(GelExpression.class);
+                operands.add(result);
+                result = (GelExpression) FactoryRegistry.getRegistry().getFactory(children.get(index++).getText()).newInstance();
+                GelExpression right = children.get(index++).accept(this);
+                operands.add(right);
+                result.setOperand(operands);
+            }
+            return result;
+        }
+        catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
+    public GelExpression visitEqualExpression(GelParser.EqualExpressionContext ctx) {
+        List<ParseTree> children = ctx.children;
+        if (children.size() == 1) {
+            GelExpression result = children.get(0).accept(this);
+            return result;
+        }
+        try {
+            GelExpression   result = children.get(0).accept(this);
+            int     index = 1;
+            while (index < children.size()) {
+                List<GelExpression>  operands = FactoryMethods.newList(GelExpression.class);
+                operands.add(result);
+                result = (GelExpression) FactoryRegistry.getRegistry().getFactory(children.get(index++).getText()).newInstance();
+                GelExpression right = children.get(index++).accept(this);
+                operands.add(right);
+                result.setOperand(operands);
+            }
+            return result;
+        }
+        catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
+    public GelExpression visitSubExpression(GelParser.SubExpressionContext ctx) {
+        List<ParseTree> children = ctx.children;
+        if (children.size() == 1) {
+            GelExpression result = children.get(0).accept(this);
+            return result;
+        }
+        try {
+            Sub result = (Sub)FactoryRegistry.getRegistry().getFactory("-").newInstance();
             GelExpression right = children.get(1).accept(this);
             List<GelExpression>  operands = FactoryMethods.newList(GelExpression.class);
             operands.add(right);
             result.setOperand(operands);
-            return result;
-        }
-        catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    @Override
-    public GelExpression visitAndExpression(GelParser.AndExpressionContext ctx) {
-        List<ParseTree> children = ctx.children;
-        if (children.size() == 1) {
-            GelExpression result = children.get(0).accept(this);
-            return result;
-        }
-        try {
-            GelExpression   result = children.get(0).accept(this);
-            int     index = 1;
-            while (index < children.size()) {
-                List<GelExpression>  operands = FactoryMethods.newList(GelExpression.class);
-                operands.add(result);
-                result = (GelExpression) FactoryRegistry.getRegistry().getFactory(children.get(index++).getText()).newInstance();
-                GelExpression right = children.get(index++).accept(this);
-                operands.add(right);
-                result.setOperand(operands);
-            }
-            return result;
-        }
-        catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    @Override
-    public GelExpression visitAddOrSubExpression(GelParser.AddOrSubExpressionContext ctx) {
-        List<ParseTree> children = ctx.children;
-        if (children.size() == 1) {
-            GelExpression result = children.get(0).accept(this);
-            return result;
-        }
-        try {
-            GelExpression result = children.get(0).accept(this);
-            for (int i=1 ; i<children.size() ; i++) {
-                GelExpression next = children.get(i).accept(this);
-                List<GelExpression> operands = next.getOperand();
-                operands.add(0, result);
-                result = next;
-            }
-            return result;
-        }
-        catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    @Override
-    public GelExpression visitNotExpression(GelParser.NotExpressionContext ctx) {
-        List<ParseTree> children = ctx.children;
-        if (children.size() == 1) {
-            GelExpression result = children.get(0).accept(this);
-            return result;
-        }
-        try {
-            GelExpression left = children.get(1).accept(this);
-            Not result = (Not)FactoryRegistry.getRegistry().getFactory("not").newInstance();
-            List<GelExpression>  operands = FactoryMethods.newList(GelExpression.class);
-            operands.add(left);
-            result.setOperand(operands);
-            return result;
-        }
-        catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    @Override
-    public GelExpression visitGreaterOrEqualExpression(GelParser.GreaterOrEqualExpressionContext ctx) {
-        List<ParseTree> children = ctx.children;
-        if (children.size() == 1) {
-            GelExpression result = children.get(0).accept(this);
-            return result;
-        }
-        try {
-            GelExpression   result = children.get(0).accept(this);
-            int     index = 1;
-            while (index < children.size()) {
-                List<GelExpression>  operands = FactoryMethods.newList(GelExpression.class);
-                operands.add(result);
-                result = (GelExpression) FactoryRegistry.getRegistry().getFactory(children.get(index++).getText()).newInstance();
-                GelExpression right = children.get(index++).accept(this);
-                operands.add(right);
-                result.setOperand(operands);
-            }
-            return result;
-        }
-        catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    @Override
-    public GelExpression visitLessOrEqualExpression(GelParser.LessOrEqualExpressionContext ctx) {
-        List<ParseTree> children = ctx.children;
-        if (children.size() == 1) {
-            GelExpression result = children.get(0).accept(this);
-            return result;
-        }
-        try {
-            GelExpression   result = children.get(0).accept(this);
-            int     index = 1;
-            while (index < children.size()) {
-                List<GelExpression>  operands = FactoryMethods.newList(GelExpression.class);
-                operands.add(result);
-                result = (GelExpression) FactoryRegistry.getRegistry().getFactory(children.get(index++).getText()).newInstance();
-                GelExpression right = children.get(index++).accept(this);
-                operands.add(right);
-                result.setOperand(operands);
-            }
-            return result;
-        }
-        catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    @Override
-    public GelExpression visitAddExpression(GelParser.AddExpressionContext ctx) {
-        List<ParseTree> children = ctx.children;
-        if (children.size() == 1) {
-            GelExpression result = children.get(0).accept(this);
-            return result;
-        }
-        try {
-            Add result = (Add)FactoryRegistry.getRegistry().getFactory("+").newInstance();
-            GelExpression right = children.get(1).accept(this);
-            List<GelExpression>  operands = FactoryMethods.newList(GelExpression.class);
-            operands.add(right);
-            result.setOperand(operands);
-            return result;
-        }
-        catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    @Override
-    public GelExpression visitMultOrDivExpression(GelParser.MultOrDivExpressionContext ctx) {
-        List<ParseTree> children = ctx.children;
-        if (children.size() == 1) {
-            GelExpression result = children.get(0).accept(this);
-            return result;
-        }
-        try {
-            GelExpression result = children.get(0).accept(this);
-            for (int i=1 ; i<children.size() ; i++) {
-                GelExpression next = children.get(i).accept(this);
-                List<GelExpression> operands = next.getOperand();
-                operands.add(0, result);
-                result = next;
-            }
             return result;
         }
         catch (Exception ex) {
@@ -509,6 +380,138 @@ public class TreeBuilder extends GelParserBaseVisitor<GelExpression> {
     }
 
     @Override
+    public GelExpression visitAndExpression(GelParser.AndExpressionContext ctx) {
+        List<ParseTree> children = ctx.children;
+        if (children.size() == 1) {
+            GelExpression result = children.get(0).accept(this);
+            return result;
+        }
+        try {
+            GelExpression   result = children.get(0).accept(this);
+            int     index = 1;
+            while (index < children.size()) {
+                List<GelExpression>  operands = FactoryMethods.newList(GelExpression.class);
+                operands.add(result);
+                result = (GelExpression) FactoryRegistry.getRegistry().getFactory(children.get(index++).getText()).newInstance();
+                GelExpression right = children.get(index++).accept(this);
+                operands.add(right);
+                result.setOperand(operands);
+            }
+            return result;
+        }
+        catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
+    public GelExpression visitAddExpression(GelParser.AddExpressionContext ctx) {
+        List<ParseTree> children = ctx.children;
+        if (children.size() == 1) {
+            GelExpression result = children.get(0).accept(this);
+            return result;
+        }
+        try {
+            Add result = (Add)FactoryRegistry.getRegistry().getFactory("+").newInstance();
+            GelExpression right = children.get(1).accept(this);
+            List<GelExpression>  operands = FactoryMethods.newList(GelExpression.class);
+            operands.add(right);
+            result.setOperand(operands);
+            return result;
+        }
+        catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
+    public GelExpression visitDivExpression(GelParser.DivExpressionContext ctx) {
+        List<ParseTree> children = ctx.children;
+        if (children.size() == 1) {
+            GelExpression result = children.get(0).accept(this);
+            return result;
+        }
+        try {
+            Div result = (Div)FactoryRegistry.getRegistry().getFactory("/").newInstance();
+            GelExpression right = children.get(1).accept(this);
+            List<GelExpression>  operands = FactoryMethods.newList(GelExpression.class);
+            operands.add(right);
+            result.setOperand(operands);
+            return result;
+        }
+        catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
+    public GelExpression visitAddOrSubExpression(GelParser.AddOrSubExpressionContext ctx) {
+        List<ParseTree> children = ctx.children;
+        if (children.size() == 1) {
+            GelExpression result = children.get(0).accept(this);
+            return result;
+        }
+        try {
+            GelExpression result = children.get(0).accept(this);
+            for (int i=1 ; i<children.size() ; i++) {
+                GelExpression next = children.get(i).accept(this);
+                List<GelExpression> operands = next.getOperand();
+                operands.add(0, result);
+                result = next;
+            }
+            return result;
+        }
+        catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
+    public GelExpression visitLessThanExpression(GelParser.LessThanExpressionContext ctx) {
+        List<ParseTree> children = ctx.children;
+        if (children.size() == 1) {
+            GelExpression result = children.get(0).accept(this);
+            return result;
+        }
+        try {
+            GelExpression   result = children.get(0).accept(this);
+            int     index = 1;
+            while (index < children.size()) {
+                List<GelExpression>  operands = FactoryMethods.newList(GelExpression.class);
+                operands.add(result);
+                result = (GelExpression) FactoryRegistry.getRegistry().getFactory(children.get(index++).getText()).newInstance();
+                GelExpression right = children.get(index++).accept(this);
+                operands.add(right);
+                result.setOperand(operands);
+            }
+            return result;
+        }
+        catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
+    public GelExpression visitModExpression(GelParser.ModExpressionContext ctx) {
+        List<ParseTree> children = ctx.children;
+        if (children.size() == 1) {
+            GelExpression result = children.get(0).accept(this);
+            return result;
+        }
+        try {
+            Mod result = (Mod)FactoryRegistry.getRegistry().getFactory("%").newInstance();
+            GelExpression right = children.get(1).accept(this);
+            List<GelExpression>  operands = FactoryMethods.newList(GelExpression.class);
+            operands.add(right);
+            result.setOperand(operands);
+            return result;
+        }
+        catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
     public GelExpression visitOppExpression(GelParser.OppExpressionContext ctx) {
         List<ParseTree> children = ctx.children;
         if (children.size() == 1) {
@@ -518,6 +521,48 @@ public class TreeBuilder extends GelParserBaseVisitor<GelExpression> {
         try {
             GelExpression left = children.get(1).accept(this);
             Opp result = (Opp)FactoryRegistry.getRegistry().getFactory("opp").newInstance();
+            List<GelExpression>  operands = FactoryMethods.newList(GelExpression.class);
+            operands.add(left);
+            result.setOperand(operands);
+            return result;
+        }
+        catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
+    public GelExpression visitMultOrDivExpression(GelParser.MultOrDivExpressionContext ctx) {
+        List<ParseTree> children = ctx.children;
+        if (children.size() == 1) {
+            GelExpression result = children.get(0).accept(this);
+            return result;
+        }
+        try {
+            GelExpression result = children.get(0).accept(this);
+            for (int i=1 ; i<children.size() ; i++) {
+                GelExpression next = children.get(i).accept(this);
+                List<GelExpression> operands = next.getOperand();
+                operands.add(0, result);
+                result = next;
+            }
+            return result;
+        }
+        catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
+    public GelExpression visitNotExpression(GelParser.NotExpressionContext ctx) {
+        List<ParseTree> children = ctx.children;
+        if (children.size() == 1) {
+            GelExpression result = children.get(0).accept(this);
+            return result;
+        }
+        try {
+            GelExpression left = children.get(1).accept(this);
+            Not result = (Not)FactoryRegistry.getRegistry().getFactory("not").newInstance();
             List<GelExpression>  operands = FactoryMethods.newList(GelExpression.class);
             operands.add(left);
             result.setOperand(operands);
@@ -549,7 +594,7 @@ public class TreeBuilder extends GelParserBaseVisitor<GelExpression> {
     }
 
     @Override
-    public GelExpression visitGreaterThanExpression(GelParser.GreaterThanExpressionContext ctx) {
+    public GelExpression visitGreaterOrEqualExpression(GelParser.GreaterOrEqualExpressionContext ctx) {
         List<ParseTree> children = ctx.children;
         if (children.size() == 1) {
             GelExpression result = children.get(0).accept(this);
@@ -566,51 +611,6 @@ public class TreeBuilder extends GelParserBaseVisitor<GelExpression> {
                 operands.add(right);
                 result.setOperand(operands);
             }
-            return result;
-        }
-        catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    @Override
-    public GelExpression visitEqualExpression(GelParser.EqualExpressionContext ctx) {
-        List<ParseTree> children = ctx.children;
-        if (children.size() == 1) {
-            GelExpression result = children.get(0).accept(this);
-            return result;
-        }
-        try {
-            GelExpression   result = children.get(0).accept(this);
-            int     index = 1;
-            while (index < children.size()) {
-                List<GelExpression>  operands = FactoryMethods.newList(GelExpression.class);
-                operands.add(result);
-                result = (GelExpression) FactoryRegistry.getRegistry().getFactory(children.get(index++).getText()).newInstance();
-                GelExpression right = children.get(index++).accept(this);
-                operands.add(right);
-                result.setOperand(operands);
-            }
-            return result;
-        }
-        catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    @Override
-    public GelExpression visitDivExpression(GelParser.DivExpressionContext ctx) {
-        List<ParseTree> children = ctx.children;
-        if (children.size() == 1) {
-            GelExpression result = children.get(0).accept(this);
-            return result;
-        }
-        try {
-            Div result = (Div)FactoryRegistry.getRegistry().getFactory("/").newInstance();
-            GelExpression right = children.get(1).accept(this);
-            List<GelExpression>  operands = FactoryMethods.newList(GelExpression.class);
-            operands.add(right);
-            result.setOperand(operands);
             return result;
         }
         catch (Exception ex) {
