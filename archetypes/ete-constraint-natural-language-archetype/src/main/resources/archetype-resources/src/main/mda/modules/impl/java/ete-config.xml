@@ -10,8 +10,10 @@
     <transformation-set >
 
             <velocity template="tree-builder.vm"
-                target="generated-sources/${rootArtifactId}/${package}/impl/${symbol_dollar}{dialect.i2uc(projectName)}TreeBuilder.java"/>
+                target="generated-sources/${artifactId}/${package}/impl/${symbol_dollar}{dialect.i2uc(projectName)}TreeBuilder.java"/>
 
+            <velocity template="parser-wrapper.vm"
+                target="generated-sources/${artifactId}/${package}/impl/${symbol_dollar}{dialect.i2uc(projectName)}ParserWrapper.java"/>
 
 
     </transformation-set>

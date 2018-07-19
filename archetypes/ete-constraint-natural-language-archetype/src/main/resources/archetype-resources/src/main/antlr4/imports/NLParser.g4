@@ -214,7 +214,7 @@ primitive
 
 
 attributeNavExpression
-    : identifier OF
+    : identifier
 ;
 
 atPreExpression
