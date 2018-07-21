@@ -95,7 +95,7 @@ public class FilterBuilder extends DynamicVisitorSupport {
         registry.registerDefaultFactory("not", NotImpl.class);
         registry.registerDefaultFactory("greaterthan", GreaterThanImpl.class);
         registry.registerDefaultFactory("attributenav", AttributeNavImpl.class);
-        registry.registerDefaultFactory("atpre", AtPreImpl.class);
+        registry.registerDefaultFactory("@pre", AtPreImpl.class);
         registry.registerDefaultFactory("xor", XorImpl.class);
         registry.registerDefaultFactory("self", SelfImpl.class);
         registry.registerDefaultFactory("booleanliteral", BooleanLiteralImpl.class);

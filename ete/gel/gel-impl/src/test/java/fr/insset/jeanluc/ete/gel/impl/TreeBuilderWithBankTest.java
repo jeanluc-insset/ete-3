@@ -83,7 +83,7 @@ public class TreeBuilderWithBankTest {
         registry.registerDefaultFactory("collect", CollectImpl.class);
         registry.registerDefaultFactory("sequence", MofSequenceImpl.class);
         registry.registerDefaultFactory("attribute_nav", fr.insset.jeanluc.ete.gel.impl.AttributeNavImpl.class);
-        registry.registerDefaultFactory("atpre", AtPreImpl.class);
+        registry.registerDefaultFactory("@pre", AtPreImpl.class);
         registry.registerDefaultFactory("flatten", FlattenImpl.class);
         registry.registerDefaultFactory("variable_reference", VariableReferenceImpl.class);
     }

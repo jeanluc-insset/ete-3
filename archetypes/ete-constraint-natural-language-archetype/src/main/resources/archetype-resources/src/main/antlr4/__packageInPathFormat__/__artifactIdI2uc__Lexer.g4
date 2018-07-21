@@ -244,10 +244,10 @@ BinaryExponentIndicator
 
 // §3.10.3 Boolean Literals
 
-BooleanLiteral
-    :   'true'
-    |   'false'
-    ;
+BooleanLiteral :   TRUE |   FALSE ;
+
+TRUE  : 'true';
+FALSE : 'false;
 
 
 // Added by JL

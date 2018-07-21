@@ -89,7 +89,7 @@ public class TreeBuilderWithBankTest {
         registry.registerDefaultFactory("collect", CollectImpl.class);
         registry.registerDefaultFactory("sequence", MofSequenceImpl.class);
         registry.registerDefaultFactory("attribute_nav", fr.insset.jeanluc.ete.gel.impl.AttributeNavImpl.class);
-        registry.registerDefaultFactory("atpre", AtPreImpl.class);
+        registry.registerDefaultFactory("@pre", AtPreImpl.class);
         registry.registerDefaultFactory("flatten", FlattenImpl.class);
         registry.registerDefaultFactory("variable_reference", VariableReferenceImpl.class);
     }
@@ -113,10 +113,10 @@ public class TreeBuilderWithBankTest {
 
     @Test
     public void balanceTest() throws InstantiationException, IOException, IllegalAccessException {
-        System.out.println("balance");
-        String  expressionAsString = "balance";
+        System.out.println("Le solde");
+        String  expressionAsString = "Le solde";
         readModel();
-        Step result = new NavHelper().startFrom(model, withdraw).navigateTo("balance").getNavigation();
+        Step result = new NavHelper().startFrom(model, withdraw).navigateTo("solde").getNavigation();
         testAny(result, expressionAsString,model, accountClass);
     }
 
@@ -124,11 +124,11 @@ public class TreeBuilderWithBankTest {
     @Test
     public void atPreTest() throws InstantiationException, IOException, IllegalAccessException {
         System.out.println("@pre");
-        String  expressionAsString = "La balance initiale";
+        String  expressionAsString = "Le solde initial";
         readModel();
-        Step result = new NavHelper().startFrom(model, withdraw).navigateTo("balance").atPre().getNavigation();
-        MofProperty balanceAttribute = accountClass.getOwnedAttribute("balance");
-        result.setToFeature(accountClass.getOwnedAttribute("balance"));
+        Step result = new NavHelper().startFrom(model, withdraw).navigateTo("solde").atPre().getNavigation();
+        MofProperty balanceAttribute = accountClass.getOwnedAttribute("solde");
+        result.setToFeature(accountClass.getOwnedAttribute("solde"));
         result.setType(balanceAttribute.getType());
         testAny(result, expressionAsString, model, accountClass);
     }
@@ -140,12 +140,12 @@ public class TreeBuilderWithBankTest {
         System.out.println(expressionAsString);
         readModel();
         Step result = new NavHelper().startFrom(model, transfer)
-                .navigateTo("fromAccount")
-                .navigateTo("balance")
+                .navigateTo("départ")
+                .navigateTo("solde")
                 .atPre()
                 .getNavigation();
-        MofProperty balanceAttribute = accountClass.getOwnedAttribute("balance");
-        result.setToFeature(accountClass.getOwnedAttribute("balance"));
+        MofProperty balanceAttribute = accountClass.getOwnedAttribute("solde");
+        result.setToFeature(accountClass.getOwnedAttribute("solde"));
         result.setType(balanceAttribute.getType());
         testAny(result, expressionAsString, model, transfer);
     }
@@ -157,13 +157,13 @@ public class TreeBuilderWithBankTest {
         String expressionAsString = "Le solde = le solde initial + inAmount";
         readModel();
 
-        Step rightNavigation = new NavHelper().startFrom(model, withdraw).navigateTo("balance").atPre().getNavigation();
-        MofProperty balanceAttribute = accountClass.getOwnedAttribute("balance");
-        rightNavigation.setToFeature(accountClass.getOwnedAttribute("balance"));
+        Step rightNavigation = new NavHelper().startFrom(model, withdraw).navigateTo("solde").atPre().getNavigation();
+        MofProperty balanceAttribute = accountClass.getOwnedAttribute("solde");
+        rightNavigation.setToFeature(accountClass.getOwnedAttribute("solde"));
         rightNavigation.setType(balanceAttribute.getType());
-        Step    inAmount = new NavHelper().startFrom(model, deposit).navigateTo("inAmount").getNavigation();
+        Step    inAmount = new NavHelper().startFrom(model, deposit).navigateTo("montant").getNavigation();
         AddImpl rightMember = buildAdd(rightNavigation, inAmount);
-        Step leftMember = new NavHelper().startFrom(model, deposit).navigateTo("balance").getNavigation();
+        Step leftMember = new NavHelper().startFrom(model, deposit).navigateTo("solde").getNavigation();
         Equal   result = new EqualImpl();
         List<GelExpression> operands = new LinkedList<>();
         operands.add(leftMember);
@@ -186,16 +186,16 @@ public class TreeBuilderWithBankTest {
 //    @Test
     public void testIncludes() throws InstantiationException, IOException, IllegalAccessException {
         System.out.println("includes");
-        String expressionAsString = "accounts contient fromAccount";
+        String expressionAsString = "Les comptes contiennent départ";
         readModel();
 
         Step    fromAccountNavigation = new NavHelper()
                             .startFrom(model, transfer)
-                            .navigateTo("fromAccount")
+                            .navigateTo("départ")
                             .getNavigation();
         Step    includesNavigation = new NavHelper()
                             .startFrom(model, transfer)
-                            .navigateTo("accounts")
+                            .navigateTo("comptes")
                             .includes(fromAccountNavigation)
                             .getNavigation();
 
@@ -207,13 +207,15 @@ public class TreeBuilderWithBankTest {
     @Test
     public void testNavFromParam() throws IOException, InstantiationException, IllegalAccessException {
         System.out.println("Navigation from parameter");
-        String expressionAsString = "Le solde de fromAccount";
+        // We should allow an expression such that :
+        // "Le solde du compte de départ"
+        String expressionAsString = "Le solde de départ";
         readModel();
         // Navigation to the account
         Step    fromAccountNavigation = new NavHelper()
                             .startFrom(model, transfer)
-                            .navigateTo("fromAccount")
-                            .navigateTo("balance")
+                            .navigateTo("départ")
+                            .navigateTo("solde")
                             .getNavigation();
 
         testAny(fromAccountNavigation, expressionAsString, model, transfer);

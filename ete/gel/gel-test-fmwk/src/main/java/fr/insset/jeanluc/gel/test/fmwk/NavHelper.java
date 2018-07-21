@@ -42,8 +42,8 @@ public class NavHelper {
         registry.registerDefaultFactory("self", SelfImpl.class);
         registry.registerDefaultFactory("collect", CollectImpl.class);
         registry.registerDefaultFactory("sequence", MofSequenceImpl.class);
-        registry.registerDefaultFactory("attribute_nav", AttributeNavImpl.class);
-        registry.registerDefaultFactory("atpre", AtPreImpl.class);
+        registry.registerDefaultFactory(".att", AttributeNavImpl.class);
+        registry.registerDefaultFactory("@pre", AtPreImpl.class);
         registry.registerDefaultFactory("flatten", FlattenImpl.class);
         registry.registerDefaultFactory("variable-reference", VariableReferenceImpl.class);
     }
@@ -82,6 +82,10 @@ public class NavHelper {
         return this;
     }
 
+    //========================================================================//
+    //                           N A V I G A T I O N                          //
+    //========================================================================//
+
 
     public NavHelper  navigateTo(String inName) throws InstantiationException, IllegalAccessException {
         MofClass    currentClass = (MofClass)current.getRecBaseType();
@@ -112,7 +116,7 @@ public class NavHelper {
             else {
                 MofClass    sourceClass = (MofClass) sourceType;
                 MofProperty attribute = sourceClass.getOwnedAttribute(inName);
-                nextStep = (Step) FactoryRegistry.newInstance("attribute_nav");
+                nextStep = (Step) FactoryRegistry.newInstance(".att");
                 nextStep.setToFeature(attribute);
                 nextStep.setType(attribute.getType());
             }
@@ -120,7 +124,7 @@ public class NavHelper {
         }
         else {
             MofProperty attribute = currentClass.getOwnedAttribute(inName);
-            nextStep = (Step) FactoryRegistry.newInstance("attribute_nav");
+            nextStep = (Step) FactoryRegistry.newInstance(".att");
             nextStep.setType(attribute.getType());
             nextStep.setToFeature(attribute);
         }
@@ -135,10 +139,25 @@ public class NavHelper {
 
 
     public NavHelper atPre() throws InstantiationException, IllegalAccessException {
-        AtPre   nextStep = (AtPre)FactoryRegistry.newInstance("atpre");
+        AtPre   nextStep = (AtPre)FactoryRegistry.newInstance("@pre");
         addOp(nextStep);
         navigation = nextStep;
         return this;
+    }
+
+
+    //========================================================================//
+    //                           O P E R A T I O N S                          //
+    //========================================================================//
+
+
+    public static AddImpl  buildAdd(GelExpression left, GelExpression right) {
+        AddImpl     add = new AddImpl();
+        List<GelExpression> operands = new LinkedList<>();
+        operands.add(left);
+        operands.add(right);
+        add.setOperand(operands);
+        return add;
     }
 
     public NavHelper flatten() throws InstantiationException, IllegalAccessException {
@@ -176,9 +195,19 @@ public class NavHelper {
     }
 
 
+    //========================================================================//
+    //                            F I N A L I Z E R                           //
+    //========================================================================//
+
     public Step getNavigation() {
         return navigation;
     }
+
+
+
+    //========================================================================//
+    //                                U T I L S                               //
+    //========================================================================//
 
 
     protected void addOp(Step nextStep) {
@@ -193,6 +222,9 @@ public class NavHelper {
 
 
     //========================================================================//
+    //                                S T A T E                               //
+    //========================================================================//
+
 
     private     MofType         current;
     private     NamedElement    context;
