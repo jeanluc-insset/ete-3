@@ -56,9 +56,38 @@ atPreExpression :
 
 
 //============================================================================//
-//                             E N T R Y P O I N T                            //
+//                           E N T R Y   P O I N T S                          //
 //============================================================================//
 
+
+
+constraintFile :
+   contextualConstraints*
+;
+
+
+contextualConstraints :
+    (
+    class_context invariant*
+    )
+    |
+    (
+    operation_context condition*
+    )
+;
+
+
+class_context :
+    BACKGROUND identifier COLON
+;
+
+invariant: nlExpression DOT;
+
+operation_context:
+     BACKGROUND identifier DOUBLE_COLON identifier COLON
+;
+
+condition: nlExpression DOT;
 
 nlExpression :
     impliesExpression
@@ -117,9 +146,10 @@ notExpression : NOT affirmativeExpression;
 //============================================================================//
 
 
-// In this grammar, comparisons are not associative. One cannot write
+// In this grammar, comparisons are not associative.
 // expressions such that
 //      a > b > c
+// are forbidden
 affirmativeExpression :
     greaterThanExpression
     |

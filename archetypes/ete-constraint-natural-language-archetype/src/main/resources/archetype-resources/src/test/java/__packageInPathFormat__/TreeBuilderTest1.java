@@ -130,7 +130,7 @@ public class TreeBuilderTest1 {
 
 
     protected void testAny(GelExpression expectedResult, String inExpression, EteModel inModel, TypedElement inContext) {
-        GelExpression abstractGelExpression = ${artifactIdI2uc}ParserWrapper.buildAbstractTree(inExpression, inModel, inContext);
+        GelExpression abstractGelExpression = new ${artifactIdI2uc}ParserWrapper().buildAbstractTree(inExpression, inModel, inContext);
         compare(expectedResult, abstractGelExpression);
     }
 

@@ -19,5 +19,6 @@
         <module>database</module>
         <module>defs</module>
         <module>methodeb</module>
+        <module>external_constraint_file</module>
     </modules>
 </project>

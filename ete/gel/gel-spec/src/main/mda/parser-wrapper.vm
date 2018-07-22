@@ -1,0 +1,9 @@
+package  fr.insset.jeanluc.ete.gel;
+
+
+public interface ParserWrapper {
+
+
+
+
+}

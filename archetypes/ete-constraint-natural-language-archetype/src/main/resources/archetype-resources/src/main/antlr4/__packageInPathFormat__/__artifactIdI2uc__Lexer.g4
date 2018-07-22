@@ -391,10 +391,15 @@ IS_EQUIVALENT_TO: '<=>';
 //============================================================================//
 
 
+
 FEATURE         : 'FONCTIONNALITÉ' | 'Fonctionnalité' | 'fonctionnalité';
 BACKGROUND      : 'CONTEXTE' | 'Contexte' |'contexte';
 SCENARIO        : 'SCENARIO' | 'Scenario' | 'scenario';
 OUTLINE         : 'RÉSUMÉ' | 'Résumé' | 'résumé';
+
+INVARIANT       : 'INVARIANT' | 'Invariant' | 'invariant';
+POSTCONDITION   : 'POST-CONDITION' | 'Post-condition' | 'post-condition';
+PRECONDITION    : 'PRE-CONDITION' | 'PRÉ-CONDITION' | 'Pre-condition' | 'Pré-condition' | 'pre-condition' | 'pré-condition';
 
 GIVEN           : ETANT DONNE;
 ETANT           : 'ÉTANT' | 'ETANT' | 'Étant' | 'Etant' | 'étant';

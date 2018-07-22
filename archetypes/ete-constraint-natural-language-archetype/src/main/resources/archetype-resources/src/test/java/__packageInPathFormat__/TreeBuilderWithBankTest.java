@@ -323,7 +323,7 @@ public class TreeBuilderWithBankTest {
 
     protected void testAny(GelExpression expectedResult, String inExpression, EteModel inModel, TypedElement inContext) {
         System.out.println("input expression : " + inExpression);
-        GelExpression abstractGelExpression = ${artifactIdI2uc}ParserWrapper.buildAbstractTree(inExpression, inModel, inContext);
+        GelExpression abstractGelExpression = new ${artifactIdI2uc}ParserWrapper().buildAbstractTree(inExpression, inModel, inContext);
         compare(expectedResult, abstractGelExpression);
     }
 
