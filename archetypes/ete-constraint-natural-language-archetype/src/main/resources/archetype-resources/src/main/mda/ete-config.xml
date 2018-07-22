@@ -8,18 +8,18 @@
 
 
     <transformation-set >
-        <model  url="models/NaturalLanguage.xml"/>
+        <!--<model  url="models/NaturalLanguage.xml"/>-->
 
         <!--
           - The context parameter specifies which context to use when
           - resolving an identifier
         -->
-        <transformation-set projectName="${artifactId}"
+<!--        <transformation-set projectName="${artifactId}"
                             context="mof">
 
             <module src="modules/impl/java/ete-config.xml"/>
 
-        </transformation-set>
+        </transformation-set>-->
 
 
     </transformation-set>

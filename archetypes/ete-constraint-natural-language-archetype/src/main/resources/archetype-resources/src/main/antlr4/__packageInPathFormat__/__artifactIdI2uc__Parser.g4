@@ -1,26 +1,23 @@
 parser grammar ${artifactIdI2uc}Parser;
 
 
-import NLParser;
-
-
 
 
 //============================================================================//
-// This grammar is an abstract grammar for any ${rootArtifactId}.             //
-// A grammar which imports this one can override any rule to customize it to  //
-// its own needs.                                                             //
-// By convention, rules with "expression" as suffix are reflected by objects  //
-// in the abstract syntax and are visitable by the abstract tree builder      //
-// The objects in the abstract syntax must have the "kind" tag value which    //
-// gives the template fragment to use in the abstract tree builder            // 
+// This grammar is a grammar for ${rootArtifactId}.
+// The user can customize this grammar.
+// The two rules in the "Navigation" chapter are particularly important :
+// - navExpression which can be from right to left, like in french, spanish...
+//   or left to right like in OCL or japanese
+// - atPreExpression which can be prefixed as in english, japanese...
+//   or postfixed like in OCL, french, spanish...
 //============================================================================//
+
 
 
 options {
     tokenVocab = ${artifactIdI2uc}Lexer;
 }
-
 
 
 
@@ -43,25 +40,18 @@ options {
 // So the navigation is from the left to the right of the sentence
 
 
-
 navExpression :
     navExpressionRightToLeft
+//    |
+//    navExpressionLeftToRight
 ;
 
 
-/*
-navExpression :
-    navExpressionLeftToRight
+atPreExpression : 
+//    prefixedAtPreExpression
+//    |
+    postfixedAtPreExpression
 ;
-*/
-
-
-
-
-attributeNavExpression:
-    identifier
-;
-
 
 
 
@@ -76,11 +66,11 @@ nlExpression :
 ;
 
 
-
 impliesExpression :
     xorExpression IMPLIES xorExpression
     xorExpression IS_EQUIVALENT_TO xorExpression
 ;
+
 
 //============================================================================//
 //                     L O G I C A L   O P E R A T I O N S                    //
@@ -154,9 +144,6 @@ lessOrEqualExpression : compareExpression LE compareExpression;
 //      a = b = c
 compareExpression
     :
-    {
-        System.out.println("compare expression");
-    }
     (    
     equalExpression
     | differentExpression
@@ -165,12 +152,7 @@ compareExpression
 ;
 
 
-equalExpression :
-                        {
-        System.out.println("equal expression");
-    }
-
-                    addOrSubExpression EQUAL addOrSubExpression;
+equalExpression : addOrSubExpression EQUAL addOrSubExpression;
 
 
 differentExpression : addOrSubExpression NOTEQUAL addOrSubExpression;
@@ -184,16 +166,18 @@ differentExpression : addOrSubExpression NOTEQUAL addOrSubExpression;
 
 addOrSubExpression :
      (
-         addExpression
-         |
-         subExpression
+         multOrDivExpression
+         (
+            ADD
+          | SUB
+         )
      )*
      multOrDivExpression
 ;
 
 
-addExpression : multOrDivExpression ADD;
-subExpression : multOrDivExpression SUB;
+// addExpression : multOrDivExpression ADD;
+// subExpression : multOrDivExpression SUB;
 
 
 multOrDivExpression :
@@ -213,9 +197,6 @@ modExpression  : operand MOD;
 
 operand
     :
-        {
-            System.out.println("operand");
-        }
         navExpression
 ;
 
@@ -228,43 +209,36 @@ operand
 
 
 
-navExpressionRightToLeft
-    : 
-        {
-            System.out.println("Right to left");
-        }
+navExpressionRightToLeft :
+    ( step OF )*
+    ( step | finalStep )
+;
+
+
+navExpressionLeftToRight
+    :
+        step
         (
-            {
-                System.out.println("Step in right to left");
-            }
-            step
             OF
-        )*
-        {
-            System.out.println("Before primitive in right to left");
-        }
-        (
             step
-            | finalStep
-        )
+        )*
+        oclIsNew?
+    ;
+
+
+
+prefixedAtPreExpression:
+    (THE | A)? ATPRE identifier 
+;
+
+postfixedAtPreExpression:
+    (THE | A)? identifier ATPRE
 ;
 
 
-
-//============================================================================//
-//                             N A V I G A T I O N                            //
-//============================================================================//
-
-
-
-atPreExpression : (THE | A)? INITIAL identifier 
-;
 
 currentExpression
     :
-    {
-        System.out.println("current expression");
-    }
    (THE | A)? identifier
 ;
 

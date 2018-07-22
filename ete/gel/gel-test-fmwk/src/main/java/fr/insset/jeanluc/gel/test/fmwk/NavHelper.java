@@ -20,6 +20,11 @@ import fr.insset.jeanluc.ete.meta.model.types.collections.impl.MofSequenceImpl;
 import fr.insset.jeanluc.util.factory.FactoryRegistry;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import static org.junit.Assert.*;
+
+
 
 /**
  * Builder DP.<br>
@@ -140,6 +145,7 @@ public class NavHelper {
 
     public NavHelper atPre() throws InstantiationException, IllegalAccessException {
         AtPre   nextStep = (AtPre)FactoryRegistry.newInstance("@pre");
+        nextStep.setType(navigation.getType());
         addOp(nextStep);
         navigation = nextStep;
         return this;
@@ -194,6 +200,23 @@ public class NavHelper {
         return this;
     }
 
+    public static GelExpression buildAny(String inSymbol, GelExpression... inOperands) {
+        try {
+            GelExpression result = (GelExpression) FactoryRegistry.newInstance(inSymbol);
+            List<GelExpression> operands = new LinkedList<>();
+            for (int i=0 ; i<inOperands.length ; i++) {
+                operands.add(inOperands[i]);
+            }
+            result.setOperand(operands);
+            return result;
+        } catch (InstantiationException ex) {
+            Logger.getLogger(NavHelper.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(NavHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
 
     //========================================================================//
     //                            F I N A L I Z E R                           //
@@ -220,6 +243,31 @@ public class NavHelper {
         nextStep.setOperand(operands);        
     }
 
+    public static void compare(GelExpression expectedResult, GelExpression abstractGelExpression) {
+        Class   expectedClass = expectedResult.getClass();
+        Class   gottenClass   = abstractGelExpression.getClass();
+        assertEquals(expectedClass, gottenClass);
+        List<GelExpression> expectedOperand = expectedResult.getOperand();
+        List<GelExpression> gottenOperand = abstractGelExpression.getOperand();
+        if (expectedOperand == null) {
+            assertEquals(null, gottenOperand);
+        }
+        else {
+            assertNotEquals(null, gottenOperand);
+            assertEquals(expectedOperand.size(), gottenOperand.size());
+            for (int i=0 ; i<expectedOperand.size() ; i++) {
+                compare(expectedOperand.get(i), gottenOperand.get(i));
+            }
+        }
+        if (expectedResult instanceof LiteralImpl) {
+            assertTrue(abstractGelExpression instanceof LiteralImpl);
+            LiteralImpl expectedLiteral = (LiteralImpl) expectedResult;
+            LiteralImpl gottenLiteral   = (LiteralImpl) abstractGelExpression;
+            assertEquals(expectedLiteral.getValueAsString(), gottenLiteral.getValueAsString());
+        } else if (expectedResult instanceof Step) {
+            assertTrue(abstractGelExpression instanceof Step);
+        }
+    }
 
     //========================================================================//
     //                                S T A T E                               //

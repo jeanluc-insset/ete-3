@@ -1,4 +1,4 @@
-package fr.insset.jeanluc.ete.${artifactId};
+package ${package};
 
 
 
@@ -37,6 +37,8 @@ import fr.insset.jeanluc.xmi.io.impl.XmlModelReader;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -54,7 +56,7 @@ import ${package}.impl.${artifactIdI2uc}ParserWrapper;
 public class TreeBuilderWithBankTest {
 
 
-    public final String  url = "src/test/mda/Bank.xml";
+    public final String  url = "src/test/mda/Compagnie_aerienne.xml";
 
     /**
      * Some tests but not all use a model. This variable is initialized by
@@ -85,13 +87,13 @@ public class TreeBuilderWithBankTest {
     @BeforeClass
     public static void setUpClass() {
         FactoryRegistry registry = FactoryRegistry.getRegistry();
-        registry.registerDefaultFactory("self", SelfImpl.class);
-        registry.registerDefaultFactory("collect", CollectImpl.class);
-        registry.registerDefaultFactory("sequence", MofSequenceImpl.class);
-        registry.registerDefaultFactory("attribute_nav", fr.insset.jeanluc.ete.gel.impl.AttributeNavImpl.class);
-        registry.registerDefaultFactory("@pre", AtPreImpl.class);
-        registry.registerDefaultFactory("flatten", FlattenImpl.class);
-        registry.registerDefaultFactory("variable_reference", VariableReferenceImpl.class);
+        registry.registerFactory("self", SelfImpl.class);
+        registry.registerFactory("collect", CollectImpl.class);
+        registry.registerFactory("sequence", MofSequenceImpl.class);
+        registry.registerFactory(".att", fr.insset.jeanluc.ete.gel.impl.AttributeNavImpl.class);
+        registry.registerFactory("@pre", AtPreImpl.class);
+        registry.registerFactory("flatten", FlattenImpl.class);
+        registry.registerFactory("variable_reference", VariableReferenceImpl.class);
     }
 
     @AfterClass
@@ -122,8 +124,21 @@ public class TreeBuilderWithBankTest {
 
 
     @Test
-    public void atPreTest() throws InstantiationException, IOException, IllegalAccessException {
+    public void simpleAtPreTest() throws InstantiationException, IOException, IllegalAccessException {
         System.out.println("@pre");
+        String  expressionAsString = "solde initial";
+        readModel();
+        Step result = new NavHelper().startFrom(model, withdraw).navigateTo("solde").atPre().getNavigation();
+        MofProperty balanceAttribute = accountClass.getOwnedAttribute("solde");
+        result.setToFeature(accountClass.getOwnedAttribute("solde"));
+        result.setType(balanceAttribute.getType());
+        testAny(result, expressionAsString, model, accountClass);
+    }
+
+
+    @Test
+    public void atPreTest() throws InstantiationException, IOException, IllegalAccessException {
+        System.out.println("@pre with article");
         String  expressionAsString = "Le solde initial";
         readModel();
         Step result = new NavHelper().startFrom(model, withdraw).navigateTo("solde").atPre().getNavigation();
@@ -136,7 +151,7 @@ public class TreeBuilderWithBankTest {
 
     @Test
     public void atPreOfParameterTest() throws InstantiationException, IOException, IllegalAccessException {
-        String  expressionAsString = "Le solde initial de fromAccount";
+        String  expressionAsString = "Le solde initial de départ";
         System.out.println(expressionAsString);
         readModel();
         Step result = new NavHelper().startFrom(model, transfer)
@@ -154,13 +169,10 @@ public class TreeBuilderWithBankTest {
     @Test
     public void depositTest() throws InstantiationException, IOException, IllegalAccessException {
         System.out.println("deposit");
-        String expressionAsString = "Le solde = le solde initial + inAmount";
+        String expressionAsString = "solde = solde initial + montant";
         readModel();
 
         Step rightNavigation = new NavHelper().startFrom(model, withdraw).navigateTo("solde").atPre().getNavigation();
-        MofProperty balanceAttribute = accountClass.getOwnedAttribute("solde");
-        rightNavigation.setToFeature(accountClass.getOwnedAttribute("solde"));
-        rightNavigation.setType(balanceAttribute.getType());
         Step    inAmount = new NavHelper().startFrom(model, deposit).navigateTo("montant").getNavigation();
         AddImpl rightMember = buildAdd(rightNavigation, inAmount);
         Step leftMember = new NavHelper().startFrom(model, deposit).navigateTo("solde").getNavigation();
@@ -173,6 +185,66 @@ public class TreeBuilderWithBankTest {
         testAny(result, expressionAsString, model, deposit);
     }
 
+
+    @Test
+    public void depositTest2() throws InstantiationException, IOException, IllegalAccessException {
+        System.out.println("deposit");
+        String expressionAsString = "Le solde = le solde initial + le montant";
+        readModel();
+
+        Step rightNavigation = new NavHelper().startFrom(model, withdraw).navigateTo("solde").atPre().getNavigation();
+        Step    inAmount = new NavHelper().startFrom(model, deposit).navigateTo("montant").getNavigation();
+        AddImpl rightMember = buildAdd(rightNavigation, inAmount);
+        Step leftMember = new NavHelper().startFrom(model, deposit).navigateTo("solde").getNavigation();
+        Equal   result = new EqualImpl();
+        List<GelExpression> operands = new LinkedList<>();
+        operands.add(leftMember);
+        operands.add(rightMember);
+        result.setOperand(operands);
+        
+        testAny(result, expressionAsString, model, deposit);
+    }
+
+
+//    @Test
+    public void depositTest3() throws InstantiationException, IOException, IllegalAccessException {
+        System.out.println("deposit");
+        String expressionAsString = "Le solde est égal au solde initial plus le montant";
+        readModel();
+
+        Step rightNavigation = new NavHelper().startFrom(model, withdraw).navigateTo("solde").atPre().getNavigation();
+        Step    inAmount = new NavHelper().startFrom(model, deposit).navigateTo("montant").getNavigation();
+        AddImpl rightMember = buildAdd(rightNavigation, inAmount);
+        Step leftMember = new NavHelper().startFrom(model, deposit).navigateTo("solde").getNavigation();
+        Equal   result = new EqualImpl();
+        List<GelExpression> operands = new LinkedList<>();
+        operands.add(leftMember);
+        operands.add(rightMember);
+        result.setOperand(operands);
+        
+        testAny(result, expressionAsString, model, deposit);
+    }
+
+
+
+//    @Test
+    public void depositTest4() throws InstantiationException, IOException, IllegalAccessException {
+        System.out.println("deposit");
+        String expressionAsString = "Le solde est augmenté du montant";
+        readModel();
+
+        Step rightNavigation = new NavHelper().startFrom(model, withdraw).navigateTo("solde").atPre().getNavigation();
+        Step    inAmount = new NavHelper().startFrom(model, deposit).navigateTo("montant").getNavigation();
+        AddImpl rightMember = buildAdd(rightNavigation, inAmount);
+        Step leftMember = new NavHelper().startFrom(model, deposit).navigateTo("solde").getNavigation();
+        Equal   result = new EqualImpl();
+        List<GelExpression> operands = new LinkedList<>();
+        operands.add(leftMember);
+        operands.add(rightMember);
+        result.setOperand(operands);
+        
+        testAny(result, expressionAsString, model, deposit);
+    }
 
     /**
      * This test checks the parameter fromAccount of the transfer method and
@@ -191,24 +263,48 @@ public class TreeBuilderWithBankTest {
 
         Step    fromAccountNavigation = new NavHelper()
                             .startFrom(model, transfer)
-                            .navigateTo("départ")
+                            .navigateTo("fromAccount")
                             .getNavigation();
         Step    includesNavigation = new NavHelper()
                             .startFrom(model, transfer)
-                            .navigateTo("comptes")
+                            .navigateTo("accounts")
                             .includes(fromAccountNavigation)
                             .getNavigation();
 
         testAny(includesNavigation, expressionAsString, model, transfer);
     }
 
+    @Test
+    public void testParam() throws IOException, InstantiationException, IllegalAccessException {
+        System.out.println("Simple parameter");
+        String expressionAsString = "Le montant";
+        readModel();
+        // Navigation to the account
+        Step    fromAccountNavigation = new NavHelper()
+                            .startFrom(model, transfer)
+                            .navigateTo("montant")
+                            .getNavigation();
 
+        testAny(fromAccountNavigation, expressionAsString, model, transfer);
+    }
+
+    @Test
+    public void testParam2() throws IOException, InstantiationException, IllegalAccessException {
+        System.out.println("Simple parameter");
+        String expressionAsString = "départ";
+        readModel();
+        // Navigation to the account
+        Step    fromAccountNavigation = new NavHelper()
+                            .startFrom(model, transfer)
+                            .navigateTo("départ")
+                            .getNavigation();
+
+        testAny(fromAccountNavigation, expressionAsString, model, transfer);
+    }
 
     @Test
     public void testNavFromParam() throws IOException, InstantiationException, IllegalAccessException {
         System.out.println("Navigation from parameter");
-        // We should allow an expression such that :
-        // "Le solde du compte de départ"
         String expressionAsString = "Le solde de départ";
         readModel();
         // Navigation to the account
@@ -226,6 +322,7 @@ public class TreeBuilderWithBankTest {
 
 
     protected void testAny(GelExpression expectedResult, String inExpression, EteModel inModel, TypedElement inContext) {
+        System.out.println("input expression : " + inExpression);
         GelExpression abstractGelExpression = ${artifactIdI2uc}ParserWrapper.buildAbstractTree(inExpression, inModel, inContext);
         compare(expectedResult, abstractGelExpression);
     }
@@ -264,30 +361,10 @@ public class TreeBuilderWithBankTest {
 
 
 
-    public AttributeNav  buildNav(Step inSource, String inToFeature) {
-        AttributeNav    result   = new AttributeNavImpl();
-        Feature         feature  = (Feature) model.getElementByName(inToFeature);
-        if (inSource != null) {
-            MofType type = inSource.getType();
-            List<GelExpression>     operands = new LinkedList<>();
-            result.setOperand(operands);
-            operands.add(inSource);
-        }
-        else {
-            result = new AttributeNavImpl();
-        }
-        return null;
-    }
-
-
-    public IntegerLiteralImpl   buildInt(String value) {
-        IntegerLiteralImpl result = new IntegerLiteralImpl();
-        result.setValueAsString(value);
-        return result;
-    }
-
-
-    public AddImpl  buildAdd(GelExpression left, GelExpression right) {
+    /**
+     * TODO : use a NavHelper method.
+     */
+    public static AddImpl  buildAdd(GelExpression left, GelExpression right) {
         AddImpl     add = new AddImpl();
         List<GelExpression> operands = new LinkedList<>();
         operands.add(left);
@@ -297,25 +374,6 @@ public class TreeBuilderWithBankTest {
     }
 
 
-    public Sub  buildSub(GelExpression left, GelExpression right) {
-        Sub     add = new SubImpl();
-        List<GelExpression> operands = new LinkedList<>();
-        operands.add(left);
-        operands.add(right);
-        add.setOperand(operands);
-        return add;
-    }
-
-
-
-    public MultImpl buildMult(GelExpression left, GelExpression right) {
-        MultImpl     mult = new MultImpl();
-        List<GelExpression> operands = new LinkedList<>();
-        operands.add(left);
-        operands.add(right);
-        mult.setOperand(operands);
-        return mult;
-    }
 
 
     //========================================================================//
@@ -335,12 +393,12 @@ public class TreeBuilderWithBankTest {
         model = instance.readModel(url, parent);
 
         // 3- set the data
-        accountClass = (MofClass) model.getElementByName("Account");
-        deposit = accountClass.getOwnedOperation("deposit");
-        withdraw = accountClass.getOwnedOperation("withdraw");
-        customerClass = (MofClass)model.getElementByName("Customer");
-        transfer = customerClass.getOwnedOperation("transfer");
-        accounts = customerClass.getOwnedAttribute("accounts");
+        accountClass = (MofClass) model.getElementByName("Compte");
+        deposit = accountClass.getOwnedOperation("déposer");
+        withdraw = accountClass.getOwnedOperation("retirer");
+        customerClass = (MofClass)model.getElementByName("Client");
+        transfer = accountClass.getOwnedOperation("transférer");
+        accounts = customerClass.getOwnedAttribute("comptes");
         
     }
 

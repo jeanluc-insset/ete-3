@@ -244,10 +244,15 @@ BinaryExponentIndicator
 
 // §3.10.3 Boolean Literals
 
-BooleanLiteral :   TRUE |   FALSE ;
-
-TRUE  : 'true';
-FALSE : 'false;
+BooleanLiteral
+    :   'VRAI'   | 'Vrai'   | 'vrai'
+    |   'VRAIE'  | 'Vraie'  | 'vraie'
+    |   'VRAIS'  | 'Vrais'  | 'vrais'
+    |   'VRAIES' | 'Vraies' | 'vraies'
+    |   'FAUX'   | 'Faux'   | 'faux'
+    |   'FAUSSE' | 'Fausse' | 'fausse'
+    |   'FAUSSES'| 'Fausses'| 'fausses'
+    ;
 
 
 // Added by JL
@@ -381,44 +386,6 @@ IS_EQUIVALENT_TO: '<=>';
 
 //============================================================================//
 //                                                                            //
-//                           I D E N T I F I E R S                            //
-//                                                                            //
-//============================================================================//
-
-
-// §3.8 Identifiers (must appear after all keywords in the grammar)
-
-Identifier
-    :   JavaLetter JavaLetterOrDigit*
-    ;
-
-fragment
-JavaLetter
-    :   [a-zA-Z$_] // these are the "java letters" below 0xFF
-    |   // covers all characters above 0xFF which are not a surrogate
-        ~[\u0000-\u00FF\uD800-\uDBFF]
-        {Character.isJavaIdentifierStart(_input.LA(-1))}?
-    |   // covers UTF-16 surrogate pairs encodings for U+10000 to U+10FFFF
-        [\uD800-\uDBFF] [\uDC00-\uDFFF]
-        {Character.isJavaIdentifierStart(Character.toCodePoint((char)_input.LA(-2), (char)_input.LA(-1)))}?
-    ;
-
-fragment
-JavaLetterOrDigit
-    :   [a-zA-Z0-9$_] // these are the "java letters or digits" below 0xFF
-    |   // covers all characters above 0xFF which are not a surrogate
-        ~[\u0000-\u00FF\uD800-\uDBFF]
-        {Character.isJavaIdentifierPart(_input.LA(-1))}?
-    |   // covers UTF-16 surrogate pairs encodings for U+10000 to U+10FFFF
-        [\uD800-\uDBFF] [\uDC00-\uDFFF]
-        {Character.isJavaIdentifierPart(Character.toCodePoint((char)_input.LA(-2), (char)_input.LA(-1)))}?
-    ;
-
-
-
-
-//============================================================================//
-//                                                                            //
 //                         R E S E R V E D   W O R D S                        //
 //                                                                            //
 //============================================================================//
@@ -456,13 +423,9 @@ OR              : 'OU' | 'Ou' | 'ou';
 //
 
 
-ATPRE    : 'INITIAL' | 'Initial' | 'initial'
-            | 'INITIALE' | 'Initiale' | 'initiale'
-            | 'INITIAUX' | 'Initiaux' | 'initiaux'
-            | 'INITIALES' | 'Initiales' | 'initiales';
 
 
-INITIAL  : 'INITIAL' | 'Initial' | 'initial'
+ATPRE  : 'INITIAL' | 'Initial' | 'initial'
             | 'INITIALE' | 'Initiale' | 'initiale'
             | 'INITIAUX' | 'Initiaux' | 'initiaux'
             | 'INITIALES' | 'Initiales' | 'initiales';
@@ -505,6 +468,52 @@ SET      : 'Ensemble' | 'Ensemble' | 'ensemble';
 
 
 
+
+
+//============================================================================//
+//                                                                            //
+//                           I D E N T I F I E R S                            //
+//                                                                            //
+//============================================================================//
+
+
+// §3.8 Identifiers (must appear after all keywords in the grammar)
+
+Identifier
+    :   JavaLetter JavaLetterOrDigit*
+    ;
+
+fragment
+JavaLetter
+    :   [a-zA-Z$_] // these are the "java letters" below 0xFF
+    |   // covers all characters above 0xFF which are not a surrogate
+        ~[\u0000-\u00FF\uD800-\uDBFF]
+        {Character.isJavaIdentifierStart(_input.LA(-1))}?
+    |   // covers UTF-16 surrogate pairs encodings for U+10000 to U+10FFFF
+        [\uD800-\uDBFF] [\uDC00-\uDFFF]
+        {Character.isJavaIdentifierStart(Character.toCodePoint((char)_input.LA(-2), (char)_input.LA(-1)))}?
+    |   [\u00C0-\u017F]
+    ;
+
+fragment
+JavaLetterOrDigit
+    :   [a-zA-Z0-9$_] // these are the "java letters or digits" below 0xFF
+    |   // covers all characters above 0xFF which are not a surrogate
+        ~[\u0000-\u00FF\uD800-\uDBFF]
+        {Character.isJavaIdentifierPart(_input.LA(-1))}?
+    |   // covers UTF-16 surrogate pairs encodings for U+10000 to U+10FFFF
+        [\uD800-\uDBFF] [\uDC00-\uDFFF]
+        {Character.isJavaIdentifierPart(Character.toCodePoint((char)_input.LA(-2), (char)_input.LA(-1)))}?
+    |   [\u00C0-\u017F]
+    ;
+
+
+
+
+
+
+
+
 //============================================================================//
 //                                                                            //
 //                         M I S C E L L A N E O U S                          //
@@ -518,7 +527,8 @@ SET      : 'Ensemble' | 'Ensemble' | 'ensemble';
 //
 
 
-WS  :  [ \t\r\n\u000C]+ -> skip ;
+WS  :  [ \t\r\n\u000C]+  -> skip ;
+
 
 COMMENT :   '/*' .*? '*/' -> skip ;
 
