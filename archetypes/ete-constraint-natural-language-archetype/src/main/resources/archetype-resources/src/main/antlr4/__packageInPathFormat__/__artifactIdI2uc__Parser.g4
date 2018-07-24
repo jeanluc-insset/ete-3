@@ -58,7 +58,11 @@ atPreExpression :
 //============================================================================//
 //                           E N T R Y   P O I N T S                          //
 //============================================================================//
-
+// This grammar is used to parse external files or embedded contraints        //
+// So there are two main entry points :                                       //
+// - constraintFile                                                           //
+// - nlExpression                                                             //
+//============================================================================//
 
 
 constraintFile :
@@ -66,9 +70,23 @@ constraintFile :
 ;
 
 
+
+nlExpression :
+    impliesExpression
+    | xorExpression
+;
+
+
+
+//============================================================================//
+//                         E X T E R N A L   F I L E S                        //
+//============================================================================//
+
+
+// A set of constraints within the same context
 contextualConstraints :
     (
-    class_context invariant*
+    class_context (operation_definition | attribute_definition | invariant)*
     )
     |
     (
@@ -81,29 +99,39 @@ class_context :
     BACKGROUND identifier COLON
 ;
 
-invariant: nlExpression DOT;
+invariant: SUB? INVARIANT name? COLON nlExpression DOT;
+
+
+operation_definition :
+    DEFINITION definition_name COLON nlExpression DOT;
+;
+
+attribute_definition :
+    DEFINITION identifier COLON identifier COLON nbExpression DOT;
+;
 
 operation_context:
      BACKGROUND identifier DOUBLE_COLON identifier COLON
 ;
 
-condition: nlExpression DOT;
+condition:  SUB? (PRECONDITION | POSTCONDITION) name? COLON nlExpression DOT;
 
-nlExpression :
-    impliesExpression
-    | xorExpression
-;
+
+name : PlainString+;
+
+list_mark: LIST_MARK;
+
+
+//============================================================================//
+//                     L O G I C A L   O P E R A T I O N S                    //
+//============================================================================//
+
 
 
 impliesExpression :
     xorExpression IMPLIES xorExpression
     xorExpression IS_EQUIVALENT_TO xorExpression
 ;
-
-
-//============================================================================//
-//                     L O G I C A L   O P E R A T I O N S                    //
-//============================================================================//
 
 
 xorExpression :

@@ -14,7 +14,6 @@
     <properties>
         <project-name>${artifactId}</project-name>
         <ete-version>3.1</ete-version>
-        <!--<artifactIdI2uc>${artifactId.substring(0,1).toUpperCase()}${artifactId.substring(1)}</artifactIdI2uc>-->
     </properties>
 
 
@@ -72,6 +71,13 @@
             <artifactId>gel-test-fmwk</artifactId>
             <version>${ete-version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>fr.insset.jeanluc</groupId>
+            <artifactId>external_constraint_file</artifactId>
+            <version>3.1</version>
+            <scope>test</scope>
+            <type>jar</type>
         </dependency>
     </dependencies>
 

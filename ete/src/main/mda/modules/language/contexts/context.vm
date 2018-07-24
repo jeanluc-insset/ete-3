@@ -90,6 +90,12 @@ public interface ${dialect.i2uc($projectName)}Context<T> {
         return (TypedElement)resolve(CONTEXT);
     }
 
+    /**
+     *
+     * @param TypedElement inContext : a MofClass or a MofOperation
+     */
+    public void setContext(TypedElement inContext);
+
 
     public default MofType getContextType() throws InstantiationException, IllegalAccessException {
         TypedElement context = getContext();

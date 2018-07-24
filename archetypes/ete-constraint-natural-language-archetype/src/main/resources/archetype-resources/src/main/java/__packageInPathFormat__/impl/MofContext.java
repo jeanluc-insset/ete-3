@@ -54,29 +54,37 @@ public class MofContext implements GelContext<GelExpression> {
 
     public MofContext(TypedElement inContext, EteModel inModel) {
         VariableSet     initialSet = new VariableSet();
-        initialSet.put(CONTEXT, inContext);
+        initialSet.put(MODEL, inModel);
+        stack.add(initialSet);
+        if (inContext == null) {
+            return;
+        }
+    }       // constructor MofContext
+
+
+    public final void setContext(TypedElement inContext) {
+        VariableSet currentSet = stack.get(0);
+        currentSet.put(CONTEXT, inContext);
         TypedElement    current = inContext;
         if (inContext instanceof MofOperation) {
             MofOperation operation = (MofOperation) inContext;
             current = operation.getOwningMofClass();
             for (MofParameter aParameter : operation.getOwnedParameter()) {
-                initialSet.put(aParameter.getName(), aParameter);
+                currentSet.put(aParameter.getName(), aParameter);
             }
         }
-        initialSet.put(SELF, current);
+        currentSet.put(SELF, current);
         try {
             // ROOT should not be a model object but a navigation
             Self      root = (Self) FactoryRegistry.newInstance(SELF);
             root.setType((MofType)current);
-            initialSet.put(ROOT, root);
+            currentSet.put(ROOT, root);
         } catch (InstantiationException ex) {
             Logger.getLogger(MofContext.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
             Logger.getLogger(MofContext.class.getName()).log(Level.SEVERE, null, ex);
         }
-        initialSet.put(MODEL, inModel);
-        stack.add(initialSet);
-    }       // constructor MofContext
+    }
 
 
 

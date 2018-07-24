@@ -8,6 +8,9 @@
         <requiredProperty key="artifactIdI2uc">
             <defaultValue>${artifactId.substring(0,1).toUpperCase()}${artifactId.substring(1)}</defaultValue>
         </requiredProperty>
+<!--        <requiredProperty key="withExamples">
+            <defaultValue>Y</defaultValue>
+        </requiredProperty>-->
     </requiredProperties>
 
     <fileSets>

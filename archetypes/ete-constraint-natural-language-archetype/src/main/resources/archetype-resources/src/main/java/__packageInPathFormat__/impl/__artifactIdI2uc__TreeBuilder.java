@@ -2,8 +2,7 @@ package ${package}.impl;
 
 
 
-
-
+import fr.insset.jeanluc.action.semantics.builder.ConditionVisitor;
 import fr.insset.jeanluc.ete.gel.DateLiteral;
 import fr.insset.jeanluc.ete.gel.IntegerLiteral;
 import fr.insset.jeanluc.ete.gel.StringLiteral;
@@ -136,6 +135,7 @@ public class ${artifactIdI2uc}TreeBuilder extends ${package}.${artifactIdI2uc}Pa
         registry.registerDefaultFactory("average", AverageImpl.class);
         registry.registerDefaultFactory("select", SelectImpl.class);
         context = new MofContext(inContext, (EteModel)inModel);
+        visitor = new ConditionVisitor();
     }
 
 
@@ -663,7 +663,62 @@ public class ${artifactIdI2uc}TreeBuilder extends ${package}.${artifactIdI2uc}Pa
     //                  H A R D   C O D E D   M E T H O D S                   //
     //========================================================================//
 
-    
+
+    //------------------------------------------------------------------------//
+    // Rules for files                                                        //
+    // A file defines contextual rules. This means that we must reset this    //
+    // context several times during parsing                                   //
+    //------------------------------------------------------------------------//
+
+
+
+    @Override
+    public GelExpression visitClass_context(FrenchParser.Class_contextContext ctx) {
+        List<ParseTree> children = ctx.children;
+        String contextName = children.get(1).getText();
+        try {
+            EteModel    model = (EteModel) context.get(MODEL);
+            MofClass mofClass = (MofClass) model.getElementByName(contextName);
+            context.setContext(mofClass);
+        } catch (InstantiationException ex) {
+            Logger.getLogger(FrenchTreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(FrenchTreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+
+    @Override
+    public GelExpression visitOperation_context(FrenchParser.Operation_contextContext ctx) {
+        List<ParseTree> children = ctx.children;
+        String contextName = children.get(1).getText();
+        try {
+            EteModel    model = (EteModel) context.get(MODEL);
+            MofClass mofClass = (MofClass) model.getElementByName(contextName);
+            String operationName = children.get(3).getText();
+            MofOperation ownedOperation = mofClass.getOwnedOperation(operationName);
+            context.setContext(ownedOperation);
+        } catch (InstantiationException ex) {
+            Logger.getLogger(FrenchTreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(FrenchTreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    @Override
+    public GelExpression visitCondition(FrenchParser.ConditionContext ctx) {
+        return super.visitCondition(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public GelExpression visitInvariant(FrenchParser.InvariantContext ctx) {
+        return super.visitInvariant(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+
+    //========================================================================//
 
 
     @Override
@@ -756,7 +811,7 @@ public class ${artifactIdI2uc}TreeBuilder extends ${package}.${artifactIdI2uc}Pa
 
 
     private GelContext<GelExpression>   context;
-
+    private ConditionVisitor            visitor;
 
 }
 

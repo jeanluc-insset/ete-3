@@ -444,6 +444,12 @@ public class ${dialect.i2uc($projectName)}ContextImpl implements ${dialect.i2uc(
     }
 
 
+    public void setContext(TypedElement inContext) {
+        set(CONTEXT, inContext);
+        if (inContext instanceof MofOperation) {
+            MofOperation operation = (MofOperation)inContext;
+        }
+    }
 
 
 

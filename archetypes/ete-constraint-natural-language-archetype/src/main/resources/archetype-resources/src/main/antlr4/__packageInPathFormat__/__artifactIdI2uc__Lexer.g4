@@ -377,11 +377,12 @@ MOD_PERCENT     : '%';
 CARET           : '^';
 MOD             : 'mod';
 
-
 // Added by JLD
 
 IMPLIES         : '=>';
 IS_EQUIVALENT_TO: '<=>';
+
+LIST_MARK       : '--';
 
 
 //============================================================================//
@@ -397,9 +398,11 @@ BACKGROUND      : 'CONTEXTE' | 'Contexte' |'contexte';
 SCENARIO        : 'SCENARIO' | 'Scenario' | 'scenario';
 OUTLINE         : 'RÉSUMÉ' | 'Résumé' | 'résumé';
 
+DEFINITION      : 'DÉFINITION' | 'Définition' | 'définition' | 'def';
 INVARIANT       : 'INVARIANT' | 'Invariant' | 'invariant';
 POSTCONDITION   : 'POST-CONDITION' | 'Post-condition' | 'post-condition';
 PRECONDITION    : 'PRE-CONDITION' | 'PRÉ-CONDITION' | 'Pre-condition' | 'Pré-condition' | 'pre-condition' | 'pré-condition';
+
 
 GIVEN           : ETANT DONNE;
 ETANT           : 'ÉTANT' | 'ETANT' | 'Étant' | 'Etant' | 'étant';
@@ -487,6 +490,8 @@ SET      : 'Ensemble' | 'Ensemble' | 'ensemble';
 Identifier
     :   JavaLetter JavaLetterOrDigit*
     ;
+
+PlainString : JavaLetterOrDigit+ ;
 
 fragment
 JavaLetter
