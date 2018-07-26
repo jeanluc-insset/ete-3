@@ -53,7 +53,7 @@ import org.antlr.v4.runtime.tree.RuleNode;
 
 
 /**
- * Generates an abstract tree builder.
+ * "Abstract tree" builder.
  * An instance of this class is a visitor for GelExpressions. It takes any
  * GelExpression concrete tree and returns the matching abstract tree.
  *

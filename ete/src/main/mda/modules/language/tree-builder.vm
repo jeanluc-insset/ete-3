@@ -59,7 +59,6 @@ import fr.insset.jeanluc.ete.util.XList;
 
 
 /**
- * Generates an abstract tree builder.
  * An instance of this class is a visitor for ${dialect.i2uc($projectName)}Expressions. It takes a
  * ${dialect.i2uc($projectName)}Expression concrete tree and returns the matching abstract tree.
  *
@@ -170,6 +169,71 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
     //========================================================================//
 
 
+    //------------------------------------------------------------------------//
+    // Rules for files                                                        //
+    // A file defines contextual rules. This means that we must reset this    //
+    // context several times during parsing                                   //
+    //------------------------------------------------------------------------//
+
+
+    @Override
+    public GelExpression visitClass_context(FrenchParser.Class_contextContext ctx) {
+        List<ParseTree> children = ctx.children;
+        String contextName = children.get(1).getText();
+        try {
+            EteModel    model = (EteModel) context.get(MODEL);
+            MofClass mofClass = (MofClass) model.getElementByName(contextName);
+            context.setContext(mofClass);
+        } catch (InstantiationException ex) {
+            Logger.getLogger(FrenchTreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(FrenchTreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+
+    @Override
+    public GelExpression visitOperation_context(FrenchParser.Operation_contextContext ctx) {
+        List<ParseTree> children = ctx.children;
+        String contextName = children.get(1).getText();
+        try {
+            EteModel    model = (EteModel) context.get(MODEL);
+            MofClass mofClass = (MofClass) model.getElementByName(contextName);
+            String operationName = children.get(3).getText();
+            MofOperation ownedOperation = mofClass.getOwnedOperation(operationName);
+            context.setContext(ownedOperation);
+        } catch (InstantiationException ex) {
+            Logger.getLogger(FrenchTreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(FrenchTreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    @Override
+    public GelExpression visitCondition(FrenchParser.ConditionContext ctx) {
+        return super.visitCondition(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public GelExpression visitInvariant(FrenchParser.InvariantContext ctx) {
+        return super.visitInvariant(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+
+    //------------------------------------------------------------------------//
+    //                  C U S T O M   D E F I N I T I O N S                   //
+    //------------------------------------------------------------------------//
+
+
+    public void 
+    
+
+
+    //------------------------------------------------------------------------//
+    //------------------------------------------------------------------------//
+
     @Override
     public GelExpression visitSelfExpression(GelParser.SelfExpressionContext ctx) {
         try {
@@ -186,7 +250,6 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
     }
 
 
-
     @Override
     public ${dialect.i2uc($projectName)}Expression visitAtPreExpression(${dialect.i2uc($projectName)}Parser.AtPreExpressionContext ctx) {
         try {
@@ -200,6 +263,7 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
             throw new RuntimeException("Exception visiting atPreExpression", ex);
         }
     }
+
 
     @Override
     public ${dialect.i2uc($projectName)}Expression visitVariableOrMemberAtPre(${dialect.i2uc($projectName)}Parser.VariableOrMemberAtPreContext ctx) {
@@ -218,8 +282,6 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
             throw new RuntimeException("Exception visiting atPreExpression", ex);
         }
     }
-
-
 
 
     @Override
@@ -252,7 +314,8 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
         } catch (IllegalAccessException ex) {
             Logger.getLogger(TreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return null;    }
+        return null;
+    }
 
 
     @Override
@@ -304,7 +367,6 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
     }
 
 
-
     @Override
     public ${dialect.i2uc($projectName)}Expression visitCollectionMethodNavExpression(${dialect.i2uc($projectName)}Parser.CollectionMethodNavExpressionContext ctx) {
         List<ParseTree> children = ctx.children;
@@ -347,16 +409,10 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
     }
 
 
-
-
     @Override
     public GelExpression visitOclIsNew(GelParser.OclIsNewContext ctx) {
         return context.resolveIsNew();
     }
-
-
-
-
 
 
     //========================================================================//
