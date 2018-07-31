@@ -1,0 +1,10 @@
+
+
+A pilot is certified for a planeModel :
+        the planeModel of the certificates of the pilot contain the planeModel.
+
+A pilote is certified for a plane :
+        the pilot is certified for the model of the plane.
+
+
+

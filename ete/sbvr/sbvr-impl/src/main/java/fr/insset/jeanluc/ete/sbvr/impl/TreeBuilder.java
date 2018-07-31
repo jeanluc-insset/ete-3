@@ -37,7 +37,6 @@ import fr.insset.jeanluc.ete.util.XList;
 
 
 /**
- * Generates an abstract tree builder.
  * An instance of this class is a visitor for SbvrExpressions. It takes a
  * SbvrExpression concrete tree and returns the matching abstract tree.
  *
@@ -59,6 +58,7 @@ public class TreeBuilder extends SbvrParserBaseVisitor<SbvrExpression> {
         registry.registerDefaultFactory(".",    AttributeNavImpl.class);
         registry.registerDefaultFactory(".att", AttributeNavImpl.class);
         registry.registerDefaultFactory(".op",  MethodNavImpl.class);
+        registry.registerDefaultFactory("symbol",  SymbolImpl.class);
     }
 
 
@@ -86,6 +86,16 @@ public class TreeBuilder extends SbvrParserBaseVisitor<SbvrExpression> {
     //========================================================================//
 
 
+    //------------------------------------------------------------------------//
+    // Rules for files                                                        //
+    // A file defines contextual rules. This means that we must reset this    //
+    // context several times during parsing                                   //
+    //------------------------------------------------------------------------//
+
+
+    //------------------------------------------------------------------------//
+    //------------------------------------------------------------------------//
+
     @Override
     public GelExpression visitSelfExpression(GelParser.SelfExpressionContext ctx) {
         try {
@@ -102,7 +112,6 @@ public class TreeBuilder extends SbvrParserBaseVisitor<SbvrExpression> {
     }
 
 
-
     @Override
     public SbvrExpression visitAtPreExpression(SbvrParser.AtPreExpressionContext ctx) {
         try {
@@ -116,6 +125,7 @@ public class TreeBuilder extends SbvrParserBaseVisitor<SbvrExpression> {
             throw new RuntimeException("Exception visiting atPreExpression", ex);
         }
     }
+
 
     @Override
     public SbvrExpression visitVariableOrMemberAtPre(SbvrParser.VariableOrMemberAtPreContext ctx) {
@@ -134,8 +144,6 @@ public class TreeBuilder extends SbvrParserBaseVisitor<SbvrExpression> {
             throw new RuntimeException("Exception visiting atPreExpression", ex);
         }
     }
-
-
 
 
     @Override
@@ -168,7 +176,8 @@ public class TreeBuilder extends SbvrParserBaseVisitor<SbvrExpression> {
         } catch (IllegalAccessException ex) {
             Logger.getLogger(TreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return null;    }
+        return null;
+    }
 
 
     @Override
@@ -220,7 +229,6 @@ public class TreeBuilder extends SbvrParserBaseVisitor<SbvrExpression> {
     }
 
 
-
     @Override
     public SbvrExpression visitCollectionMethodNavExpression(SbvrParser.CollectionMethodNavExpressionContext ctx) {
         List<ParseTree> children = ctx.children;
@@ -263,16 +271,10 @@ public class TreeBuilder extends SbvrParserBaseVisitor<SbvrExpression> {
     }
 
 
-
-
     @Override
     public GelExpression visitOclIsNew(GelParser.OclIsNewContext ctx) {
         return context.resolveIsNew();
     }
-
-
-
-
 
 
     //========================================================================//

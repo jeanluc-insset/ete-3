@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>fr.insset.jeanluc</groupId>
+        <artifactId>incrementalantlr</artifactId>
+        <version>3.1</version>
+    </parent>
+    <artifactId>incremental_antlr</artifactId>
+    <packaging>jar</packaging>
+
+    <description>
+        The purpose of this project is to provide an easy process for
+        "incremental grammars".
+        Such a grammar is actually built with two layers.
+        The first layers creates definitions, the second layer can use
+        definitions of the first layer.
+        The second layer is not allowed to contain definitions.
+        For example, if the fist layer contains :
+        Definition : a pilot is certified for a planeModel :
+        the (collection of) model of the certificates of the pilote contains
+        the planeModel.
+        Then the rule :
+        pilotIsCertifiedForPlaneModel :
+                    model of certificates of pilote contains planeModel;
+        is added to the second layer and the navExpression is enriched with :
+        navexpression :
+            | pilotIsCertifiedForPlaneModel;
+    </description>
+
+
+    <build>
+        <plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <compilerArgument>-proc:none</compilerArgument>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.antlr</groupId>
+                <artifactId>antlr4-maven-plugin</artifactId>
+                <version>4.5.3</version>
+                <configuration>
+                    <visitor>true</visitor>
+                    <listener>true</listener>
+                    <sourceDirectory>${basedir}/src/main/antlr4</sourceDirectory>
+                    <outputDirectory>${basedir}/target/generated-sources/antlr4</outputDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>prepare</id>
+                        <goals>
+                            <goal>antlr4</goal>
+                        </goals>
+                        <phase>initialize</phase>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4-runtime</artifactId>
+            <version>4.7</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4</artifactId>
+            <version>4.7</version>
+        </dependency>
+    </dependencies>
+</project>
+

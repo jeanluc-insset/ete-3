@@ -65,8 +65,12 @@ atPreExpression :
 //============================================================================//
 
 
-constraintFile :
-   contextualConstraints*
+file :
+    (
+       definition
+       classContextualStatements
+       operationContextualStatements
+    )*
 ;
 
 

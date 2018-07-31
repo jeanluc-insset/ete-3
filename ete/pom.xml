@@ -21,5 +21,6 @@
         <module>methodeb</module>
         <module>external_constraint_file</module>
         <module>sbvr</module>
+        <module>incrementalantlr</module>
     </modules>
 </project>

@@ -59,6 +59,7 @@ public class MofContext implements GelContext<GelExpression> {
         if (inContext == null) {
             return;
         }
+        setContext(inContext);
     }       // constructor MofContext
 
 

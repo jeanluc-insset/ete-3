@@ -97,6 +97,7 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
         registry.registerDefaultFactory(".",    AttributeNavImpl.class);
         registry.registerDefaultFactory(".att", AttributeNavImpl.class);
         registry.registerDefaultFactory(".op",  MethodNavImpl.class);
+        registry.registerDefaultFactory("symbol",  SymbolImpl.class);
     }
 
 
@@ -174,61 +175,6 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
     // A file defines contextual rules. This means that we must reset this    //
     // context several times during parsing                                   //
     //------------------------------------------------------------------------//
-
-
-    @Override
-    public GelExpression visitClass_context(FrenchParser.Class_contextContext ctx) {
-        List<ParseTree> children = ctx.children;
-        String contextName = children.get(1).getText();
-        try {
-            EteModel    model = (EteModel) context.get(MODEL);
-            MofClass mofClass = (MofClass) model.getElementByName(contextName);
-            context.setContext(mofClass);
-        } catch (InstantiationException ex) {
-            Logger.getLogger(FrenchTreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(FrenchTreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
-    }
-
-
-    @Override
-    public GelExpression visitOperation_context(FrenchParser.Operation_contextContext ctx) {
-        List<ParseTree> children = ctx.children;
-        String contextName = children.get(1).getText();
-        try {
-            EteModel    model = (EteModel) context.get(MODEL);
-            MofClass mofClass = (MofClass) model.getElementByName(contextName);
-            String operationName = children.get(3).getText();
-            MofOperation ownedOperation = mofClass.getOwnedOperation(operationName);
-            context.setContext(ownedOperation);
-        } catch (InstantiationException ex) {
-            Logger.getLogger(FrenchTreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(FrenchTreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
-    }
-
-    @Override
-    public GelExpression visitCondition(FrenchParser.ConditionContext ctx) {
-        return super.visitCondition(ctx); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public GelExpression visitInvariant(FrenchParser.InvariantContext ctx) {
-        return super.visitInvariant(ctx); //To change body of generated methods, choose Tools | Templates.
-    }
-
-
-    //------------------------------------------------------------------------//
-    //                  C U S T O M   D E F I N I T I O N S                   //
-    //------------------------------------------------------------------------//
-
-
-    public void 
-    
 
 
     //------------------------------------------------------------------------//

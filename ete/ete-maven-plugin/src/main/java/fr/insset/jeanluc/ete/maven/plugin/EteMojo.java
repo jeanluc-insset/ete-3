@@ -45,6 +45,7 @@ public class EteMojo
     /**
      * {@inheritDoc}
      */
+    @Override
     public void execute()
             throws MojoExecutionException {
         Logger.getGlobal().log(Level.INFO, "Ete plugin running");
