@@ -1,7 +1,7 @@
 
 
 Infrastructure
-    - default naming
+    - default naming : navigable ends should be named, it would be nice to provide default naming
     - generation of "queries"
     - OCL custom functions
         - definition
@@ -9,14 +9,18 @@ Infrastructure
     - full support of OCL
     - external OCL files
     - derived properties
-    - other constraint language
+    - other constraint languages
+        - B
+        - ATL
+        - natural languages
     - XMI output
 
 Projects
     - Ete 4.0
-    - Mof2Text
-    - MOF-QVTop
-    - MOF-QVTrel
+        - metametamodel
+        - Mof2Text
+        - MOF-QVTop
+        - MOF-QVTrel
     - B
 
 Templates and modules
