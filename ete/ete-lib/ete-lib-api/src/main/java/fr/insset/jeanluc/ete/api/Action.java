@@ -204,6 +204,14 @@ public interface Action {
         return null;
     }
 
+    public default Object getParameter(String inName, Object inDefaultValue) {
+        Object result = getParameter(inName);
+        if (result != null) {
+            return result;
+        }
+        return inDefaultValue;
+    }
+
     public default String getConcatenatedParameter(String inName) {
         Action  parent = getParent();
         String result = parent == null ? "" : parent.getConcatenatedParameter(inName);

@@ -23,14 +23,31 @@
         Then the rule :
         pilotIsCertifiedForPlaneModel :
                     model of certificates of pilote contains planeModel;
-        is added to the second layer and the navExpression is enriched with :
-        navexpression :
+        is added to the second layer and the navExpression rule is enriched
+        with :
+        navExpression :
+            ...
             | pilotIsCertifiedForPlaneModel;
     </description>
 
 
     <build>
         <plugins>
+
+            <plugin>
+                <groupId>fr.insset.jeanluc</groupId>
+                <artifactId>incrementalantlr-maven-plugin</artifactId>
+                <version>3.1</version>
+                <executions>
+                    <execution>
+                        <id>build grammars</id>
+                        <goals>
+                            <goal>definition-processor</goal>
+                        </goals>
+                        <phase>generate-sources</phase>
+                    </execution>
+                </executions>
+            </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -81,5 +98,6 @@
             <version>4.7</version>
         </dependency>
     </dependencies>
+
 </project>
 

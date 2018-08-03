@@ -1,9 +1,10 @@
-                    package fr.insset.jeanluc.ete.api.impl;
+package fr.insset.jeanluc.ete.api.impl;
+
+
 
 import fr.insset.jeanluc.ete.api.ActionSupport;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.MofPackage;
 import fr.insset.jeanluc.util.factory.FactoryRegistry;
-import static fr.insset.jeanluc.util.factory.FactoryRegistry.getRegistry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -45,7 +46,7 @@ public class RegisterAction extends ActionSupport {
         register(actionName, className);
         return inModel;
     }
-    
 
 
 }
+

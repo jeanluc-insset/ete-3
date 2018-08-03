@@ -1,0 +1,14 @@
+
+
+définition :
+    Un Pilote est certifié pour un TypeDAvion :
+        la liste modèle des certificats du Pilote contient le TypeDAvion.
+définition :
+    Un Pilote est certifié pour un Avion :
+        le Pilote est certifié pour le modèle de l'Avion.
+
+contexte Vol :
+    inv le commandant est certifié : le commandant de ce Vol est certifié pour l'avion de ce Vol.
+    inv le copilote est certifié : le copilote de ce Vol est certifié pour l'avion de ce Vol.
+
+
