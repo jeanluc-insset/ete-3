@@ -12,15 +12,14 @@
         <module>meta-model</module>
         <module>el</module>
         <module>ete-lib</module>
+        <module>defs</module>
         <module>ete-maven-plugin</module>
         <module>gel</module>
         <module>xlang</module>
-        <module>incrementalantlr</module>
         <module>xlang-to-sql</module>
+        <module>constraint</module>
         <module>database</module>
-        <module>defs</module>
         <module>methodeb</module>
         <module>sbvr</module>
-        <module>constraint</module>
     </modules>
 </project>

@@ -1,9 +1,0 @@
-
-
-Context flight :
-    The captain is certified for the plane.
-    The copilot is certified for the plane.
-    The captain and the copilot are different.
-
-
-

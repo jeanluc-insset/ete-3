@@ -10,7 +10,5 @@
     <packaging>pom</packaging>
     <modules>
         <module>incremental-antlr-action</module>
-        <module>incremental_antlr</module>
-        <module>incrementalantlr-maven-plugin</module>
     </modules>
 </project>
