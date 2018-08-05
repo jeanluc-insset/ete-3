@@ -12,6 +12,8 @@
     <description>
         Ce project defines an Ete Action which reads constraints in a file.
         The constraints are added to the model.
+        They can be expressed in a custom language, as long as that language
+        has been loaded first
     </description>
 
     <dependencies>

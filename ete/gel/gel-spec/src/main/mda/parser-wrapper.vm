@@ -8,7 +8,16 @@ import fr.insset.jeanluc.ete.meta.model.types.TypedElement;
 
 public interface ParserWrapper {
 
+    /**
+     * Reads a contextual expression, typically an expression which is embedded
+     * in a model
+     */
     public GelExpression buildAbstractTree(String inExpression, EteModel inModel, TypedElement inContextElement);
+
+    /**
+     * Reads non contextual expressions, typically the content of a text file.
+     */
+    public void          readExpressions(String inExpressions, EteModel inoutModel);
 
 }
 
