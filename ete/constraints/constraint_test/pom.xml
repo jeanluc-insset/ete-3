@@ -3,14 +3,9 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>fr.insset.jeanluc</groupId>
-        <artifactId>ete</artifactId>
+        <artifactId>constraints</artifactId>
         <version>3.1</version>
     </parent>
-    <artifactId>constraints</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>constraints_io</module>
-        <module>constraint_language</module>
-        <module>constraint_test</module>
-    </modules>
+    <artifactId>constraint_test</artifactId>
+    <packaging>jar</packaging>
 </project>

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
+
     <modelVersion>4.0.0</modelVersion>
+
 
     <parent>
         <groupId>fr.insset.jeanluc</groupId>
@@ -11,7 +13,101 @@
     <artifactId>constraint_language</artifactId>
     <packaging>jar</packaging>
 
+
     <description>
-        The project defines an action to load constraint languages.
+        The project defines two actions to load a constraint language, actually
+        a ParserWrapper implementation and to use it with constraints files.
+
+        The language action cr
+
+        The actual grammar is made of three layers :
+        - the basic language grammar
+        - the model grammar
+        - the final grammar
+
+        The basic language grammar defines the keywords of the language :
+            - modalities (for each, any...)
+            - logical operations (and, or, implies, not both...)
+
+        The model grammar defines tokens from the model : any entity is turned
+        into a token.
+
+        The final grammar contains rules generated from the definitions
+        provided in a constraint file.
+
+        The language action generates the model grammar. 
+
+        Then the user can define constraint files through the constraint action.
+        The constraint file can contain definitions of functions.
+
+        The constraint action builds the final grammar then launches Antlr to
+        actually build the ParserWrapper.
+        The it compiles and instantiates the ParserWrapper class.
+        Finally, it reads the constraint file.
+
+        Example (the french model is used) :
+        <!--
+            <constraint name="french" file="src/main/mda/myConstraints.txt"/>
+        -->
+        The following lexer is generated :
+        
+lexer grammar ModelFrenchLexer;
+
+import FrenchLexer;
+
+Pilot  : 'Pilot' | 'pilot';
+Flight : 'Flight' | 'flight';
+Plane  : 'Plane' | 'plane';
+PlaneModel : ('Plane' | 'plane') 'model';
+...
+
+        Then the constraint file contains the following definitions :
+Definition :
+    a Pilot is certified for a PlaneModel :
+    the model of the certificates of the Pilot contains the PlaneModel.
+Definition :
+    a Pilot is certified for a Plane :
+    the Pilot is certified for the model of the Plane.
+
+The final parser grammar will containt :
+
+aPilotIsCertifiedForAPlaneModel :
+    a Pilot is certified for a PlaneModel;
+aPilotIsCertifiedForAPlane :
+    a Pilot is certified for a Plane;
+
+function : aPilotIsCertifiedForAPlaneModel | aPilotIsCertifiedForAPlane;
+
+The constraint file, in turn can contain rules such that :
+
+Context Flight :
+    inv captain is certified : the captain of this flight is certified for the plane of this flight
+    inv copilot is certified : the copilot ot this flight is certified for the plane of this flight.
+
+
+As we can see, the is overload of the sentence "a Pilot is certified for".
+This can be embarassing for antlr.
+
+A good solution would be to avoid such situations.
+
     </description>
+
+
+    <dependencies>
+
+        <dependency>
+            <groupId>fr.insset.jeanluc</groupId>
+            <artifactId>ete-lib-api</artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>gel-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+    </dependencies>
+
+
 </project>
