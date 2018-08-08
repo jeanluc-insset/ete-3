@@ -45,12 +45,12 @@
         The it compiles and instantiates the ParserWrapper class.
         Finally, it reads the constraint file.
 
-        Example (the french model is used) :
+        Example :
         <!--
-            <constraint name="french" file="src/main/mda/myConstraints.txt"/>
+            <constraint language="english" file="src/main/mda/myConstraints.txt"/>
         -->
         The following lexer is generated :
-        
+[
 lexer grammar ModelFrenchLexer;
 
 import FrenchLexer;
@@ -60,32 +60,39 @@ Flight : 'Flight' | 'flight';
 Plane  : 'Plane' | 'plane';
 PlaneModel : ('Plane' | 'plane') 'model';
 ...
+]
 
         Then the constraint file contains the following definitions :
+[
 Definition :
     a Pilot is certified for a PlaneModel :
     the model of the certificates of the Pilot contains the PlaneModel.
 Definition :
     a Pilot is certified for a Plane :
     the Pilot is certified for the model of the Plane.
+]
 
-The final parser grammar will containt :
+The final parser grammar will contain :
 
+[
 aPilotIsCertifiedForAPlaneModel :
     a Pilot is certified for a PlaneModel;
 aPilotIsCertifiedForAPlane :
     a Pilot is certified for a Plane;
 
 function : aPilotIsCertifiedForAPlaneModel | aPilotIsCertifiedForAPlane;
+]
 
-The constraint file, in turn can contain rules such that :
+        In turn the constraint file can also contain rules such that :
 
+[
 Context Flight :
     inv captain is certified : the captain of this flight is certified for the plane of this flight
     inv copilot is certified : the copilot ot this flight is certified for the plane of this flight.
+]
 
 
-As we can see, the is overload of the sentence "a Pilot is certified for".
+As we can see, the is an overload of the sentence "a Pilot is certified for".
 This can be embarassing for antlr.
 
 A good solution would be to avoid such situations.
@@ -106,7 +113,44 @@ A good solution would be to avoid such situations.
             <artifactId>gel-api</artifactId>
             <version>${project.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-core</artifactId>
+            <version>1.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>fr.insset.jeanluc</groupId>
+            <artifactId>meta-model-impl</artifactId>
+            <version>3.1</version>
+            <scope>test</scope>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>fr.insset.jeanluc</groupId>
+            <artifactId>xmi-io</artifactId>
+            <version>3.1</version>
+            <scope>test</scope>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4</artifactId>
+            <version>4.7.1</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-compiler-api</artifactId>
+            <version>2.8.2</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 
 

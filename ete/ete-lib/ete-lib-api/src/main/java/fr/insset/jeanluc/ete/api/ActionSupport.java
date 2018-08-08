@@ -2,8 +2,14 @@ package fr.insset.jeanluc.ete.api;
 
 
 
+import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
+import static fr.insset.jeanluc.ete.meta.model.emof.MofClass.MOF_CLASS;
+import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
+import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.MofPackage;
+import static fr.insset.jeanluc.ete.meta.model.mofpackage.MofPackage.MOF_PACKAGE;
+import fr.insset.jeanluc.ete.meta.model.types.TypedElement;
 import fr.insset.jeanluc.util.factory.FactoryMethods;
 import fr.insset.jeanluc.util.factory.FactoryRegistry;
 import static fr.insset.jeanluc.util.factory.FactoryRegistry.FACTORY_REGISTRY;
@@ -217,7 +223,41 @@ public abstract class ActionSupport implements Action {
     }
 
 
+    //========================================================================//
+    //                           U T I L I T I E S                            //
+    //========================================================================//
 
+
+    /**
+     * TODO : currently, the method returns to received package instead of a
+     * fresh one.
+     */
+    public MofPackage clonePackage(MofPackage inPackage) throws InstantiationException, IllegalAccessException {
+        MofPackage      result;
+//        result = (MofPackage) FactoryRegistry.newInstance(MOF_PACKAGE);
+        result = inPackage;
+        return result;
+    }
+
+    public MofClass cloneClass(MofClass inClass) throws InstantiationException, IllegalAccessException {
+        MofClass    result = (MofClass) FactoryRegistry.newInstance(MOF_CLASS);
+        return result;
+    }
+
+    public MofOperation cloneOperation(MofOperation inOperation)  throws InstantiationException, IllegalAccessException {
+        MofOperation    result = (MofOperation) FactoryRegistry.newInstance(MOF_CLASS);
+        return result;
+    }
+
+    public MofProperty cloneOperation(MofProperty inProperty)  throws InstantiationException, IllegalAccessException {
+        MofProperty    result = (MofProperty) FactoryRegistry.newInstance(MOF_CLASS);
+        return result;
+    }
+
+
+    protected void copyContent(TypedElement from, TypedElement to) {
+        
+    }
 
     //========================================================================//
     //                   I N S T A N C E   V A R I A B L E S                  //
