@@ -79,6 +79,37 @@ public class LexerBuilder {
     }
 
 
+    //========================================================================//
+
+
+    public void generateParserGrammar(String inName, MofPackage inModel, String fileName) throws FileNotFoundException {
+        int indexLastSlash = fileName.lastIndexOf(File.separator);
+        if (indexLastSlash > 0) {
+            String directoryPath = fileName.substring(0, indexLastSlash);
+            File file = new File(directoryPath);
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+        }
+        generateParserGrammar(inName, inModel, new FileOutputStream(inName));
+    }
+
+    public void generateParserGrammar(String inName, MofPackage inModel, OutputStream file) {
+        generateParserGrammar(inName, inModel, new OutputStreamWriter(file));
+    }
+
+    public void generateParserGrammar(String inName, MofPackage inModel, Writer inWriter) {
+        generateParserGrammar(inName, inModel, new PrintWriter(inWriter));
+    }
+
+    public void generateParserGrammar(String inName, MofPackage inModel, PrintWriter writer) {
+    }
+
+
+
+    //========================================================================//
+
+
     public String toUpperCaseInitial(String inString) {
             return inString.substring(0,1).toUpperCase() + inString.substring(1);
     }

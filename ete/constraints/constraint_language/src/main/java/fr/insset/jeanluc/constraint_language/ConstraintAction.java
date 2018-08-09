@@ -25,14 +25,32 @@ public class ConstraintAction extends ActionSupport {
     @Override
     public MofPackage postProcess(MofPackage inPackage) throws EteException {
         try {
-            // 1- Build the lexer grammar from the model
+            // 1- Create a fresh model to return
             MofPackage  result = clonePackage(inPackage);
+
+            // 2- Generate the lexer grammar from the model and a first parser
             String  language = (String) getParameter("language");
             LexerBuilder lexerBuilder = new LexerBuilder();
             language = language.substring(0, 1).toUpperCase() + language.substring(1);
             lexerBuilder.generateLexerGrammar(language, result, "target/tmp/" + language + "Lexer.g4");
+            lexerBuilder.generateParserGrammar(language, result, "target/tmp/" + language + "Parser.g4");
 
-            // Build the parser from that lexer and a standard parser
+            // 3- 
+            
+
+            // 4- Generate the parser from a first parsing of the constraint file
+            //    (the grammar will contain a rule for every definition in the constraint file)
+            
+
+            // 5- Run antlr4 on the final grammar.
+            //    This will generate the parser class.
+            AntlrRunner     parserBuilder = new AntlrRunner();
+
+            // 5- Compile the generated classes
+
+            // 6- Parse the constraint file using the final grammar
+
+            // 7- We're through it
             return result;
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ConstraintAction.class.getName()).log(Level.SEVERE, null, ex);

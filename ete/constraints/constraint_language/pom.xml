@@ -51,9 +51,9 @@
         -->
         The following lexer is generated :
 [
-lexer grammar ModelFrenchLexer;
+lexer grammar ModelEnglishLexer;
 
-import FrenchLexer;
+import EnglishLexer;
 
 Pilot  : 'Pilot' | 'pilot';
 Flight : 'Flight' | 'flight';
@@ -72,7 +72,7 @@ Definition :
     the Pilot is certified for the model of the Plane.
 ]
 
-The final parser grammar will contain :
+The generated final parser grammar will contain :
 
 [
 aPilotIsCertifiedForAPlaneModel :

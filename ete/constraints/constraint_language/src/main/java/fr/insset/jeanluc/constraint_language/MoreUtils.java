@@ -16,7 +16,7 @@ import java.security.NoSuchAlgorithmException;
 
 
 
-class MojoUtils {
+class MoreUtils {
 
     /**
      * Creates the MD5 checksum for the given file.

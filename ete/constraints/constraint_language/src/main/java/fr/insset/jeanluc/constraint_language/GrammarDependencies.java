@@ -119,7 +119,7 @@ class GrammarDependencies {
             if (!usages.isEmpty()) {
                 grammars.put(grammarFile,
                     new AbstractMap.SimpleImmutableEntry<byte[], Collection<String>>(
-                        MojoUtils.checksum(grammarFile), usages));
+                        MoreUtils.checksum(grammarFile), usages));
 
                 log.fine("  " + getRelativePath(grammarFile) + " used by " + usages);
             }
@@ -132,7 +132,7 @@ class GrammarDependencies {
             if (!usages.isEmpty()) {
                 grammars.put(grammarFile,
                     new AbstractMap.SimpleImmutableEntry<byte[], Collection<String>>(
-                        MojoUtils.checksum(grammarFile), usages));
+                        MoreUtils.checksum(grammarFile), usages));
 
                 log.fine("  " + grammarFile.getName() + " imported by " + usages);
             }
@@ -159,7 +159,7 @@ class GrammarDependencies {
             Collection<String> usages = e.getValue().getValue();
 
             if (usages.contains(grammarPath)) {
-                if (!depGrammarFile.exists() || !Arrays.equals(MojoUtils.checksum(depGrammarFile), checksum)) {
+                if (!depGrammarFile.exists() || !Arrays.equals(MoreUtils.checksum(depGrammarFile), checksum)) {
                     logger.fine("  " + grammarPath + ": dependency " +
                         depGrammarFile.getName() + " changed");
 
@@ -188,7 +188,7 @@ class GrammarDependencies {
             return packageName + grammarFile.getName();
 
         // otherwise resolve the path relative to the source directory
-        String path = MojoUtils.findSourceSubdir(sourceDirectory, grammarFile);
+        String path = MoreUtils.findSourceSubdir(sourceDirectory, grammarFile);
 
         return path + grammarFile.getName();
     }
@@ -244,7 +244,7 @@ class GrammarDependencies {
                         String name = stripQuotes(value);
                         // the grammar name may be qualified, but we resolve the path anyway
                         String grammarName = stripPath(name);
-                        String grammarPath = MojoUtils.findSourceSubdir(sourceDirectory,
+                        String grammarPath = MoreUtils.findSourceSubdir(sourceDirectory,
                                 grammarFile);
                         File depGrammarFile = resolve(grammarName, grammarPath);
 
