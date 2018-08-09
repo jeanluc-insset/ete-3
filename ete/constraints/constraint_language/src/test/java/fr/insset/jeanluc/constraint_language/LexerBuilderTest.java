@@ -51,23 +51,24 @@ public class LexerBuilderTest {
 
 
     /**
-     * Test of generateLexerGrammar method, of class LexerBuilder.
+     * Test of generateGrammars method, of class LexerBuilder.
      */
     @Test
     public void testGenerateLexerGrammar() throws Exception {
         System.out.println("generateLexerGrammar");
         readModel();
         String inName = "french";
+        String directory = "target/tmp";
         String fileName = "target/tmp/FrenchModelLexer.g4";
         LexerBuilder instance = new LexerBuilder();
-        instance.generateLexerGrammar(inName, model, fileName);
+        instance.generateGrammars(inName, model, directory);
 
         // Currently, we cannot check the content of the file (this will be
         // done in the ParserBuilderTest). We just check the file exists and
         // has a correct length.
         File file = new File(fileName);
         assertTrue(file.exists());
-        assertEquals(256, file.length());
+        assertEquals(136, file.length());
     }
 
 

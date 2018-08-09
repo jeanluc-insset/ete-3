@@ -1,4 +1,4 @@
-// Generated from fr/insset/jeanluc/ete/sbvr/GelLexer.g4 by ANTLR 4.5.3
+// Generated from fr/insset/jeanluc/ete/sbvr/SbvrLexer.g4 by ANTLR 4.5.3
 package fr.insset.jeanluc.ete.sbvr;
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
@@ -10,7 +10,7 @@ import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.misc.*;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
-public class GelLexer extends Lexer {
+public class SbvrLexer extends Lexer {
 	static { RuntimeMetaData.checkVersion("4.5.3", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
@@ -104,13 +104,13 @@ public class GelLexer extends Lexer {
 	}
 
 
-	public GelLexer(CharStream input) {
+	public SbvrLexer(CharStream input) {
 		super(input);
 		_interp = new LexerATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
 
 	@Override
-	public String getGrammarFileName() { return "GelLexer.g4"; }
+	public String getGrammarFileName() { return "SbvrLexer.g4"; }
 
 	@Override
 	public String[] getRuleNames() { return ruleNames; }

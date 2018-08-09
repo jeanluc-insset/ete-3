@@ -4,6 +4,8 @@
  * Copyright (c) 2012-2017 The ANTLR Project. All rights reserved.
  * Use of this file is governed by the BSD 3-clause license that
  * can be found in the LICENSE.txt file in the project root.
+ *
+ * Copyright (©) 2018 by Jean-Luc Déléage.
  */
 
 package fr.insset.jeanluc.constraint_language;
@@ -45,14 +47,17 @@ import org.codehaus.plexus.compiler.util.scan.mapping.SuffixMapping;
 /**
  * Parses a parser grammar and generates the java classes (actually, runs antlr
  * on the parser grammar).
+ * 
+ * The original Mojo class has been turned into a Pojo class.
+ * Some properties have been modified from File to String.
  *
  * @author jldeleage
  */
 public class AntlrRunner {
 
-    private File sourceDirectory;
+    private String sourceDirectoryPath;
     private String outputDirectoryPath;
-    private File libDirectory;
+    private String libDirectoryPath;
     private Set<String> excludes = new HashSet<String>();
     private Set<String> includes = new HashSet<String>();
     private String statusDirectory = "maven-status/antlr4";
@@ -61,11 +66,12 @@ public class AntlrRunner {
         Logger log = Logger.getGlobal();
 
         Tool tool = new MyAntlrTool();
-        if (sourceDirectory == null) {
-            sourceDirectory = new File("src/main/antlr4");
+        if (sourceDirectoryPath == null) {
+            sourceDirectoryPath = "src/main/antlr4";
         }
 
 //		outputEncoding = validateEncoding(outputEncoding);
+        File sourceDirectory = new File(sourceDirectoryPath);
         if (!sourceDirectory.isDirectory()) {
             return;
         }
@@ -80,9 +86,10 @@ public class AntlrRunner {
         if (!outputDirectory.exists()) {
             outputDirectory.mkdirs();
         }
-        if (libDirectory == null) {
-            libDirectory = new File("src/main/antlr4/imports");
+        if (libDirectoryPath == null) {
+            libDirectoryPath = "src/main/antlr4/imports";
         }
+        File libDirectory = new File(libDirectoryPath);
 
         GrammarDependencies dependencies
                 = new GrammarDependencies(sourceDirectory,
@@ -149,10 +156,10 @@ public class AntlrRunner {
         List<String> args = new ArrayList<String>();
 
         args.add("-o");
-        args.add("target/tmp/");
+        args.add(outputDirectoryPath);
 
         args.add("-lib");
-        args.add("src/main/antlr4/imports");
+        args.add(libDirectoryPath);
 
         // Next we need to set the options given to us in the pom into the
         // tool instance we have created.
@@ -244,6 +251,7 @@ public class AntlrRunner {
     }
 
     private Set<File> getImportFiles(File sourceDirectory) throws InclusionScanException {
+        File    libDirectory = new File(libDirectoryPath);
         if (!libDirectory.exists()) {
             return Collections.emptySet();
         }

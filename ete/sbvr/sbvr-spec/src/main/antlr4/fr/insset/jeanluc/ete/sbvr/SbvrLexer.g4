@@ -1,4 +1,4 @@
-lexer grammar GelLexer;
+lexer grammar SbvrLexer;
 
 
 

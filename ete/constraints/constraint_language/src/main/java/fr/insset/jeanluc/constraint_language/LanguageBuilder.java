@@ -21,8 +21,7 @@ public class LanguageBuilder {
     public void buildLexerGrammar(String language, MofPackage inModel) throws FileNotFoundException, UnsupportedEncodingException {
         LexerBuilder lexerBuilder = new LexerBuilder();
         language = language.substring(0, 1).toUpperCase() + language.substring(1);
-        lexerBuilder.generateLexerGrammar(language, inModel, "target/tmp/" + language + "Lexer.g4");
-        lexerBuilder.generateParserGrammar(language, inModel, "target/tmp/" + language + "Parser.g4");
+        lexerBuilder.generateGrammars(language, inModel, "target/tmp/" + language + "Lexer.g4");
     }
 
     /**

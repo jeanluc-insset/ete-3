@@ -32,8 +32,7 @@ public class ConstraintAction extends ActionSupport {
             String  language = (String) getParameter("language");
             LexerBuilder lexerBuilder = new LexerBuilder();
             language = language.substring(0, 1).toUpperCase() + language.substring(1);
-            lexerBuilder.generateLexerGrammar(language, result, "target/tmp/" + language + "Lexer.g4");
-            lexerBuilder.generateParserGrammar(language, result, "target/tmp/" + language + "Parser.g4");
+            lexerBuilder.generateGrammars(language, result, "target/tmp/" + language + "Lexer.g4");
 
             // 3- 
             

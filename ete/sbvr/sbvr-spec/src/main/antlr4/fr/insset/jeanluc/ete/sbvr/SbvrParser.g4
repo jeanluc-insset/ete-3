@@ -1,9 +1,9 @@
-parser grammar GelParser;
+parser grammar SbvrParser;
 
 
 
 options {
-    tokenVocab = GelLexer;
+    tokenVocab = SbvrLexer;
 }
 
 
@@ -27,10 +27,11 @@ options {
 //                             E N T R Y P O I N T                            //
 //============================================================================//
 
+sbvrExpression: gelExpression;
 
-gelExpression :
-    xorExpression
-;
+
+
+gelExpression : xorExpression;
 
 
 //============================================================================//
@@ -38,13 +39,7 @@ gelExpression :
 //============================================================================//
 
 
-xorExpression :
-    (
-    orExpression
-    XOR
-    )*
-    orExpression
-;
+xorExpression : (orExpression XOR)* orExpression;
 
 
 orExpression :
