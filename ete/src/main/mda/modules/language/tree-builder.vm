@@ -36,8 +36,8 @@ import fr.insset.jeanluc.ete.meta.model.types.collections.MofCollection;
 import fr.insset.jeanluc.ete.${dialect.i2lc($projectName)}.${dialect.i2uc($projectName)}Parser;
 import fr.insset.jeanluc.ete.${dialect.i2lc($projectName)}.${dialect.i2uc($projectName)}ParserBaseVisitor;
 import fr.insset.jeanluc.ete.${dialect.i2lc($projectName)}.*;
-import static fr.insset.jeanluc.ete.gel.GelContext.CURRENT;
-import static fr.insset.jeanluc.ete.gel.GelContext.ROOT;
+import static fr.insset.jeanluc.ete.${dialect.i2lc($projectName)}.${dialect.i2uc($projectName)}Context.CURRENT;
+import static fr.insset.jeanluc.ete.${dialect.i2lc($projectName)}.${dialect.i2uc($projectName)}Context.ROOT;
 import fr.insset.jeanluc.ete.meta.model.emof.Feature;
 import fr.insset.jeanluc.util.factory.FactoryMethods;
 import fr.insset.jeanluc.util.factory.FactoryRegistry;
@@ -181,7 +181,7 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
     //------------------------------------------------------------------------//
 
     @Override
-    public GelExpression visitSelfExpression(GelParser.SelfExpressionContext ctx) {
+    public ${dialect.i2uc($projectName)}Expression visitSelfExpression(${dialect.i2uc($projectName)}Parser.SelfExpressionContext ctx) {
         try {
             Self    result = (Self) FactoryRegistry.newInstance("self");
             result.setType(context.getContextType());
@@ -235,7 +235,7 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
         try {
             String text = ctx.getText();
             Object resolve = context.resolve(text);
-            return (GelExpression)resolve;
+            return (${dialect.i2uc($projectName)}Expression)resolve;
         } catch (InstantiationException ex) {
             Logger.getLogger(TreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
@@ -254,7 +254,7 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
     @Override
     public ${dialect.i2uc($projectName)}Expression visitVariableOrMember(${dialect.i2uc($projectName)}Parser.VariableOrMemberContext ctx) {
         try {
-            return (GelExpression)context.resolve(ctx.getText());
+            return (${dialect.i2uc($projectName)}Expression)context.resolve(ctx.getText());
         } catch (InstantiationException ex) {
             Logger.getLogger(TreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
@@ -356,7 +356,7 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
 
 
     @Override
-    public GelExpression visitOclIsNew(GelParser.OclIsNewContext ctx) {
+    public ${dialect.i2uc($projectName)}Expression visitOclIsNew(${dialect.i2uc($projectName)}Parser.OclIsNewContext ctx) {
         return context.resolveIsNew();
     }
 

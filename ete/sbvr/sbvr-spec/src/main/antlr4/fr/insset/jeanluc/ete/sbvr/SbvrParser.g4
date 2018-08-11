@@ -2,6 +2,14 @@ parser grammar SbvrParser;
 
 
 
+
+//============================================================================//
+// This grammar merges SBVR structured english and OCL expressions            //
+// The rules has designed to make easy to use other natural languages than    //
+// english                                                                    //
+//============================================================================//
+
+
 options {
     tokenVocab = SbvrLexer;
 }
@@ -9,138 +17,78 @@ options {
 
 
 //============================================================================//
-// This grammar is the basis for OCL, UEL, MOF-QVTo and Mof2Text grammars     //
-// It handles operator priority through hierarchical rules.                   //
-// Any grammar which imports this one can override any rule to customize it   //
-// to its own needs.                                                          //
-// By convention, rules with "expression" as suffix are reflected by objects  //
-// in the abstract syntax and are visitable by the abstract tree builder      //
-// The objects in the abstract syntax must have the "kind" tag value which    //
-// gives the template fragment to use in the abstract tree builder            // 
+//                           E N T R Y P O I N T S                            //
 //============================================================================//
 
 
-
-
-
-//============================================================================//
-//                             E N T R Y P O I N T                            //
-//============================================================================//
-
-sbvrExpression: gelExpression;
-
-
-
-gelExpression : xorExpression;
-
-
-//============================================================================//
-//                     L O G I C A L   O P E R A T I O N S                    //
-//============================================================================//
-
-
-xorExpression : (orExpression XOR)* orExpression;
-
-
-orExpression :
-    (
-    andExpression
-    OR
-    )*
-    andExpression
+file :
+    definition*
+    globalConstraint*
+    contextualConstraints*
 ;
 
 
-andExpression :
-    (
-    notOrNotNotExpression
-    AND
-    )*
-    notOrNotNotExpression
+definition :
+   DEFINITION word+ COLON word+ DOT
 ;
 
 
-notOrNotNotExpression:
-    notExpression
-    |
-    affirmativeExpression
+
+//============================================================================//
+//                            F I L E   R U L E S                             //
+//============================================================================//
+
+
+globalConstraint:
+    word+ COLON sbvrExpression DOT
 ;
 
-// The grammar does not allow "not not xxxx"
-notExpression : NOT affirmativeExpression;
+contextualConstraints:
+     invariants | conditions
+;
+
+invariants :
+    CONTEXT Identifier
+    invariant*
+;
+
+invariant :
+    INVARIANT word* COLON sbvrExpression
+;
+
+
+conditions :
+    CONTEXT Identifier DOUBLE_COLON Identifier
+    (precondition | postcondition)+
+;
+
+precondition  : PRE word* COLON sbvrExpression;
+postcondition : POST word* COLON sbvrExpression;
 
 
 //============================================================================//
 
 
-// In this grammar, comparisons are not associative. One cannot write
-// expressions such that
-//      a > b > c
-affirmativeExpression :
-    greaterThanExpression
-    |
-    greaterOrEqualExpression
-    |
-    lessThanExpression
-    |
-    lessOrEqualExpression
-    |
-    compareExpression
-;
-
-
-greaterThanExpression : compareExpression GT compareExpression;
-greaterOrEqualExpression : compareExpression GE compareExpression;
-lessThanExpression : compareExpression LT compareExpression;
-lessOrEqualExpression : compareExpression LE compareExpression;
-
-
-// In this grammar, = and <> are not associative : one cannot write expressions
-// such that
-//      a = b = c
-compareExpression
-    : equalExpression
-    | differentExpression
-    | addOrSubExpression
-;
-
-
-equalExpression : addOrSubExpression EQUAL addOrSubExpression;
-
-differentExpression : addOrSubExpression NOTEQUAL addOrSubExpression;
+sbvrExpression:
+    navExpression
+   | sbvrExpression multOperator sbvrExpression
+   | sbvrExpression addOperator sbvrExpression
+   | sbvrExpression comparator sbvrExpression
+   | sbvrExpression equalityOperator sbvrExpression
+   | NOT sbvrExpression
+   | sbvrExpression AND sbvrExpression
+   | sbvrExpression OR sbvrExpression
+   | sbvrExpression XOR sbvrExpression
+    structuredNaturalLanguage;
 
 
 
-//============================================================================//
-//                  A R I T H M E T I C   O P E R A T I O N S                 //
-//============================================================================//
 
+multOperator     : MUL | DIV | MOD;
+addOperator      : ADD | SUB;
+equalityOperator : EQUAL | NOTEQUAL;
+comparator       : LE | LT | GE | GT;
 
-addOrSubExpression :
-    multOrDivExpression
-    (
-        addExpression 
-      | subExpression
-    )*
-;
-
-
-addExpression : ADD multOrDivExpression;
-subExpression : SUB multOrDivExpression;
-
-
-multOrDivExpression :
-    operand
-    (
-          multExpression
-        | divExpression
-        | modExpression
-    )*
-;
-
-multExpression : MUL operand;
-divExpression  : DIV operand;
-modExpression  : MOD operand;
 
 
 //============================================================================//
@@ -148,158 +96,73 @@ modExpression  : MOD operand;
 //============================================================================//
 
 
-operand
-    : oppExpression
-    | navExpression
-    | literal
-    | parenthesisExpression
+operand: literal | navExpression;
+
+
+navExpression:
+//    leftToRightNavigation
+    rightToLeftNavigation
 ;
 
 
-
-parenthesisExpression:
-    LPAREN gelExpression RPAREN
-;
+leftToRightNavigation:
+    firstStep (navOperator step)*;
 
 
-navExpression
-    : 
-      ( 
-          primitive
-      )
-      (  attributeNavExpression
-      |  atPreExpression
-      | asTypeExpression
-      | methodNavExpression
-      | collectionMethodNavExpression
-      )*
-      finalStep ?
-;
+rightToLeftNavigation:
+    (step navOperator)* firstStep;
 
 
 
-
-
-finalStep :
-    oclIsNew | oclIsTypeOf | oclIsKindOf
-;
-
-
-oclIsNew    :   OCL_IS_NEW;
-oclIsTypeOf :   OCL_IS_TYPE_OF LPAREN gelExpression RPAREN;
-oclIsKindOf :   OCL_IS_KIND_OF LPAREN gelExpression RPAREN;
-
-
-primitive
-    : selfExpression
-    | variableOrMember
-    | variableOrMemberAtPre
-;
-
-
-
-
-attributeNavExpression
-    : DOT identifier
-;
-
-atPreExpression
-    : ATPRE
-;
-
-asTypeExpression
-    : DOT OCL_AS_TYPE LPAREN gelExpression RPAREN
-;
-
-methodNavExpression
-    : DOT functionCall
-;
-
-collectionMethodNavExpression
-    : ARROW functionCall
-;
-
-
-variableOrMember: identifier;
-
-variableOrMemberAtPre: identifier ATPRE;
-
-
-functionCall :
-    identifier LPAREN parameterList RPAREN
-;
-
-
-//----------------------------------------------------------------------------//
-
-
-
-variableDeclarationExpression :
-    Identifier
-    (   COLON typeExpression )?
-;
-
-
-typeExpression
-    : atomicTypeExpression
-    | sequenceTypeExpression
-    | bagTypeExpression
-    | setTypeExpression
-    | orderedSetTypeExpression
-;
-
-
-atomicTypeExpression :
-    Identifier
-;
-
-sequenceTypeExpression
-    : SEQUENCE LPAREN typeExpression RPAREN
-;
-
-bagTypeExpression
-    : BAG LPAREN typeExpression RPAREN
-;
-
-setTypeExpression
-    : SET LPAREN typeExpression RPAREN
-;
-
-orderedSetTypeExpression
-    : ORDERED SET LPAREN typeExpression RPAREN
-;
+firstStep   : identifier;
+step        : identifier;
+navOperator : OF;
 
 
 //============================================================================//
-//                                A T O M I C S                               //
+//                                  S B V R                                   //
 //============================================================================//
 
 
-oppExpression :
-    SUB
-    operand
+structuredNaturalLanguage :
+    modality? sentence
+;
+
+modality:
+    IT_IS_OBLIGATORY_THAT
+    | IT_IS_PROHIBITED_THAT
+    | IT_IS_NECESSARY_THAT
+    | IT_IS_IMPOSSIBLE_THAT
+    | IT_IS_POSSIBLE_THAT
+    | IT_IS_PERMITTED_THAT;
+
+
+sentence:
+    (general_concept | verb)+
+;
+
+general_concept :
+    (determiner)? identifier
 ;
 
 
-selfExpression : Self;
+determiner : quantifier | article;
+
+verb                : identifier;
+quantifier          : EACH | SOME | AT_LEAST_ONE | AT_LEAST | AT_MOST_ONE | AT_MOST | EXACTLY_ONE | EXACTLY | MORE_THAN_ONE | NO;
+
+article             : definite_article | indefinite_article;
+definite_article    : THE;
+indefinite_article  : A;
+
+demonstrative       : THIS | THAT;
+
+possessive          : ITS;
 
 
-variableReference : Identifier;
-
-
-
-parameterList:
-    (
-        ( gelExpression COMMA )* gelExpression
-    )
-    |
-    ()
-;
-
-
-//----------------------------------------------------------------------------//
-//                                   LITERALS                                 //
-//----------------------------------------------------------------------------//
+//============================================================================//
+//                               L I T E R A L S                              //
+//============================================================================//
 
 
 literal
@@ -313,11 +176,13 @@ literal
 ;
 
 
+word: Identifier;
+
 
 identifier           : Identifier;
 integerLiteral       : IntegerLiteral;
 floatingPointLiteral : FloatingPointLiteral;
-booleanLiteral       : BooleanLiteral;
+booleanLiteral       : TRUE | FALSE;
 dateLiteral          : DateLiteral;
 characterLiteral     : CharacterLiteral;
 stringLiteral        : StringLiteral;

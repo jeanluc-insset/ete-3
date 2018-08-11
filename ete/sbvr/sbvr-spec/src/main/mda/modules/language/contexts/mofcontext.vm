@@ -1,11 +1,16 @@
-package fr.insset.jeanluc.ete.sbvr.impl;
+################################################################################
+##                                                                            ##
+## Generates a convenience class to instantiate a parser for a simple String  ##
+##                                                                            ##
+################################################################################
+package fr.insset.jeanluc.ete.${dialect.i2lc($projectName)}.impl;
 
 
 
-// import fr.insset.jeanluc.ete.sbvr.AttributeNav;
-// import fr.insset.jeanluc.ete.sbvr.SbvrContext;
-import fr.insset.jeanluc.ete.sbvr.*;
-import fr.insset.jeanluc.ete.sbvr.VariableDefinition;
+// import fr.insset.jeanluc.ete.${projectName.toLowerCase()}.AttributeNav;
+// import fr.insset.jeanluc.ete.${projectName.toLowerCase()}.${dialect.i2uc($projectName)}Context;
+import fr.insset.jeanluc.ete.${projectName.toLowerCase()}.*;
+import fr.insset.jeanluc.ete.${projectName.toLowerCase()}.VariableDefinition;
 import fr.insset.jeanluc.ete.meta.model.core.NamedElement;
 import fr.insset.jeanluc.ete.meta.model.emof.Feature;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
@@ -38,11 +43,11 @@ import java.util.List;
  * @author jldeleage
  */
 @Generated("ete - jean-luc@insset.fr  ete/src/main/mda/modules/language/contexts/mofcontext.vm")
-public class SbvrContextImpl implements SbvrContext<SbvrExpression> {
+public class ${dialect.i2uc($projectName)}ContextImpl implements ${dialect.i2uc($projectName)}Context<${dialect.i2uc($projectName)}Expression> {
 
 
 
-    public SbvrContextImpl(EteModel inModel, MofClass inContextualClass, NamedElement inContext) {
+    public ${dialect.i2uc($projectName)}ContextImpl(EteModel inModel, MofClass inContextualClass, NamedElement inContext) {
         // We must start with at least a stack frame
         push();
         FactoryRegistry.getRegistry().registerDefaultFactory("let", VariableDefinitionImpl.class);
@@ -100,8 +105,8 @@ public class SbvrContextImpl implements SbvrContext<SbvrExpression> {
      * The last case is handled by the resolveCollOp method.
      */
     @Override
-    public GelExpression resolve(String inIdentifier) {
-        GelExpression   result = null;
+    public ${dialect.i2uc($projectName)}Expression resolve(String inIdentifier) {
+        ${dialect.i2uc($projectName)}Expression   result = null;
         try {
             if ("self".equals(inIdentifier)) {
                 Logger logger = Logger.getGlobal();
@@ -150,12 +155,12 @@ public class SbvrContextImpl implements SbvrContext<SbvrExpression> {
     }
 
 
-    public GelExpression resolveIsNew() {
+    public ${dialect.i2uc($projectName)}Expression resolveIsNew() {
         IsNew   result;
         try {
             result = (IsNew) FactoryRegistry.newInstance("isnew");
             Step current = (Step) get(CURRENT);
-            result.setOperand(FactoryMethods.newList(GelExpression.class));
+            result.setOperand(FactoryMethods.newList(${dialect.i2uc($projectName)}Expression.class));
             result.setType(current.getType());
         } catch (InstantiationException | IllegalAccessException ex) {
             throw new RuntimeException("Unable to instantiate isNew ", ex);
@@ -165,7 +170,7 @@ public class SbvrContextImpl implements SbvrContext<SbvrExpression> {
 
 
 
-    public GelExpression resolveInContext(String inIdentifier) throws InstantiationException, IllegalAccessException {
+    public ${dialect.i2uc($projectName)}Expression resolveInContext(String inIdentifier) throws InstantiationException, IllegalAccessException {
         Object context = get(CONTEXT);
         MofClass    contextClass = null;
         if (context instanceof MofOperation) {
@@ -202,7 +207,7 @@ public class SbvrContextImpl implements SbvrContext<SbvrExpression> {
     }
 
     @Override
-    public GelExpression resolveOperation(String inString, MofType inType) throws InstantiationException, IllegalAccessException {
+    public ${dialect.i2uc($projectName)}Expression resolveOperation(String inString, MofType inType) throws InstantiationException, IllegalAccessException {
         throw new UnsupportedOperationException("Not supported yet : " + inString + " in " + inType.getName()); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -222,7 +227,7 @@ public class SbvrContextImpl implements SbvrContext<SbvrExpression> {
      * @throws InstantiationException
      * @throws IllegalAccessException 
      */
-    public GelExpression resolveInCurrent(String inIdentifier, int inIndex) throws InstantiationException, IllegalAccessException {
+    public ${dialect.i2uc($projectName)}Expression resolveInCurrent(String inIdentifier, int inIndex) throws InstantiationException, IllegalAccessException {
         if (inIndex >= stack.size()) {
             return null;
         }
@@ -246,7 +251,7 @@ public class SbvrContextImpl implements SbvrContext<SbvrExpression> {
         MofType type = current.getType();
         Step nav = type.isCollection() ? (Step) FactoryRegistry.newInstance("collect") : (Step) FactoryRegistry.newInstance(".att");
 //        Step nav = (Step) FactoryRegistry.newInstance(".att");
-        List<GelExpression>     operands = FactoryMethods.newList(GelExpression.class);
+        List<${dialect.i2uc($projectName)}Expression>     operands = FactoryMethods.newList(${dialect.i2uc($projectName)}Expression.class);
         nav.setOperand(operands);
         nav.setToFeature(ownedAttribute);
         MofType nextType;
@@ -264,7 +269,7 @@ public class SbvrContextImpl implements SbvrContext<SbvrExpression> {
 
 
     @Override
-    public GelExpression resolveCollOp(String inString) {
+    public ${dialect.i2uc($projectName)}Expression resolveCollOp(String inString) {
         try {
             // TODO : we should have the allowed selectors (the collection API
             // should be checked without being hard coded)
@@ -303,7 +308,7 @@ public class SbvrContextImpl implements SbvrContext<SbvrExpression> {
             set(CURRENT, result);
             return result;
         } catch (InstantiationException | IllegalAccessException ex) {
-//            Logger.getLogger(GelContextImpl.class.getName()).log(Level.SEVERE, null, ex);
+//            Logger.getLogger(${dialect.i2uc($projectName)}ContextImpl.class.getName()).log(Level.SEVERE, null, ex);
             throw new RuntimeException(ex);
         }
     }
@@ -313,8 +318,8 @@ public class SbvrContextImpl implements SbvrContext<SbvrExpression> {
      * does not handle a collection of collections of collections of Xxx.
      * We should add a clone method to MofCollections
      */
-//    protected GelExpression __resolve(String inString) throws InstantiationException, IllegalAccessException {
-//        GelExpression   result = null;
+//    protected ${dialect.i2uc($projectName)}Expression __resolve(String inString) throws InstantiationException, IllegalAccessException {
+//        ${dialect.i2uc($projectName)}Expression   result = null;
 //        Object context = resolveVariable(CONTEXT);
 //        if (context instanceof MofOperation) {
 //            result = resolveParameter(inString, (MofOperation)context);
@@ -338,7 +343,7 @@ public class SbvrContextImpl implements SbvrContext<SbvrExpression> {
 //        }
 //        else {
 //            MofType baseType = current.getRecBaseType();
-//            GelExpression property = resolveProperty(inString, (MofClass)baseType, baseType.isCollection());
+//            ${dialect.i2uc($projectName)}Expression property = resolveProperty(inString, (MofClass)baseType, baseType.isCollection());
 //            if (property instanceof Step) {
 //                Step    step = (Step) property;
 //                if (current.isCollection()) {
@@ -356,8 +361,8 @@ public class SbvrContextImpl implements SbvrContext<SbvrExpression> {
 //        if (variable == null) {
 //            variable = resolveModelInstance(inString);
 //        }
-//        if (variable instanceof GelExpression) {
-//            return (GelExpression)variable;
+//        if (variable instanceof ${dialect.i2uc($projectName)}Expression) {
+//            return (${dialect.i2uc($projectName)}Expression)variable;
 //        }
 //        if (result instanceof NamedElement) {
 //
@@ -371,7 +376,7 @@ public class SbvrContextImpl implements SbvrContext<SbvrExpression> {
 
 /*
     @Override
-    public void setGel(String inString, GelExpression inValue) {
+    public void set${dialect.i2uc($projectName)}(String inString, ${dialect.i2uc($projectName)}Expression inValue) {
         set(inString, inValue);
     }
 */
@@ -450,7 +455,7 @@ public class SbvrContextImpl implements SbvrContext<SbvrExpression> {
 
 //
 //
-//    public GelExpression resolveParameter(String inString, MofOperation inOperation) throws InstantiationException, IllegalAccessException {
+//    public ${dialect.i2uc($projectName)}Expression resolveParameter(String inString, MofOperation inOperation) throws InstantiationException, IllegalAccessException {
 //        Collection<MofParameter> ownedParameter = inOperation.getOwnedParameter();
 //        for (MofParameter aParameter : ownedParameter) {
 //            if (inString.equals(aParameter.getName())) {
@@ -466,7 +471,7 @@ public class SbvrContextImpl implements SbvrContext<SbvrExpression> {
 //    }
 //
 //
-//    public   GelExpression resolveProperty(String inString, MofClass from, boolean fromCollection) {
+//    public   ${dialect.i2uc($projectName)}Expression resolveProperty(String inString, MofClass from, boolean fromCollection) {
 //        Feature feature = from.getOwnedAttribute(inString);
 //        if (feature != null) {
 //            try {
@@ -492,17 +497,17 @@ public class SbvrContextImpl implements SbvrContext<SbvrExpression> {
 //    }
 //
 //
-//    public   GelExpression resolveOperation(String inString, MofType from) throws InstantiationException, IllegalAccessException {
+//    public   ${dialect.i2uc($projectName)}Expression resolveOperation(String inString, MofType from) throws InstantiationException, IllegalAccessException {
 //        // TODO : we should allow methods on predefined types (at least on
 //        // String and date types)
 //        if (! (from instanceof MofClass)) {
 //            return null;
 //        }
 //        if ("isNew".equals(inString)) {
-//            return (GelExpression) FactoryRegistry.newInstance("isnew");
+//            return (${dialect.i2uc($projectName)}Expression) FactoryRegistry.newInstance("isnew");
 //        }
 //        else if ("isDeleted".equals(inString)) {
-//            return (GelExpression) FactoryRegistry.newInstance("isdeleted");
+//            return (${dialect.i2uc($projectName)}Expression) FactoryRegistry.newInstance("isdeleted");
 //        }
 //        Feature feature = ((MofClass)from).getOwnedOperation(inString);
 //        if (feature != null) {
@@ -552,7 +557,7 @@ public class SbvrContextImpl implements SbvrContext<SbvrExpression> {
 
 
 
-    public SbvrExpression flatten() {
+    public ${dialect.i2uc($projectName)}Expression flatten() {
         try {
             MofType current = (MofType) resolveVariable(CURRENT);
             MofType baseType = current.getRecBaseType();

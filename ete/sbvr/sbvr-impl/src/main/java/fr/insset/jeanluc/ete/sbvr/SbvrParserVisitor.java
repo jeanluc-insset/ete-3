@@ -11,137 +11,89 @@ import org.antlr.v4.runtime.tree.ParseTreeVisitor;
  */
 public interface SbvrParserVisitor<T> extends ParseTreeVisitor<T> {
 	/**
+	 * Visit a parse tree produced by {@link SbvrParser#file}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFile(SbvrParser.FileContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SbvrParser#definition}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDefinition(SbvrParser.DefinitionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SbvrParser#globalConstraint}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitGlobalConstraint(SbvrParser.GlobalConstraintContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SbvrParser#contextualConstraints}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitContextualConstraints(SbvrParser.ContextualConstraintsContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SbvrParser#invariants}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitInvariants(SbvrParser.InvariantsContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SbvrParser#invariant}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitInvariant(SbvrParser.InvariantContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SbvrParser#conditions}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitConditions(SbvrParser.ConditionsContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SbvrParser#precondition}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPrecondition(SbvrParser.PreconditionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SbvrParser#postcondition}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPostcondition(SbvrParser.PostconditionContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link SbvrParser#sbvrExpression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitSbvrExpression(SbvrParser.SbvrExpressionContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SbvrParser#gelExpression}.
+	 * Visit a parse tree produced by {@link SbvrParser#multOperator}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitGelExpression(SbvrParser.GelExpressionContext ctx);
+	T visitMultOperator(SbvrParser.MultOperatorContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SbvrParser#xorExpression}.
+	 * Visit a parse tree produced by {@link SbvrParser#addOperator}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitXorExpression(SbvrParser.XorExpressionContext ctx);
+	T visitAddOperator(SbvrParser.AddOperatorContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SbvrParser#orExpression}.
+	 * Visit a parse tree produced by {@link SbvrParser#equalityOperator}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitOrExpression(SbvrParser.OrExpressionContext ctx);
+	T visitEqualityOperator(SbvrParser.EqualityOperatorContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SbvrParser#andExpression}.
+	 * Visit a parse tree produced by {@link SbvrParser#comparator}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitAndExpression(SbvrParser.AndExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SbvrParser#notOrNotNotExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitNotOrNotNotExpression(SbvrParser.NotOrNotNotExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SbvrParser#notExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitNotExpression(SbvrParser.NotExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SbvrParser#affirmativeExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAffirmativeExpression(SbvrParser.AffirmativeExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SbvrParser#greaterThanExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitGreaterThanExpression(SbvrParser.GreaterThanExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SbvrParser#greaterOrEqualExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitGreaterOrEqualExpression(SbvrParser.GreaterOrEqualExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SbvrParser#lessThanExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitLessThanExpression(SbvrParser.LessThanExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SbvrParser#lessOrEqualExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitLessOrEqualExpression(SbvrParser.LessOrEqualExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SbvrParser#compareExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitCompareExpression(SbvrParser.CompareExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SbvrParser#equalExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitEqualExpression(SbvrParser.EqualExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SbvrParser#differentExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitDifferentExpression(SbvrParser.DifferentExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SbvrParser#addOrSubExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAddOrSubExpression(SbvrParser.AddOrSubExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SbvrParser#addExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAddExpression(SbvrParser.AddExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SbvrParser#subExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitSubExpression(SbvrParser.SubExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SbvrParser#multOrDivExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitMultOrDivExpression(SbvrParser.MultOrDivExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SbvrParser#multExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitMultExpression(SbvrParser.MultExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SbvrParser#divExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitDivExpression(SbvrParser.DivExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SbvrParser#modExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitModExpression(SbvrParser.ModExpressionContext ctx);
+	T visitComparator(SbvrParser.ComparatorContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SbvrParser#operand}.
 	 * @param ctx the parse tree
@@ -149,167 +101,125 @@ public interface SbvrParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitOperand(SbvrParser.OperandContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SbvrParser#parenthesisExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitParenthesisExpression(SbvrParser.ParenthesisExpressionContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link SbvrParser#navExpression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitNavExpression(SbvrParser.NavExpressionContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SbvrParser#finalStep}.
+	 * Visit a parse tree produced by {@link SbvrParser#leftToRightNavigation}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitFinalStep(SbvrParser.FinalStepContext ctx);
+	T visitLeftToRightNavigation(SbvrParser.LeftToRightNavigationContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SbvrParser#oclIsNew}.
+	 * Visit a parse tree produced by {@link SbvrParser#rightToLeftNavigation}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitOclIsNew(SbvrParser.OclIsNewContext ctx);
+	T visitRightToLeftNavigation(SbvrParser.RightToLeftNavigationContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SbvrParser#oclIsTypeOf}.
+	 * Visit a parse tree produced by {@link SbvrParser#firstStep}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitOclIsTypeOf(SbvrParser.OclIsTypeOfContext ctx);
+	T visitFirstStep(SbvrParser.FirstStepContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SbvrParser#oclIsKindOf}.
+	 * Visit a parse tree produced by {@link SbvrParser#step}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitOclIsKindOf(SbvrParser.OclIsKindOfContext ctx);
+	T visitStep(SbvrParser.StepContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SbvrParser#primitive}.
+	 * Visit a parse tree produced by {@link SbvrParser#navOperator}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPrimitive(SbvrParser.PrimitiveContext ctx);
+	T visitNavOperator(SbvrParser.NavOperatorContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SbvrParser#attributeNavExpression}.
+	 * Visit a parse tree produced by {@link SbvrParser#structuredNaturalLanguage}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitAttributeNavExpression(SbvrParser.AttributeNavExpressionContext ctx);
+	T visitStructuredNaturalLanguage(SbvrParser.StructuredNaturalLanguageContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SbvrParser#atPreExpression}.
+	 * Visit a parse tree produced by {@link SbvrParser#modality}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitAtPreExpression(SbvrParser.AtPreExpressionContext ctx);
+	T visitModality(SbvrParser.ModalityContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SbvrParser#asTypeExpression}.
+	 * Visit a parse tree produced by {@link SbvrParser#sentence}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitAsTypeExpression(SbvrParser.AsTypeExpressionContext ctx);
+	T visitSentence(SbvrParser.SentenceContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SbvrParser#methodNavExpression}.
+	 * Visit a parse tree produced by {@link SbvrParser#general_concept}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitMethodNavExpression(SbvrParser.MethodNavExpressionContext ctx);
+	T visitGeneral_concept(SbvrParser.General_conceptContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SbvrParser#collectionMethodNavExpression}.
+	 * Visit a parse tree produced by {@link SbvrParser#determiner}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitCollectionMethodNavExpression(SbvrParser.CollectionMethodNavExpressionContext ctx);
+	T visitDeterminer(SbvrParser.DeterminerContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SbvrParser#variableOrMember}.
+	 * Visit a parse tree produced by {@link SbvrParser#verb}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitVariableOrMember(SbvrParser.VariableOrMemberContext ctx);
+	T visitVerb(SbvrParser.VerbContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SbvrParser#variableOrMemberAtPre}.
+	 * Visit a parse tree produced by {@link SbvrParser#quantifier}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitVariableOrMemberAtPre(SbvrParser.VariableOrMemberAtPreContext ctx);
+	T visitQuantifier(SbvrParser.QuantifierContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SbvrParser#functionCall}.
+	 * Visit a parse tree produced by {@link SbvrParser#article}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitFunctionCall(SbvrParser.FunctionCallContext ctx);
+	T visitArticle(SbvrParser.ArticleContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SbvrParser#variableDeclarationExpression}.
+	 * Visit a parse tree produced by {@link SbvrParser#definite_article}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitVariableDeclarationExpression(SbvrParser.VariableDeclarationExpressionContext ctx);
+	T visitDefinite_article(SbvrParser.Definite_articleContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SbvrParser#typeExpression}.
+	 * Visit a parse tree produced by {@link SbvrParser#indefinite_article}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitTypeExpression(SbvrParser.TypeExpressionContext ctx);
+	T visitIndefinite_article(SbvrParser.Indefinite_articleContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SbvrParser#atomicTypeExpression}.
+	 * Visit a parse tree produced by {@link SbvrParser#demonstrative}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitAtomicTypeExpression(SbvrParser.AtomicTypeExpressionContext ctx);
+	T visitDemonstrative(SbvrParser.DemonstrativeContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SbvrParser#sequenceTypeExpression}.
+	 * Visit a parse tree produced by {@link SbvrParser#possessive}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitSequenceTypeExpression(SbvrParser.SequenceTypeExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SbvrParser#bagTypeExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitBagTypeExpression(SbvrParser.BagTypeExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SbvrParser#setTypeExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitSetTypeExpression(SbvrParser.SetTypeExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SbvrParser#orderedSetTypeExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitOrderedSetTypeExpression(SbvrParser.OrderedSetTypeExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SbvrParser#oppExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitOppExpression(SbvrParser.OppExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SbvrParser#selfExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitSelfExpression(SbvrParser.SelfExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SbvrParser#variableReference}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitVariableReference(SbvrParser.VariableReferenceContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SbvrParser#parameterList}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitParameterList(SbvrParser.ParameterListContext ctx);
+	T visitPossessive(SbvrParser.PossessiveContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SbvrParser#literal}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitLiteral(SbvrParser.LiteralContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SbvrParser#word}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitWord(SbvrParser.WordContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SbvrParser#identifier}.
 	 * @param ctx the parse tree

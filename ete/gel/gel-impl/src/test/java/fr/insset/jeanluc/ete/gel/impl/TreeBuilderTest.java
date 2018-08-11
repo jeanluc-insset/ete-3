@@ -6,7 +6,10 @@ import fr.insset.jeanluc.gel.test.fmwk.NavHelper;
 import fr.insset.jeanluc.ete.gel.AttributeNav;
 import fr.insset.jeanluc.ete.gel.Collect;
 import fr.insset.jeanluc.ete.gel.Equal;
+import fr.insset.jeanluc.ete.gel.FloatingPointLiteral;
 import fr.insset.jeanluc.ete.gel.GelExpression;
+import static fr.insset.jeanluc.ete.gel.GelLexer.IntegerLiteral;
+import fr.insset.jeanluc.ete.gel.IntegerLiteral;
 import fr.insset.jeanluc.ete.gel.Nav;
 import fr.insset.jeanluc.ete.gel.Result;
 import fr.insset.jeanluc.ete.gel.Step;
@@ -26,6 +29,7 @@ import fr.insset.jeanluc.ete.meta.model.types.MofType;
 import fr.insset.jeanluc.ete.meta.model.types.TypedElement;
 import fr.insset.jeanluc.ete.meta.model.types.collections.MofSequence;
 import fr.insset.jeanluc.ete.meta.model.types.collections.impl.MofSequenceImpl;
+import static fr.insset.jeanluc.gel.test.fmwk.NavHelper.*;
 import fr.insset.jeanluc.util.factory.FactoryMethods;
 import fr.insset.jeanluc.util.factory.FactoryRegistry;
 import fr.insset.jeanluc.xmi.io.impl.XmlModelReader;
@@ -78,6 +82,8 @@ public class TreeBuilderTest {
         registry.registerDefaultFactory("@pre", AtPreImpl.class);
         registry.registerDefaultFactory("flatten", FlattenImpl.class);
         registry.registerDefaultFactory("variable_reference", VariableReferenceImpl.class);
+        registry.registerDefaultFactory("IntegerLiteral", IntegerLiteralImpl.class);
+        registry.registerDefaultFactory("FloatingPointLiteral", FloatingPointLiteralImpl.class);
     }
 
     @AfterClass
@@ -105,21 +111,18 @@ public class TreeBuilderTest {
     }
 
     @Test
-    public void testIntegerLiteral() {
+    public void testIntegerLiteral() throws InstantiationException, IllegalAccessException {
         System.out.println("integer literal");
         String      douze  = "12";
-        IntegerLiteralImpl integerLiteralImpl = new IntegerLiteralImpl();        
-        integerLiteralImpl.setValueAsString(douze);
+        IntegerLiteral integerLiteralImpl = newInt(douze);
         testAny(integerLiteralImpl, douze, null, null);
     }
 
     @Test
-    public void testFloatLiteral() {
+    public void testFloatLiteral() throws InstantiationException, IllegalAccessException {
         System.out.println("float literal");
         String      douze  = "12.0";
-        FloatingPointLiteralImpl floatingPointLiteralImpl = new FloatingPointLiteralImpl();
-        
-        floatingPointLiteralImpl.setValueAsString(douze);
+        FloatingPointLiteral floatingPointLiteralImpl = newFP(douze);
         testAny(floatingPointLiteralImpl, douze, null, null);
     }
 

@@ -3,8 +3,11 @@
 package fr.insset.jeanluc.gel.test.fmwk;
 
 import fr.insset.jeanluc.ete.gel.AtPre;
+import fr.insset.jeanluc.ete.gel.FloatingPointLiteral;
 import static fr.insset.jeanluc.ete.gel.GelContext.SELF;
 import fr.insset.jeanluc.ete.gel.GelExpression;
+import fr.insset.jeanluc.ete.gel.IntegerLiteral;
+import fr.insset.jeanluc.ete.gel.Literal;
 import fr.insset.jeanluc.ete.gel.Step;
 import fr.insset.jeanluc.ete.gel.VariableReference;
 import fr.insset.jeanluc.ete.meta.model.core.NamedElement;
@@ -42,7 +45,8 @@ import static org.junit.Assert.*;
  */
 public class NavHelper {
 
-    public NavHelper() {
+//    public NavHelper()
+    static {
         FactoryRegistry registry = FactoryRegistry.getRegistry();
         registry.registerDefaultFactory("self", SelfImpl.class);
         registry.registerDefaultFactory("collect", CollectImpl.class);
@@ -51,8 +55,14 @@ public class NavHelper {
         registry.registerDefaultFactory("@pre", AtPreImpl.class);
         registry.registerDefaultFactory("flatten", FlattenImpl.class);
         registry.registerDefaultFactory("variable-reference", VariableReferenceImpl.class);
+        registry.registerDefaultFactory("IntegerLiteral", IntegerLiteralImpl.class);
+        registry.registerDefaultFactory("FloatingPointLiteral", FloatingPointLiteralImpl.class);
     }
 
+
+    //========================================================================//
+    //                         S T A R T   P O I N T                          //
+    //========================================================================//
 
 
     public NavHelper startFrom(EteModel inModel, String inContext) throws InstantiationException, IllegalAccessException {
@@ -86,6 +96,7 @@ public class NavHelper {
         navigation.setName("self");
         return this;
     }
+
 
     //========================================================================//
     //                           N A V I G A T I O N                          //
@@ -151,6 +162,23 @@ public class NavHelper {
         return this;
     }
 
+
+    //========================================================================//
+    //                            L I T E R A L S                             //
+    //========================================================================//
+
+
+    public static IntegerLiteral newInt(String inValue) throws InstantiationException, IllegalAccessException {
+        IntegerLiteral result = (IntegerLiteral)FactoryRegistry.newInstance("IntegerLiteral");
+        result.setValueAsString(inValue);
+        return result;
+    }
+
+    public static FloatingPointLiteral newFP(String inValue) throws InstantiationException, IllegalAccessException {
+        FloatingPointLiteral result = (FloatingPointLiteral)FactoryRegistry.newInstance("FloatingPointLiteral");
+        result.setValueAsString(inValue);
+        return result;
+    }
 
     //========================================================================//
     //                           O P E R A T I O N S                          //

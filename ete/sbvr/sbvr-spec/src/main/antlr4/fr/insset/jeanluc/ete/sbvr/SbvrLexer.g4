@@ -7,11 +7,24 @@ lexer grammar SbvrLexer;
 //                                  L E X E R                                 //
 //============================================================================//
 //                                                                            //
-// This lexer is a Java lexer borrowed from antlr documentation.              //
-// The paragraph numbers reference the original grammar                       //
+// This lexer defines tokens for OCL and for SBVR structured english          //
+// It is designed to be easy to customize                                     //
 //                                                                            //
 //============================================================================//
 
+
+
+//============================================================================//
+//
+//============================================================================//
+
+
+DEFINITION: 'definition';
+
+CONTEXT   : 'context';
+INVARIANT : 'inv';
+PRE       : 'pre';
+POST      : 'post';
 
 
 
@@ -21,13 +34,10 @@ lexer grammar SbvrLexer;
 //============================================================================//
 
 
-// Added by JL
-
 Self : 'self';
 
 
-
-// §3.10.1 Integer Literals
+// Number literals
 
 IntegerLiteral
     :   DecimalIntegerLiteral
@@ -157,7 +167,7 @@ BinaryDigitOrUnderscore
     |   '_'
     ;
 
-// §3.10.2 Floating-Point Literals
+// Floating-Point Literals
 
 FloatingPointLiteral
     :   DecimalFloatingPointLiteral
@@ -181,6 +191,8 @@ fragment
 ExponentIndicator
     :   [eE]
     ;
+
+
 
 fragment
 SignedInteger
@@ -214,25 +226,21 @@ BinaryExponent
     ;
 
 fragment
-BinaryExponentIndicator
-    :   [pP]
-    ;
+BinaryExponentIndicator : [pP];
 
-// §3.10.3 Boolean Literals
+// Boolean Literals
 
-BooleanLiteral
-    :   'true'
-    |   'false'
-    ;
+TRUE    :   'true';
+FALSE   :   'false';
 
 
-// Added by JL
+// Date Literals
 
 DateLiteral
     : '"' Digit Digit Digit Digit SUB Digit Digit SUB Digit Digit '"';
 
 
-// §3.10.4 Character Literals
+// Character Literals
 
 CharacterLiteral
     :   '\'' SingleCharacter '\''
@@ -244,7 +252,7 @@ SingleCharacter
     :   ~['\\]
     ;
 
-// §3.10.5 String Literals
+// String Literals
 
 StringLiteral
     :   '"' StringCharacters? '"'
@@ -261,7 +269,7 @@ StringCharacter
     |   EscapeSequence
     ;
 
-// §3.10.6 Escape Sequences for Character and String Literals
+// Escape Sequences for Character and String Literals
 
 fragment
 EscapeSequence
@@ -287,7 +295,7 @@ ZeroToThree
     :   [0-3]
     ;
 
-// §3.10.7 The Null Literal
+// The Null Literal
 
 NullLiteral
     :   'null'
@@ -300,7 +308,8 @@ NullLiteral
 //                                                                            //
 //============================================================================//
 
-// §3.11 Separators
+
+// Separators
 
 LPAREN          : '(';
 RPAREN          : ')';
@@ -318,8 +327,6 @@ PIPE            : '|';
 
 
 
-
-
 //============================================================================//
 //                                                                            //
 //                             O P E R A T O R S                              //
@@ -327,11 +334,11 @@ PIPE            : '|';
 //============================================================================//
 
 
-// §3.12 Operators
+// Operators
 
 GT              : '>';
 LT              : '<';
-NOT             : 'not';
+// NOT             : 'not';
 TILDE           : '~';
 QUESTION        : '?';
 COLON           : ':';
@@ -351,19 +358,94 @@ MOD_PERCENT     : '%';
 CARET           : '^';
 MOD             : 'mod';
 
+
+OF              : 'of';
+
+
 //============================================================================//
 //                                                                            //
-//                         R E S E R V E D   W O R D S                        //
+//                         S B V R   K E Y W O R D S                          //
 //                                                                            //
 //============================================================================//
 
 
-SEQUENCE        : 'sequence';
-BAG             : 'bag';
-SET             : 'set';
-ORDERED         : 'ordered';
+// Quantifiers
+
+EACH                   : 'each';
+SOME                   : 'some';
+AT_LEAST_ONE           : 'at' 'least' 'one';
+AT_LEAST               : 'at' 'least';
+AT_MOST_ONE            : 'at' 'most' 'one';
+AT_MOST                : 'at' 'most';
+EXACTLY_ONE            : 'exactly' 'one';
+EXACTLY                : 'exactly';
+MORE_THAN_ONE          : 'more' 'than' 'one';
+NO                     : 'no';
 
 
+// Logical operations
+
+IT_IS_NOT_THE_CASE_THAT: 'it' 'is' 'not' 'the' 'case' 'that';
+BUT_NOT_BOTH           : 'but' 'not' 'both';
+THEN                   : 'then';
+IF_AND_ONLY_IF         : 'if' 'and' 'only' 'if';
+NOT_BOTH               : 'not' 'both';
+NEITHER                : 'neither';
+WHETHER_OR_NOT         : 'whether' 'or' 'not';
+
+
+// Modal operations
+
+IT_IS_OBLIGATORY_THAT  : 'it' 'is' 'obligatory' 'that';
+IT_IS_PROHIBITED_THAT  : 'it' 'is' 'prohibited' 'that';
+IT_IS_NECESSARY_THAT   : 'it' 'is' 'necessary' 'that';
+IT_IS_IMPOSSIBLE_THAT  : 'it' 'is' 'impossible' 'that';
+IT_IS_POSSIBLE_THAT    : 'it' 'is' 'possible' 'that';
+IT_IS_PERMITTED_THAT   : 'it' 'is' 'permitted' 'that';
+
+ONLY_IF                : 'only' 'if';
+
+MUST_NOT               : 'must' 'not';
+MUST                   : 'must';
+NEED_NOT               : 'need' 'not';
+NEED                   : 'need';
+ALWAYS                 : 'always';
+NEVER                  : 'never';
+CAN                    : 'can';
+MAY                    : 'may';
+NOT                    : 'not';
+
+
+// Other keywords
+
+THE                    : 'the';
+A_GIVEN                : 'a' 'given';
+GIVEN                  : 'given';
+A                      : 'a' | 'an';
+ANOTHER                : 'another';
+THAT                   : 'that';
+WHO                    : 'who';
+WHAT                   : 'what';
+IS_OF                  : 'is' 'of';
+THIS                   : 'this';
+
+
+// added by JLD
+
+ITS                    : 'its';
+
+
+//============================================================================//
+//                                                                            //
+//                    O C L   R E S E R V E D   W O R D S                     //
+//                                                                            //
+//============================================================================//
+
+
+SEQUENCE               : 'sequence';
+BAG                    : 'bag';
+SET                    : 'set';
+ORDERED                : 'ordered';
 
 
 //============================================================================//
@@ -372,12 +454,10 @@ ORDERED         : 'ordered';
 //============================================================================//
 
 
-OCL_IS_NEW      : DOT 'isNew' LPAREN RPAREN;
-OCL_IS_TYPE_OF  : DOT 'oclIsTypeOf';
-OCL_IS_KIND_OF  : DOT 'oclIsKindOf';
-OCL_AS_TYPE     : DOT 'oclAsType';
-
-
+OCL_IS_NEW             : DOT 'isNew' LPAREN RPAREN;
+OCL_IS_TYPE_OF         : DOT 'oclIsTypeOf';
+OCL_IS_KIND_OF         : DOT 'oclIsKindOf';
+OCL_AS_TYPE            : DOT 'oclAsType';
 
 
 //============================================================================//
@@ -387,11 +467,10 @@ OCL_AS_TYPE     : DOT 'oclAsType';
 //============================================================================//
 
 
-// §3.8 Identifiers (must appear after all keywords in the grammar)
+// Identifiers (must appear after all keywords in the grammar)
 
-Identifier
-    :   JavaLetter JavaLetterOrDigit*
-    ;
+Identifier :   JavaLetter JavaLetterOrDigit* ;
+
 
 fragment
 JavaLetter
@@ -403,6 +482,7 @@ JavaLetter
         [\uD800-\uDBFF] [\uDC00-\uDFFF]
         {Character.isJavaIdentifierStart(Character.toCodePoint((char)_input.LA(-2), (char)_input.LA(-1)))}?
     ;
+
 
 fragment
 JavaLetterOrDigit
@@ -446,3 +526,5 @@ COMMENT
 LINE_COMMENT
     :   '--' ~[\r\n]* -> skip
     ;
+
+

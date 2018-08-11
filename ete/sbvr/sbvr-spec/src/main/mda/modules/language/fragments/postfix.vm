@@ -1,0 +1,11 @@
+################################################################################
+##                                                                            ##
+## Fragment for TreeBuilder.vm                                                ##
+##                                                                            ##
+################################################################################
+            GelExpression left = children.get(0).accept(this);        
+            $aClass result = ($aClass)FactoryRegistry.getRegistry().getFactory("${aClass.getValueOf("symbol")}").newInstance();
+            List<GelExpression>  operands = FactoryMethods.newList(GelExpression.class);
+            operands.add(left);
+            result.setOperand(operands);
+            return result;

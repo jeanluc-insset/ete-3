@@ -2,6 +2,9 @@ package fr.insset.jeanluc.ete.sbvr.impl;
 
 
 
+import fr.insset.jeanluc.ete.gel.GelContext;
+import static fr.insset.jeanluc.ete.gel.GelContext.CURRENT;
+import static fr.insset.jeanluc.ete.gel.GelContext.ROOT;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 import fr.insset.jeanluc.ete.meta.model.emof.MofParameter;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
@@ -14,8 +17,6 @@ import fr.insset.jeanluc.ete.meta.model.types.collections.MofCollection;
 import fr.insset.jeanluc.ete.sbvr.SbvrParser;
 import fr.insset.jeanluc.ete.sbvr.SbvrParserBaseVisitor;
 import fr.insset.jeanluc.ete.sbvr.*;
-import static fr.insset.jeanluc.ete.gel.GelContext.CURRENT;
-import static fr.insset.jeanluc.ete.gel.GelContext.ROOT;
 import fr.insset.jeanluc.ete.meta.model.emof.Feature;
 import fr.insset.jeanluc.util.factory.FactoryMethods;
 import fr.insset.jeanluc.util.factory.FactoryRegistry;
@@ -48,13 +49,53 @@ SbvrExpression        abstractExpression = treeBuilder.visitSbvrExpression(ctx);
 </pre></code>
  *
  */
-@Generated("ete - jean-luc@insset.fr  ete/src/main/mda/modules/language/tree-builder.vm")
+@Generated("ete - jean-luc@insset.fr  src/main/mda/tree-builder.vm")
 public class TreeBuilder extends SbvrParserBaseVisitor<SbvrExpression> {
 
 
-    public TreeBuilder(SbvrContext inContext) {
+    public TreeBuilder(GelContext inContext) {
         context = inContext;
         FactoryRegistry registry = FactoryRegistry.getRegistry();
+        registry.registerDefaultFactory("Double", FloatingPointLiteralImpl.class);
+        registry.registerDefaultFactory("Integer", IntegerLiteralImpl.class);
+        registry.registerDefaultFactory("String", StringLiteralImpl.class);
+        registry.registerDefaultFactory("date", DateLiteralImpl.class);
+        registry.registerDefaultFactory("Boolean", BooleanLiteralImpl.class);
+        registry.registerDefaultFactory("*", MultImpl.class);
+        registry.registerDefaultFactory(".att", AttributeNavImpl.class);
+        registry.registerDefaultFactory("<", LessThanImpl.class);
+        registry.registerDefaultFactory("let", VariableDefinitionImpl.class);
+        registry.registerDefaultFactory("var", VariableReferenceImpl.class);
+        registry.registerDefaultFactory("=", EqualImpl.class);
+        registry.registerDefaultFactory("-", SubImpl.class);
+        registry.registerDefaultFactory("not", NotImpl.class);
+        registry.registerDefaultFactory(">", GreaterThanImpl.class);
+        registry.registerDefaultFactory("isnew", IsNewImpl.class);
+        registry.registerDefaultFactory("<>", DifferentImpl.class);
+        registry.registerDefaultFactory("->", CollectionMethodNavImpl.class);
+        registry.registerDefaultFactory("opp", OppImpl.class);
+        registry.registerDefaultFactory("<=", LessOrEqualImpl.class);
+        registry.registerDefaultFactory(">=", GreaterOrEqualImpl.class);
+        registry.registerDefaultFactory("xor", XorImpl.class);
+        registry.registerDefaultFactory("/", DivImpl.class);
+        registry.registerDefaultFactory("and", AndImpl.class);
+        registry.registerDefaultFactory("+", AddImpl.class);
+        registry.registerDefaultFactory("%", ModImpl.class);
+        registry.registerDefaultFactory("result", ResultImpl.class);
+        registry.registerDefaultFactory("self", SelfImpl.class);
+        registry.registerDefaultFactory("@pre", AtPreImpl.class);
+        registry.registerDefaultFactory("|", LambdaImpl.class);
+        registry.registerDefaultFactory("or", OrImpl.class);
+        registry.registerDefaultFactory(".meth", MethodNavImpl.class);
+        registry.registerDefaultFactory("->", FlatCollectImpl.class);
+        registry.registerDefaultFactory("excludes", ExcludesImpl.class);
+        registry.registerDefaultFactory("select", SelectImpl.class);
+        registry.registerDefaultFactory("collect", CollectImpl.class);
+        registry.registerDefaultFactory("average", AverageImpl.class);
+        registry.registerDefaultFactory("sum", SumImpl.class);
+        registry.registerDefaultFactory("includes", IncludesImpl.class);
+        registry.registerDefaultFactory("flatten", FlattenImpl.class);
+        registry.registerDefaultFactory("flatCollect", FlatCollectImpl.class);
         registry.registerDefaultFactory(".",    AttributeNavImpl.class);
         registry.registerDefaultFactory(".att", AttributeNavImpl.class);
         registry.registerDefaultFactory(".op",  MethodNavImpl.class);
@@ -75,8 +116,92 @@ public class TreeBuilder extends SbvrParserBaseVisitor<SbvrExpression> {
 //============================================================================//
 
 
+    // LITERAL TYPE : Double
+    @Override
+    public SbvrExpression visitFloatingPointLiteral(SbvrParser.FloatingPointLiteralContext ctx) {
+        try {
+            String text = ctx.getText();
+            FloatingPointLiteral newInstance = (FloatingPointLiteral)FactoryRegistry.newInstance("Double");
+            newInstance.setValueAsString(text);
+            return newInstance;
+        } catch (InstantiationException | IllegalAccessException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    // LITERAL TYPE : Integer
+    @Override
+    public SbvrExpression visitIntegerLiteral(SbvrParser.IntegerLiteralContext ctx) {
+        try {
+            String text = ctx.getText();
+            IntegerLiteral newInstance = (IntegerLiteral)FactoryRegistry.newInstance("Integer");
+            newInstance.setValueAsString(text);
+            return newInstance;
+        } catch (InstantiationException | IllegalAccessException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    // LITERAL TYPE : String
+    @Override
+    public SbvrExpression visitStringLiteral(SbvrParser.StringLiteralContext ctx) {
+        try {
+            String text = ctx.getText();
+            StringLiteral newInstance = (StringLiteral)FactoryRegistry.newInstance("String");
+            newInstance.setValueAsString(text);
+            return newInstance;
+        } catch (InstantiationException | IllegalAccessException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    // LITERAL TYPE : date
+    @Override
+    public SbvrExpression visitDateLiteral(SbvrParser.DateLiteralContext ctx) {
+        try {
+            String text = ctx.getText();
+            DateLiteral newInstance = (DateLiteral)FactoryRegistry.newInstance("date");
+            newInstance.setValueAsString(text);
+            return newInstance;
+        } catch (InstantiationException | IllegalAccessException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    // LITERAL TYPE : Boolean
+    @Override
+    public SbvrExpression visitBooleanLiteral(SbvrParser.BooleanLiteralContext ctx) {
+        try {
+            String text = ctx.getText();
+            BooleanLiteral newInstance = (BooleanLiteral)FactoryRegistry.newInstance("Boolean");
+            newInstance.setValueAsString(text);
+            return newInstance;
+        } catch (InstantiationException | IllegalAccessException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
 
 //============================================================================//
+
+/*
+    @Override
+    public SbvrExpression visit${aClass.name}Expression(SbvrParser.${aClass.name}ExpressionContext ctx) {
+        List<ParseTree> children = ctx.children;
+        if (children.size() == 1) {
+            SbvrExpression result = children.get(0).accept(this);
+            context.remove(CURRENT);
+            return result;
+        }
+        try {
+
+        }
+        catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+*/
+
 
 
 
@@ -88,199 +213,43 @@ public class TreeBuilder extends SbvrParserBaseVisitor<SbvrExpression> {
 
     //------------------------------------------------------------------------//
     // Rules for files                                                        //
-    // A file defines contextual rules. This means that we must reset this    //
-    // context several times during parsing                                   //
+    // A file defines explicit context for rules. This means that we must     //
+    // reset this context several times during parsing                        //
+    //------------------------------------------------------------------------//
+
+
+
+    //------------------------------------------------------------------------//
+    //                       M A I N   D I S P A T C H                        //
+    //------------------------------------------------------------------------//
+
+
+    
+
+
+
+    //------------------------------------------------------------------------//
+    //                  S T A N D A R D   O P E R A T O R S                   //
+    //------------------------------------------------------------------------//
+
+
+
+    //------------------------------------------------------------------------//
+    //                          N A V I G A T I O N                           //
     //------------------------------------------------------------------------//
 
 
     //------------------------------------------------------------------------//
+    //         S T R U C T U R E D   N A T U R A L   L A N G U A G E          //
     //------------------------------------------------------------------------//
 
-    @Override
-    public GelExpression visitSelfExpression(GelParser.SelfExpressionContext ctx) {
-        try {
-            Self    result = (Self) FactoryRegistry.newInstance("self");
-            result.setType(context.getContextType());
-            context.set(CURRENT, result);
-            return result;
-        } catch (InstantiationException ex) {
-            Logger.getLogger(TreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(TreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return super.visitSelfExpression(ctx); //To change body of generated methods, choose Tools | Templates.
-    }
 
-
-    @Override
-    public SbvrExpression visitAtPreExpression(SbvrParser.AtPreExpressionContext ctx) {
-        try {
-            AtPre   result = (AtPre) FactoryRegistry.newInstance("@pre");
-            List<SbvrExpression> operands = new XList<>();
-//            operands.add(accept);
-            result.setOperand(operands);
-            return result;
-        } catch (InstantiationException | IllegalAccessException ex) {
-            Logger.getLogger(TreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
-            throw new RuntimeException("Exception visiting atPreExpression", ex);
-        }
-    }
-
-
-    @Override
-    public SbvrExpression visitVariableOrMemberAtPre(SbvrParser.VariableOrMemberAtPreContext ctx) {
-        try {
-            AtPre   result = (AtPre) FactoryRegistry.newInstance("@pre");
-            Step accept = (Step)ctx.children.get(0).accept(this);
-            List<SbvrExpression> operands = new XList<>();
-            operands.add(accept);
-            result.setOperand(operands);
-            Feature feature = accept.getToFeature();
-            result.setToFeature(feature);
-            result.setType(feature.getType());
-            return result;
-        } catch (InstantiationException | IllegalAccessException ex) {
-            Logger.getLogger(TreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
-            throw new RuntimeException("Exception visiting atPreExpression", ex);
-        }
-    }
-
-
-    @Override
-    public SbvrExpression visitIdentifier(SbvrParser.IdentifierContext ctx) {
-        try {
-            String text = ctx.getText();
-            Object resolve = context.resolve(text);
-            return (GelExpression)resolve;
-        } catch (InstantiationException ex) {
-            Logger.getLogger(TreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(TreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
-    }
-
-
-    @Override
-    public SbvrExpression visitParenthesisExpression(SbvrParser.ParenthesisExpressionContext ctx) {
-        return ctx.children.get(1).accept(this);
-    }
-
-
-    @Override
-    public SbvrExpression visitVariableOrMember(SbvrParser.VariableOrMemberContext ctx) {
-        try {
-            return (GelExpression)context.resolve(ctx.getText());
-        } catch (InstantiationException ex) {
-            Logger.getLogger(TreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(TreeBuilder.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
-    }
-
-
-    @Override
-    public SbvrExpression visitAttributeNavExpression(SbvrParser.AttributeNavExpressionContext ctx) {
-        try {
-            List<ParseTree> children = ctx.children;
-            SbvrParser.IdentifierContext functionCall = (SbvrParser.IdentifierContext)children.get(1);
-            String identifier = functionCall.getText();
-            SbvrExpression result = context.resolve(identifier);
-            List<SbvrExpression>  operands = result.getOperand();
-            // Parse the parameters of the call 
-            // Warning : there are commas between parameters
-            List<ParseTree>     functionChildren = functionCall.children;
-            if (functionChildren.size() > 2) {
-                SbvrParser.ParameterListContext parameterList = (SbvrParser.ParameterListContext) functionChildren.get(2);
-                List<ParseTree> parameters = parameterList.children;
-                for (int i=0 ; i<parameters.size() ; i += 2) {
-                    SbvrExpression aParameter = parameters.get(i).accept(this);
-                    operands.add(aParameter);
-                }
-            }
-            return result;
-        }
-        catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-
-    @Override
-    public SbvrExpression visitMethodNavExpression(SbvrParser.MethodNavExpressionContext ctx) {
-        List<ParseTree> children = ctx.children;
-        if (children.size() == 1) {
-            return children.get(0).accept(this);
-        }
-        try {
-            SbvrParser.FunctionCallContext functionCall = (SbvrParser.FunctionCallContext)children.get(1);
-            String functionIdentifier = functionCall.children.get(0).getText();
-            MofType   current = (MofType)context.resolveVariable(CURRENT);
-            SbvrExpression result = context.resolveOperation(functionIdentifier, current);
-            List<SbvrExpression>  operands = FactoryMethods.newList(SbvrExpression.class);
-            result.setOperand(operands);
-            // Todo : parse the parameters of the call
-            return result;
-        }
-        catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-
-    @Override
-    public SbvrExpression visitCollectionMethodNavExpression(SbvrParser.CollectionMethodNavExpressionContext ctx) {
-        List<ParseTree> children = ctx.children;
-        if (children.size() == 1) {
-            // With the current version of the grammar this should never
-            // happend
-            return children.get(0).accept(this);
-        }
-        try {
-            Collect  current = (Collect) context.get(CURRENT);
-            Feature toFeature = current.getToFeature();
-            context.set(ROOT, toFeature);
-            SbvrParser.FunctionCallContext functionCall = (SbvrParser.FunctionCallContext)children.get(1);
-            String functionIdentifier = functionCall.children.get(0).getText();
-            SbvrExpression result = context.resolveCollOp(functionIdentifier);
-            List<SbvrExpression>  operands = FactoryMethods.newList(SbvrExpression.class);
-            result.setOperand(operands);
-            // Parse the parameters of the call
-            List<ParseTree>     functionChildren = functionCall.children;
-            if (functionChildren.size() > 2) {
-                // In the current grammar a function call has always 4 children
-                // The third one is the parameter list
-                SbvrParser.ParameterListContext parameterList = (SbvrParser.ParameterListContext) functionChildren.get(2);
-                List<ParseTree> parameters = parameterList.children;
-                if (parameters != null) {
-                    context.push();
-                    context.set(CURRENT, context.get(CURRENT));
-                    for (int i=0 ; i<parameters.size() ; i += 2) {
-                        SbvrExpression aParameter = parameters.get(i).accept(this);
-                        operands.add(aParameter);
-                    }
-                    context.pop();
-                }
-            }
-            return result;
-        }
-        catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-
-    @Override
-    public GelExpression visitOclIsNew(GelParser.OclIsNewContext ctx) {
-        return context.resolveIsNew();
-    }
 
 
     //========================================================================//
 
 
-    SbvrContext<SbvrExpression>   context;
+    GelContext<SbvrExpression>   context;
 
 
 }

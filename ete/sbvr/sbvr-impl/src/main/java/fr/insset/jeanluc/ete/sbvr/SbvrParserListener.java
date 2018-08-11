@@ -8,6 +8,96 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  */
 public interface SbvrParserListener extends ParseTreeListener {
 	/**
+	 * Enter a parse tree produced by {@link SbvrParser#file}.
+	 * @param ctx the parse tree
+	 */
+	void enterFile(SbvrParser.FileContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link SbvrParser#file}.
+	 * @param ctx the parse tree
+	 */
+	void exitFile(SbvrParser.FileContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link SbvrParser#definition}.
+	 * @param ctx the parse tree
+	 */
+	void enterDefinition(SbvrParser.DefinitionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link SbvrParser#definition}.
+	 * @param ctx the parse tree
+	 */
+	void exitDefinition(SbvrParser.DefinitionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link SbvrParser#globalConstraint}.
+	 * @param ctx the parse tree
+	 */
+	void enterGlobalConstraint(SbvrParser.GlobalConstraintContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link SbvrParser#globalConstraint}.
+	 * @param ctx the parse tree
+	 */
+	void exitGlobalConstraint(SbvrParser.GlobalConstraintContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link SbvrParser#contextualConstraints}.
+	 * @param ctx the parse tree
+	 */
+	void enterContextualConstraints(SbvrParser.ContextualConstraintsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link SbvrParser#contextualConstraints}.
+	 * @param ctx the parse tree
+	 */
+	void exitContextualConstraints(SbvrParser.ContextualConstraintsContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link SbvrParser#invariants}.
+	 * @param ctx the parse tree
+	 */
+	void enterInvariants(SbvrParser.InvariantsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link SbvrParser#invariants}.
+	 * @param ctx the parse tree
+	 */
+	void exitInvariants(SbvrParser.InvariantsContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link SbvrParser#invariant}.
+	 * @param ctx the parse tree
+	 */
+	void enterInvariant(SbvrParser.InvariantContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link SbvrParser#invariant}.
+	 * @param ctx the parse tree
+	 */
+	void exitInvariant(SbvrParser.InvariantContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link SbvrParser#conditions}.
+	 * @param ctx the parse tree
+	 */
+	void enterConditions(SbvrParser.ConditionsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link SbvrParser#conditions}.
+	 * @param ctx the parse tree
+	 */
+	void exitConditions(SbvrParser.ConditionsContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link SbvrParser#precondition}.
+	 * @param ctx the parse tree
+	 */
+	void enterPrecondition(SbvrParser.PreconditionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link SbvrParser#precondition}.
+	 * @param ctx the parse tree
+	 */
+	void exitPrecondition(SbvrParser.PreconditionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link SbvrParser#postcondition}.
+	 * @param ctx the parse tree
+	 */
+	void enterPostcondition(SbvrParser.PostconditionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link SbvrParser#postcondition}.
+	 * @param ctx the parse tree
+	 */
+	void exitPostcondition(SbvrParser.PostconditionContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link SbvrParser#sbvrExpression}.
 	 * @param ctx the parse tree
 	 */
@@ -18,215 +108,45 @@ public interface SbvrParserListener extends ParseTreeListener {
 	 */
 	void exitSbvrExpression(SbvrParser.SbvrExpressionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SbvrParser#gelExpression}.
+	 * Enter a parse tree produced by {@link SbvrParser#multOperator}.
 	 * @param ctx the parse tree
 	 */
-	void enterGelExpression(SbvrParser.GelExpressionContext ctx);
+	void enterMultOperator(SbvrParser.MultOperatorContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SbvrParser#gelExpression}.
+	 * Exit a parse tree produced by {@link SbvrParser#multOperator}.
 	 * @param ctx the parse tree
 	 */
-	void exitGelExpression(SbvrParser.GelExpressionContext ctx);
+	void exitMultOperator(SbvrParser.MultOperatorContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SbvrParser#xorExpression}.
+	 * Enter a parse tree produced by {@link SbvrParser#addOperator}.
 	 * @param ctx the parse tree
 	 */
-	void enterXorExpression(SbvrParser.XorExpressionContext ctx);
+	void enterAddOperator(SbvrParser.AddOperatorContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SbvrParser#xorExpression}.
+	 * Exit a parse tree produced by {@link SbvrParser#addOperator}.
 	 * @param ctx the parse tree
 	 */
-	void exitXorExpression(SbvrParser.XorExpressionContext ctx);
+	void exitAddOperator(SbvrParser.AddOperatorContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SbvrParser#orExpression}.
+	 * Enter a parse tree produced by {@link SbvrParser#equalityOperator}.
 	 * @param ctx the parse tree
 	 */
-	void enterOrExpression(SbvrParser.OrExpressionContext ctx);
+	void enterEqualityOperator(SbvrParser.EqualityOperatorContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SbvrParser#orExpression}.
+	 * Exit a parse tree produced by {@link SbvrParser#equalityOperator}.
 	 * @param ctx the parse tree
 	 */
-	void exitOrExpression(SbvrParser.OrExpressionContext ctx);
+	void exitEqualityOperator(SbvrParser.EqualityOperatorContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SbvrParser#andExpression}.
+	 * Enter a parse tree produced by {@link SbvrParser#comparator}.
 	 * @param ctx the parse tree
 	 */
-	void enterAndExpression(SbvrParser.AndExpressionContext ctx);
+	void enterComparator(SbvrParser.ComparatorContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SbvrParser#andExpression}.
+	 * Exit a parse tree produced by {@link SbvrParser#comparator}.
 	 * @param ctx the parse tree
 	 */
-	void exitAndExpression(SbvrParser.AndExpressionContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link SbvrParser#notOrNotNotExpression}.
-	 * @param ctx the parse tree
-	 */
-	void enterNotOrNotNotExpression(SbvrParser.NotOrNotNotExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SbvrParser#notOrNotNotExpression}.
-	 * @param ctx the parse tree
-	 */
-	void exitNotOrNotNotExpression(SbvrParser.NotOrNotNotExpressionContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link SbvrParser#notExpression}.
-	 * @param ctx the parse tree
-	 */
-	void enterNotExpression(SbvrParser.NotExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SbvrParser#notExpression}.
-	 * @param ctx the parse tree
-	 */
-	void exitNotExpression(SbvrParser.NotExpressionContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link SbvrParser#affirmativeExpression}.
-	 * @param ctx the parse tree
-	 */
-	void enterAffirmativeExpression(SbvrParser.AffirmativeExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SbvrParser#affirmativeExpression}.
-	 * @param ctx the parse tree
-	 */
-	void exitAffirmativeExpression(SbvrParser.AffirmativeExpressionContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link SbvrParser#greaterThanExpression}.
-	 * @param ctx the parse tree
-	 */
-	void enterGreaterThanExpression(SbvrParser.GreaterThanExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SbvrParser#greaterThanExpression}.
-	 * @param ctx the parse tree
-	 */
-	void exitGreaterThanExpression(SbvrParser.GreaterThanExpressionContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link SbvrParser#greaterOrEqualExpression}.
-	 * @param ctx the parse tree
-	 */
-	void enterGreaterOrEqualExpression(SbvrParser.GreaterOrEqualExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SbvrParser#greaterOrEqualExpression}.
-	 * @param ctx the parse tree
-	 */
-	void exitGreaterOrEqualExpression(SbvrParser.GreaterOrEqualExpressionContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link SbvrParser#lessThanExpression}.
-	 * @param ctx the parse tree
-	 */
-	void enterLessThanExpression(SbvrParser.LessThanExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SbvrParser#lessThanExpression}.
-	 * @param ctx the parse tree
-	 */
-	void exitLessThanExpression(SbvrParser.LessThanExpressionContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link SbvrParser#lessOrEqualExpression}.
-	 * @param ctx the parse tree
-	 */
-	void enterLessOrEqualExpression(SbvrParser.LessOrEqualExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SbvrParser#lessOrEqualExpression}.
-	 * @param ctx the parse tree
-	 */
-	void exitLessOrEqualExpression(SbvrParser.LessOrEqualExpressionContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link SbvrParser#compareExpression}.
-	 * @param ctx the parse tree
-	 */
-	void enterCompareExpression(SbvrParser.CompareExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SbvrParser#compareExpression}.
-	 * @param ctx the parse tree
-	 */
-	void exitCompareExpression(SbvrParser.CompareExpressionContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link SbvrParser#equalExpression}.
-	 * @param ctx the parse tree
-	 */
-	void enterEqualExpression(SbvrParser.EqualExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SbvrParser#equalExpression}.
-	 * @param ctx the parse tree
-	 */
-	void exitEqualExpression(SbvrParser.EqualExpressionContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link SbvrParser#differentExpression}.
-	 * @param ctx the parse tree
-	 */
-	void enterDifferentExpression(SbvrParser.DifferentExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SbvrParser#differentExpression}.
-	 * @param ctx the parse tree
-	 */
-	void exitDifferentExpression(SbvrParser.DifferentExpressionContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link SbvrParser#addOrSubExpression}.
-	 * @param ctx the parse tree
-	 */
-	void enterAddOrSubExpression(SbvrParser.AddOrSubExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SbvrParser#addOrSubExpression}.
-	 * @param ctx the parse tree
-	 */
-	void exitAddOrSubExpression(SbvrParser.AddOrSubExpressionContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link SbvrParser#addExpression}.
-	 * @param ctx the parse tree
-	 */
-	void enterAddExpression(SbvrParser.AddExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SbvrParser#addExpression}.
-	 * @param ctx the parse tree
-	 */
-	void exitAddExpression(SbvrParser.AddExpressionContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link SbvrParser#subExpression}.
-	 * @param ctx the parse tree
-	 */
-	void enterSubExpression(SbvrParser.SubExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SbvrParser#subExpression}.
-	 * @param ctx the parse tree
-	 */
-	void exitSubExpression(SbvrParser.SubExpressionContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link SbvrParser#multOrDivExpression}.
-	 * @param ctx the parse tree
-	 */
-	void enterMultOrDivExpression(SbvrParser.MultOrDivExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SbvrParser#multOrDivExpression}.
-	 * @param ctx the parse tree
-	 */
-	void exitMultOrDivExpression(SbvrParser.MultOrDivExpressionContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link SbvrParser#multExpression}.
-	 * @param ctx the parse tree
-	 */
-	void enterMultExpression(SbvrParser.MultExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SbvrParser#multExpression}.
-	 * @param ctx the parse tree
-	 */
-	void exitMultExpression(SbvrParser.MultExpressionContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link SbvrParser#divExpression}.
-	 * @param ctx the parse tree
-	 */
-	void enterDivExpression(SbvrParser.DivExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SbvrParser#divExpression}.
-	 * @param ctx the parse tree
-	 */
-	void exitDivExpression(SbvrParser.DivExpressionContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link SbvrParser#modExpression}.
-	 * @param ctx the parse tree
-	 */
-	void enterModExpression(SbvrParser.ModExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SbvrParser#modExpression}.
-	 * @param ctx the parse tree
-	 */
-	void exitModExpression(SbvrParser.ModExpressionContext ctx);
+	void exitComparator(SbvrParser.ComparatorContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link SbvrParser#operand}.
 	 * @param ctx the parse tree
@@ -238,16 +158,6 @@ public interface SbvrParserListener extends ParseTreeListener {
 	 */
 	void exitOperand(SbvrParser.OperandContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SbvrParser#parenthesisExpression}.
-	 * @param ctx the parse tree
-	 */
-	void enterParenthesisExpression(SbvrParser.ParenthesisExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SbvrParser#parenthesisExpression}.
-	 * @param ctx the parse tree
-	 */
-	void exitParenthesisExpression(SbvrParser.ParenthesisExpressionContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link SbvrParser#navExpression}.
 	 * @param ctx the parse tree
 	 */
@@ -258,245 +168,175 @@ public interface SbvrParserListener extends ParseTreeListener {
 	 */
 	void exitNavExpression(SbvrParser.NavExpressionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SbvrParser#finalStep}.
+	 * Enter a parse tree produced by {@link SbvrParser#leftToRightNavigation}.
 	 * @param ctx the parse tree
 	 */
-	void enterFinalStep(SbvrParser.FinalStepContext ctx);
+	void enterLeftToRightNavigation(SbvrParser.LeftToRightNavigationContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SbvrParser#finalStep}.
+	 * Exit a parse tree produced by {@link SbvrParser#leftToRightNavigation}.
 	 * @param ctx the parse tree
 	 */
-	void exitFinalStep(SbvrParser.FinalStepContext ctx);
+	void exitLeftToRightNavigation(SbvrParser.LeftToRightNavigationContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SbvrParser#oclIsNew}.
+	 * Enter a parse tree produced by {@link SbvrParser#rightToLeftNavigation}.
 	 * @param ctx the parse tree
 	 */
-	void enterOclIsNew(SbvrParser.OclIsNewContext ctx);
+	void enterRightToLeftNavigation(SbvrParser.RightToLeftNavigationContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SbvrParser#oclIsNew}.
+	 * Exit a parse tree produced by {@link SbvrParser#rightToLeftNavigation}.
 	 * @param ctx the parse tree
 	 */
-	void exitOclIsNew(SbvrParser.OclIsNewContext ctx);
+	void exitRightToLeftNavigation(SbvrParser.RightToLeftNavigationContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SbvrParser#oclIsTypeOf}.
+	 * Enter a parse tree produced by {@link SbvrParser#firstStep}.
 	 * @param ctx the parse tree
 	 */
-	void enterOclIsTypeOf(SbvrParser.OclIsTypeOfContext ctx);
+	void enterFirstStep(SbvrParser.FirstStepContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SbvrParser#oclIsTypeOf}.
+	 * Exit a parse tree produced by {@link SbvrParser#firstStep}.
 	 * @param ctx the parse tree
 	 */
-	void exitOclIsTypeOf(SbvrParser.OclIsTypeOfContext ctx);
+	void exitFirstStep(SbvrParser.FirstStepContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SbvrParser#oclIsKindOf}.
+	 * Enter a parse tree produced by {@link SbvrParser#step}.
 	 * @param ctx the parse tree
 	 */
-	void enterOclIsKindOf(SbvrParser.OclIsKindOfContext ctx);
+	void enterStep(SbvrParser.StepContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SbvrParser#oclIsKindOf}.
+	 * Exit a parse tree produced by {@link SbvrParser#step}.
 	 * @param ctx the parse tree
 	 */
-	void exitOclIsKindOf(SbvrParser.OclIsKindOfContext ctx);
+	void exitStep(SbvrParser.StepContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SbvrParser#primitive}.
+	 * Enter a parse tree produced by {@link SbvrParser#navOperator}.
 	 * @param ctx the parse tree
 	 */
-	void enterPrimitive(SbvrParser.PrimitiveContext ctx);
+	void enterNavOperator(SbvrParser.NavOperatorContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SbvrParser#primitive}.
+	 * Exit a parse tree produced by {@link SbvrParser#navOperator}.
 	 * @param ctx the parse tree
 	 */
-	void exitPrimitive(SbvrParser.PrimitiveContext ctx);
+	void exitNavOperator(SbvrParser.NavOperatorContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SbvrParser#attributeNavExpression}.
+	 * Enter a parse tree produced by {@link SbvrParser#structuredNaturalLanguage}.
 	 * @param ctx the parse tree
 	 */
-	void enterAttributeNavExpression(SbvrParser.AttributeNavExpressionContext ctx);
+	void enterStructuredNaturalLanguage(SbvrParser.StructuredNaturalLanguageContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SbvrParser#attributeNavExpression}.
+	 * Exit a parse tree produced by {@link SbvrParser#structuredNaturalLanguage}.
 	 * @param ctx the parse tree
 	 */
-	void exitAttributeNavExpression(SbvrParser.AttributeNavExpressionContext ctx);
+	void exitStructuredNaturalLanguage(SbvrParser.StructuredNaturalLanguageContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SbvrParser#atPreExpression}.
+	 * Enter a parse tree produced by {@link SbvrParser#modality}.
 	 * @param ctx the parse tree
 	 */
-	void enterAtPreExpression(SbvrParser.AtPreExpressionContext ctx);
+	void enterModality(SbvrParser.ModalityContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SbvrParser#atPreExpression}.
+	 * Exit a parse tree produced by {@link SbvrParser#modality}.
 	 * @param ctx the parse tree
 	 */
-	void exitAtPreExpression(SbvrParser.AtPreExpressionContext ctx);
+	void exitModality(SbvrParser.ModalityContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SbvrParser#asTypeExpression}.
+	 * Enter a parse tree produced by {@link SbvrParser#sentence}.
 	 * @param ctx the parse tree
 	 */
-	void enterAsTypeExpression(SbvrParser.AsTypeExpressionContext ctx);
+	void enterSentence(SbvrParser.SentenceContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SbvrParser#asTypeExpression}.
+	 * Exit a parse tree produced by {@link SbvrParser#sentence}.
 	 * @param ctx the parse tree
 	 */
-	void exitAsTypeExpression(SbvrParser.AsTypeExpressionContext ctx);
+	void exitSentence(SbvrParser.SentenceContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SbvrParser#methodNavExpression}.
+	 * Enter a parse tree produced by {@link SbvrParser#general_concept}.
 	 * @param ctx the parse tree
 	 */
-	void enterMethodNavExpression(SbvrParser.MethodNavExpressionContext ctx);
+	void enterGeneral_concept(SbvrParser.General_conceptContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SbvrParser#methodNavExpression}.
+	 * Exit a parse tree produced by {@link SbvrParser#general_concept}.
 	 * @param ctx the parse tree
 	 */
-	void exitMethodNavExpression(SbvrParser.MethodNavExpressionContext ctx);
+	void exitGeneral_concept(SbvrParser.General_conceptContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SbvrParser#collectionMethodNavExpression}.
+	 * Enter a parse tree produced by {@link SbvrParser#determiner}.
 	 * @param ctx the parse tree
 	 */
-	void enterCollectionMethodNavExpression(SbvrParser.CollectionMethodNavExpressionContext ctx);
+	void enterDeterminer(SbvrParser.DeterminerContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SbvrParser#collectionMethodNavExpression}.
+	 * Exit a parse tree produced by {@link SbvrParser#determiner}.
 	 * @param ctx the parse tree
 	 */
-	void exitCollectionMethodNavExpression(SbvrParser.CollectionMethodNavExpressionContext ctx);
+	void exitDeterminer(SbvrParser.DeterminerContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SbvrParser#variableOrMember}.
+	 * Enter a parse tree produced by {@link SbvrParser#verb}.
 	 * @param ctx the parse tree
 	 */
-	void enterVariableOrMember(SbvrParser.VariableOrMemberContext ctx);
+	void enterVerb(SbvrParser.VerbContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SbvrParser#variableOrMember}.
+	 * Exit a parse tree produced by {@link SbvrParser#verb}.
 	 * @param ctx the parse tree
 	 */
-	void exitVariableOrMember(SbvrParser.VariableOrMemberContext ctx);
+	void exitVerb(SbvrParser.VerbContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SbvrParser#variableOrMemberAtPre}.
+	 * Enter a parse tree produced by {@link SbvrParser#quantifier}.
 	 * @param ctx the parse tree
 	 */
-	void enterVariableOrMemberAtPre(SbvrParser.VariableOrMemberAtPreContext ctx);
+	void enterQuantifier(SbvrParser.QuantifierContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SbvrParser#variableOrMemberAtPre}.
+	 * Exit a parse tree produced by {@link SbvrParser#quantifier}.
 	 * @param ctx the parse tree
 	 */
-	void exitVariableOrMemberAtPre(SbvrParser.VariableOrMemberAtPreContext ctx);
+	void exitQuantifier(SbvrParser.QuantifierContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SbvrParser#functionCall}.
+	 * Enter a parse tree produced by {@link SbvrParser#article}.
 	 * @param ctx the parse tree
 	 */
-	void enterFunctionCall(SbvrParser.FunctionCallContext ctx);
+	void enterArticle(SbvrParser.ArticleContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SbvrParser#functionCall}.
+	 * Exit a parse tree produced by {@link SbvrParser#article}.
 	 * @param ctx the parse tree
 	 */
-	void exitFunctionCall(SbvrParser.FunctionCallContext ctx);
+	void exitArticle(SbvrParser.ArticleContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SbvrParser#variableDeclarationExpression}.
+	 * Enter a parse tree produced by {@link SbvrParser#definite_article}.
 	 * @param ctx the parse tree
 	 */
-	void enterVariableDeclarationExpression(SbvrParser.VariableDeclarationExpressionContext ctx);
+	void enterDefinite_article(SbvrParser.Definite_articleContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SbvrParser#variableDeclarationExpression}.
+	 * Exit a parse tree produced by {@link SbvrParser#definite_article}.
 	 * @param ctx the parse tree
 	 */
-	void exitVariableDeclarationExpression(SbvrParser.VariableDeclarationExpressionContext ctx);
+	void exitDefinite_article(SbvrParser.Definite_articleContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SbvrParser#typeExpression}.
+	 * Enter a parse tree produced by {@link SbvrParser#indefinite_article}.
 	 * @param ctx the parse tree
 	 */
-	void enterTypeExpression(SbvrParser.TypeExpressionContext ctx);
+	void enterIndefinite_article(SbvrParser.Indefinite_articleContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SbvrParser#typeExpression}.
+	 * Exit a parse tree produced by {@link SbvrParser#indefinite_article}.
 	 * @param ctx the parse tree
 	 */
-	void exitTypeExpression(SbvrParser.TypeExpressionContext ctx);
+	void exitIndefinite_article(SbvrParser.Indefinite_articleContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SbvrParser#atomicTypeExpression}.
+	 * Enter a parse tree produced by {@link SbvrParser#demonstrative}.
 	 * @param ctx the parse tree
 	 */
-	void enterAtomicTypeExpression(SbvrParser.AtomicTypeExpressionContext ctx);
+	void enterDemonstrative(SbvrParser.DemonstrativeContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SbvrParser#atomicTypeExpression}.
+	 * Exit a parse tree produced by {@link SbvrParser#demonstrative}.
 	 * @param ctx the parse tree
 	 */
-	void exitAtomicTypeExpression(SbvrParser.AtomicTypeExpressionContext ctx);
+	void exitDemonstrative(SbvrParser.DemonstrativeContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SbvrParser#sequenceTypeExpression}.
+	 * Enter a parse tree produced by {@link SbvrParser#possessive}.
 	 * @param ctx the parse tree
 	 */
-	void enterSequenceTypeExpression(SbvrParser.SequenceTypeExpressionContext ctx);
+	void enterPossessive(SbvrParser.PossessiveContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SbvrParser#sequenceTypeExpression}.
+	 * Exit a parse tree produced by {@link SbvrParser#possessive}.
 	 * @param ctx the parse tree
 	 */
-	void exitSequenceTypeExpression(SbvrParser.SequenceTypeExpressionContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link SbvrParser#bagTypeExpression}.
-	 * @param ctx the parse tree
-	 */
-	void enterBagTypeExpression(SbvrParser.BagTypeExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SbvrParser#bagTypeExpression}.
-	 * @param ctx the parse tree
-	 */
-	void exitBagTypeExpression(SbvrParser.BagTypeExpressionContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link SbvrParser#setTypeExpression}.
-	 * @param ctx the parse tree
-	 */
-	void enterSetTypeExpression(SbvrParser.SetTypeExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SbvrParser#setTypeExpression}.
-	 * @param ctx the parse tree
-	 */
-	void exitSetTypeExpression(SbvrParser.SetTypeExpressionContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link SbvrParser#orderedSetTypeExpression}.
-	 * @param ctx the parse tree
-	 */
-	void enterOrderedSetTypeExpression(SbvrParser.OrderedSetTypeExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SbvrParser#orderedSetTypeExpression}.
-	 * @param ctx the parse tree
-	 */
-	void exitOrderedSetTypeExpression(SbvrParser.OrderedSetTypeExpressionContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link SbvrParser#oppExpression}.
-	 * @param ctx the parse tree
-	 */
-	void enterOppExpression(SbvrParser.OppExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SbvrParser#oppExpression}.
-	 * @param ctx the parse tree
-	 */
-	void exitOppExpression(SbvrParser.OppExpressionContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link SbvrParser#selfExpression}.
-	 * @param ctx the parse tree
-	 */
-	void enterSelfExpression(SbvrParser.SelfExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SbvrParser#selfExpression}.
-	 * @param ctx the parse tree
-	 */
-	void exitSelfExpression(SbvrParser.SelfExpressionContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link SbvrParser#variableReference}.
-	 * @param ctx the parse tree
-	 */
-	void enterVariableReference(SbvrParser.VariableReferenceContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SbvrParser#variableReference}.
-	 * @param ctx the parse tree
-	 */
-	void exitVariableReference(SbvrParser.VariableReferenceContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link SbvrParser#parameterList}.
-	 * @param ctx the parse tree
-	 */
-	void enterParameterList(SbvrParser.ParameterListContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SbvrParser#parameterList}.
-	 * @param ctx the parse tree
-	 */
-	void exitParameterList(SbvrParser.ParameterListContext ctx);
+	void exitPossessive(SbvrParser.PossessiveContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link SbvrParser#literal}.
 	 * @param ctx the parse tree
@@ -507,6 +347,16 @@ public interface SbvrParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitLiteral(SbvrParser.LiteralContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link SbvrParser#word}.
+	 * @param ctx the parse tree
+	 */
+	void enterWord(SbvrParser.WordContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link SbvrParser#word}.
+	 * @param ctx the parse tree
+	 */
+	void exitWord(SbvrParser.WordContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link SbvrParser#identifier}.
 	 * @param ctx the parse tree

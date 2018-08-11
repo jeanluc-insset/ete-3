@@ -68,7 +68,7 @@ public class LexerBuilderTest {
         // has a correct length.
         File file = new File(fileName);
         assertTrue(file.exists());
-        assertEquals(136, file.length());
+        assertEquals(256, file.length());
     }
 
 
