@@ -8,9 +8,19 @@
     </parent>
     <artifactId>sbvr</artifactId>
     <packaging>pom</packaging>
+
+    <description>
+        This project defines the sbvr language which extends and embeds GEL.
+        This is achieve with the following techniques:
+        - the sbvr lexer imports and refines the GEL lexer
+        - the sbvr parser imports and refines the GEL parser
+        - the 
+    </description>
+
     <modules>
         <module>sbvr-spec</module>
         <module>sbvr-api</module>
         <module>sbvr-impl</module>
     </modules>
+
 </project>

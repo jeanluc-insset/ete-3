@@ -223,7 +223,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
 
         // 1- parse the condition
         String          specificationAsString = inCondition.getSpecificationAsString();
-        GelParser       parser                = GelParserWrapper.newParser(specificationAsString);
+        GelParser       parser                = new GelParserWrapper().newParser(specificationAsString);
         GelParser.GelExpressionContext   ctx  = parser.gelExpression();
 
         // 2- build expression as an abstract tree
@@ -248,7 +248,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
 
         // 1- parse the condition
         String          specificationAsString = inCondition.getSpecificationAsString();
-        GelParser       parser                = GelParserWrapper.newParser(specificationAsString);
+        GelParser       parser                = new GelParserWrapper().newParser(specificationAsString);
         GelParser.GelExpressionContext   ctx  = parser.gelExpression();
 
         // 2- build expression as an abstract tree

@@ -3,8 +3,8 @@ import React, { Component } from 'react';
 
 
 import EntityName from './EntityName';
-import AndMineTooComponent from './AndMineTooComponent';
 import ChangeMyNameComponent from './ChangeMyNameComponent';
+import AndMineTooComponent from './AndMineTooComponent';
 
 
 export default class EntityList extends Component {
@@ -28,8 +28,8 @@ export default class EntityList extends Component {
     render() { 
         return (
           <div className="EntityList">
-          {this.renderEntity("AndMineToo")}
           {this.renderEntity("ChangeMyName")}
+          {this.renderEntity("AndMineToo")}
           </div>
           )
     }

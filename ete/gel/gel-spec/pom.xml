@@ -25,11 +25,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr4-runtime</artifactId>
-            <version>4.5.3</version>
-        </dependency>
-        <dependency>
             <groupId>fr.insset.jeanluc</groupId>
             <artifactId>meta-model-api</artifactId>
             <version>${project.version}</version>

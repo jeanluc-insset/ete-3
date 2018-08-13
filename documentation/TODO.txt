@@ -2,10 +2,13 @@
 
 Infrastructure
     - default naming : navigable ends should be named, it would be nice to provide default naming
-    - generation of "queries"
+
+Constraints
+    ~ generation of "queries"
     - OCL custom functions
         - definition
         - usage
+    - split conjonctions ("A and B" should be treated as separate constraints)
     - full support of OCL
     - external OCL files
     - derived properties

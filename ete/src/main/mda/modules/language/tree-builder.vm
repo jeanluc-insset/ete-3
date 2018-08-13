@@ -23,7 +23,6 @@
 package fr.insset.jeanluc.ete.${dialect.i2lc($projectName)}.impl;
 
 
-
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 import fr.insset.jeanluc.ete.meta.model.emof.MofParameter;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
@@ -56,7 +55,25 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.RuleNode;
 import fr.insset.jeanluc.ete.util.XList;
 
-
+//                                                                            //
+// Generates an abstract tree builder for any Expression Language             //
+// An instance of this class is a visitor for these Expressions. It takes any //
+// expression concrete tree and returns the matching abstract tree.           //
+//                                                                            //
+// Usage :                                                                    //
+//                                                                            //
+//  XxxParser             parser       = XxxParserFactory                     //
+//                                          .newParser(inExpression);         //
+//  XxxExpressionContext  ctx          = parser.xxxExpression();              //
+//  // a context "resolves" identifiers                                       //
+//  XxxContext<XxxExpression> context  = new XxxContextImpl(                  //
+//                                          theModel, theClass, theElement);  //
+//  TreeBuilder           treeBuilder  = new TreeBuilder(inContext);          //
+//  XxxExpression         expression   = treeBuilder.visitXxxExpression(ctx); //
+//                                                                            //
+//  All this stuff is encapsulated in the "buildAbstractTree" static method   //
+//  of the "ParserWrapper" class                                              //
+//                                                                            //
 
 /**
  * An instance of this class is a visitor for ${dialect.i2uc($projectName)}Expressions. It takes a

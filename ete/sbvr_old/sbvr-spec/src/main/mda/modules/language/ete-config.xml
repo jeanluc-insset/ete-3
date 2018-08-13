@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<mda>
+
+
+    <transformation-set >
+
+<!--        <velocity template="contexts/context.vm"
+                dialect="fr.insset.jeanluc.el.dialect.BasicJavaDialect"
+                target="${projectName}-api/src/main/java/fr/insset/jeanluc/ete/${projectName.toLowerCase()}/${projectName.substring(0,1).toUpperCase()}${projectName.substring(1)}Context.java"/>-->
+
+<!--        <velocity template="contexts/${context}context.vm"
+                dialect="fr.insset.jeanluc.el.dialect.BasicJavaDialect"
+                target="${projectName}-impl/src/main/java/fr/insset/jeanluc/ete/${projectName.toLowerCase()}/impl/${projectName.substring(0,1).toUpperCase()}${projectName.substring(1)}ContextImpl.java"/>-->
+
+<!--        <velocity template="parser-wrapper.vm"
+                target="../sbvr/sbvr-api/src/main/java/fr/insset/jeanluc/ete/sbvr/ParserWrapper.java"/>-->
+
+        <velocity template="parser-wrapper-impl.vm"
+                target="../sbvr/sbvr-impl/src/main/java/fr/insset/jeanluc/ete/sbvr/impl/SbvrParserWrapper.java"/>
+
+        
+<!--        <velocity template="tree-builder.vm"
+                target="../sbvr/sbvr-impl/src/main/java/fr/insset/jeanluc/ete/sbvr/impl/TreeBuilder.java"/>-->
+
+    </transformation-set>
+
+</mda>
+
+
+

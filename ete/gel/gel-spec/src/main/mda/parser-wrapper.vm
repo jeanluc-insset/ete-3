@@ -1,8 +1,8 @@
 package  fr.insset.jeanluc.ete.gel;
 
 
+import fr.insset.jeanluc.ete.meta.model.core.NamedElement;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
-import fr.insset.jeanluc.ete.meta.model.types.TypedElement;
 
 
 
@@ -12,7 +12,7 @@ public interface ParserWrapper {
      * Reads a contextual expression, typically an expression which is embedded
      * in a model
      */
-    public GelExpression buildAbstractTree(String inExpression, EteModel inModel, TypedElement inContextElement);
+    public GenericExpression buildAbstractTree(String inExpression, EteModel inModel, NamedElement inContextElement);
 
     /**
      * Reads non contextual expressions, typically the content of a text file.

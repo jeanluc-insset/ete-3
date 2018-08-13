@@ -6,9 +6,10 @@
 package fr.insset.jeanluc.ete.${dialect.i2lc($projectName)}.impl;
 
 import fr.insset.jeanluc.ete.${projectName.toLowerCase()}.${dialect.i2uc($projectName)}Context;
-import fr.insset.jeanluc.ete.${projectName.toLowerCase()}.${dialect.i2uc($projectName)}Expression;
 import fr.insset.jeanluc.ete.${projectName.toLowerCase()}.${dialect.i2uc($projectName)}Lexer;
 import fr.insset.jeanluc.ete.${projectName.toLowerCase()}.${dialect.i2uc($projectName)}Parser;
+import fr.insset.jeanluc.ete.gel.GenericExpression;
+import fr.insset.jeanluc.ete.gel.ParserWrapper;
 import fr.insset.jeanluc.ete.meta.model.core.NamedElement;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
@@ -24,9 +25,9 @@ import org.antlr.v4.runtime.CommonTokenStream;
  * @author jldeleage
  */
 @Generated("ete - jean-luc@insset.fr  ete/src/main/mda/modules/language/parser-wrapper.vm")
-public class ${dialect.i2uc($projectName)}ParserWrapper {
+public class ${dialect.i2uc($projectName)}ParserWrapper implements ParserWrapper {
     
-    public static ${dialect.i2uc($projectName)}Parser newParser(String inExpression) {
+    public ${dialect.i2uc($projectName)}Parser newParser(String inExpression) {
         ${dialect.i2uc($projectName)}Lexer lexer = null;
         ANTLRInputStream input = new ANTLRInputStream(inExpression);
         lexer = new ${dialect.i2uc($projectName)}Lexer(input);
@@ -35,7 +36,7 @@ public class ${dialect.i2uc($projectName)}ParserWrapper {
         return parser;
     }
 
-    public static ${dialect.i2uc($projectName)}Expression buildAbstractTree(String inExpression, EteModel inModel, NamedElement inContextElement) {
+    public GenericExpression buildAbstractTree(String inExpression, EteModel inModel, NamedElement inContextElement) {
         MofClass    contextualClass = null;
         if (inContextElement instanceof MofClass) {
             contextualClass = (MofClass)inContextElement;
@@ -47,13 +48,23 @@ public class ${dialect.i2uc($projectName)}ParserWrapper {
         return buildAbstractTree(inExpression, context);
     }
 
-    public static ${dialect.i2uc($projectName)}Expression buildAbstractTree(String inExpression, ${dialect.i2uc($projectName)}Context inContext) {
-        ${dialect.i2uc($projectName)}Parser parser = ${dialect.i2uc($projectName)}ParserWrapper.newParser(inExpression);
-        ${dialect.i2uc($projectName)}Parser.${dialect.i2uc($projectName)}ExpressionContext concreteExpression = parser.${dialect.i2lc($projectName)}Expression();
+    public GenericExpression buildAbstractTree(String inExpression, ${dialect.i2uc($projectName)}Context inContext) {
+        ${dialect.i2uc($projectName)}Parser parser = newParser(inExpression);
+        ${dialect.i2uc($projectName)}Parser.GenericExpressionContext concreteExpression = parser.genericExpression();
         TreeBuilder builder = new TreeBuilder(inContext);
-        ${dialect.i2uc($projectName)}Expression abstractExpression = builder.visit(concreteExpression);
+        GenericExpression abstractExpression = builder.visit(concreteExpression);
         return abstractExpression;
     }
+
+
+
+    @Override
+    public void readExpressions(String inExpressions, EteModel inoutModel) {
+        buildAbstractTree(inExpressions, inoutModel, null);
+    }
+
+
+
 
     protected void addToContext(String inName, TypedElement inValue) {
     }
