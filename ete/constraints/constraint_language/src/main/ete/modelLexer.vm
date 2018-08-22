@@ -1,0 +1,9 @@
+lexer grammar ModelLexer;
+
+import EnglishLexer;
+
+#foreach ($aClass in $current.allClasses)
+${aClass.name.toUpperCase()}  :  ${aClass.name};
+#end
+
+

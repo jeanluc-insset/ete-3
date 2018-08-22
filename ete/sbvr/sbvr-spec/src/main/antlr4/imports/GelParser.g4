@@ -28,7 +28,7 @@ options {
 //============================================================================//
 
 
-file : gelExpression*;
+file : genericExpression+;
 
 
 genericExpression: gelExpression;
@@ -40,7 +40,12 @@ genericExpression: gelExpression;
 
 
 gelExpression :
-    xorExpression
+  (
+     literal (ADD literal)*
+  )
+  |
+    navExpression
+//    xorExpression
 ;
 
 

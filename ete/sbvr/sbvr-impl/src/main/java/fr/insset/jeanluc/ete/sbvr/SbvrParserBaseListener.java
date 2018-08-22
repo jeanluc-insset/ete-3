@@ -28,6 +28,18 @@ public class SbvrParserBaseListener implements SbvrParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterDefinition(SbvrParser.DefinitionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDefinition(SbvrParser.DefinitionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterSbvrExpression(SbvrParser.SbvrExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}

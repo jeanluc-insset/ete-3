@@ -17,6 +17,12 @@ public interface SbvrParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitGenericExpression(SbvrParser.GenericExpressionContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link SbvrParser#definition}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDefinition(SbvrParser.DefinitionContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link SbvrParser#sbvrExpression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

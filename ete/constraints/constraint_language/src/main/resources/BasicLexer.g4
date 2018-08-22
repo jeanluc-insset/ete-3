@@ -1,0 +1,124 @@
+lexer grammar BasicLexer;
+
+
+
+//============================================================================//
+// This lexer provides the tokens for all OCL based languages, including      //
+// pseudo natural languages.
+//============================================================================//
+
+
+
+
+//============================================================================//
+//                             O P E R A T O R S                              //
+//============================================================================//
+
+
+XOR             : 'xor';
+OR              : 'or';
+AND             : 'and';
+NOT             : 'not';
+
+LT              : '<';
+LE              : '<=';
+GT              : '>';
+GE              : '>=';
+
+EQUAL           : '=';
+DIFF            : '<>';
+
+PLUS            : '+';
+MINUS           : '-';
+MULT            : '*';
+DIV             : '/';
+MOD             : '%';
+
+
+
+//============================================================================//
+//                            S E P A R A T O R S                             //
+//============================================================================//
+
+
+LPAREN          : '(';
+RPAREN          : ')';
+LBRACE          : '{';
+RBRACE          : '}';
+LBRACK          : '[';
+RBRACK          : ']';
+COLON           : ':';
+SEMI            : ';';
+COMMA           : ',';
+DOT             : '.';
+ARROW           : '->';
+DOUBLE_ARROW    : '=>';
+LEFT_ARROW      : '<-';
+PIPE            : '|';
+
+
+NO_DETERMINER   : 'no' 'determiner';
+NO_KEYWORD      : 'no' 'keyword';
+NO_MODEL_TERM   : 'no' 'model' 'term';
+NO_OTHER        : 'no' 'other' 'term';
+
+//============================================================================//
+//                                 F I L E S                                  //
+//============================================================================//
+
+
+DEFINITION      : 'Definition';
+RULE            : 'Rule';
+
+
+//============================================================================//
+//                           I D E N T I F I E R S                            //
+//============================================================================//
+
+
+
+Identifier
+    :   JavaLetter JavaLetterOrDigit*
+    ;
+
+fragment
+JavaLetter
+    :   [a-zA-Z$_] // these are the "java letters" below 0xFF
+    |   // covers all characters above 0xFF which are not a surrogate
+        ~[\u0000-\u00FF\uD800-\uDBFF]
+        {Character.isJavaIdentifierStart(_input.LA(-1))}?
+    |   // covers UTF-16 surrogate pairs encodings for U+10000 to U+10FFFF
+        [\uD800-\uDBFF] [\uDC00-\uDFFF]
+        {Character.isJavaIdentifierStart(Character.toCodePoint((char)_input.LA(-2), (char)_input.LA(-1)))}?
+    ;
+
+fragment
+JavaLetterOrDigit
+    :   [a-zA-Z0-9$_] // these are the "java letters or digits" below 0xFF
+    |   // covers all characters above 0xFF which are not a surrogate
+        ~[\u0000-\u00FF\uD800-\uDBFF]
+        {Character.isJavaIdentifierPart(_input.LA(-1))}?
+    |   // covers UTF-16 surrogate pairs encodings for U+10000 to U+10FFFF
+        [\uD800-\uDBFF] [\uDC00-\uDFFF]
+        {Character.isJavaIdentifierPart(Character.toCodePoint((char)_input.LA(-2), (char)_input.LA(-1)))}?
+    ;
+
+
+
+//============================================================================//
+//          N O N   S I G N I F I C A T I V E   C H A R A C T E R S           //
+//============================================================================//
+
+
+
+WS  :  [ \t\r\n\u000C]+ -> skip
+    ;
+
+COMMENT
+    :   '/*' .*? '*/' -> skip
+    ;
+
+LINE_COMMENT
+    :   '--' ~[\r\n]* -> skip
+    ;
+

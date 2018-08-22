@@ -2,6 +2,7 @@
 
 package fr.insset.jeanluc.constraint_language;
 
+import fr.insset.jeanluc.constraint_language.antlr4.AntlrRunner;
 import fr.insset.jeanluc.ete.api.ActionSupport;
 import fr.insset.jeanluc.ete.api.EteException;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.MofPackage;
@@ -29,27 +30,20 @@ public class ConstraintAction extends ActionSupport {
             MofPackage  result = clonePackage(inPackage);
 
             // 2- Generate the lexer grammar from the model and a first parser
-            String  language = (String) getParameter("language");
-            LexerBuilder lexerBuilder = new LexerBuilder();
+            //    Parses them with antlr4, compile the classes, run the parser
+            //    on the constraint file to create new lexer and parser
+            //    Run again antlr4 on these fresh grammars
+            String  language        = (String) getParameter("language", "OCL");
+            String  constraintFile  = (String) getParameter("constraints");
+            String  name            = (String)getParameter("name", "constraints");
+            LanguageBuilder builder = new LanguageBuilder();
             language = language.substring(0, 1).toUpperCase() + language.substring(1);
-            lexerBuilder.generateGrammars(language, result, "target/tmp/" + language + "Lexer.g4");
+            builder.generateGrammars(name, inPackage, name, constraintFile);
 
-            // 3- 
-            
+            // 3- Parse the constraint file using the final grammar
+            //    This should add the constraints to the model.
 
-            // 4- Generate the parser from a first parsing of the constraint file
-            //    (the grammar will contain a rule for every definition in the constraint file)
-            
-
-            // 5- Run antlr4 on the final grammar.
-            //    This will generate the parser class.
-            AntlrRunner     parserBuilder = new AntlrRunner();
-
-            // 5- Compile the generated classes
-
-            // 6- Parse the constraint file using the final grammar
-
-            // 7- We're through it
+            // 4- We're through it
             return result;
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ConstraintAction.class.getName()).log(Level.SEVERE, null, ex);

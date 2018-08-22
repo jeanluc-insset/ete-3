@@ -15,35 +15,77 @@
 
 
     <description>
-        The project defines two actions to load a constraint language, actually
-        a ParserWrapper implementation and to use it with constraints files.
+        The project defines an action to load a constraint file.
+        The constraint file may be written in a custom language.
 
-        The language action cr
 
-        The actual grammar is made of three layers :
+================================================================================
+                                   U S A G E                                   
+================================================================================
+
+
+A project using the constraint action MUST add in the src/main/antlr4/imports
+directory the following grammars :
+- BasicLexer.g4
+- BasicParser.g4
+- XxxLexer.g4
+- XxxParser.g4
+where Xxx is the name of the language used by the constraints file.
+
+
+================================================================================
+                                 D E T A I L S
+================================================================================
+
+
+        The actual grammar is made of four layers :
         - the basic language grammar
+        - the natural language grammar
         - the model grammar
-        - the final grammar
+        - the actual grammar
 
-        The basic language grammar defines the keywords of the language :
-            - modalities (for each, any...)
+        The first two levels should be provided in the project in the
+        imports directory (see above).
+        The third and fourth level are dynamically built by the action.
+
+        The basic language grammar defines expressions and navigations :
+            - leftToRight and rightToLeft navigations
             - logical operations (and, or, implies, not both...)
 
-        The model grammar defines tokens from the model : any entity is turned
-        into a token.
+        The "natural language" grammar defines the keywords of the language :
+            - modalities (it is mandatory that...)
+            - determiners (the, a)
+            - quantifiers (for each, any...)
+            - the navigation operator 
+        The natural language grammar chooses which navigation to use. It may
+        define its own rule.
 
-        The final grammar contains rules generated from the definitions
+        The model grammar defines tokens from the model : any entity is turned
+        into a token, any property is turned into a token as well.
+        
+        The definition grammar defines tokens for every definition found in the
+        constraint file.
+
+        The actual grammar contains rules generated from the definitions
         provided in a constraint file.
 
-        The language action generates the model grammar. 
+        The basic and natural language grammars are supposed to be provided
+        in the "import" directory.
+        The language action generates the model grammars then launches Antlr to
+        build the ModelLexer and ModelParser java classes. Then it compiles
+        these classes.
 
-        Then the user can define constraint files through the constraint action.
-        The constraint file can contain definitions of functions.
+        Then the constraint action reads the constraint file and parses it with
+        the ModelParser.
+        The constraint file can contain definitions of functions. A specific
+        visitor builds the actual grammar.
 
-        The constraint action builds the final grammar then launches Antlr to
-        actually build the ParserWrapper.
-        The it compiles and instantiates the ParserWrapper class.
-        Finally, it reads the constraint file.
+        Then the constraint action launches Antlr to actually build the
+        ActualLexr and ActualParser java classes. The action compile these
+        classes.
+        It compiles and instantiates the ParserWrapper class as well.
+        Finally, it reads again the constraint file and parses it with the
+        actual Parser.
 
         Example :
         <!--
@@ -90,6 +132,9 @@ Context Flight :
     inv captain is certified : the captain of this flight is certified for the plane of this flight
     inv copilot is certified : the copilot ot this flight is certified for the plane of this flight.
 ]
+
+The next tools will leverage the function definition in the model to
+generate functions for example in generated code.
 
 
 As we can see, the is an overload of the sentence "a Pilot is certified for".
@@ -149,6 +194,12 @@ A good solution would be to avoid such situations.
             <groupId>org.codehaus.plexus</groupId>
             <artifactId>plexus-compiler-api</artifactId>
             <version>2.8.2</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>fr.insset.jeanluc</groupId>
+            <artifactId>el-evaluator</artifactId>
+            <version>3.1</version>
             <type>jar</type>
         </dependency>
     </dependencies>

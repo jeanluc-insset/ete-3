@@ -51,10 +51,11 @@ public class LanguageAction extends ActionSupport {
                 }
             }
             String      name = (String) getParameter("name");
-            LexerBuilder    builder = new LexerBuilder();
+            String      constraintFile = (String) getParameter("constraints");
+            LanguageBuilder    builder = new LanguageBuilder();
             // Actually, this builds a parser grammar as well, which uses the
             // tokens of the generated lexer.
-            builder.generateGrammars(name, inPackage, name);
+            builder.generateGrammars(name, inPackage, name, constraintFile);
             String languageClassName = (String) this.getParameter("class");
             Class<?> languageClass = Class.forName(languageClassName);
             ParserWrapper language = (ParserWrapper) languageClass.newInstance();

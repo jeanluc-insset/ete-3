@@ -1,6 +1,6 @@
-
-
 package fr.insset.jeanluc.gel.test.fmwk;
+
+
 
 import fr.insset.jeanluc.ete.gel.AtPre;
 import fr.insset.jeanluc.ete.gel.FloatingPointLiteral;
@@ -250,6 +250,7 @@ public class NavHelper {
     //                            F I N A L I Z E R                           //
     //========================================================================//
 
+
     public Step getNavigation() {
         return navigation;
     }
@@ -306,4 +307,6 @@ public class NavHelper {
     private     NamedElement    context;
     private     Step            navigation;
     private     EteModel        model;
+
+
 }

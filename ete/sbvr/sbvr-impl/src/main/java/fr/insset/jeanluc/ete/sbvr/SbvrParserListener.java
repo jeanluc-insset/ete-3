@@ -18,6 +18,16 @@ public interface SbvrParserListener extends ParseTreeListener {
 	 */
 	void exitGenericExpression(SbvrParser.GenericExpressionContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link SbvrParser#definition}.
+	 * @param ctx the parse tree
+	 */
+	void enterDefinition(SbvrParser.DefinitionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link SbvrParser#definition}.
+	 * @param ctx the parse tree
+	 */
+	void exitDefinition(SbvrParser.DefinitionContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link SbvrParser#sbvrExpression}.
 	 * @param ctx the parse tree
 	 */

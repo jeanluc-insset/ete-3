@@ -18,8 +18,8 @@
                             context="mof">
 
                     <!--API and default implementation generation--> 
-<!--            <module src="../../../../../src/main/mda/modules/language/ete-config.xml"
-                    dialect="fr.insset.jeanluc.el.dialect.BasicJavaDialect"/>-->
+            <module src="../../../../../src/main/mda/modules/from-spec/ete-config.xml"
+                    dialect="fr.insset.jeanluc.el.dialect.BasicJavaDialect"/>
 
 
             <velocity template="parser-wrapper.vm"

@@ -13,7 +13,11 @@ options {
 }
 
 
-genericExpression : gelExpression | sbvrExpression;
+genericExpression : definition | sbvrExpression | gelExpression;
+
+
+
+definition : DEFINITION noungroup+ DOUBLE_COLON gelExpression DOT;
 
 
 sbvrExpression : (keyword | noungroup | navExpression)+;
