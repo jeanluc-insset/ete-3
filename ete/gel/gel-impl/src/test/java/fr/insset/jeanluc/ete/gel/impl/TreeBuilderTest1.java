@@ -134,7 +134,8 @@ public class TreeBuilderTest1 {
 
 
     protected void testAny(GelExpression expectedResult, String inExpression, EteModel inModel, TypedElement inContext) {
-        GelExpression abstractGelExpression = GelParserWrapper.buildAbstractTree(inExpression, inModel, inContext);
+        GelParserWrapper gelParserWrapper = new GelParserWrapper();
+        GelExpression abstractGelExpression = (GelExpression) gelParserWrapper.buildAbstractTree(inExpression, inModel, inContext);
         compare(expectedResult, abstractGelExpression);
     }
 
