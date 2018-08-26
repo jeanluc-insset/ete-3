@@ -2,12 +2,14 @@
 
 package fr.insset.jeanluc.constraint_language;
 
-import fr.insset.jeanluc.constraint_language.antlr4.AntlrRunner;
 import fr.insset.jeanluc.ete.api.ActionSupport;
 import fr.insset.jeanluc.ete.api.EteException;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.MofPackage;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -42,19 +44,14 @@ public class ConstraintAction extends ActionSupport {
 
             // 3- Parse the constraint file using the final grammar
             //    This should add the constraints to the model.
-
-            // 4- We're through it
             return result;
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(ConstraintAction.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(ConstraintAction.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            Logger.getLogger(ConstraintAction.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
+        } catch (InstantiationException | IllegalAccessException
+                | IOException | ClassNotFoundException
+                | IllegalArgumentException | NoSuchMethodException
+                | InvocationTargetException ex) {
             Logger.getLogger(ConstraintAction.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return super.postProcess(inPackage); //To change body of generated methods, choose Tools | Templates.
+        return super.postProcess(inPackage);
     }
 
 

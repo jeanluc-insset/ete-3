@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.nio.file.Files;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -54,43 +56,78 @@ public class GrammarBuilderTest {
      * Test of generateGrammars method, of class LexerBuilder.
      */
     @Test
-    public void testGenerateModelLexer() throws Exception {
-        System.out.println("generate model lexer grammar");
+    public void testGenerateModelGrammars() throws Exception {
+        System.out.println("generate model grammars");
+
+        // 1- prepare all the stuff
+        clean("target/tmp");
         readModel();
         String inName = "french";
-        String directory = "target/tmp";
-        String fileName = "target/tmp/FrenchModelLexer.g4";
-        LanguageBuilder instance = new LanguageBuilder();
-        instance.generateGrammars(inName, model, directory, "src/test/mda/constraints.txt");
+        String directoryName = "target/tmp";
+        File   tmpDirectory = new File(directoryName);
+        if (! tmpDirectory.exists()) {
+            tmpDirectory.mkdirs();
+        }
+        File    srcImportDirectory = new File("src/test/antlr4/imports/");
+        File    importDirectory = new File(directoryName, "antlr4/imports/");
+        if (! importDirectory.exists()) {
+            importDirectory.mkdirs();
+        }
+        
+        File[] listFiles = srcImportDirectory.listFiles();
+        for (File aFile : listFiles) {
+            Files.copy(aFile.toPath(), new File(importDirectory, aFile.getName()).toPath(), REPLACE_EXISTING);
+        }
 
-        // Currently, we cannot check the content of the file (this will be
-        // done in the ParserBuilderTest). We just check the file exists and
-        // has a correct length.
+        // 2- run the generateGrammars method
+        LanguageBuilder instance = new LanguageBuilder();
+        instance.generateGrammars(inName, model, directoryName,
+                "src/test/mda/constraints.txt", "target/tmp/antlr4/imports");
+
+        // 3- Check the result
+        // Currently, we do not check the content of the files (this will be
+        // done in the ParserBuilderTest). We just check the files exist and
+        // have a correct length.
+        String fileName = "target/tmp/antlr4/imports/FrenchModelLexer.g4";
         File file = new File(fileName);
         assertTrue(file.exists());
-        assertEquals(256, file.length());
+        assertEquals(296, file.length());
+        fileName = "target/tmp/antlr4/imports/FrenchModelParser.g4";
+        file = new File(fileName);
+        assertTrue(file.exists());
+        assertEquals(187, file.length());
+        fileName = "target/tmp/antlr4/FrenchActualLexer.g4";
+        file = new File(fileName);
+        assertTrue(file.exists());
+        System.out.println("FrenchActualLexer size : " + file.length());
+        fileName = "target/tmp/antlr4/FrenchActualParser.g4";
+        file = new File(fileName);
+        assertTrue(file.exists());
+        System.out.println("FrenchActualParser size : " + file.length());
+//        assertEquals(187, file.length());
     }
 
 
         /**
      * Test of generateGrammars method, of class LexerBuilder.
      */
-    @Test
-    public void testGenerateModelParser() throws Exception {
-        System.out.println("generate model parser grammar");
+//    @Test
+    public void testGenerateActualGrammars() throws Exception {
+        System.out.println("generate actual grammars");
         readModel();
         String inName = "french";
         String directory = "target/tmp";
-        String fileName = "target/tmp/FrenchModelParser.g4";
+        String fileName = "target/tmp/antlr4/FrenchModelParser.g4";
         LanguageBuilder instance = new LanguageBuilder();
-        instance.generateGrammars(inName, model, directory, "src/test/mda/constraints.txt");
+        instance.generateGrammars(inName, model, directory,
+                "src/test/mda/constraints.txt", "target/tmp/antlr4/imports");
 
         // Currently, we cannot check the content of the file (this will be
         // done in the ParserBuilderTest). We just check the file exists and
         // has a correct length.
         File file = new File(fileName);
         assertTrue(file.exists());
-        assertEquals(256, file.length());
+        assertEquals(187, file.length());
     }
 
 
@@ -107,6 +144,18 @@ public class GrammarBuilderTest {
         PrimitiveDataTypes.init(parent);
         model = instance.readModel(url, parent);
         
+    }
+    
+    protected void clean(String inFileName) throws IOException {
+        File file = new File(inFileName);
+        if (!file.exists()) return;
+        if (file.isDirectory()) {
+            String[] list = file.list();
+            for (String aFile : list) {
+                clean(inFileName+ "/" + aFile);
+            }
+        }
+        Files.delete(file.toPath());
     }
     
 }

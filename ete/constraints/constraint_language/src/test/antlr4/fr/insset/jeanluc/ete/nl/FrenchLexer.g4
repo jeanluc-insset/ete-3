@@ -258,7 +258,7 @@ BooleanLiteral
 // Added by JL
 
 DateLiteral
-    : '"' Digit Digit Digit Digit SUB Digit Digit SUB Digit Digit '"';
+    : Digit Digit Digit Digit SUB Digit Digit SUB Digit Digit;
 
 
 // §3.10.4 Character Literals
@@ -450,7 +450,7 @@ THIS     : 'CE' | 'Ce' | 'ce'
             | 'CES' | 'Ces' | 'ces';
 A        : 'UN' | 'Un' | 'un'
             | 'UNE' | 'Une' | 'une'
-            'DES' | 'Des' | 'des';
+            /*'DES' | 'Des' | 'des'*/;
 WITH     : 'AVEC' | 'Avec' | 'avec';
 
 TYPE     : 'TYPE' | 'Type' | 'type';

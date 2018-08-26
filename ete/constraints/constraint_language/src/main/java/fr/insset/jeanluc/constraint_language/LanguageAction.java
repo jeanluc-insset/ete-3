@@ -8,7 +8,10 @@ import fr.insset.jeanluc.ete.gel.ParserWrapper;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.MofPackage;
 import fr.insset.jeanluc.util.factory.FactoryMethods;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -53,9 +56,14 @@ public class LanguageAction extends ActionSupport {
             String      name = (String) getParameter("name");
             String      constraintFile = (String) getParameter("constraints");
             LanguageBuilder    builder = new LanguageBuilder();
-            // Actually, this builds a parser grammar as well, which uses the
-            // tokens of the generated lexer.
-            builder.generateGrammars(name, inPackage, name, constraintFile);
+            try {
+                // This builds a lexer grammar and a parser grammar as well,
+                // which uses the tokens of the generated lexer.
+                builder.generateGrammars(name, inPackage, name, constraintFile);
+            } catch (IOException | IllegalArgumentException
+                    | NoSuchMethodException | InvocationTargetException ex) {
+                Logger.getLogger(LanguageAction.class.getName()).log(Level.SEVERE, null, ex);
+            }
             String languageClassName = (String) this.getParameter("class");
             Class<?> languageClass = Class.forName(languageClassName);
             ParserWrapper language = (ParserWrapper) languageClass.newInstance();
@@ -67,10 +75,6 @@ public class LanguageAction extends ActionSupport {
         } catch (InstantiationException ex) {
             Logger.getLogger(LanguageAction.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            Logger.getLogger(LanguageAction.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(LanguageAction.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(LanguageAction.class.getName()).log(Level.SEVERE, null, ex);
         }
         return inPackage;

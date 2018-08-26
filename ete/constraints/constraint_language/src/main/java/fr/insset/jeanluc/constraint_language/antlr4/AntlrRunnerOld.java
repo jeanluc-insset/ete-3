@@ -1,16 +1,16 @@
-/*
+/* This class is based upon on a copyrighted work from ANTLR Project which
+ * is governed by rhe BSD 3-clause.
+ *
  * Copyright (c) 2012-2017 The ANTLR Project. All rights reserved.
  * Use of this file is governed by the BSD 3-clause license that
  * can be found in the LICENSE.txt file in the project root.
- * Copyright © 2018 The ETE Project. As authorized by the BSD 3-clause, the
- * original code has been adapted to specific purpose, namely the use of antlr
- * by an ETE action.
+ *
+ * Copyright (©) 2018 by Jean-Luc Déléage.
  */
-
 
 package fr.insset.jeanluc.constraint_language.antlr4;
 
-import fr.insset.jeanluc.ete.api.EteException;
+import fr.insset.jeanluc.ete.defs.EteException;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -29,6 +29,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,6 +38,7 @@ import org.antlr.v4.codegen.CodeGenerator;
 import org.antlr.v4.runtime.misc.MultiMap;
 import org.antlr.v4.runtime.misc.Utils;
 import org.antlr.v4.tool.Grammar;
+import org.antlr.v4.tool.ast.GrammarRootAST;
 import org.codehaus.plexus.compiler.util.scan.InclusionScanException;
 import org.codehaus.plexus.compiler.util.scan.SimpleSourceInclusionScanner;
 import org.codehaus.plexus.compiler.util.scan.SourceInclusionScanner;
@@ -44,40 +46,36 @@ import org.codehaus.plexus.compiler.util.scan.mapping.SourceMapping;
 import org.codehaus.plexus.compiler.util.scan.mapping.SuffixMapping;
 
 /**
- * Runs antlr against grammars found in a specific folder and outputs the
- * generated classes into a specific folder as well.<br>
- * Finally, compiles the generated classes.
+ * Parses a parser grammar and generates the java classes (actually, runs antlr
+ * on the parser grammar). Then compiles the generated Java classes.<br>
+ * 
+ * The original Mojo class has been turned into a Pojo class.
+ * Some properties have been modified from File to String.
  *
  * @author jldeleage
  */
-public class AntlrRunner {
+public class AntlrRunnerOld {
 
-    private File sourceDirectory;
-    private File outputDirectory;
-    private File libDirectory;
+    private String sourceDirectoryPath;
+    private String outputDirectoryPath;
+    private String libDirectoryPath;
     private Set<String> excludes = new HashSet<String>();
     private Set<String> includes = new HashSet<String>();
     private String statusDirectory = "maven-status/antlr4";
-    private String libDirectoryPath;
 
-    public static void main(String[] args) throws FileNotFoundException, EteException {
-        AntlrRunner main = new AntlrRunner();
-        main.execute("src/main/antlr4", "target/tmp", "src/main/antlr4/imports");
-    }
-
-    public void execute(String sourceDirectoryPath, String outputDirectoryPath, String libDirectoryPath) throws EteException {
+    public void execute(String sourceDirectoryPath, String outputDirectoryPath, String libDirectoryPath) {
         this.libDirectoryPath = libDirectoryPath;
         build(sourceDirectoryPath, outputDirectoryPath, libDirectoryPath);
         compile(outputDirectoryPath);
     }
 
 
-    public void build(String sourceDirectoryPath, String outputDirectoryPath, String libDirectoryPath) throws EteException {
+    public void build(String sourceDirectoryPath, String outputDirectoryPath, String libDirectoryPath) {
         Logger log = Logger.getGlobal();
 
         Tool tool;
 
-        sourceDirectory = new File(sourceDirectoryPath);
+        File sourceDirectory = new File(sourceDirectoryPath);
 
 //		outputEncoding = validateEncoding(outputEncoding);
         if (!sourceDirectory.isDirectory()) {
@@ -87,8 +85,8 @@ public class AntlrRunner {
         // Ensure that the output directory path is all in tact so that
         // ANTLR can just write into it.
         //
-        outputDirectory = new File(outputDirectoryPath);
-        libDirectory = new File(libDirectoryPath);
+        File outputDirectory = new File(outputDirectoryPath);
+        File libDirectory = new File(libDirectoryPath);
 
         if (!outputDirectory.exists()) {
             outputDirectory.mkdirs();
@@ -106,8 +104,8 @@ public class AntlrRunner {
         try {
             List<String> args = getCommandArguments();
             grammarFiles = getGrammarFiles(sourceDirectory);
-            importGrammarFiles = getImportFiles(sourceDirectory);
-            argumentSets = processGrammarFiles(args, grammarFiles, dependencies, sourceDirectory);
+            importGrammarFiles = getImportFiles(sourceDirectory, libDirectory);
+            argumentSets = processGrammarFiles(args, grammarFiles, dependencies, sourceDirectory, outputDirectory);
         } catch (Exception e) {
             throw new EteException("Fatal error occured while evaluating the names of the grammar files to analyze", e);
         }
@@ -133,13 +131,15 @@ public class AntlrRunner {
 
             // Set working directory for ANTLR to be the base source directory
             tool.inputDirectory = sourceDirectory;
+            tool.libDirectory   = libDirectoryPath;
 
             tool.processGrammarsOnCommandLine();
 
             // If any of the grammar files caused errors but did not throw exceptions
             // then we should have accumulated errors in the counts
             if (tool.getNumErrors() > 0) {
-                System.out.println("ANTLR 4 caught " + tool.getNumErrors() + " build errors.");
+                System.out.println("ANTLR 4 caught " + tool.getNumErrors());
+//                throw new EteException("ANTLR 4 caught " + tool.getNumErrors() + " build errors.");
             }
         }
 
@@ -158,7 +158,7 @@ public class AntlrRunner {
         List<String> args = new ArrayList<String>();
 
         args.add("-o");
-        args.add("target/generated-sources/ete/");
+        args.add("target/tmp/");
 
         args.add("-lib");
         args.add(libDirectoryPath);
@@ -175,7 +175,7 @@ public class AntlrRunner {
 //			args.add(inputEncoding);
 //		}
         args.add("-no-listener");
-        args.add("-visitor");
+        args.add("-no-visitor");
 //        args.add("-Werror");
 
         if (false) {
@@ -194,7 +194,8 @@ public class AntlrRunner {
             List<String> args,
             Set<File> grammarFiles,
             GrammarDependencies dependencies,
-            File sourceDirectory) throws InclusionScanException, IOException {
+            File sourceDirectory,
+            File outputDirectory) throws InclusionScanException, IOException {
 
         // We don't want the plugin to run for every grammar, regardless of whether
         // it's changed since the last compilation. Check the mtime of the tokens vs
@@ -251,7 +252,7 @@ public class AntlrRunner {
         return result;
     }
 
-    private Set<File> getImportFiles(File sourceDirectory) throws InclusionScanException {
+    private Set<File> getImportFiles(File sourceDirectory, File libDirectory) throws InclusionScanException {
         if (!libDirectory.exists()) {
             return Collections.emptySet();
         }
@@ -315,11 +316,7 @@ public class AntlrRunner {
         return statusFile;
     }
 
-    public void execute(String string, String targetgeneratedsourcesete, String targettmpantlr4, String inImportsDirectoryName) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    private final class CustomTool extends Tool {
+    public final class CustomTool extends Tool {
 
         public CustomTool(String[] args) {
             super(args);
@@ -331,6 +328,8 @@ public class AntlrRunner {
             Logger.getGlobal().info("Processing grammar: " + g.fileName);
             super.process(g, gencode);
         }
+
+
 
         @Override
         public Writer getOutputFileWriter(Grammar g, String fileName) throws IOException {
@@ -384,5 +383,4 @@ public class AntlrRunner {
     protected void compile(String inSourceDirectory) {
         
     }
-
 }
