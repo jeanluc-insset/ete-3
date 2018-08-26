@@ -1,14 +1,15 @@
 
 
-Definition:
+Définition
     Un pilote est certifié pour un modèle d avion :
         le modèle des certificats du pilote contient le modèle d avion.
 
-Definition:
+Définition
     Un pilote est habilité pour un avion :
         le pilote est certifié pour le modèle de l avion.
 
-Contexte Vol:
-    Invariant le commandant est certifié :
-        le commandant est habilité pour l'avion.
+Règle le commandant est certifié :
+        le commandant du vol est habilité pour l'avion du vol.
+Règle le copilote est certifié :
+        le copilote du vol est habilité pour l'avion du vol.
 

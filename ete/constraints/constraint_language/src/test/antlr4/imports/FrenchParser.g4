@@ -13,7 +13,7 @@ options {
      tokenVocab = FrenchLexer;
 }
 
-definitionSignature     : (word | keyword)+;
+definitionSignature     : (keyword | word)+;
 
 
 navExpression       : rightToLeftNavigation;
