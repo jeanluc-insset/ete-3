@@ -73,7 +73,7 @@ public class GrammarBuilderTest {
         if (! importDirectory.exists()) {
             importDirectory.mkdirs();
         }
-        
+
         File[] listFiles = srcImportDirectory.listFiles();
         for (File aFile : listFiles) {
             Files.copy(aFile.toPath(), new File(importDirectory, aFile.getName()).toPath(), REPLACE_EXISTING);
@@ -88,23 +88,10 @@ public class GrammarBuilderTest {
         // Currently, we do not check the content of the files (this will be
         // done in the ParserBuilderTest). We just check the files exist and
         // have a correct length.
-        String fileName = "target/tmp/antlr4/imports/FrenchModelLexer.g4";
-        File file = new File(fileName);
-        assertTrue(file.exists());
-        assertEquals(296, file.length());
-        fileName = "target/tmp/antlr4/imports/FrenchModelParser.g4";
-        file = new File(fileName);
-        assertTrue(file.exists());
-        assertEquals(187, file.length());
-        fileName = "target/tmp/antlr4/FrenchActualLexer.g4";
-        file = new File(fileName);
-        assertTrue(file.exists());
-        System.out.println("FrenchActualLexer size : " + file.length());
-        fileName = "target/tmp/antlr4/FrenchActualParser.g4";
-        file = new File(fileName);
-        assertTrue(file.exists());
-        System.out.println("FrenchActualParser size : " + file.length());
-//        assertEquals(187, file.length());
+        checkFile("target/tmp/antlr4/imports/FrenchModelLexer.g4", 296);
+        checkFile("target/tmp/antlr4/imports/FrenchModelParser.g4", 451);
+        checkFile("target/tmp/antlr4/actual/FrenchActualLexer.g4",0);
+        checkFile("target/tmp/antlr4/actual/FrenchActualParser.g4",0);
     }
 
 
@@ -125,10 +112,21 @@ public class GrammarBuilderTest {
         // Currently, we cannot check the content of the file (this will be
         // done in the ParserBuilderTest). We just check the file exists and
         // has a correct length.
+        checkFile(fileName, 187);
+    }
+
+
+    protected void checkFile(String fileName, int inExpectedLength) {
         File file = new File(fileName);
         assertTrue(file.exists());
-        assertEquals(187, file.length());
+        if (inExpectedLength > 0) {
+            assertEquals(inExpectedLength, file.length());
+        }
+        else {
+            System.out.println("Length of fileName : " + file.length());
+        }
     }
+
 
 
     /**
@@ -157,5 +155,5 @@ public class GrammarBuilderTest {
         }
         Files.delete(file.toPath());
     }
-    
+
 }

@@ -13,18 +13,24 @@ file       : (definition | businessRule)+ ;
 //============================================================================//
 
 
-definition              : definitionKeyword definitionHead definitionSeparator gelExpression definitionEnd;
+definition              : definitionKeyword definitionHead definitionSeparator definitionBody definitionEnd;
 definitionKeyword       : DEFINITION;
 definitionHead          : definitionMark? definitionSignature;
 definitionSignature     : word+;
 definitionSeparator     : COLON;
+definitionBody          : gelExpression;
 definitionMark          : MINUS;
 definitionEnd           : DOT;
 
-businessRule            : RULE sentence COLON gelExpression DOT;
+businessRule            : ruleKeyword ruleHead ruleSeparator ruleBody ruleEnd;
 ruleKeyword             : RULE;
+ruleHead                : (keyword | word)+;
+ruleSeparator           : COLON;
+ruleBody                : gelExpression;
+ruleEnd                 : DOT;
 
-sentence                : word+;
+
+sentence                : (keyword | word)+;
 
 
 nounGroup               : determiner? word;
@@ -68,11 +74,22 @@ geOperator              : GE;
 leOperator              : LE;
 ltOperator              : LT;
 
-negationExpression      : notOperator? oppExpression;
+negationExpression      : notOperator? collectionOrOppExpression;
 notOperator             : NOT;
 
-oppExpression           : MINUS? navExpression;
+collectionOrOppExpression : collectionExpression | oppExpression;
+collectionExpression    : navExpression ARROW collectionOperator LPAREN gelExpression RPAREN;
+collectionOperator      : includes | excludes | including | excluding;
+includes                : INCLUDES;
+excludes                : EXCLUDES;
+including               : INCLUDING;
+excluding               : EXCLUDING;
 
+oppExpression           : literal | MINUS? navExpression;
+
+//============================================================================//
+
+literal                 : INTEGER;
 
 //============================================================================//
 
@@ -83,7 +100,8 @@ navExpression           :
 
 leftToRightNavigation   : initTerm (navOperator term)*;
 rightToLeftNavigation   : (term navOperator)* initTerm;
-navOperator             : ARROW;
+navOperator             : DOT;
+collectionOperator      : ARROW;
 initTerm                : word;
 term                    : word;
 

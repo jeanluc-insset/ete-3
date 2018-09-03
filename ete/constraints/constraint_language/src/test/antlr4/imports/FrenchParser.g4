@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 parser grammar FrenchParser;
 
 
@@ -14,17 +9,26 @@ options {
 }
 
 definitionSignature     : (keyword | word)+;
+definitionEnd           : POINT_EXCLAMATION;
 
 
 navExpression       : rightToLeftNavigation;
-navigationKeyword   : OF;
+navOperator         : OF | DES;
+
+collectionExpression: (navExpression collectionOperator collectionOrOppExpression) | specialCollectionExpression;
+specialCollectionExpression : somme | produit | moyenne;
+
+somme               : LA SOMME navOperator navExpression;
+produit             : LE PRODUIT navOperator navExpression;
+moyenne             : LA MOYENNE navOperator navExpression;
+
 
 // for "terms" in gel expression navigation
 word                : determiner? Identifier;
-determiner          : THE | A;
+determiner          : LE | LA | LES | L | UN | UNE | DES;
 
 keyword             : IS;
 
 
-initTerm                : determiner? word;
-term                    : determiner? word;
+initTerm            : determiner? word;
+term                : determiner? word;

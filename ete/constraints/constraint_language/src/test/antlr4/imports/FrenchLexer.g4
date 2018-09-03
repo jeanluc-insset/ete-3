@@ -8,17 +8,35 @@ import BasicLexer;
 DEFINITION  : 'Définition';
 RULE        : 'Règle';
 
+//============================================================================//
+//============================================================================//
+
+EXCLUDES        : 'ne' ('contient' | 'contiennent') 'pas';
+INCLUDING       : ('contient' | 'contiennent') 'en' 'plus';
+EXCLUDING       : 'ne' ('contient' | 'contiennent') 'plus';
+INCLUDES        : 'contient' | 'contiennent';
+
+
+SOMME           : 'la' 'somme';
+PRODUIT         : 'le' 'produit';
+MOYENNE         : 'la' 'moyenne';
+
 
 //============================================================================//
 
+LE          : 'le';
+LA          : 'la';
+L           : 'l\u0027';
+LES         : 'les';
+UN          : 'un';
+UNE         : 'une';
+DES         : 'des';
 
-THE         : 'le' | 'la' | 'les';
-A           : 'un' | 'une' /*| 'des'*/;
-
-OF          : 'de' | 'du' | 'des';
+OF          : 'de' | 'du' | 'd\u0027';
 
 IS          : ('doit' 'être') | ('doivent' 'être') | 'est' | 'sont';
 
+POINT_EXCLAMATION : '!';
 
 
 fragment
