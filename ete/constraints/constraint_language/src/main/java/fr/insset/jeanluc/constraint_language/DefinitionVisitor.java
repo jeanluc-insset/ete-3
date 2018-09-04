@@ -1,7 +1,6 @@
 package fr.insset.jeanluc.constraint_language;
 
 
-import fr.insset.jeanluc.constraint_language.tmp.FrenchModelParser;
 import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
 import java.util.List;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;

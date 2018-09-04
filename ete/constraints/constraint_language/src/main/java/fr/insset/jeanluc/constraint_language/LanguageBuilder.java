@@ -3,8 +3,6 @@ package fr.insset.jeanluc.constraint_language;
 
 
 import fr.insset.jeanluc.constraint_language.antlr4.AntlrRunner;
-import fr.insset.jeanluc.constraint_language.tmp.FrenchModelParser;
-import fr.insset.jeanluc.constraint_language.tmp.FrenchModelParserBaseVisitor;
 import fr.insset.jeanluc.el.dialect.Dialect;
 import fr.insset.jeanluc.ete.api.EteException;
 import fr.insset.jeanluc.ete.gel.GenericExpression;
@@ -74,7 +72,8 @@ public class LanguageBuilder implements Dialect {
      * @throws FileNotFoundException
      * @throws UnsupportedEncodingException 
      */
-    public void generateGrammars(String inName, MofPackage inModel,
+    public void generateGrammars(String inName,
+                                MofPackage inModel,
                                 String directoryName,
                                 String inConstraintFile,
                                 String inImportsDirectoryName) throws FileNotFoundException, UnsupportedEncodingException, IOException, EteException, MalformedURLException, ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException, IllegalArgumentException, InvocationTargetException {
@@ -84,13 +83,12 @@ public class LanguageBuilder implements Dialect {
         }
         File    directory = getDirectory(new File("."), directoryName);
         directory = getDirectory(directory, "antlr4");
-        inName = i2uc(inName);
 
         // 2- Parse the model to create the model grammars
         //    This method generate the grammars, runs Antlr to generate the
         //    java classes and compile these classes. Finally, the method moves
         //    the generated grammars to the antlr4 lib directory
-        GrammarWrapper compile = generateModelGrammars(directory, inName, inModel, directoryName, inImportsDirectoryName);
+        GrammarWrapper compile = generateModelGrammars(inName, directory, inModel, directoryName, inImportsDirectoryName);
 //        File    modelDirectory = getDirectory(directory, "model");
 //        File    modelLexer = new File(modelDirectory, inName + "ModelLexer.g4");
 //        generateModelLexer(inName, inModel, new PrintWriter(new OutputStreamWriter(new FileOutputStream(modelLexer))));
@@ -130,11 +128,11 @@ public class LanguageBuilder implements Dialect {
     //========================================================================//
 
 
-    public GrammarWrapper generateModelGrammars(File directory, String inName, MofPackage inModel, String directoryName, String inImportsDirectoryName) throws FileNotFoundException, EteException, MalformedURLException, InstantiationException, ClassNotFoundException, IllegalAccessException, IOException {
+    public GrammarWrapper generateModelGrammars(String inName, File directory, MofPackage inModel, String directoryName, String inImportsDirectoryName) throws FileNotFoundException, EteException, MalformedURLException, InstantiationException, ClassNotFoundException, IllegalAccessException, IOException {
         File    modelDirectory = getDirectory(directory, "model");
-        File    modelLexer = new File(modelDirectory, inName + "ModelLexer.g4");
+        File    modelLexer = new File(modelDirectory, "ModelLexer.g4");
         generateModelLexer(inName, inModel, new PrintWriter(new OutputStreamWriter(new FileOutputStream(modelLexer))));
-        File    modelParser = new File(modelDirectory, inName + "ModelParser.g4");
+        File    modelParser = new File(modelDirectory, "ModelParser.g4");
         generateModelParser(inName, inModel, new PrintWriter(new OutputStreamWriter(new FileOutputStream(modelParser))));
 
         // 3- Run antlr on the model grammars to generate the Java classes
@@ -142,20 +140,17 @@ public class LanguageBuilder implements Dialect {
         runner.execute(directoryName + "/antlr4", "target/generated-sources/ete/", inImportsDirectoryName);
 
         // 4- Compile the Java classes
-        GrammarWrapper compile = compile(inName + "Model", "target/generated-sources/ete/",
+        GrammarWrapper compile = compile("Model", "target/generated-sources/ete/",
                 "target/classes/", "model");
-        move(modelLexer, inImportsDirectoryName, inName + "ModelLexer.g4");
-        move(modelParser, inImportsDirectoryName, inName + "ModelParser.g4");
+        move(modelLexer, inImportsDirectoryName, "ModelLexer.g4");
+        move(modelParser, inImportsDirectoryName, "ModelParser.g4");
 
         return compile;
     }
 
 
     public void generateModelLexer(String inName, MofPackage inModel, PrintWriter writer) {
-
-        inName = i2uc(inName);
         writer.print("lexer grammar ");
-        writer.print(inName);
         writer.println("ModelLexer;");
         writer.println();
 
@@ -178,7 +173,6 @@ public class LanguageBuilder implements Dialect {
     public void generateModelParser(String inName, MofPackage inModel, PrintWriter writer) {
         inName = i2uc(inName);
         writer.print("parser grammar ");
-        writer.print(inName);
         writer.println("ModelParser;");
         writer.println();
 
@@ -189,7 +183,6 @@ public class LanguageBuilder implements Dialect {
         writer.println();
         writer.println("options {");
         writer.print("    tokenVocab = ");
-        writer.print(inName);
         writer.println("ModelLexer;");
         writer.println("}");
         writer.println();
@@ -266,9 +259,9 @@ public class LanguageBuilder implements Dialect {
 
     public GrammarWrapper generateActualGrammars(File directory, String inName, MofPackage inModel, String directoryName, String inConstraintFileName, String inImportsDirectoryName) throws FileNotFoundException, EteException, MalformedURLException, InstantiationException, ClassNotFoundException, IllegalAccessException, IOException {
         File    actualDirectory = getDirectory(directory, "actual");
-        File    actualLexer = new File(actualDirectory, inName + "ActualLexer.g4");
+        File    actualLexer = new File(actualDirectory, "ActualLexer.g4");
         generateActualLexer(inName, inModel, inConstraintFileName, new PrintWriter(new OutputStreamWriter(new FileOutputStream(actualLexer))));
-        File    actualParser = new File(actualDirectory, inName + "ActualParser.g4");
+        File    actualParser = new File(actualDirectory, "ActualParser.g4");
         generateActualParser(inName, inModel, inConstraintFileName, new PrintWriter(new OutputStreamWriter(new FileOutputStream(actualParser))));
 
         // 3- Run antlr on the actual grammars to generate the Java classes
@@ -288,14 +281,11 @@ public class LanguageBuilder implements Dialect {
     public void generateActualLexer(String inName, MofPackage inModel, String inConstraintFilePath, PrintWriter writer) {
         inName = i2uc(inName);
         writer.print("lexer grammar ");
-        writer.print(inName);
         writer.println("ActualLexer;");
         writer.println();
 
         // import ${inName}Lexer;
-        writer.print("import ");
-        writer.print(inName);
-        writer.println("ModelLexer;");
+        writer.print("import ModelLexer;");
         writer.println();
 
         for (String aString : keywords) {
@@ -313,19 +303,14 @@ public class LanguageBuilder implements Dialect {
 
     public void generateActualParser(String inName, MofPackage inModel, String inConstraintFilePath, PrintWriter writer) {
         inName = i2uc(inName);
-        writer.print("parser grammar ");
-        writer.print(inName);
-        writer.println("ActualParser;");
+        writer.print("parser grammar ActualParser;");
         writer.println();
 
         // import ${inName}Parser;
-        writer.print("import ");
-        writer.print(inName);
-        writer.println("Parser;");
+        writer.print("import ModelParser;");
         writer.println();
         writer.println("options {");
         writer.print("    tokenVocab = ");
-        writer.print(inName);
         writer.println("ActualLexer;");
         writer.println("}");
         writer.println();
@@ -340,8 +325,6 @@ public class LanguageBuilder implements Dialect {
             }
             writer.println(";");
         }
-        
-
 
         writer.println();
         writer.flush();

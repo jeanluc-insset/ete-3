@@ -88,10 +88,10 @@ public class GrammarBuilderTest {
         // Currently, we do not check the content of the files (this will be
         // done in the ParserBuilderTest). We just check the files exist and
         // have a correct length.
-        checkFile("target/tmp/antlr4/imports/FrenchModelLexer.g4", 296);
-        checkFile("target/tmp/antlr4/imports/FrenchModelParser.g4", 451);
-        checkFile("target/tmp/antlr4/actual/FrenchActualLexer.g4",0);
-        checkFile("target/tmp/antlr4/actual/FrenchActualParser.g4",0);
+        checkFile("target/tmp/antlr4/imports/ModelLexer.g4", 290);
+        checkFile("target/tmp/antlr4/imports/ModelParser.g4", 439);
+        checkFile("target/tmp/antlr4/actual/ActualLexer.g4",0);
+        checkFile("target/tmp/antlr4/actual/ActualParser.g4",0);
     }
 
 
