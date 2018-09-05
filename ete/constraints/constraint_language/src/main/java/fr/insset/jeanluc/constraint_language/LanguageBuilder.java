@@ -228,19 +228,18 @@ public class LanguageBuilder implements Dialect {
         ParserRuleContext file = (ParserRuleContext) fileMethod.invoke(parser);
         DefinitionVisitor definitionVisitor = new DefinitionVisitor();
         // Register the definitions and the new keywords they use
-        definitionVisitor.genericVisit(file);
+        // the 4th parameter is used to number variables
+        definitionVisitor.genericVisit(file, keywords, signatures, 1);
         System.out.println("DEFINITION KEYWORDS :");
         for (String aString : keywords) {
             System.out.println("    - " + aString);
         }
         System.out.println("DEFINITIONS :");
-        for (Map.Entry<String, Definition> anEntry : signatures.entrySet()) {
-            System.out.println("    - " + anEntry.getKey() + " : ");
-            Definition value = anEntry.getValue();
-            System.out.print("        ");
-            for (ParseTree aChild : value.body.children) {
-                ParserRuleContext anElement = (ParserRuleContext) aChild;
-                System.out.print(anElement.getText() + "[" + anElement.getClass().getName() + "]");
+        for (fr.insset.jeanluc.constraint_language.Definition aDefinition : definitionVisitor.getDefinitions()) {
+            List<SignatureElement> signature = aDefinition.getSignature();
+            System.out.print("   - ");
+            for (SignatureElement anElement : signature) {
+                System.out.print(anElement.getValue());
                 System.out.print(" ");
             }
             System.out.println();
@@ -269,7 +268,7 @@ public class LanguageBuilder implements Dialect {
         runner.execute(directoryName + "/antlr4", "target/generated-sources/ete/", inImportsDirectoryName);
 
         // 4- Compile the Java classes
-        GrammarWrapper compile = compile(inName + "Actual", "target/generated-sources/ete/",
+        GrammarWrapper compile = compile("Actual", "target/generated-sources/ete/",
                 "target/classes/", "actual");
 //        move(actualLexer, inImportsDirectoryName, inName + "ActualLexer.g4");
 //        move(actualParser, inImportsDirectoryName, inName + "ActualParser.g4");
@@ -280,8 +279,7 @@ public class LanguageBuilder implements Dialect {
 
     public void generateActualLexer(String inName, MofPackage inModel, String inConstraintFilePath, PrintWriter writer) {
         inName = i2uc(inName);
-        writer.print("lexer grammar ");
-        writer.println("ActualLexer;");
+        writer.print("lexer grammar ActualLexer;");
         writer.println();
 
         // import ${inName}Lexer;
@@ -477,16 +475,16 @@ public class LanguageBuilder implements Dialect {
     //========================================================================//
 
 
-    /** +
+    /**
      * Model keywords are registered to facilitate the actual parsing.
      */
-    private         Map<String, MofClass>   modelElts  = new HashMap<>();
+    private     Map<String, MofClass>   modelElts   = new HashMap<>();
 
     /**
      * The words in a definition which are not language keyword nor model
      * keyword are added as "definition" keywords in the actual grammar.
      */
-    private         Set<String>             keywords   = new HashSet<>();
+    private     Set<String>             keywords    = new HashSet<>();
 
     /**
      * Each definition is registered as a signature.<br>
@@ -495,7 +493,7 @@ public class LanguageBuilder implements Dialect {
      * There is not overloading (the name strips the language and model keywords
      * off, keeping only anonymous placeholders).
      */
-    private         Map<String, Definition>  signatures = new HashMap<>();
+    private     Map<String, Definition>  signatures = new HashMap<>();
 
 
     //========================================================================//
@@ -572,6 +570,7 @@ public class LanguageBuilder implements Dialect {
     public static class Definition {
         private  ParserRuleContext  src;
         private  ParserRuleContext  body;
+        private  List<ParseTree>    elements;
 
         public Definition(ParserRuleContext inSrc, ParserRuleContext inBody) {
             src = inSrc;

@@ -2,6 +2,7 @@
 
 package fr.insset.jeanluc.actual.xlang_builder;
 
+import static fr.insset.jeanluc.ete.defs.Constants.NOT_IMPLEMENTED_YET;
 import fr.insset.jeanluc.ete.gel.GelExpression;
 import fr.insset.jeanluc.ete.meta.model.constraint.Postcondition;
 import fr.insset.jeanluc.ete.xlang.VariableDeclaration;
