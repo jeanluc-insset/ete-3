@@ -32,12 +32,16 @@ public interface ParserWrapper {
      * Reads a contextual expression, typically an expression which is embedded
      * in a model
      */
-    public GenericExpression buildAbstractTree(String inExpression, EteModel inModel, NamedElement inContextElement);
+    public default GenericExpression buildAbstractTree(String inExpression, EteModel inModel, NamedElement inContextElement) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
     /**
      * Reads non contextual expressions, typically the content of a text file.
      */
-    public void          readExpressions(String inExpressions, EteModel inoutModel);
+    public default void  readExpressions(String inExpressions, EteModel inoutModel) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
 
     public default String readFile(String inFilePath) throws FileNotFoundException {

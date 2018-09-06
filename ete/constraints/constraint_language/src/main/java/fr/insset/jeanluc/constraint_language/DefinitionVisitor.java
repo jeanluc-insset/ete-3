@@ -10,6 +10,7 @@ import model.ModelParser;
 import model.ModelParser.BusinessRuleContext;
 import model.ModelParser.DefinitionBodyContext;
 import model.ModelParser.DefinitionContext;
+import model.ModelParser.KeywordContext;
 import model.ModelParser.ModelTermGroupContext;
 import model.ModelParser.WordContext;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -37,6 +38,7 @@ public class DefinitionVisitor extends DynamicVisitorSupport {
         register(BusinessRuleContext.class, "visitBusinessRuleContext");
         register(DefinitionContext.class, "visitDefinitionContext");
         register(ModelTermGroupContext.class, "visitModelTermGroupContext");
+        register(KeywordContext.class, "visitKeywordContext");
     }
 
 
@@ -94,19 +96,35 @@ public class DefinitionVisitor extends DynamicVisitorSupport {
     }
 
 
+    /**
+     * 
+     */
+    public Object visitKeywordContext(ModelParser.KeywordContext inContext, Object... inParams) {
+        SignatureElement    element = new SignatureElement(inContext.getText(), inContext);
+        Definition definition = (Definition) inParams[3];
+        definition.addElement(element);
+        return inParams[0];
+    }
+
+
+    /**
+     * 
+     */
     public Object visitDefinitionBodyContext(ModelParser.DefinitionBodyContext inContext, Object... inParams) {
         return inParams[0];
     }
 
+
+    /**
+     * The business rules are ignored during this phase.
+     */
     public Object visitBusinessRuleContext(BusinessRuleContext inBusinessRuleContext, Object... inParam) {
-        System.out.println("Ignoring business rule : " + inBusinessRuleContext.getText());
         return inBusinessRuleContext;
     }
 
-    
-
 
     //========================================================================//
+
 
     public List<Definition> getDefinitions() {
         return definitions;

@@ -26,7 +26,6 @@
         <!-- other constraint languages -->
 <!--        <module>sbvr_old</module>-->
         <module>methodeb</module>
-        <module>sbvr</module>
 
         <module>xlang-to-sql</module>
         <module>database</module>

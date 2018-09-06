@@ -218,6 +218,7 @@ public class LanguageBuilder implements Dialect {
             public GenericExpression buildAbstractTree(String inExpression, EteModel inModel, NamedElement inContextElement) {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
+
             @Override
             public void readExpressions(String inExpressions, EteModel inoutModel) {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
