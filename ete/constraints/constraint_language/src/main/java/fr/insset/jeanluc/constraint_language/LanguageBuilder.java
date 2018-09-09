@@ -195,6 +195,7 @@ public class LanguageBuilder implements Dialect {
         // Should we allow any operator in the expression as well ?
         writer.println("ruleBody : (modelTermGroup | keyword | navOperator | collectionOperator | word)+;");
         writer.println("initTerm : modelTermGroup;");
+        writer.println("term : modelTermGroup | (determiner? word);");
 
         writer.flush();
         writer.close();
@@ -287,9 +288,9 @@ public class LanguageBuilder implements Dialect {
         writer.println();
 
         if (keywords.size() > 0) {
-            writer.println("definitionSignature: (modelTermGroup | definitionKeyword | keyword | navOperator | word)+;");
+            writer.println("definitionSignature: (modelTermGroup | actualKeyword | keyword | navOperator | word)+;");
             writer.println();
-            writer.print("definitionKeyword : ");
+            writer.print("actualKeyword : ");
             boolean  alreadyOne = false;
             for (String aString : keywords) {
                 if (alreadyOne) {
@@ -323,6 +324,8 @@ public class LanguageBuilder implements Dialect {
             writer.println(";");
             writer.println();
         }
+        writer.println("ruleBody : gelExpression;");
+        writer.println();
 
         TokenReader tokenReader = new TokenReader();
         Map<Integer, String> symbols = tokenReader.read("target/generated-sources/ete/ModelLexer.tokens");

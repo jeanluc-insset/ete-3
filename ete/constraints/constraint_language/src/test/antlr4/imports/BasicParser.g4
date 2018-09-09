@@ -87,7 +87,7 @@ excludes                : EXCLUDES;
 including               : INCLUDING;
 excluding               : EXCLUDING;
 
-oppExpression           : literal | MINUS? navExpression;
+oppExpression           : MINUS? (literal | navExpression);
 
 //============================================================================//
 
