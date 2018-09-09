@@ -66,13 +66,19 @@ NO_OTHER        : 'no' 'other' 'term';
 DEFINITION      : 'Definition';
 RULE            : 'Rule';
 
+
 //============================================================================//
 //============================================================================//
+
 
 INCLUDES        : 'includes';
 EXCLUDES        : 'excludes';
 INCLUDING       : 'including';
 EXCLUDING       : 'excluding';
+
+SUM             : 'sum';
+PRODUCT         : 'product';
+AVERAGE         : 'average';
 
 
 //============================================================================//

@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -89,32 +90,20 @@ public class LanguageBuilder implements Dialect {
         //    java classes and compile these classes. Finally, the method moves
         //    the generated grammars to the antlr4 lib directory
         GrammarWrapper compile = generateModelGrammars(inName, directory, inModel, directoryName, inImportsDirectoryName);
-//        File    modelDirectory = getDirectory(directory, "model");
-//        File    modelLexer = new File(modelDirectory, inName + "ModelLexer.g4");
-//        generateModelLexer(inName, inModel, new PrintWriter(new OutputStreamWriter(new FileOutputStream(modelLexer))));
-//        File    modelParser = new File(modelDirectory, inName + "ModelParser.g4");
-//        generateModelParser(inName, inModel, new PrintWriter(new OutputStreamWriter(new FileOutputStream(modelParser))));
-//
-//        // 3- Run antlr on the model grammars to generate the Java classes
-//        AntlrRunner     runner = new AntlrRunner();
-//        runner.execute(directoryName + "/antlr4", "target/generated-sources/ete/", inImportsDirectoryName);
-//
-//        // 4- Compile the Java classes
-//        GrammarWrapper compile = compile(inName + "Model", "target/generated-sources/ete/",
-//                "target/classes/", "model");
 
-        // 5- Generate the actual grammars
-        // 5-a parse the constraint file to build the actual grammars
+        // 3- Generate the actual grammars
+        // 3-a parse the constraint file to build the actual grammars
         parseModelGrammars(inConstraintFile, compile);
 
-        // 5-b- Create the actual grammars
-        generateActualGrammars(directory, inName, inModel, directoryName, inConstraintFile, inImportsDirectoryName);
+        // 3-b- Create the actual grammars
+        compile = generateActualGrammars(directory, inName, inModel, directoryName, inConstraintFile, inImportsDirectoryName);
 
-        // 6 - run Antlr on the actual grammars
+        // 4 - run Antlr on the actual grammars
+        parseActualGrammars(inConstraintFile, compile);
 
-        // 7- compile the actual grammars and load the actual parser
+        // 5- compile the actual grammars and load the actual parser
 
-        // 8- parse again the constraint file
+        // 6- parse again the constraint file
     }
 
 
@@ -202,14 +191,14 @@ public class LanguageBuilder implements Dialect {
         writer.println();
 
         writer.println("definitionSignature: (modelTermGroup | keyword | navOperator | word)+;");
-        writer.println("definitionBody : (modelTermGroup | keyword | navOperator | collectionOperator | word)+;");
+        writer.println("definitionBody : (navExpression | keyword | collectionOperator | word)+;");
         // Should we allow any operator in the expression as well ?
         writer.println("ruleBody : (modelTermGroup | keyword | navOperator | collectionOperator | word)+;");
         writer.println("initTerm : modelTermGroup;");
 
         writer.flush();
         writer.close();
-    }
+    }       // generateModelParser
 
 
     protected void parseModelGrammars(String inConstraintFile, GrammarWrapper compile) throws FileNotFoundException, InstantiationException, NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
@@ -230,23 +219,8 @@ public class LanguageBuilder implements Dialect {
         DefinitionVisitor definitionVisitor = new DefinitionVisitor();
         // Register the definitions and the new keywords they use
         // the 4th parameter is used to number variables
-        definitionVisitor.genericVisit(file, keywords, signatures, 1);
-        System.out.println("DEFINITION KEYWORDS :");
-        for (String aString : keywords) {
-            System.out.println("    - " + aString);
-        }
-        System.out.println("DEFINITIONS :");
-        for (fr.insset.jeanluc.constraint_language.Definition aDefinition : definitionVisitor.getDefinitions()) {
-            List<SignatureElement> signature = aDefinition.getSignature();
-            System.out.print("   - ");
-            for (SignatureElement anElement : signature) {
-                System.out.print(anElement.getValue());
-                System.out.print(" ");
-            }
-            System.out.println();
-        }
-    }
-
+        definitionVisitor.genericVisit(file, keywords, signatures);
+    }       // parseModelGrammars
 
 
     //========================================================================//
@@ -257,7 +231,7 @@ public class LanguageBuilder implements Dialect {
     //========================================================================//
 
 
-    public GrammarWrapper generateActualGrammars(File directory, String inName, MofPackage inModel, String directoryName, String inConstraintFileName, String inImportsDirectoryName) throws FileNotFoundException, EteException, MalformedURLException, InstantiationException, ClassNotFoundException, IllegalAccessException, IOException {
+    public GrammarWrapper generateActualGrammars(File directory, String inName, MofPackage inModel, String directoryName, String inConstraintFileName, String inImportsDirectoryName) throws FileNotFoundException, EteException, MalformedURLException, InstantiationException, ClassNotFoundException, IllegalAccessException, IOException, IllegalArgumentException, InvocationTargetException {
         File    actualDirectory = getDirectory(directory, "actual");
         File    actualLexer = new File(actualDirectory, "ActualLexer.g4");
         generateActualLexer(inName, inModel, inConstraintFileName, new PrintWriter(new OutputStreamWriter(new FileOutputStream(actualLexer))));
@@ -271,66 +245,128 @@ public class LanguageBuilder implements Dialect {
         // 4- Compile the Java classes
         GrammarWrapper compile = compile("Actual", "target/generated-sources/ete/",
                 "target/classes/", "actual");
-//        move(actualLexer, inImportsDirectoryName, inName + "ActualLexer.g4");
-//        move(actualParser, inImportsDirectoryName, inName + "ActualParser.g4");
 
         return compile;
-    }
+    }       // generateActualGrammars
 
 
     public void generateActualLexer(String inName, MofPackage inModel, String inConstraintFilePath, PrintWriter writer) {
         inName = i2uc(inName);
-        writer.print("lexer grammar ActualLexer;");
+        writer.println("lexer grammar ActualLexer;");
         writer.println();
 
-        // import ${inName}Lexer;
-        writer.print("import ModelLexer;");
+        writer.println("import ModelLexer;");
         writer.println();
 
         for (String aString : keywords) {
             writer.print(aString.toUpperCase());
-            writer.print(" : ");
+            writer.print(" : '");
             writer.print(i2lc(aString));
-            writer.println(";");
+            writer.println("';");
         }
 
         writer.println();
         writer.flush();
         writer.close();
-    }
+    }       // generateActualLexer
 
 
-    public void generateActualParser(String inName, MofPackage inModel, String inConstraintFilePath, PrintWriter writer) {
+    public void generateActualParser(String inName, MofPackage inModel, String inConstraintFilePath, PrintWriter writer) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, FileNotFoundException {
         inName = i2uc(inName);
-        writer.print("parser grammar ActualParser;");
+
+        writer.println("parser grammar ActualParser;");
         writer.println();
 
-        // import ${inName}Parser;
-        writer.print("import ModelParser;");
+        writer.println("import ModelParser;");
         writer.println();
+
         writer.println("options {");
         writer.print("    tokenVocab = ");
         writer.println("ActualLexer;");
         writer.println("}");
         writer.println();
+
         if (keywords.size() > 0) {
-            writer.print("definitionKeywords : ");
+            writer.println("definitionSignature: (modelTermGroup | definitionKeyword | keyword | navOperator | word)+;");
+            writer.println();
+            writer.print("definitionKeyword : ");
             boolean  alreadyOne = false;
             for (String aString : keywords) {
                 if (alreadyOne) {
                     writer.print(" | ");
                 }
+                else {
+                    alreadyOne = true;
+                }
                 writer.print(aString.toUpperCase());
             }
             writer.println(";");
         }
-
         writer.println();
+
+        if (signatures.size() >0) {
+            writer.println("collectionOrOppExpression : customFunction | collectionExpression | collectionFunction | oppExpression;");
+            writer.print("customFunction : ");
+            boolean alreadyOne = false;
+            for (Definition aDefinition : signatures) {
+                if (alreadyOne) {
+                    writer.print(" | ");
+                }
+                else {
+                    alreadyOne = true;
+                }
+                List<SignatureElement> signature = aDefinition.getSignature();
+                for (SignatureElement anElement : signature) {
+                    writer.print(anElement);
+                }
+            }
+            writer.println(";");
+            writer.println();
+        }
+
+        TokenReader tokenReader = new TokenReader();
+        Map<Integer, String> symbols = tokenReader.read("target/generated-sources/ete/ModelLexer.tokens");
+
+        for (Definition aDefinition : signatures) {
+            List<SignatureElement> signature = aDefinition.getSignature();
+            for (SignatureElement anElement : signature) {
+                writer.print(anElement);
+            }
+            writer.print(" :");
+            // The full body is not supposed to be written here. It must be
+            // recorded as the semantics of the function, directly as an
+            // abstract tree.
+            // Here we write only the skelton of the signature
+            ParseTree body = aDefinition.getBody();
+            SignatureBuilderVisitor visitor = new SignatureBuilderVisitor(symbols);
+            for (SignatureElement anElement : signature) {
+                visitor.genericVisit(anElement.getParseTree(), writer);
+            }
+            writer.println(";");
+        }
+        writer.println();
+
         writer.flush();
         writer.close();
-    }
+    }       // generateActualParser
 
 
+    protected void parseActualGrammars(String inConstraintFile, GrammarWrapper compile) throws FileNotFoundException, InstantiationException, NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        ParserWrapper parserWrapper = new ParserWrapper() {
+            @Override
+            public GenericExpression buildAbstractTree(String inExpression, EteModel inModel, NamedElement inContextElement) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void readExpressions(String inExpressions, EteModel inoutModel) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        };          // new ParserWrapper
+        Parser parser = parserWrapper.getParser(inConstraintFile, compile.lexerClass, compile.parserClass);
+        Method fileMethod = parser.getClass().getMethod("file", new Class[0]);
+        ParserRuleContext file = (ParserRuleContext) fileMethod.invoke(parser);
+    }       // parseAtcualGrammars
 
     //========================================================================//
     //                           U T I L I T I E S                            //
@@ -416,7 +452,7 @@ public class LanguageBuilder implements Dialect {
         if (task.call()) {
             // 4-2 instantiate some classes
             // Load and execute
-            System.out.println("Loading and compiling the files");
+            System.out.println("Grammars have been compiled. Loading and instanciating " + inName + " parser grammar");
             // Create a new custom class loader, pointing to the directory that contains the compiled
             // classes, this should point to the top of the package structure!
             URLClassLoader classLoader = new URLClassLoader(
@@ -464,14 +500,6 @@ public class LanguageBuilder implements Dialect {
     }
 
 
-    //========================================================================//
-
-
-    protected String readFile(String inFilePath) throws FileNotFoundException {
-        String content = new Scanner(new File(inFilePath)).useDelimiter("\\Z").next();
-        return content;
-    }
-
 
     //========================================================================//
 
@@ -494,7 +522,7 @@ public class LanguageBuilder implements Dialect {
      * There is not overloading (the name strips the language and model keywords
      * off, keeping only anonymous placeholders).
      */
-    private     Map<String, Definition>  signatures = new HashMap<>();
+    private     List<Definition>  signatures = new LinkedList<>();
 
 
     //========================================================================//
@@ -514,70 +542,5 @@ public class LanguageBuilder implements Dialect {
         public Class<? extends Parser>  parserClass;
     }       // GrammarWrapper
 
-
-    /*
-     * Registers the signature and adds keywords to the list.
-     */
-/*
-    private class DefinitionVisitor extends FrenchModelParserBaseVisitor {
-
-        @Override
-        public Object visitBusinessRule(FrenchModelParser.BusinessRuleContext ctx) {
-            return null;
-        }
-
-
-
-        @Override
-        public Object visitDefinitionSignature(FrenchModelParser.DefinitionSignatureContext ctx) {
-            name = new StringBuilder();
-            String      name = ctx.getText();
-            return super.visitDefinitionSignature(ctx);
-        }
-
-        @Override
-        public Object visitModelTerm(FrenchModelParser.ModelTermContext ctx) {
-            return super.visitModelTerm(ctx);
-        }
-
-        @Override
-        public Object visitKeyword(FrenchModelParser.KeywordContext ctx) {
-            return super.visitKeyword(ctx);
-        }
-
-        @Override
-        public Object visitWord(FrenchModelParser.WordContext ctx) {
-            if (inSignature) {
-                keywords.add(ctx.getText());
-            }
-            return super.visitWord(ctx);
-        }
-
-
-
-        protected void addElement(SignatureElement inElement) {
-            
-        }
-
-        private boolean                 inSignature;
-        private StringBuilder           name;
-        private List<SignatureElement>  elements;
-
-    }       // DefinitionVisitor
-*/
-
-
-
-    public static class Definition {
-        private  ParserRuleContext  src;
-        private  ParserRuleContext  body;
-        private  List<ParseTree>    elements;
-
-        public Definition(ParserRuleContext inSrc, ParserRuleContext inBody) {
-            src = inSrc;
-            body = inBody;
-        }
-
-    }       // Definition class
 
 }           // LanguageBuilder class

@@ -17,19 +17,15 @@ EXCLUDING       : 'ne' ('contient' | 'contiennent') 'plus';
 INCLUDES        : 'contient' | 'contiennent';
 
 
-SOMME           : 'la' 'somme';
-PRODUIT         : 'le' 'produit';
-MOYENNE         : 'la' 'moyenne';
+SUM             : 'la'? 'somme';
+PRODUCT         : 'le'? 'produit';
+AVERAGE         : 'la'? 'moyenne';
 
 
 //============================================================================//
 
-LE          : 'le';
-LA          : 'la';
-L           : 'l\u0027';
-LES         : 'les';
-UN          : 'un';
-UNE         : 'une';
+THE         : 'le' | 'la' | 'l\u0027' | 'les';
+A           : 'un' | 'une';
 DES         : 'des';
 
 OF          : 'de' | 'du' | 'd\u0027';

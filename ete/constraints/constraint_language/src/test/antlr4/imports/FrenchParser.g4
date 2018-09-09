@@ -18,14 +18,14 @@ navOperator         : OF | DES;
 collectionExpression: (navExpression collectionOperator collectionOrOppExpression) | specialCollectionExpression;
 specialCollectionExpression : somme | produit | moyenne;
 
-somme               : LA SOMME navOperator navExpression;
-produit             : LE PRODUIT navOperator navExpression;
-moyenne             : LA MOYENNE navOperator navExpression;
+somme               : SUM navOperator navExpression;
+produit             : PRODUCT navOperator navExpression;
+moyenne             : AVERAGE navOperator navExpression;
 
 
 // for "terms" in gel expression navigation
 word                : determiner? Identifier;
-determiner          : LE | LA | LES | L | UN | UNE | DES;
+determiner          : THE | A | DES;
 
 keyword             : IS;
 

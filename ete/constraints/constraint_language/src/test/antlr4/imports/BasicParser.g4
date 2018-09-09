@@ -77,9 +77,11 @@ ltOperator              : LT;
 negationExpression      : notOperator? collectionOrOppExpression;
 notOperator             : NOT;
 
-collectionOrOppExpression : collectionExpression | oppExpression;
+collectionOrOppExpression : collectionExpression | collectionFunction | oppExpression;
 collectionExpression    : navExpression ARROW collectionOperator LPAREN gelExpression RPAREN;
 collectionOperator      : includes | excludes | including | excluding;
+collectionFunction      : navExpression ARROW collectionFuntionSymbol LPAREN RPAREN;
+collectionFuntionSymbol : SUM | PRODUCT | AVERAGE;
 includes                : INCLUDES;
 excludes                : EXCLUDES;
 including               : INCLUDING;

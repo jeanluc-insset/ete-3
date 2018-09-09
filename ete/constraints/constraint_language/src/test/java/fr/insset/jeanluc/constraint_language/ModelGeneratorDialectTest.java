@@ -38,9 +38,6 @@ public class ModelGeneratorDialectTest {
      public void hello() {
         ModelGeneratorDialect dialect = new ModelGeneratorDialect() {};
         List<List<String>> translate = dialect.translate("aSmartPlaneModel");
-        for (List<String> aList : translate) {
-            System.out.println(aList);
-        }
         assertEquals("aSmartPlaneModel", translate.get(0).get(0));
         assertEquals("ASmartPlaneModel", translate.get(1).get(0));
         assertEquals("a", translate.get(2).get(0));

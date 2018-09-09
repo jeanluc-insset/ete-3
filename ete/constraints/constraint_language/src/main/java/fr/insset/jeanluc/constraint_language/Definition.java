@@ -4,6 +4,7 @@ package fr.insset.jeanluc.constraint_language;
 
 import java.util.LinkedList;
 import java.util.List;
+import static model.ModelParser.DefinitionBodyContext;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 
@@ -17,6 +18,10 @@ import org.antlr.v4.runtime.tree.ParseTree;
  * @author jldeleage
  */
 public class Definition {
+
+    public Definition(DefinitionBodyContext body) {
+        this.body = body;
+    }
 
 
     public void addElement(SignatureElement inElement) {
@@ -34,13 +39,13 @@ public class Definition {
         return body;
     }
 
-    public void setBody(ParseTree body) {
+    public void setBody(DefinitionBodyContext body) {
         this.body = body;
     }
 
 
 
-    private  List<SignatureElement>     signature = new LinkedList<>();
-    private  ParseTree                  body;
+    private  List<SignatureElement>         signature = new LinkedList<>();
+    private  DefinitionBodyContext  body;
 
 }       // Definition

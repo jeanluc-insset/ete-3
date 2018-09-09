@@ -5,6 +5,7 @@ package fr.insset.jeanluc.constraint_language;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 /**
+ * These keywords come from the basic or the language grammar.
  *
  * @author jldeleage
  */

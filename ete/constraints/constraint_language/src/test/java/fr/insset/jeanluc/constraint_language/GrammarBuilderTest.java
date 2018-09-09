@@ -89,7 +89,7 @@ public class GrammarBuilderTest {
         // done in the ParserBuilderTest). We just check the files exist and
         // have a correct length.
         checkFile("target/tmp/antlr4/imports/ModelLexer.g4", 290);
-        checkFile("target/tmp/antlr4/imports/ModelParser.g4", 439);
+        checkFile("target/tmp/antlr4/imports/ModelParser.g4", 424);
         checkFile("target/tmp/antlr4/actual/ActualLexer.g4",0);
         checkFile("target/tmp/antlr4/actual/ActualParser.g4",0);
     }
@@ -123,7 +123,7 @@ public class GrammarBuilderTest {
             assertEquals(inExpectedLength, file.length());
         }
         else {
-            System.out.println("Length of fileName : " + file.length());
+            System.out.println("Length of " + fileName + " : " + file.length());
         }
     }
 
@@ -150,7 +150,7 @@ public class GrammarBuilderTest {
         if (file.isDirectory()) {
             String[] list = file.list();
             for (String aFile : list) {
-                clean(inFileName+ "/" + aFile);
+                clean(inFileName + "/" + aFile);
             }
         }
         Files.delete(file.toPath());

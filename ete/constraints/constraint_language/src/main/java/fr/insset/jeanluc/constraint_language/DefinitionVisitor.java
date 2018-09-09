@@ -60,7 +60,8 @@ public class DefinitionVisitor extends DynamicVisitorSupport {
 
 
     public Object visitDefinitionContext(DefinitionContext inContext, Object... inParams) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        Definition currentDefinition = new Definition();
+        Definition currentDefinition = new Definition(inContext.definitionBody());
+        List<Definition> definitions = (List<Definition>) inParams[1];
         definitions.add(currentDefinition);
         List<ParseTree> children = inContext.children;
         for (ParseTree aChild : children) {
@@ -74,7 +75,7 @@ public class DefinitionVisitor extends DynamicVisitorSupport {
         Integer num = (Integer) inParams[2];
         num++;
         inParams[2] = num;
-        SignatureElement    element = new SignatureElement("x" + num, inContext);
+        ModelKeywordSignatureElement    element = new ModelKeywordSignatureElement(inContext.getText(), inContext, num);
         Definition definition = (Definition) inParams[3];
         definition.addElement(element);
         return inParams[0];
@@ -83,13 +84,12 @@ public class DefinitionVisitor extends DynamicVisitorSupport {
 
     public Object visitWordContext(WordContext inContext, Object... inParams) {
         String text = inContext.getText();
-        System.out.println("   NEW WORD found in definition : " + text);
         Set<String>     keywords = (Set<String>) inParams[0];
         keywords.add(text);
         Integer num = (Integer) inParams[2];
         num++;
         inParams[2] = num;
-        SignatureElement    element = new SignatureElement(inContext.getText(), inContext);
+        SignatureElement    element = new DefinitionKeywordSignatureElement(inContext.getText(), inContext);
         Definition definition = (Definition) inParams[3];
         definition.addElement(element);
         return inParams[0];
@@ -100,7 +100,7 @@ public class DefinitionVisitor extends DynamicVisitorSupport {
      * 
      */
     public Object visitKeywordContext(ModelParser.KeywordContext inContext, Object... inParams) {
-        SignatureElement    element = new SignatureElement(inContext.getText(), inContext);
+        SignatureElement    element = new KeywordSignatureElement(inContext.getText(), inContext);
         Definition definition = (Definition) inParams[3];
         definition.addElement(element);
         return inParams[0];
@@ -126,13 +126,13 @@ public class DefinitionVisitor extends DynamicVisitorSupport {
     //========================================================================//
 
 
-    public List<Definition> getDefinitions() {
-        return definitions;
-    }
+//    public List<Definition> getDefinitions() {
+//        return definitions;
+//    }
 
 
 //    private StringBuilder           name;
-    private List<Definition>    definitions = new LinkedList<>();
+//    private List<Definition>    definitions = new LinkedList<>();
 
 
 }

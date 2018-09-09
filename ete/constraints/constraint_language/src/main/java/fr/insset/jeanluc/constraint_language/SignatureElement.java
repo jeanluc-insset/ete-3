@@ -15,6 +15,13 @@ public class SignatureElement {
         this.parseTree = parseTree;
     }
 
+    @Override
+    public String toString() {
+        return getValue();
+    }
+
+
+
     public String getValue() {
         return value;
     }
