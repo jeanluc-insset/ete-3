@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  *
  * @author jldeleage
  */
-public class NamedElementImpl implements NamedElement {
+public class NamedElementImpl extends MofElementImpl implements NamedElement {
 
     @Override
     public String getXmiType() {

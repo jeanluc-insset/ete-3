@@ -112,8 +112,8 @@ public class AntlrRunner {
             throw new EteException("Fatal error occured while evaluating the names of the grammar files to analyze", e);
         }
 
-        log.info("Output directory base will be " + outputDirectory.getAbsolutePath());
-        log.info("ANTLR 4: Processing source directory " + sourceDirectory.getAbsolutePath());
+        log.fine("Output directory base will be " + outputDirectory.getAbsolutePath());
+        log.fine("ANTLR 4: Processing source directory " + sourceDirectory.getAbsolutePath());
         for (List<String> args : argumentSets) {
             try {
                 // Create an instance of the ANTLR 4 build tool
@@ -328,7 +328,7 @@ public class AntlrRunner {
 
         @Override
         public void process(Grammar g, boolean gencode) {
-            Logger.getGlobal().info("Processing grammar: " + g.fileName);
+            Logger.getGlobal().log(Level.FINE, "Processing grammar: {0}", g.fileName);
             super.process(g, gencode);
         }
 

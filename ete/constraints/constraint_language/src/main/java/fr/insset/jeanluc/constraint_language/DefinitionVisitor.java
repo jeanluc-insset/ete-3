@@ -2,9 +2,10 @@ package fr.insset.jeanluc.constraint_language;
 
 
 import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
+import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import model.ModelParser;
 import model.ModelParser.BusinessRuleContext;
@@ -14,7 +15,9 @@ import model.ModelParser.KeywordContext;
 import model.ModelParser.ModelTermGroupContext;
 import model.ModelParser.WordContext;
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.TerminalNode;
 
 
 /**
@@ -31,7 +34,7 @@ public class DefinitionVisitor extends DynamicVisitorSupport {
 
 
 
-    public DefinitionVisitor() {
+    public DefinitionVisitor(Map<Integer, String> inSymbols) {
         register("visit", "org.antlr.v4.runtime");
         register(DefinitionBodyContext.class, "visitDefinitionBodyContext");
         register(WordContext.class, "visitWordContext");
@@ -39,6 +42,7 @@ public class DefinitionVisitor extends DynamicVisitorSupport {
         register(DefinitionContext.class, "visitDefinitionContext");
         register(ModelTermGroupContext.class, "visitModelTermGroupContext");
         register(KeywordContext.class, "visitKeywordContext");
+        symbols = inSymbols;
     }
 
 
@@ -102,6 +106,11 @@ public class DefinitionVisitor extends DynamicVisitorSupport {
     public Object visitKeywordContext(ModelParser.KeywordContext inContext, Object... inParams) {
         SignatureElement    element = new KeywordSignatureElement(inContext.getText(), inContext);
         Definition definition = (Definition) inParams[3];
+        List<ParseTree>     children = inContext.children;
+        TerminalNode node = (TerminalNode) children.get(0);
+        Token symbol = node.getSymbol();
+        String text = symbols.get(symbol.getType());
+        definition.addToBody(text);
         definition.addElement(element);
         return inParams[0];
     }
@@ -123,16 +132,7 @@ public class DefinitionVisitor extends DynamicVisitorSupport {
     }
 
 
-    //========================================================================//
 
-
-//    public List<Definition> getDefinitions() {
-//        return definitions;
-//    }
-
-
-//    private StringBuilder           name;
-//    private List<Definition>    definitions = new LinkedList<>();
-
+    Map<Integer, String>    symbols;
 
 }

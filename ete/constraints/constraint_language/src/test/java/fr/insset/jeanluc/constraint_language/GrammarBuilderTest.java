@@ -57,7 +57,7 @@ public class GrammarBuilderTest {
      */
     @Test
     public void testGenerateModelGrammars() throws Exception {
-        System.out.println("generate model grammars");
+        System.out.println("full constraint file analysis");
 
         // 1- prepare all the stuff
         clean("target/tmp");
@@ -91,7 +91,7 @@ public class GrammarBuilderTest {
         checkFile("target/tmp/antlr4/imports/ModelLexer.g4", 290);
         checkFile("target/tmp/antlr4/imports/ModelParser.g4", 468);
         checkFile("target/tmp/antlr4/actual/ActualLexer.g4",89);
-        checkFile("target/tmp/antlr4/actual/ActualParser.g4",451);
+        checkFile("target/tmp/antlr4/actual/ActualParser.g4",439);
     }
 
 

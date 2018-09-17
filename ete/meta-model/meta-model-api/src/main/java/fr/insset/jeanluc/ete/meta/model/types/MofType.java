@@ -1,11 +1,16 @@
 package fr.insset.jeanluc.ete.meta.model.types;
 
 
+import fr.insset.jeanluc.ete.meta.model.core.MofElement;
 import fr.insset.jeanluc.ete.meta.model.emof.TagValueDeclaration;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.PackageableElement;
 import fr.insset.jeanluc.ete.meta.model.types.collections.MofCollection;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  *
@@ -54,5 +59,16 @@ public interface MofType extends PackageableElement {
         }
         return null;
     }
+
+
+    public default Set<MofElement> getAllDependances() {
+        Set<MofElement>    result = getDependance();
+        Collection<MofType> superTypes = getSuperTypes();
+        for (MofType aType : superTypes) {
+            result.addAll(aType.getAllDependances());
+        }
+        return result;
+    }
+
 
 }

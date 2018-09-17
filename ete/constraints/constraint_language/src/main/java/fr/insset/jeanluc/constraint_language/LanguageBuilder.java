@@ -34,6 +34,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
@@ -217,7 +219,9 @@ public class LanguageBuilder implements Dialect {
         Parser parser = parserWrapper.getParser(inConstraintFile, compile.lexerClass, compile.parserClass);
         Method fileMethod = parser.getClass().getMethod("file", new Class[0]);
         ParserRuleContext file = (ParserRuleContext) fileMethod.invoke(parser);
-        DefinitionVisitor definitionVisitor = new DefinitionVisitor();
+        TokenReader     reader = new TokenReader();
+        Map<Integer, String> symbols = reader.read("target/generated-sources/ete/ModelLexer.tokens");
+        DefinitionVisitor definitionVisitor = new DefinitionVisitor(symbols);
         // Register the definitions and the new keywords they use
         // the 4th parameter is used to number variables
         definitionVisitor.genericVisit(file, keywords, signatures);
@@ -289,6 +293,7 @@ public class LanguageBuilder implements Dialect {
 
         if (keywords.size() > 0) {
             writer.println("definitionSignature: (modelTermGroup | actualKeyword | keyword | navOperator | word)+;");
+            writer.println("definitionBody : gelExpression;");
             writer.println();
             writer.print("actualKeyword : ");
             boolean  alreadyOne = false;
@@ -324,6 +329,7 @@ public class LanguageBuilder implements Dialect {
             writer.println(";");
             writer.println();
         }
+        writer.println("ruleHead : (modelTermGroup | actualKeyword | keyword | word)+;");
         writer.println("ruleBody : gelExpression;");
         writer.println();
 
@@ -340,11 +346,12 @@ public class LanguageBuilder implements Dialect {
             // recorded as the semantics of the function, directly as an
             // abstract tree.
             // Here we write only the skelton of the signature
-            ParseTree body = aDefinition.getBody();
-            SignatureBuilderVisitor visitor = new SignatureBuilderVisitor(symbols);
-            for (SignatureElement anElement : signature) {
-                visitor.genericVisit(anElement.getParseTree(), writer);
-            }
+//            ParseTree body = aDefinition.getBody();
+//            SignatureBuilderVisitor visitor = new SignatureBuilderVisitor(symbols);
+//            for (SignatureElement anElement : signature) {
+//                visitor.genericVisit(anElement.getParseTree(), writer);
+//            }
+            writer.print(aDefinition.getBody());
             writer.println(";");
         }
         writer.println();
@@ -455,7 +462,8 @@ public class LanguageBuilder implements Dialect {
         if (task.call()) {
             // 4-2 instantiate some classes
             // Load and execute
-            System.out.println("Grammars have been compiled. Loading and instanciating " + inName + " parser grammar");
+            Logger logger = Logger.getGlobal();
+            logger.log(Level.FINE, "Grammars have been compiled. Loading and instanciating {0} parser grammar", inName);
             // Create a new custom class loader, pointing to the directory that contains the compiled
             // classes, this should point to the top of the package structure!
             URLClassLoader classLoader = new URLClassLoader(

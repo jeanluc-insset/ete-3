@@ -5,7 +5,7 @@ Définition
         le modèle des certificats du pilote contient le modèle de l'avion !
 
 Règle le commandant est habilité :
-        le commandant du vol est certifié pour l'avion de vol.
+        le commandant du vol est certifié pour l'avion du vol.
 Règle le copilote est habilité :
-        le copilote du vol est certifié pour l'avion de vol.
+        le copilote du vol est certifié pour l'avion du vol.
 

@@ -3,6 +3,7 @@ package fr.insset.jeanluc.ete.meta.model.mofpackage;
 
 import static fr.insset.jeanluc.ete.defs.Constants.NOT_IMPLEMENTED_YET;
 import fr.insset.jeanluc.ete.meta.model.constraint.Constraint;
+import fr.insset.jeanluc.ete.meta.model.core.MofElement;
 import fr.insset.jeanluc.ete.meta.model.core.NamedElement;
 import fr.insset.jeanluc.ete.meta.model.emof.Stereotype;
 import fr.insset.jeanluc.ete.meta.model.emof.TagValueDeclaration;
@@ -10,6 +11,7 @@ import fr.insset.jeanluc.ete.meta.model.emof.instance.InstanceSpecification;
 import fr.insset.jeanluc.ete.meta.model.types.MofType;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -186,6 +188,21 @@ public class PackageableElementTest {
         @Override
         public String getXmiType() {
             throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public void addDependance(MofElement inDependance) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public void removeDependance(MofElement inDependance) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public Set<MofElement> getDependance() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
     }           // PackageableElementImpl
     

@@ -34,9 +34,12 @@ public class Definition {
     }
 
 
+    public  void addToBody(String inString) {
+        bodyAsString.append(inString);
+    }
 
-    public ParseTree getBody() {
-        return body;
+    public String getBody() {
+        return bodyAsString.toString();
     }
 
     public void setBody(DefinitionBodyContext body) {
@@ -45,7 +48,8 @@ public class Definition {
 
 
 
-    private  List<SignatureElement>         signature = new LinkedList<>();
-    private  DefinitionBodyContext  body;
+    private  List<SignatureElement>     signature = new LinkedList<>();
+    private  DefinitionBodyContext      body;
+    private  StringBuilder              bodyAsString = new StringBuilder();
 
 }       // Definition

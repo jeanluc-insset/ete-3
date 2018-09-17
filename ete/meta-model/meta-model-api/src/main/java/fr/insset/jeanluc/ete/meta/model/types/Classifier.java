@@ -50,10 +50,10 @@ public interface Classifier extends MofType {
         result.addAll(getOwnedOperation());
         return result;
     }
-    public  void                               addOwnedOperation(MofOperation inOperation);
-    public  void                               removeOwnedOperation(MofOperation inOperation);
-    public  MofOperation                       getOwnedOperation(String inName);
-    public  Stream<MofOperation>               getOwnedOperationAsStream();
+    public  void                    addOwnedOperation(MofOperation inOperation);
+    public  void                    removeOwnedOperation(MofOperation inOperation);
+    public  MofOperation            getOwnedOperation(String inName);
+    public  Stream<MofOperation>    getOwnedOperationAsStream();
 
 }
 

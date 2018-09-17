@@ -287,6 +287,9 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
             if ("return".equals(direction)) {
                 MofType type = readType(aParamElement, model);
                 inOperation.setType(type);
+                if (type instanceof MofClass) {
+                    inOperation.getOwningMofClass().addDependance(type);
+                }
             }
             else {
                 try {
@@ -298,6 +301,9 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
                         global.log(Level.FINER, "Parameter : {0}", parameterName);
                         MofType     type = readType(aParamElement, model);
                         parameter.setType(type);
+                        if (type instanceof MofClass) {
+                            inOperation.getOwningMofClass().addDependance(type);
+                        }
                         inOperation.addOwnedParameter(parameter);
                 } catch (InstantiationException ex) {
                     Logger.getLogger(XmlModelReaderVisitor.class.getName()).log(Level.SEVERE, null, ex);
