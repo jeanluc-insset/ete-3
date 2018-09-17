@@ -31,6 +31,17 @@ public class MofOperationImpl extends FeatureImpl implements MofOperation {
         }
     }
 
+    public boolean isAbstract() {
+        return isAbstract;
+    }
+
+    public void setAbstract(boolean isAbstract) {
+        this.isAbstract = isAbstract;
+    }
+
+
+
+
     @Override
     public Collection<MofParameter> getOwnedParameter() {
         return ownedParameter;
@@ -145,6 +156,7 @@ public class MofOperationImpl extends FeatureImpl implements MofOperation {
     }
 
 
+    private boolean                     isAbstract;
     private List<MofParameter>          ownedParameter;
     private Collection<MofType>         raisedException;
     private boolean                     ordered;

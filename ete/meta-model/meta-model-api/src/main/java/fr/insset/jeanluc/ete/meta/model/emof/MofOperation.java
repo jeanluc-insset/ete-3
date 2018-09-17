@@ -23,6 +23,9 @@ public interface MofOperation extends Feature, NamedElement, MultiplicityElement
         return "uml:Operation";
     }
 
+    public  void                        setAbstract(boolean inAbstract);
+    public  boolean                     isAbstract();
+
     public  Collection<MofParameter>    getOwnedParameter();
     public  void                        addOwnedParameter(MofParameter inParameter);
     public  void                        removeOwnedParameter(MofParameter inParameter);

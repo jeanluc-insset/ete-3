@@ -279,6 +279,14 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
         }
         EteModel    model = (EteModel)inParam[1];
         Element     element = (Element)inParam[2];
+
+        String isAbstract = element.getAttribute("isAbstract");
+        if ("true".equals(isAbstract)) {
+            Logger             logger = Logger.getGlobal();
+            logger.log(Level.FINER, "The operation {0} is abstract", inOperation.getName());
+            inOperation.setAbstract(true);
+        }
+
         NodeList    paramElements = element.getElementsByTagName("ownedParameter");
         global.log(Level.FINE, "Visiting operation {0} with {1} parameter(s)", new Object[]{inOperation.getName(), paramElements});
         for (int i=0 ; i<paramElements.getLength() ; i++) {
