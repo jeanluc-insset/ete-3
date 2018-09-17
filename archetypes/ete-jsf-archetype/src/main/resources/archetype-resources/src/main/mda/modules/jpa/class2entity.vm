@@ -4,7 +4,9 @@
 package ${symbol_dollar}{current.owningPackage}.model;
 
 
-
+#foreach ($aDependance in $current.dependances)
+import ${aDependance.owningPackage.name}.model.${aDependance.name};
+#end
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
@@ -120,7 +122,12 @@ ${symbol_pound}end
 
 ${symbol_pound}foreach (${symbol_dollar}aMethod in ${symbol_dollar}current.ownedOperation)
     public ${symbol_dollar}dialect.moft2lt(${symbol_dollar}aMethod.type.name) ${symbol_dollar}{aMethod.name}(${symbol_pound}foreach(${symbol_dollar}aParam in ${symbol_dollar}{aMethod.ownedParameter})${symbol_dollar}{dialect.mt2lt(${symbol_dollar}aParam.type)} ${symbol_dollar}{aParam.name}${symbol_pound}if( ${symbol_dollar}foreach.hasNext ), ${symbol_pound}end ${symbol_pound}end) {
-${symbol_dollar}{dialect.getOperationBody(${symbol_dollar}aMethod, "    ")}
+${symbol_pound}set (${symbol_dollar}body = ${symbol_dollar}dialect.getOperationBody(${symbol_dollar}aMethod, "    "))
+${symbol_pound}if (${symbol_dollar}body && ${symbol_dollar}body.length() > 0)
+${symbol_dollar}body
+${symbol_pound}else
+        throw new RuntimeException("Not implemented yet");
+${symbol_pound}end
     }
 ${symbol_pound}end
 
