@@ -1,6 +1,7 @@
 package fr.insset.jeanluc.ete.api.impl;
 
 
+import com.sun.el.stream.Stream;
 import fr.insset.jeanluc.el.evaluator.JSR341Evaluator;
 import fr.insset.jeanluc.ete.api.Action;
 import fr.insset.jeanluc.ete.api.ActionSupport;
@@ -12,6 +13,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 
 
@@ -70,9 +72,17 @@ public class ForEachAction extends ActionSupport {
             // TODO : should we pass the parameters ?
 //            JSR341Evaluator elEvaluator = new JSR341Evaluator(inModel, getParameters());
             JSR341Evaluator elEvaluator = new JSR341Evaluator(inModel);
-            Collection evaluate = (Collection)elEvaluator.evaluate(itemsExpression);
-            logger.log(Level.FINE, "Items : " + evaluate);
-            return evaluate;
+            Object itemsValue = elEvaluator.evaluate(itemsExpression);
+            Collection<NamedElement>  result;
+            if (itemsValue instanceof Collection) {
+                System.out.println("It'a collection");
+                result = (Collection<NamedElement>)itemsValue;
+            } else {
+                System.out.println("It's not a collection, so it should be a stream");
+                result = (Collection<NamedElement>) ((Stream)itemsValue).toList();
+            }
+            logger.log(Level.FINE, "Items : " + result);
+            return result;
         } catch (InstantiationException ex) {
             Logger.getLogger(ForEachAction.class.getName()).log(Level.SEVERE, null, ex);
             throw new EteException(ex);
