@@ -15,6 +15,7 @@ import fr.insset.jeanluc.ete.meta.model.mofpackage.MofPackage;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.PackageableElement;
 //import fr.insset.jeanluc.ete.meta.model.datatype.UnlimitedNatural;
 import fr.insset.jeanluc.ete.meta.model.types.MofType;
+import fr.insset.jeanluc.ete.meta.model.types.TypedElement;
 import fr.insset.jeanluc.ete.meta.model.types.collections.MofCollection;
 import fr.insset.jeanluc.ete.meta.model.types.collections.MofOrderedSet;
 import fr.insset.jeanluc.ete.meta.model.types.collections.MofSequence;
@@ -87,6 +88,28 @@ public interface JavaDialect extends Dialect {
         }
         return moft2lt(inType.getName());
     }
+
+
+    public default String mp2lt(TypedElement inProperty) {
+        MofType     type = inProperty.getType();
+        if (type == null) {
+            return "void";
+        }
+        if (type.isCollection()) {
+            MofCollection coll = (MofCollection) type;
+            if (inProperty.hasStereotype("array")) {
+                return mt2lt(coll.getBaseType()) + "[]";
+            }
+            if (coll.isOrdered()) {
+                return "List<" + mt2lt(coll.getBaseType()) + ">";
+            }
+            else {
+                return "Set<" + mt2lt(coll.getBaseType()) + ">";
+            }
+        }
+        return moft2lt(type.getName());
+    }
+
 
 
     @Override
