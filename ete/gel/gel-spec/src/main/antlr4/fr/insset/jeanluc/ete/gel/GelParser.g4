@@ -166,11 +166,19 @@ modExpression  : MOD operand;
 
 operand
     : oppExpression
+    | predefinedFunction
     | navExpression
     | literal
     | parenthesisExpression
 ;
 
+
+predefinedFunction
+    : INT_RANDOM LPAREN gelExpression RPAREN
+    | FLOAT_RANDOM LPAREN gelExpression RPAREN
+    | STRING_RANDOM LPAREN gelExpression COMMA gelExpression RPAREN
+    | DATE_RANDOM LPAREN gelExpression COMMA gelExpression RPAREN
+;
 
 
 parenthesisExpression:
@@ -216,7 +224,11 @@ primitive
 
 
 attributeNavExpression
-    : DOT identifier
+    : DOT identifier indexExpression?
+;
+
+indexExpression :
+   LBRACK gelExpression RBRACK
 ;
 
 atPreExpression

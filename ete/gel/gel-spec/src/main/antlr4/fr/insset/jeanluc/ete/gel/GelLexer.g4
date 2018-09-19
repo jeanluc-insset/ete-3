@@ -14,6 +14,15 @@ lexer grammar GelLexer;
 
 
 
+// Added by JLD
+
+// These tokens are used to define convenience functions
+
+INT_RANDOM      : 'intRandom';
+FLOAT_RANDOM    : 'floatRandom';
+STRING_RANDOM   : 'stringRandom';
+DATE_RANDOM     : 'dateRandom';
+
 
 
 //============================================================================//

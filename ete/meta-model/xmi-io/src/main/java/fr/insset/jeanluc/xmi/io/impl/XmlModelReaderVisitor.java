@@ -90,7 +90,7 @@ import static fr.insset.jeanluc.xmi.io.impl.XmlUtilities.getStringValue;
 public class XmlModelReaderVisitor extends DynamicVisitorSupport {
 
 
-    /* This code has been removed from the constructor
+    /* This code has been removed from the constructor :
         registering "visit" with "fr.insset.jeanluc.ete.meta.model.emof",
                     "fr.insset.jeanluc.ete.meta.model.mofpackage",
                     "fr.insset.jeanluc.ete.meta.model.constraint"
