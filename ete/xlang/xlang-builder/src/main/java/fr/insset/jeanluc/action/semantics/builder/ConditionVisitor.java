@@ -55,7 +55,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
 
     //========================================================================//
 
-   
+
     
     public ConditionVisitor() {
         FactoryRegistry registry = FactoryRegistry.getRegistry();
@@ -252,7 +252,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         GelParser.GelExpressionContext   ctx  = parser.gelExpression();
 
         // 2- build expression as an abstract tree
-        // Should we use an abstract facotry ?
+        // Should we use an abstract factory ?
         // The GelContext class is generated...
         GelContext      gelContext            = new GelContextImpl(model, context, context);
         gelContext.set("model", model);

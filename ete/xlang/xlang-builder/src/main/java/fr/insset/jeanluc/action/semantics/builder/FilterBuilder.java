@@ -143,18 +143,28 @@ public class FilterBuilder extends DynamicVisitorSupport {
     public void buildQueries(EteModel inModel) throws InstantiationException, IllegalAccessException, InvocationTargetException {
         Collection<MofClass> allClasses = inModel.getAllClasses();
 
+        System.out.println("--------------------------------");
+        System.out.println("B U I L D I N G   Q U E R I E S");
+        System.out.println("1- building supports");
         for (MofClass aMofClass : allClasses) {
+            System.out.println("Examining " + aMofClass.getName());
             for (MofProperty aProperty : aMofClass.getAllAttributes()) {
                 MofType type = aProperty.getType();
                 if (type instanceof EnhancedMofClassImpl) {
                     EnhancedMofClassImpl    targetClass = (EnhancedMofClassImpl) type;
+                    System.out.println("Adding " + aProperty.getName() + " to the support of " + targetClass.getName());
                     targetClass.getSupport().put(aProperty, FactoryMethods.newList(EteQuery.class));
+                    // Debugging only : the next line MUST BE REMOVED
+                    targetClass.getSupport();
                 }
             }       // loop on properties
         }       // loop on classes
+        System.out.println("2- Actual building of queries");
         for (MofClass aMofClass : allClasses) {
             buildQueries(aMofClass);
         }
+        System.out.println("Q U E R I E S   A R E   B U I L T");
+        System.out.println("---------------------------------");
     }
 
 
@@ -165,13 +175,18 @@ public class FilterBuilder extends DynamicVisitorSupport {
             // First we build a copy of the expression, subsituting a variable
             // to any navigation.
             // The variables are registered in the result inout parameter
+            System.out.println("Building queries for " + anInvariant.getSpecificationAsString());
             List<VariableDeclaration>  result = FactoryMethods.newList(VariableDeclaration.class);
             GelExpression copy = buildQueries((EnhancedInvariantImpl) anInvariant, inMofClass, result);
             // Now the result contains all the variables found across the invariants
             // of this class
             // For each variable, we must build a query in the TARGET class
             for (VariableDeclaration aDeclaration : result) {
-                Logger.getGlobal().log(Level.FINER,"Variable found : {0} ({1}) = {2} in {3}",
+                System.out.println("Variable found : " + aDeclaration.getName()
+                        + " " + aDeclaration.getType().getName()
+                        + " " + aDeclaration.getInitValue().getClass()
+                        + " dans " + anInvariant.getSpecificationAsString());
+                Logger.getGlobal().log(Level.INFO,"Variable found : {0} ({1}) = {2} in {3}",
                         new Object[]{
                             aDeclaration.getName(),
                             aDeclaration.getType().getName(),
@@ -220,7 +235,7 @@ public class FilterBuilder extends DynamicVisitorSupport {
      * @throws InvocationTargetException 
      */
     private GelExpression buildQueries(EnhancedInvariantImpl anInvariant, MofClass inMofClass, List<VariableDeclaration> inoutVariables) throws IllegalAccessException, InvocationTargetException {
-        // Looks for "top level" roles
+        // Looks for "top level" roles (i.e. properties of self)
         Object specification = anInvariant.getExpression();
         if (specification == null) {
             return null;
@@ -267,6 +282,7 @@ public class FilterBuilder extends DynamicVisitorSupport {
 
 
     public GelExpression visitAttributeNav(AttributeNav inNav, Object... inParameters) {
+        System.out.println("Visit of a navigation to the attribute " + inNav.getName());
         VariableDeclaration  definition = new VariableDeclarationImpl();
         definition.setInitValue(inNav);
         definition.setType(inNav.getType());

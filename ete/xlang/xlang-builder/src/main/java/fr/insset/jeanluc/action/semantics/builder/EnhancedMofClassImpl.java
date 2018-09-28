@@ -30,7 +30,6 @@ public class EnhancedMofClassImpl extends MofClassImpl {
 
     public void addQuery(EteQuery inFilter) {
         MofProperty filteredProperty = inFilter.getFilteredProperty();
-        
         List<EteQuery> filters = support.computeIfAbsent(filteredProperty, f -> {
             try {
                 return FactoryMethods.newList(EteQuery.class);
@@ -44,6 +43,7 @@ public class EnhancedMofClassImpl extends MofClassImpl {
 
 
     public Map<MofProperty, List<EteQuery>> getSupport() {
+        System.out.println("Requesting support of class " + getName() + " : " + support);
         return support;
     }
 
