@@ -153,3 +153,5 @@
 /ete/sbvr_old/sbvr-impl/target/
 /ete/sbvr_old/sbvr-impl/nbproject/
 /ete/sbvr/sbvr-spec/target/
+ete/constraints/constraint_test/target/
+ete/constraints/constraints_io/target/
