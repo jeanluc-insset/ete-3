@@ -219,7 +219,7 @@ public class FilterBuilder extends DynamicVisitorSupport {
         name += "For" + invariantName;
         query.setFilteredProperty(toFeature);
         query.setExpression(copy);
-        query.setPropertyName(name);
+//        query.setPropertyName(name);
         query.setTargetVariable(aDeclaration);
         query.setInvariant(anInvariant);
         result.stream().filter(other -> !(other.equals(aDeclaration))).forEach(query::addVariable);
@@ -228,6 +228,11 @@ public class FilterBuilder extends DynamicVisitorSupport {
 
 
     /**
+     *  Adds a filter per navigation in the invariant.<br>At the same time, it builds a list of variables (a navigation,
+     *  a variable).<br>
+     * The returned GelExpression uses these variables instead of navigations.
+     * Each query is about one of these variables.
+     * @see{Query}
      * 
      * @param anInvariant
      * @throws IllegalAccessException
@@ -282,7 +287,7 @@ public class FilterBuilder extends DynamicVisitorSupport {
 
 
     public GelExpression visitAttributeNav(AttributeNav inNav, Object... inParameters) {
-        System.out.println("Visit of a navigation to the attribute " + inNav.getName());
+        System.out.println("Visit of a navigation to the attribute " + inNav.getToFeature().getName());
         VariableDeclaration  definition = new VariableDeclarationImpl();
         definition.setInitValue(inNav);
         definition.setType(inNav.getType());

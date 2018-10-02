@@ -1,8 +1,6 @@
 package fr.insset.jeanluc.as2java;
 
 
-
-
 import fr.insset.jeanluc.action.semantics.builder.EteQuery;
 import fr.insset.jeanluc.el.dialect.JavaDialect;
 import fr.insset.jeanluc.ete.gel.AttributeNav;

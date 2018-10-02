@@ -14,8 +14,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * A EteQuery aims to be translated to filter expressions in a stream
- or where statements in an SQL query.<br>
+ * A EteQuery aims to be translated to filter expressions in a stream, an
+ * Observable or to where statements in an SQL query.<br>
  * For example, the invariant <code>captain &lt;&gt; copilot</code> gives two
  * filters&nbsp;:<ul>
  * <li>
@@ -23,11 +23,15 @@ import java.util.logging.Logger;
  *          <li>filtered class : Pilot</li>
  *          <li>client class : Flight</li>
  *          <li>filtered property : captain</li>
+ *          <li>invariant : crew</li>
+ *          <li>gelExpression : captain &lt;&gt; copilot</li>
  *      </ul>
  *      <ul>
  *          <li>filtered class : Pilot</li>
  *          <li>client class : Flight</li>
  *          <li>filtered property : copilot</li>
+ *          <li>invariant : crew</li>
+ *          <li>gelExpression : captain &lt;&gt; copilot</li>
  *      </ul>
  * </li>
  * </ul>
@@ -106,12 +110,12 @@ public class EteQuery {
 
 
     public String getPropertyName() {
-        return propertyName;
+        return getFilteredProperty().getName();
     }
 
-    public void setPropertyName(String propertyName) {
-        this.propertyName = propertyName;
-    }
+//    public void setPropertyName(String propertyName) {
+//        this.propertyName = propertyName;
+//    }
 
     public VariableDeclaration getTargetVariable() {
         return targetVariable;
@@ -131,7 +135,7 @@ public class EteQuery {
     private     VariableDeclaration         targetVariable;
     private     Invariant                   invariant;
     private     GelExpression               expression;
-    private     String                      propertyName;
+//    private     String                      propertyName;
     private     List<VariableDeclaration>   variables = new LinkedList<>();
 
 
