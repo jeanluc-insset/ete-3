@@ -20,6 +20,7 @@
         <module>xlang_builder-impl</module>
         <module>actual-xlang_builder</module>-->
         <module>xlang-to-java</module>
+        <module>xlang-to-sql</module>
     </modules>
     <name>xlang</name>
 </project>
