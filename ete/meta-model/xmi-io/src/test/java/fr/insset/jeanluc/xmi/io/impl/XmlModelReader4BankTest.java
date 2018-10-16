@@ -70,7 +70,7 @@ public class XmlModelReader4BankTest {
         Factories.init();
 
         // 2- call the operation
-        XmlModelReader instance = new XmlModelReader();
+        XmiModelReader instance = new XmiModelReader();
         String  url = "../../../samples/web-ete-bank/src/main/mda/Bank.xml";
         EteModel parent = new EteModelImpl();
         EteModel result = instance.readModel(url, parent);

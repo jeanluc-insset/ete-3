@@ -16,7 +16,7 @@ import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.impl.EteModelImpl;
 import fr.insset.jeanluc.ete.xlang.VariableDeclaration;
 import fr.insset.jeanluc.ete.xlang.builder.BodyBuilder;
-import fr.insset.jeanluc.xmi.io.impl.XmlModelReader;
+import fr.insset.jeanluc.xmi.io.impl.XmiModelReader;
 import fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -82,7 +82,7 @@ public class JpaGeneratorTest {
         // 1-b custom factories
 
         // 2- prepare reader and its visitors
-        XmlModelReader instance = new XmlModelReader();
+        XmiModelReader instance = new XmiModelReader();
         instance.addVisitors(new XmlModelReaderVisitor());
         ConditionVisitor.enableActionSemantics(instance);
 
@@ -116,7 +116,7 @@ public class JpaGeneratorTest {
         // 1-b custom factories
 
         // 2- prepare reader and its visitors
-        XmlModelReader instance = new XmlModelReader();
+        XmiModelReader instance = new XmiModelReader();
         instance.addVisitors(new XmlModelReaderVisitor());
         ConditionVisitor.enableActionSemantics(instance);
 

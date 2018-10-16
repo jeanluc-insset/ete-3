@@ -17,7 +17,7 @@ import fr.insset.jeanluc.ete.xlang.Assignment;
 import fr.insset.jeanluc.ete.xlang.Statement;
 import fr.insset.jeanluc.ete.xlang.VariableDeclaration;
 import fr.insset.jeanluc.ete.xlang.builder.BodyBuilder;
-import fr.insset.jeanluc.xmi.io.impl.XmlModelReader;
+import fr.insset.jeanluc.xmi.io.impl.XmiModelReader;
 import fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor;
 import java.io.File;
 import java.io.IOException;
@@ -82,7 +82,7 @@ public class IsNewTest {
         // 1-b custom factories
 
         // 2- prepare reader and its visitors
-        XmlModelReader instance = new XmlModelReader();
+        XmiModelReader instance = new XmiModelReader();
         instance.addVisitors(new XmlModelReaderVisitor());
         ConditionVisitor.enableActionSemantics(instance);
 

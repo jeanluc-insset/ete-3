@@ -70,7 +70,7 @@ public class XmiModelWriterTest {
         // 1- Initialize framework and read a model
         Factories.init();
 
-        XmlModelReader  reader = new XmlModelReader();
+        XmiModelReader  reader = new XmiModelReader();
         EteModel parent = new EteModelImpl();
         EteModel result = reader.readModel(url, parent);
 

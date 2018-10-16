@@ -69,7 +69,7 @@ public class XmlModelReaderTest {
         Factories.init();
 
         // 2- call the operation
-        XmlModelReader instance = new XmlModelReader();
+        XmiModelReader instance = new XmiModelReader();
         String  url = "../../../src/test/mda/models/MCQ.xml";
         EteModel parent = new EteModelImpl();
         EteModel result = instance.readModel(url, parent);
@@ -112,7 +112,7 @@ public class XmlModelReaderTest {
         Factories.init();
 
         // 2- call the operation
-        XmlModelReader instance = new XmlModelReader();
+        XmiModelReader instance = new XmiModelReader();
         instance.addVisitors(new XmlModelReaderVisitor());
         String  url = "../../../src/test/mda/models/full_MCQ.xml";
         EteModel parent = new EteModelImpl();

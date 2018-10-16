@@ -330,6 +330,15 @@ public interface Dialect {
     }
 
 
+    //==========================================================================//
+
+
+    public default void setPrefix(String inPrefix) {
+    }
+
+
+    //==========================================================================//
+
     /**
      * Returns a symbol associated to a string.<br>
      * Useful for example to translate an abstract operator to an actual

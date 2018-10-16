@@ -70,7 +70,7 @@ public class InheritanceTest {
         Factories.init();
 
         // 2- call the operation
-        XmlModelReader instance = new XmlModelReader();
+        XmiModelReader instance = new XmiModelReader();
         instance.addVisitors(new XmlModelReaderVisitor());
         String  url = "../../../samples/modeleur/src/main/mda/modeleur.xml";
         EteModel parent = new EteModelImpl();

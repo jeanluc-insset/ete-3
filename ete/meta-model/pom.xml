@@ -14,5 +14,6 @@
         <module>meta-model-io</module>
         <module>xmi-io</module>
         <module>plain-text-io</module>
+        <module>VisualParadigmReader</module>
     </modules>
 </project>

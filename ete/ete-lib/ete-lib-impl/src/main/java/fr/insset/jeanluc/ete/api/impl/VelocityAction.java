@@ -2,6 +2,7 @@ package fr.insset.jeanluc.ete.api.impl;
 
 
 
+import fr.insset.jeanluc.el.dialect.Dialect;
 import static fr.insset.jeanluc.el.dialect.Dialect.DIALECT;
 import fr.insset.jeanluc.el.evaluator.JSR341Evaluator;
 import static fr.insset.jeanluc.ete.api.impl.GenericTemplate.TEMPLATE;
@@ -76,6 +77,10 @@ public class VelocityAction extends GenericTemplate {
         try {
             Class dialectClass = loadClass(dialectName);
             Object dialect = dialectClass.newInstance();
+            String prefix = (String) getParameter("prefix");
+            if (prefix != null && prefix.length()>0) {
+                ((Dialect)dialect).setPrefix(prefix);
+            }
             context.put("_d", dialect);
             context.put(DIALECT, dialect);
             Logger.getGlobal().log(Level.FINE, "Added dialect " + context.get(DIALECT));

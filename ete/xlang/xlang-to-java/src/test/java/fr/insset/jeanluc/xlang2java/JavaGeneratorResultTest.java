@@ -11,7 +11,7 @@ import fr.insset.jeanluc.ete.meta.model.core.PrimitiveDataTypes;
 import fr.insset.jeanluc.ete.meta.model.core.impl.Factories;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.impl.EteModelImpl;
-import fr.insset.jeanluc.xmi.io.impl.XmlModelReader;
+import fr.insset.jeanluc.xmi.io.impl.XmiModelReader;
 import fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor;
 import java.io.File;
 import java.io.IOException;
@@ -116,7 +116,7 @@ public class JavaGeneratorResultTest {
         //    This operation invokes the SimpleActionSemanticsBuilder which
         //    builds statements along the post-conditions of operations.
         // 2-a prepare a reader
-        XmlModelReader instance = new XmlModelReader();
+        XmiModelReader instance = new XmiModelReader();
         instance.addVisitors(new XmlModelReaderVisitor());
         ConditionVisitor.enableActionSemantics(instance);
         // 2-b actually read

@@ -8,13 +8,13 @@ import static fr.insset.jeanluc.ete.meta.model.mofpackage.MofPackage.MOF_PACKAGE
  *
  * @author jldeleage
  */
-public interface XmlPaths {
+public interface VpXmlPaths {
 
     public final static String     PRIMITIVE_TYPE_PATH     = "//packagedElement[@*='uml:PrimitiveType']";
-    public final static String     PACKAGE_PATH            = "uml:Package";
-    public final static String     CLASS_PATH              = "//*[@*='uml:Package']/*[@*='uml:Class']";
+    public final static String     PACKAGE_PATH            = "//Package";
+    public final static String     CLASS_PATH              = "//Class";
     public final static String     ENUM_PATH               = "//*[@*='uml:Package']/*[@*='uml:Enumeration']";
-    public final static String     ASSOCIATION_PATH        = "uml:Association";
+    public final static String     ASSOCIATION_PATH        = "//Association";
     public final static String     PROPERTY_PATH           = "uml:Property";
     public final static String     OPERATION_PATH          = "uml:Operation";
     public final static String     INSTANCE_PATH           = "uml:InstanceSpecification";

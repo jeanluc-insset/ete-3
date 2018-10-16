@@ -58,10 +58,10 @@ import java.io.IOException;
  *
  * @author jldeleage
  */
-public class XmlModelReader extends XmlUtilities implements ModelReader, XmiPaths {
+public class XmiModelReader implements ModelReader, XmiPaths {
 
 
-    public XmlModelReader() throws InstantiationException {
+    public XmiModelReader() throws InstantiationException {
         FactoryRegistry registry = FactoryRegistry.getRegistry();
         registry.registerDefaultFactory(READER_VISITOR, XmlModelReaderVisitor.class);
         registry.registerFactory(XLIST, XList.class);
@@ -147,7 +147,7 @@ public class XmlModelReader extends XmlUtilities implements ModelReader, XmiPath
                 }
             }
         } catch (XPathExpressionException ex) {
-            Logger.getLogger(XmlModelReader.class.getName()).log(Level.FINE, null, ex);
+            Logger.getLogger(XmiModelReader.class.getName()).log(Level.FINE, null, ex);
             throw new IOException(ex);
         }
     }
@@ -229,7 +229,7 @@ public class XmlModelReader extends XmlUtilities implements ModelReader, XmiPath
             logger.log(Level.FINE, "Reading elements with " + inPath + " of type " + inType + " found " + elementsByType.getLength() + " elements");
             return _doReadElements(elementsByType, inNode, inModel, inPath, inType);
         } catch (XPathExpressionException ex) {
-            Logger.getLogger(XmlModelReader.class.getName()).log(Level.INFO, null, ex);
+            Logger.getLogger(XmiModelReader.class.getName()).log(Level.INFO, null, ex);
             throw new IOException(ex);
         }
     }
@@ -253,7 +253,7 @@ public class XmlModelReader extends XmlUtilities implements ModelReader, XmiPath
             NodeList elementsByType = getElements(inPath, inNode);
             return _doReadElements(elementsByType, inNode, inModel, inPath, inType);
         } catch (XPathExpressionException ex) {
-            Logger.getLogger(XmlModelReader.class.getName()).log(Level.FINE, null, ex);
+            Logger.getLogger(XmiModelReader.class.getName()).log(Level.FINE, null, ex);
             throw new IOException(ex);
         }
     }
@@ -298,7 +298,7 @@ public class XmlModelReader extends XmlUtilities implements ModelReader, XmiPath
                     try {
                         visitor.genericVisit(newInstance, parentNamedElement, inModel, domElement);
                     } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-                        Logger.getLogger(XmlModelReader.class.getName()).log(Level.FINE, null, ex);
+                        Logger.getLogger(XmiModelReader.class.getName()).log(Level.FINE, null, ex);
                         Logger.getGlobal().log(Level.FINE, "Error when visiting {0} : {1}", new Object[]{newInstance.getName(), ex});
                         continue elements;
                     }
@@ -307,7 +307,7 @@ public class XmlModelReader extends XmlUtilities implements ModelReader, XmiPath
             }
             return result;
         } catch (InstantiationException ex) {
-            Logger.getLogger(XmlModelReader.class.getName()).log(Level.FINE, null, ex);
+            Logger.getLogger(XmiModelReader.class.getName()).log(Level.FINE, null, ex);
             throw new IOException(ex);
         }
     }
@@ -334,10 +334,10 @@ public class XmlModelReader extends XmlUtilities implements ModelReader, XmiPath
             try {
                 visitors.add((DynamicVisitorSupport) FactoryRegistry.newInstance(READER_VISITOR));
             } catch (IllegalAccessException ex) {
-                Logger.getLogger(XmlModelReader.class.getName()).log(Level.FINE, null, ex);
+                Logger.getLogger(XmiModelReader.class.getName()).log(Level.FINE, null, ex);
                 // OK, never mind, we'll get a "weak" model
             } catch (InstantiationException ex) {
-                Logger.getLogger(XmlModelReader.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(XmiModelReader.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         return visitors;
