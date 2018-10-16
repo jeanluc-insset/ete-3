@@ -75,10 +75,8 @@ public class ForEachAction extends ActionSupport {
             Object itemsValue = elEvaluator.evaluate(itemsExpression);
             Collection<NamedElement>  result;
             if (itemsValue instanceof Collection) {
-                System.out.println("It'a collection");
                 result = (Collection<NamedElement>)itemsValue;
             } else {
-                System.out.println("It's not a collection, so it should be a stream");
                 result = (Collection<NamedElement>) ((Stream)itemsValue).toList();
             }
             logger.log(Level.FINE, "Items : " + result);
