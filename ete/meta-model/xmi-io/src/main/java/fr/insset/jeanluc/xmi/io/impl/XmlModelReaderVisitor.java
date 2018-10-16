@@ -16,6 +16,7 @@ import fr.insset.jeanluc.ete.meta.model.emof.AggregationKind;
 import fr.insset.jeanluc.ete.meta.model.emof.Association;
 import fr.insset.jeanluc.ete.meta.model.emof.Enumeration;
 import fr.insset.jeanluc.ete.meta.model.emof.Literal;
+import static fr.insset.jeanluc.ete.meta.model.emof.Literal.LITERAL;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 import fr.insset.jeanluc.ete.meta.model.emof.MultiplicityElement;
 import fr.insset.jeanluc.ete.meta.model.emof.Stereotype;
@@ -193,7 +194,7 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
         NodeList childNodes = element.getChildNodes();
         // Read the literals
         // We could have readen them in a dedicated couple of methods
-        // (read, visit) but we read the literals directly.
+        // (read, visit) but we read the literals directly in the enumeration
         for (int i=0 ; i<childNodes.getLength() ; i++) {
             Node aChildNode = childNodes.item(i);
             if (! (aChildNode instanceof Element)) {
@@ -201,7 +202,9 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
             }
             Element aChildElement = (Element) aChildNode;
             if ("ownedLiteral".equals(aChildElement.getNodeName())) {
-                Literal  newLiteral = (Literal) FactoryRegistry.newInstance("literal");
+                Literal  newLiteral = (Literal) FactoryRegistry.newInstance(LITERAL);
+                String literalName = aChildElement.getAttribute("name");
+                newLiteral.setValue(literalName);
                 inElement.addLiteral(newLiteral);
             }
         }
