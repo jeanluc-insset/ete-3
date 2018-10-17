@@ -395,7 +395,6 @@ public interface Dialect {
     }
 
 
-
     public default void addQualifiedName(PackageableElement inElement, StringBuilder inoutBuilder) {
         MofPackage owningPackage = inElement.getOwningPackage();
         if (owningPackage != null) {
@@ -416,6 +415,18 @@ public interface Dialect {
         }
         return inElement.getQualifiedName();
     }
+
+
+    //=========================================================================//
+
+    public default void print(Object obj) {
+        System.out.print(obj);
+    }
+
+    public default void println(Object obj) {
+        System.out.println(obj);
+    }
+
 
 
 }
