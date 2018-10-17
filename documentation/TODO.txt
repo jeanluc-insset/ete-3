@@ -1,6 +1,11 @@
 
 
 Infrastructure
+    - merge current branch into master branch
+    - add some xlang subprojects to .gitignore
+    - beautify the commits
+
+Metamodel
     - default naming : navigable ends should be named, it would be nice to provide default naming
 
 Constraints
