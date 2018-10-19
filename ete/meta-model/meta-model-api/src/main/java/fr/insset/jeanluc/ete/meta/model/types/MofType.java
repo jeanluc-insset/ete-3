@@ -37,7 +37,7 @@ public interface MofType extends PackageableElement {
     }
 
     public default boolean          isPrimitive() {
-        return true;
+        return false;
     }
 
 

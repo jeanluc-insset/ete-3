@@ -6,7 +6,8 @@ Infrastructure
     - beautify the commits
 
 Metamodel
-    - default naming : navigable ends should be named, it would be nice to provide default naming
+    - default naming : navigable ends should be named, it would be nice to
+      provide default naming
 
 Constraints
     ~ generation of "queries"
