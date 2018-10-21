@@ -71,4 +71,9 @@ public interface MofType extends PackageableElement {
     }
 
 
+    public default boolean  isEnumeration() {
+        return false;
+    }
+
+
 }

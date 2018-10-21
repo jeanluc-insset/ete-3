@@ -21,5 +21,8 @@ public interface Enumeration extends Classifier {
     public void             setLiteral(List<Literal> inLiterals);
     public void             addLiteral(Literal inLiteral);
 
+    public default boolean  isEnumeration() {
+        return true;
+    }
 
 }
