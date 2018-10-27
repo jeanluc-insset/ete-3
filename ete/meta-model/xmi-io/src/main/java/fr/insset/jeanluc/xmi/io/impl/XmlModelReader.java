@@ -131,13 +131,13 @@ public class XmlModelReader extends XmlUtilities implements ModelReader, XmiPath
                 Element next        = (Element) elements.item(i);
                 String idSubClass   = getModelId() + ((Element)next.getParentNode()).getAttribute("name");
                 String idSuperClass = getModelId() + next.getAttribute("general");
-                logger.log(Level.FINER,"Ids : [" + idSubClass + "]   [" + idSuperClass + "]");
+                logger.log(Level.INFO,"Ids : [" + idSubClass + "]   [" + idSuperClass + "]");
                 try {
                     MofType subClass   = (MofType) inoutModel.getElementByName(idSubClass);
                     MofType superClass = (MofType) inoutModel.getElementById(idSuperClass);
-                    logger.log(Level.FINER,"SubClass : " + subClass + " superClass : " + superClass);
+                    logger.log(Level.WARNING,"SubClass : " + subClass + " superClass : " + superClass);
                     if (subClass != null && superClass != null) {
-                        Logger.getGlobal().log(Level.FINE, "Adding inheritance {0} -> {1}", new Object[]{subClass, superClass});
+                        Logger.getGlobal().log(Level.WARNING, "Adding inheritance {0} -> {1}", new Object[]{subClass, superClass});
                         subClass.addSuperType(superClass);
                         subClass.addDependance(superClass);
                     }

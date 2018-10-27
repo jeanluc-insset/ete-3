@@ -18,7 +18,7 @@ public class MofTypeImpl extends PackageableElementImpl implements MofType {
     public Collection<MofType> getSuperTypes() {
         if (superTypes == null) {
             try {
-                superTypes = FactoryMethods.newSet(MofType.class);
+                superTypes = FactoryMethods.newList(MofType.class);
             } catch (InstantiationException ex) {
                 Logger.getLogger(MofTypeImpl.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -35,7 +35,7 @@ public class MofTypeImpl extends PackageableElementImpl implements MofType {
     public void addSuperType(MofType inSuperType) {
         if (superTypes == null) {
             try {
-                superTypes = FactoryMethods.newSet(MofType.class);
+                superTypes = FactoryMethods.newList(MofType.class);
             } catch (InstantiationException ex) {
                 throw new RuntimeException(ex);
             }
