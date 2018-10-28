@@ -72,6 +72,15 @@ public class BasicJavaDialect implements JavaDialect {
         if (inType == null) {
             return "void";
         }
+        if (inType.isCollection()) {
+            MofCollection coll = (MofCollection) inType;
+            if (coll.isOrdered()) {
+                return "List<" + mt2lt(coll.getBaseType()) + ">";
+            }
+            else {
+                return "Set<" + mt2lt(coll.getBaseType()) + ">";
+            }
+        }
         String name = inType.getName();
         String result = inType.hasStereotype("ignore")? name : getPrefix() + name;
         switch (name) {
