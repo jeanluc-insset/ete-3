@@ -72,7 +72,7 @@ public class NamedElementImpl extends MofElementImpl implements NamedElement {
         dependances = inDependances;
     }
 
-    public void                             addDependance(NamedElement inDependance) {
+    public void                             addDependency(NamedElement inDependance) {
         if (dependances == null) {
             try {
                 dependances = FactoryMethods.newSet(NamedElement.class);

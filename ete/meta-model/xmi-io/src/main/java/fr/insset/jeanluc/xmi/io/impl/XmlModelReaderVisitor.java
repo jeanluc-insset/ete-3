@@ -300,7 +300,7 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
                 MofType type = readType(aParamElement, model);
                 inOperation.setType(type);
                 if (type instanceof MofClass) {
-                    inOperation.getOwningMofClass().addDependance(type);
+                    inOperation.getOwningMofClass().addDependency(type);
                 }
             }
             else {
@@ -314,7 +314,7 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
                         MofType     type = readType(aParamElement, model);
                         parameter.setType(type);
                         if (type instanceof MofClass) {
-                            inOperation.getOwningMofClass().addDependance(type);
+                            inOperation.getOwningMofClass().addDependency(type);
                         }
                         inOperation.addOwnedParameter(parameter);
                 } catch (InstantiationException ex) {
@@ -352,9 +352,9 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
         Classifier firstClass = properties[0].getOwningMofClass();
         Classifier secondClass = properties[1].getOwningMofClass();
         if (null != secondClass.getName() && ! "void".equals(secondClass.getName()))
-            firstClass.addDependance(secondClass);
+            firstClass.addDependency(secondClass);
         if (null != firstClass.getName() && ! "void".equals(firstClass.getName()))
-            secondClass.addDependance(firstClass);
+            secondClass.addDependency(firstClass);
 
         memberEnds = getNamedElements("ownedEnd", "xmi:id", (Element)inParam[2], (EteModel) inParam[1]);
         for (NamedElement aNamedElement : memberEnds) {

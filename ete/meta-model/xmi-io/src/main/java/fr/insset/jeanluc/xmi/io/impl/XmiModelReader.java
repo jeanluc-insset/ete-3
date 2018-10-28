@@ -139,7 +139,7 @@ public class XmiModelReader implements ModelReader, XmiPaths {
                     if (subClass != null && superClass != null) {
                         Logger.getGlobal().log(Level.WARNING, "Adding inheritance {0} -> {1}", new Object[]{subClass, superClass});
                         subClass.addSuperType(superClass);
-                        subClass.addDependance(superClass);
+                        subClass.addDependency(superClass);
                     }
                 }
                 catch (Exception ex) {

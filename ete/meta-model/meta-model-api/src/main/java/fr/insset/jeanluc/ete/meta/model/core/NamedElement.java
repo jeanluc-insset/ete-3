@@ -33,7 +33,7 @@ public interface NamedElement extends MofElement {
 
     public Collection<NamedElement>         getDependances();
     public void                             setDependances(Collection<NamedElement> inDependances);
-    public void                             addDependance(NamedElement inDependance);
+    public void                             addDependency(NamedElement inDependance);
 
     public Collection<Stereotype>           getStereotypes();
     public void                             setStereotypes(Collection<Stereotype> inStereotypes);

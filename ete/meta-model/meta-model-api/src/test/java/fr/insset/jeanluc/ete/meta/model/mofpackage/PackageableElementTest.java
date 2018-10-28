@@ -99,7 +99,7 @@ public class PackageableElementTest {
         }
 
         @Override
-        public void addDependance(NamedElement inDependance) {
+        public void addDependency(NamedElement inDependance) {
             throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET); //To change body of generated methods, choose Tools | Templates.
         }
 
