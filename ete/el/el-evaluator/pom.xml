@@ -55,13 +55,13 @@
         </dependency>
 
 
-        <dependency>
+<!--        <dependency>
             <groupId>fr.insset.jeanluc</groupId>
             <artifactId>ete-lib-api</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
             <type>jar</type>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>fr.insset.jeanluc</groupId>
             <artifactId>xmi-io</artifactId>

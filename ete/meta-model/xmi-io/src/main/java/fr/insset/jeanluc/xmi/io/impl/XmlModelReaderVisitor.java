@@ -2,7 +2,8 @@ package fr.insset.jeanluc.xmi.io.impl;
 
 
 
-import fr.insset.jeanluc.ete.api.EteException;
+
+import fr.insset.jeanluc.ete.defs.EteException;
 import fr.insset.jeanluc.ete.meta.model.constraint.Constraint;
 import fr.insset.jeanluc.ete.meta.model.constraint.Invariant;
 import fr.insset.jeanluc.ete.meta.model.constraint.Postcondition;

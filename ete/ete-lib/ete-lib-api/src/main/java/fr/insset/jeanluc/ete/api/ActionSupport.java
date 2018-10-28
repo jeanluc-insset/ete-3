@@ -165,6 +165,15 @@ public abstract class ActionSupport implements Action {
     }
 
 
+    @Override
+    public Object readAttribute(String inAttributeName) throws EteException {
+        ActionReader reader = getReader();
+        if (reader != null) {
+            return reader.readAttribute(this, definition, inAttributeName);
+        }
+        return null;
+    }
+
 
     //========================================================================//
     //                     A C T I O N   H I E R A R C H Y                    //

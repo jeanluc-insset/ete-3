@@ -1,6 +1,7 @@
 package fr.insset.jeanluc.ete.api;
 
 
+import fr.insset.jeanluc.el.dialect.BasicJavaDialect;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.MofPackage;
 import fr.insset.jeanluc.util.factory.FactoryRegistry;
@@ -106,6 +107,7 @@ public interface Action {
      */
     public default void init(MofPackage inPackage) throws EteException {
         FactoryRegistry.pushNewRegistry();
+        loadDialect();
         readAttributes();
     }
 
@@ -150,8 +152,29 @@ public interface Action {
     //========================================================================//
     // Every action has parameters
 
+    /**
+     * The dialect should be set first since some attributes may have expressions
+     * as values and these expressions are allowed to use the dialect
+     * 
+     * @throws EteException 
+     */
+    public default void loadDialect() throws EteException {
+        String      dialectName = (String) readAttribute("dialect");
+        if (dialectName == null) {
+            dialectName = "fr.insset.jeanluc.el.dialect.BasicJavaDialect";
+        }
+        Object dialect;
+        try {
+            Class<?> dialectClass = Class.forName(dialectName);
+            dialect = dialectClass.newInstance();
+        } catch (Exception ex) {
+            dialect = new BasicJavaDialect();
+        }
+        addParameter("dialect", dialect);
+    }
 
     public void    readAttributes() throws EteException;
+    public Object  readAttribute(String inAttributeName) throws EteException;
 
     public void    addParameter(String inName, Object inValue);
 

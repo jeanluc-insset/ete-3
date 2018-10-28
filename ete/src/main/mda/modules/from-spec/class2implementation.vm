@@ -39,8 +39,8 @@ public#if($current.abstract) abstract#end class ${current.name}Impl #if (${curre
         // }
         // values.add(inValue);
     }
-#end        ## isCollection
-#else
+#end## qualified property and collection
+#else## not qualified property
 #if($aProperty.name && $aProperty.type.name)
     public ${dialect.mt2lt($aProperty.type)} get${dialect.i2uc($aProperty.name)}() {
         return ${aProperty.name};

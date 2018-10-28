@@ -65,28 +65,19 @@ public class VelocityAction extends GenericTemplate {
         context.put("model", model);
         context.put("classes",model.getClasses());
         context.put("packages", model.getPackages());
-        String dialectName = (String)getParameter(DIALECT);
+        Object  dialect = getParameter(DIALECT);
 
         for (Map.Entry<String,Object> entry : getAllParameters().entrySet()) {
             logger.log(LEVEL, "Passing parameter " + entry.getKey() + " = " + entry.getValue());
             context.put(entry.getKey(), entry.getValue());
         }
-        if (dialectName == null) {
-            dialectName = "fr.insset.jeanluc.el.dialect.BasicJavaDialect";
+        String prefix = (String) getParameter("prefix");
+        if (prefix != null && prefix.length()>0) {
+            ((Dialect)dialect).setPrefix(prefix);
         }
-        try {
-            Class dialectClass = loadClass(dialectName);
-            Object dialect = dialectClass.newInstance();
-            String prefix = (String) getParameter("prefix");
-            if (prefix != null && prefix.length()>0) {
-                ((Dialect)dialect).setPrefix(prefix);
-            }
-            context.put("_d", dialect);
-            context.put(DIALECT, dialect);
-            Logger.getGlobal().log(Level.FINE, "Added dialect " + context.get(DIALECT));
-        } catch (Exception ex) {
-            Logger.getLogger(VelocityAction.class.getName()).log(Level.SEVERE, "Unable to instanciate dialect " + dialectName, ex);
-        }
+        context.put("_d", dialect);
+        context.put(DIALECT, dialect);
+        Logger.getGlobal().log(Level.FINE, "Added dialect " + context.get(DIALECT));
 
     }
 

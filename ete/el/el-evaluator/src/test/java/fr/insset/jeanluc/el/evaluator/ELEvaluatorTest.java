@@ -2,7 +2,7 @@ package fr.insset.jeanluc.el.evaluator;
 
 import fr.insset.jeanluc.el.dialect.BasicJavaDialect;
 import static fr.insset.jeanluc.el.dialect.Dialect.DIALECT;
-import fr.insset.jeanluc.ete.api.EteException;
+import fr.insset.jeanluc.ete.defs.EteException;
 import fr.insset.jeanluc.ete.meta.model.core.impl.Factories;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 import fr.insset.jeanluc.ete.meta.model.emof.Stereotype;
