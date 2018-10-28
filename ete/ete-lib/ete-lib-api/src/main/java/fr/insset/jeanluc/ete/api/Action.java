@@ -1,6 +1,7 @@
 package fr.insset.jeanluc.ete.api;
 
 
+import fr.insset.jeanluc.el.dialect.BasicJavaDialect;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.MofPackage;
 import fr.insset.jeanluc.util.factory.FactoryRegistry;
@@ -162,13 +163,14 @@ public interface Action {
         if (dialectName == null) {
             dialectName = "fr.insset.jeanluc.el.dialect.BasicJavaDialect";
         }
+        Object dialect;
         try {
             Class<?> dialectClass = Class.forName(dialectName);
-            Object dialect = dialectClass.newInstance();
-            addParameter("dialect", dialect);
+            dialect = dialectClass.newInstance();
         } catch (Exception ex) {
-            throw new EteException(ex);
+            dialect = new BasicJavaDialect();
         }
+        addParameter("dialect", dialect);
     }
 
     public void    readAttributes() throws EteException;
