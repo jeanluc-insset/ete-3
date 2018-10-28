@@ -52,6 +52,7 @@ public interface ActionReader {
      */
     public  Object  readConfiguration(InputStream inInputStream) throws EteException;
     public  void    readAttributes(Action inoutAction, Object inParameter) throws EteException;
+    public  Object  readAttribute(Action inoutAction, Object inParameter, String inAttributeName) throws EteException;
     public  void    readChildren(Action inoutAction, Object inParameter) throws EteException;
 
 }

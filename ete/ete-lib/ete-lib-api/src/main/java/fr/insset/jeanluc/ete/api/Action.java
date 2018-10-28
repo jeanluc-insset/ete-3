@@ -106,6 +106,7 @@ public interface Action {
      */
     public default void init(MofPackage inPackage) throws EteException {
         FactoryRegistry.pushNewRegistry();
+        loadDialect();
         readAttributes();
     }
 
@@ -150,8 +151,28 @@ public interface Action {
     //========================================================================//
     // Every action has parameters
 
+    /**
+     * The dialect should be set first since some attributes may have expressions
+     * as values and these expressions are allowed to use the dialect
+     * 
+     * @throws EteException 
+     */
+    public default void loadDialect() throws EteException {
+        String      dialectName = (String) readAttribute("dialect");
+        if (dialectName == null) {
+            dialectName = "fr.insset.jeanluc.el.dialect.BasicJavaDialect";
+        }
+        try {
+            Class<?> dialectClass = Class.forName(dialectName);
+            Object dialect = dialectClass.newInstance();
+            addParameter("dialect", dialect);
+        } catch (Exception ex) {
+            throw new EteException(ex);
+        }
+    }
 
     public void    readAttributes() throws EteException;
+    public Object  readAttribute(String inAttributeName) throws EteException;
 
     public void    addParameter(String inName, Object inValue);
 

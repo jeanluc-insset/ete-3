@@ -94,6 +94,10 @@ public class XmlActionReader implements ActionReader {
         for (int i=0 ; i<attributes.getLength() ; i++) {
             Node item = attributes.item(i);
             String name = item.getNodeName();
+            // We are supposed to have already read the dialect
+            if ("dialect".equals(name)) {
+                continue;
+            }
             String stringValue = item.getNodeValue();
             try {
                 JSR341Evaluator evaluator = new JSR341Evaluator();
@@ -105,6 +109,19 @@ public class XmlActionReader implements ActionReader {
             }
         }       // loop over the attributes
     }       // readAttributes
+
+
+
+    @Override
+    public Object readAttribute(Action inoutAction, Object inParameter, String inAttributeName) throws EteException {
+        Element element = (Element) inParameter;
+        String attribute = element.getAttribute(inAttributeName);
+        JSR341Evaluator evaluator = new JSR341Evaluator();
+        Object value = evaluator.evaluate(attribute, inoutAction.getAllParameters());
+        inoutAction.addParameter(inAttributeName, value);
+        return value;
+    }
+
 
 
 }
