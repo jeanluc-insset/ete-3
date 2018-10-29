@@ -2,8 +2,8 @@ package ${current.package.name};
 
 
 
-#foreach ($aDependance in $current.dependencies)
-import ${dialect.getQualifiedName($aDependance)};
+#foreach ($aDependency in $dialect.getImports($current))
+import ${dialect.getQualifiedName($aDependency)};
 #end
 import java.util.List;
 import java.util.Set;

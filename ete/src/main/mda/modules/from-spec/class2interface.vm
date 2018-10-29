@@ -1,8 +1,8 @@
 package ${current.owningPackage};
 
 
-#foreach ($aDependance in $current.dependencies)
-import ${dialect.getQualifiedName($aDependance)};
+#foreach ($aDependency in $dialect.getImports($current))
+import ${dialect.getQualifiedName($aDependency)};
 #end
 #if ($current.hasStereotype("collection_operation"))
 import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
