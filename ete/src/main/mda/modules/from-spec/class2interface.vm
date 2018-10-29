@@ -1,7 +1,7 @@
 package ${current.owningPackage};
 
 
-#foreach ($aDependance in $current.dependances)
+#foreach ($aDependance in $current.dependencies)
 import ${dialect.getQualifiedName($aDependance)};
 #end
 #if ($current.hasStereotype("collection_operation"))
