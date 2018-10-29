@@ -64,11 +64,11 @@ public class NamedElementImpl extends MofElementImpl implements NamedElement {
 
 
 
-    public Collection<NamedElement>         getDependances() {
+    public Collection<NamedElement>         getDependencies() {
         return dependances;
     }
 
-    public void                             setDependances(Collection<NamedElement> inDependances) {
+    public void                             setDependencies(Collection<NamedElement> inDependances) {
         dependances = inDependances;
     }
 

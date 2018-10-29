@@ -1,7 +1,6 @@
 package fr.insset.jeanluc.ete.xlang;
 
 
-import fr.insset.jeanluc.ete.xlang.Statement;
 import fr.insset.jeanluc.ete.meta.model.types.TypedElement;
 import java.util.List;
 import java.util.Set;

@@ -89,12 +89,12 @@ public class PackageableElementTest {
         }
 
         @Override
-        public Collection<NamedElement> getDependances() {
+        public Collection<NamedElement> getDependencies() {
             throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override
-        public void setDependances(Collection<NamedElement> inDependances) {
+        public void setDependencies(Collection<NamedElement> inDependances) {
             throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET); //To change body of generated methods, choose Tools | Templates.
         }
 

@@ -1,5 +1,10 @@
 package ${current.package.name};
 
+
+
+#foreach ($aDependency in $dialect.getImports($current))
+import ${dialect.getQualifiedName($aDependency)};
+#end
 import java.util.List;
 import java.util.Set;
 import javax.annotation.Generated;
