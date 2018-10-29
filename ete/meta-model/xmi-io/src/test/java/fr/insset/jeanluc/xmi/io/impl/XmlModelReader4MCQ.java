@@ -135,6 +135,9 @@ public class XmlModelReader4MCQ {
 //        System.out.println("ValueOf datasource = " + valueOf);
 //        assertEquals("jdbc:sample", valueOf);
 
+        // 4 check dependencies
+        
+
     }       // testReadComplexModel
 
 

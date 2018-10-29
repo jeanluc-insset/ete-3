@@ -248,8 +248,16 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
             parentClass.addOwnedAttribute((MofProperty) inProperty);
             logger.log(Level.FINEST, "{0} added to {1}", new Object[]{inProperty.getName(), parentClass.getName()});
         }
-        if (inProperty.getType() == null) {
-            inProperty.setType(readType((Element)inParam[2], (EteModel)inParam[1]));
+
+        MofType     propertyType = inProperty.getType();
+        if (propertyType == null) {
+            propertyType = readType((Element)inParam[2], (EteModel)inParam[1]);
+            inProperty.setType(propertyType);
+            logger.log(Level.FINEST, "Reading {0} of type {1} in class {2}", new Object[]{inProperty.getName(), propertyType.getName(), parentClass});
+            if (parentClass != null && propertyType instanceof MofClass) {
+                logger.log(Level.FINE, "     We got a new dependency !");
+                parentClass.addDependency(propertyType);
+            }
         }
         logger.log(Level.FINER, "Type of {0} is {1}", new Object[]{inProperty.getName(), inProperty.getType()});
 
@@ -258,6 +266,7 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
             logger.log(Level.FINE, "Setting {0} to {1}", new Object[]{inProperty.getName(), stringValue});
             inProperty.setDefaultValue(stringValue);
         }
+        // Is it a "qualified" property ?
         NodeList elements = XmlUtilities.getElements("qualifier", elt);
         if (elements.getLength()>0) {
             Element qualifierElement = (Element)elements.item(0);
@@ -268,6 +277,8 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
         }
         
 //        We should read multiplicity
+
+//        We should read the reverse property if there is such
         return inProperty;
     }
 
@@ -351,10 +362,16 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
         properties[1].setOpposite(properties[0]);
         Classifier firstClass = properties[0].getOwningMofClass();
         Classifier secondClass = properties[1].getOwningMofClass();
-        if (null != secondClass.getName() && ! "void".equals(secondClass.getName()))
+        Logger logger = Logger.getGlobal();
+        logger.log(Level.INFO, "Looking for a dependance between " + firstClass.getName() + " and " + secondClass.getName());
+        if (null != secondClass.getName() && ! "void".equals(secondClass.getName())) {
+            logger.log(Level.INFO, "Adding a dependance " + firstClass.getName() + " to " + secondClass.getName());
             firstClass.addDependency(secondClass);
-        if (null != firstClass.getName() && ! "void".equals(firstClass.getName()))
+        }
+        if (null != firstClass.getName() && ! "void".equals(firstClass.getName())) {
+            logger.log(Level.INFO, "Adding a dependance " + secondClass.getName() + " to " + firstClass.getName());
             secondClass.addDependency(firstClass);
+        }
 
         memberEnds = getNamedElements("ownedEnd", "xmi:id", (Element)inParam[2], (EteModel) inParam[1]);
         for (NamedElement aNamedElement : memberEnds) {
