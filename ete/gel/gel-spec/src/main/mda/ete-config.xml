@@ -26,8 +26,8 @@
             <velocity template="parser-wrapper.vm"
                     target="../gel/gel-api/src/main/java/fr/insset/jeanluc/ete/gel/ParserWrapper.java"/>
 
-            <module src="modules/gel-impl-test/ete-config.xml"
-                    projectName="gel"/>
+<!--            <module src="modules/gel-impl-test/ete-config.xml"
+                    projectName="gel"/>-->
 
         </transformation-set>
 
