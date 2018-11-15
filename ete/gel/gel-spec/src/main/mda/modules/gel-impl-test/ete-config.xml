@@ -4,16 +4,13 @@
 <mda>
 
     <!--
-        This module receives the ${projectname} parameter.
+        This module receives the ${projectName} parameter.
+        The output_base parameter is set to ${projectName}
       -->
 
-    <transformation-set output_base="${projectname}/src/test/java/">
+    <transformation-set output_base="${projectName}-test-fmwk/src/main/java/">
 
-        <velocity template="test.vm"
-                target="fr/insset/jeanluc/ete/gel/impl/GelTest.java"/>
-        <velocity template="evaluator.vm"
-                dialect="fr.insset.jeanluc.el.dialect.BasicJavaDialect"
-                target="fr/insset/jeanluc/gel/impl/GelEvaluator.java"/>
+
     </transformation-set>
 
 </mda>

@@ -17,7 +17,7 @@
                             projectName="gel"
                             context="mof">
 
-                    <!--API and default implementation generation--> 
+            <!--API and default implementation generation--> 
             <module src="../../../../../src/main/mda/modules/language/ete-config.xml"
                     dialect="fr.insset.jeanluc.el.dialect.BasicJavaDialect"
                     projectName="gel"/>
@@ -26,9 +26,8 @@
             <velocity template="parser-wrapper.vm"
                     target="../gel/gel-api/src/main/java/fr/insset/jeanluc/ete/gel/ParserWrapper.java"/>
 
-            <velocity template="../../../../../src/main/mda/modules/from-spec/class2implementation.vm"
-                  target='${projectName}-impl/src/main/java/${current.owningPackage.name.replace(".", "/")}/impl/${current.name}Impl.java'
-            />
+<!--            <module src="modules/gel-impl-test/ete-config.xml"
+                    projectName="gel"/>-->
 
         </transformation-set>
 
