@@ -22,7 +22,7 @@ public class MofElementImpl implements MofElement {
     }
 
     @Override
-    public void addDependance(MofElement inDependance) {
+    public void addDependency(MofElement inDependance) {
         if (dependances == null) {
             dependances = new HashSet<>();
         }
@@ -30,7 +30,7 @@ public class MofElementImpl implements MofElement {
     }
 
     @Override
-    public void removeDependance(MofElement inDependance) {
+    public void removeDependency(MofElement inDependance) {
         if (dependances == null) {
             return;
         }
@@ -38,7 +38,7 @@ public class MofElementImpl implements MofElement {
     }
 
     @Override
-    public Set<MofElement> getDependance() {
+    public Set<MofElement> getDependency() {
         if (dependances == null) {
             return Collections.EMPTY_SET;
         }

@@ -35,7 +35,7 @@ public class MofPropertyImpl extends FeatureImpl implements MofProperty {
             inType = coll.getBaseType();
         }
         if (inType instanceof MofClass) {
-            this.getOwningMofClass().addDependance(inType);
+            this.getOwningMofClass().addDependency(inType);
         }
     }
 

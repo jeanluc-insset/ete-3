@@ -64,28 +64,6 @@ public class NamedElementImpl extends MofElementImpl implements NamedElement {
 
 
 
-    public Collection<NamedElement>         getDependencies() {
-        return dependances;
-    }
-
-    public void                             setDependencies(Collection<NamedElement> inDependances) {
-        dependances = inDependances;
-    }
-
-    public void                             addDependency(NamedElement inDependance) {
-        if (dependances == null) {
-            try {
-                dependances = FactoryMethods.newSet(NamedElement.class);
-            } catch (InstantiationException ex) {
-                throw new RuntimeException("Unable to create a set", ex);
-            }
-        }
-        dependances.add(inDependance);
-    }
-
-
-
-
 
     @Override
     public Collection<Stereotype> getStereotypes() {
@@ -169,7 +147,7 @@ public class NamedElementImpl extends MofElementImpl implements NamedElement {
     private String                              id;
     private Collection<Stereotype>              stereotypes;
     private Map<TagValueDeclaration, Object>    tagValues;
-    private Collection<NamedElement>            dependances;
+//    private Collection<NamedElement>            dependances;
     private Collection<Constraint>              constraints;
     private Collection<NamedElement>            ownedElements;
 

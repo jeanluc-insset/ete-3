@@ -56,7 +56,7 @@ public class MofOperationImpl extends FeatureImpl implements MofOperation {
             type = coll.getBaseType();
         }
         if (type instanceof MofClass) {
-            addDependance(type);
+            addDependency(type);
         }
     }
 

@@ -31,10 +31,6 @@ public interface NamedElement extends MofElement {
     }
 
 
-    public Collection<NamedElement>         getDependencies();
-    public void                             setDependencies(Collection<NamedElement> inDependances);
-    public void                             addDependency(NamedElement inDependance);
-
     public Collection<Stereotype>           getStereotypes();
     public void                             setStereotypes(Collection<Stereotype> inStereotypes);
     public default void                     addStereotype(Stereotype inStereotype) {

@@ -61,11 +61,11 @@ public interface MofType extends PackageableElement {
     }
 
 
-    public default Set<MofElement> getAllDependances() {
-        Set<MofElement>    result = getDependance();
+    public default Set<MofElement> getAllDependencies() {
+        Set<MofElement>    result = getDependency();
         Collection<MofType> superTypes = getSuperTypes();
         for (MofType aType : superTypes) {
-            result.addAll(aType.getAllDependances());
+            result.addAll(aType.getAllDependencies());
         }
         return result;
     }

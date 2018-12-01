@@ -16,17 +16,17 @@ public interface MofElement {
     public String                       getId();
     public void                         setId(String inId);
 
-    public  void                        addDependance(MofElement inDependance);
-    public  void                        removeDependance(MofElement inDependance);
-    public  Set<MofElement>             getDependance();
-    public  default Stream<MofElement>  getDependanceAsStream() {
-        return getDependance().stream();
+    public  void                        addDependency(MofElement inDependance);
+    public  void                        removeDependency(MofElement inDependance);
+    public  Set<MofElement>             getDependency();
+    public  default Stream<MofElement>  getDependencyAsStream() {
+        return getDependency().stream();
     }
-    public  default Set<MofElement>     getAllDependances() {
-        return getDependance();
+    public  default Set<MofElement>     getAllDependencies() {
+        return getDependency();
     }
-    public default Stream<MofElement>   getAllDependancesAsStream() {
-        return getAllDependances().stream();
+    public default Stream<MofElement>   getAllDependenciesAsStream() {
+        return getAllDependencies().stream();
     }
 
 

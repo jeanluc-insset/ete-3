@@ -21,22 +21,22 @@ public class XlangFactory {
         FactoryRegistry registry = FactoryRegistry.getRegistry();
         registry.registerDefaultFactory(MOF_TYPE, MofTypeImpl.class);
 
-        registry.registerDefaultFactory("method_invocation_statement",
-                    fr.insset.jeanluc.ete.xlang.impl.MethodInvocationImpl.class);        
-        registry.registerDefaultFactory("variable_declaration_statement",
-                    fr.insset.jeanluc.ete.xlang.impl.VariableDeclarationImpl.class);        
-        registry.registerDefaultFactory("do_while_statement",
-                    fr.insset.jeanluc.ete.xlang.impl.DoWhileLoopImpl.class);        
-        registry.registerDefaultFactory("if_statement",
-                    fr.insset.jeanluc.ete.xlang.impl.ConditionalImpl.class);        
-        registry.registerDefaultFactory("for_statement",
-                    fr.insset.jeanluc.ete.xlang.impl.ForLoopImpl.class);        
-        registry.registerDefaultFactory("assignment_statement",
-                    fr.insset.jeanluc.ete.xlang.impl.AssignmentImpl.class);        
-        registry.registerDefaultFactory("while_statement",
-                    fr.insset.jeanluc.ete.xlang.impl.WhileDoLoopImpl.class);        
         registry.registerDefaultFactory("allocation",
                     fr.insset.jeanluc.ete.xlang.impl.AllocationImpl.class);        
+        registry.registerDefaultFactory("method_invocation_statement",
+                    fr.insset.jeanluc.ete.xlang.impl.MethodInvocationImpl.class);        
+        registry.registerDefaultFactory("assignment_statement",
+                    fr.insset.jeanluc.ete.xlang.impl.AssignmentImpl.class);        
+        registry.registerDefaultFactory("if_statement",
+                    fr.insset.jeanluc.ete.xlang.impl.ConditionalImpl.class);        
+        registry.registerDefaultFactory("while_statement",
+                    fr.insset.jeanluc.ete.xlang.impl.WhileDoLoopImpl.class);        
+        registry.registerDefaultFactory("do_while_statement",
+                    fr.insset.jeanluc.ete.xlang.impl.DoWhileLoopImpl.class);        
+        registry.registerDefaultFactory("for_statement",
+                    fr.insset.jeanluc.ete.xlang.impl.ForLoopImpl.class);        
+        registry.registerDefaultFactory("variable_declaration_statement",
+                    fr.insset.jeanluc.ete.xlang.impl.VariableDeclarationImpl.class);        
 
     }
 

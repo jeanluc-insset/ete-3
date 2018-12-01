@@ -191,17 +191,17 @@ public class PackageableElementTest {
         }
 
         @Override
-        public void addDependance(MofElement inDependance) {
+        public void addDependency(MofElement inDependance) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override
-        public void removeDependance(MofElement inDependance) {
+        public void removeDependency(MofElement inDependance) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override
-        public Set<MofElement> getDependance() {
+        public Set<MofElement> getDependency() {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
     }           // PackageableElementImpl
