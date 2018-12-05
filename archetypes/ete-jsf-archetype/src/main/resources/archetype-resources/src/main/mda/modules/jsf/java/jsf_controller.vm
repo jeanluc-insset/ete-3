@@ -8,8 +8,10 @@ import ${symbol_dollar}{current.owningPackage.name}.model.${symbol_dollar}{curre
 import ${package}.ete.jsf.util.JsfUtil;
 import ${package}.ete.jsf.util.PaginationHelper;
 import ${symbol_dollar}{current.owningPackage.name}.jpa.${symbol_dollar}{current.name}Jpa;
-
-${symbol_pound}foreach (${symbol_dollar}aDependance in ${symbol_dollar}current.dependances)
+#foreach ($aDependance in $dialect.getImports($current))
+import ${aDependance.owningPackage.name}.model.${aDependance.name};
+#end
+${symbol_pound}foreach (${symbol_dollar}aDependance in ${symbol_dollar}dialect.getImports(${symbol_dollar}current))
 import ${symbol_dollar}{aDependance.owningPackage.name}.model.${symbol_dollar}{aDependance.name};
 ${symbol_pound}end
 ${symbol_pound}foreach (${symbol_dollar}aProperty in ${symbol_dollar}current.support.keySet())

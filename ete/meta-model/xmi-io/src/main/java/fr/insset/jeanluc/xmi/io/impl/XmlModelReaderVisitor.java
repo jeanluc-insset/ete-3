@@ -246,24 +246,26 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
         MofClass    parentClass = (MofClass) inParam[0];
         if (parentClass != null) {
             parentClass.addOwnedAttribute((MofProperty) inProperty);
-            logger.log(Level.FINEST, "{0} added to {1}", new Object[]{inProperty.getName(), parentClass.getName()});
+            logger.log(Level.FINER, "{0} added to {1}", new Object[]{inProperty.getName(), parentClass.getName()});
         }
 
         MofType     propertyType = inProperty.getType();
         if (propertyType == null) {
             propertyType = readType((Element)inParam[2], (EteModel)inParam[1]);
             inProperty.setType(propertyType);
-            logger.log(Level.FINEST, "Reading {0} of type {1} in class {2}", new Object[]{inProperty.getName(), propertyType.getName(), parentClass});
-            if (parentClass != null && propertyType instanceof MofClass) {
-                logger.log(Level.FINE, "     We got a new dependency !");
-                parentClass.addDependency(propertyType);
-            }
+            logger.log(Level.FINER, "Reading {0} of type {1} in class {2}", new Object[]{inProperty.getName(), propertyType.getName(), parentClass});
         }
-        logger.log(Level.FINER, "Type of {0} is {1}", new Object[]{inProperty.getName(), inProperty.getType()});
+        if (propertyType != null) {
+            if (parentClass != null && propertyType instanceof MofClass) {
+                logger.log(Level.INFO, "     " + parentClass.getName() + " depends of " + propertyType.getName());
+                parentClass.addDependency(propertyType);
+            }            
+        }
+        logger.log(Level.INFO, "Type of {0} is {1}", new Object[]{inProperty.getName(), inProperty.getType()});
 
         String stringValue = getStringValue("defaultValue/@value", elt);
         if (stringValue != null && ! "".equals(stringValue)) {
-            logger.log(Level.FINE, "Setting {0} to {1}", new Object[]{inProperty.getName(), stringValue});
+            logger.log(Level.FINER, "Setting {0} to default value: {1}", new Object[]{inProperty.getName(), stringValue});
             inProperty.setDefaultValue(stringValue);
         }
         // Is it a "qualified" property ?
@@ -273,7 +275,8 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
             MofType qualifierType = readType(qualifierElement, (EteModel)inParam[1]);
             inProperty.setQualifierType(qualifierType);
             inProperty.setQualifierName(qualifierElement.getAttribute("name"));
-            logger.log(Level.FINE, "QUALIFICATION - {0} : {1}", new Object[]{qualifierElement.getAttribute("name"), qualifierType});
+            logger.log(Level.INFO, "The property {0} is qualified by {1}: {2}", new Object[]{
+                inProperty.getName(), qualifierElement.getAttribute("name"), qualifierType});
         }
         
 //        We should read multiplicity

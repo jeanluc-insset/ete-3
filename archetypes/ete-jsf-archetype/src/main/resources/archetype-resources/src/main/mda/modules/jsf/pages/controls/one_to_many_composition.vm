@@ -9,9 +9,9 @@
                     </p:tab>
                 </p:accordionPanel>
             </ui:repeat>
-                <h:outputLabel value="new" for="new" />
-                <ete:${symbol_dollar}{var.type.baseType.name}_form
-                           selection="${symbol_pound}{${symbol_dollar}{dialect.i2lc($current.name)}Controller.new${symbol_dollar}{dialect.i2uc($varName)}}"
-                />
-                <h:outputText value=" "/>
-                <h:commandButton action="${symbol_pound}{${symbol_dollar}{dialect.i2lc($current.name)}Controller.addNew${symbol_dollar}{dialect.i2uc($varName)}}" value="Add"/>
+            <h:outputLabel value="new" for="new" />
+            <ete:${symbol_dollar}{var.type.baseType.name}_form
+                       selection="${symbol_pound}{${symbol_dollar}{dialect.i2lc($current.name)}Controller.new${symbol_dollar}{dialect.i2uc($varName)}}"
+            />
+            <h:outputText value=" "/>
+            <h:commandButton action="${symbol_pound}{${symbol_dollar}{dialect.i2lc($current.name)}Controller.addNew${symbol_dollar}{dialect.i2uc($varName)}}" value="Add"/>
