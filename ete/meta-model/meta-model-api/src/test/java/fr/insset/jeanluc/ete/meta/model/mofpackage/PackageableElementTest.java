@@ -88,20 +88,6 @@ public class PackageableElementTest {
             name = inName;
         }
 
-        @Override
-        public Collection<NamedElement> getDependencies() {
-            throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public void setDependencies(Collection<NamedElement> inDependances) {
-            throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public void addDependency(NamedElement inDependance) {
-            throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET); //To change body of generated methods, choose Tools | Templates.
-        }
 
         @Override
         public Collection<Stereotype> getStereotypes() {

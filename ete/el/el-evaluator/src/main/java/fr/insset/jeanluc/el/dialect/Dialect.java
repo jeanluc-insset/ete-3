@@ -44,6 +44,10 @@ public interface Dialect {
                                 ENTITY_PACKAGE          = "entitypackage";
 
 
+    /**
+     * ORM constant.<br>
+     * Any ORM uses the same concepts whatever the implementation language.
+     */
     public final static String  SIMPLE                  = "simple",
                                 MANY_SIMPLE             = "many_simple",
                                 DATE                    = "date",
@@ -182,13 +186,13 @@ public interface Dialect {
     }
 
 
-    //========================================================================//
-    //                                  O R M                                 //
-    //========================================================================//
+    //==========================================================================//
+    //                                   O R M                                  //
+    //==========================================================================//
 
     /**
      * <div>
-     * WARNING : the bidirectional many to many assoication is messy.
+     * WARNING : the bidirectional many to many association is messy.
      * </div>
      * 
      * To build a persistence model, we need to find out whether the

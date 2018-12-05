@@ -1,5 +1,6 @@
 package fr.insset.jeanluc.el.dialect;
 
+import fr.insset.jeanluc.ete.meta.model.core.MofElement;
 import fr.insset.jeanluc.ete.meta.model.core.NamedElement;
 import static fr.insset.jeanluc.ete.meta.model.core.PrimitiveDataTypes.BOOLEAN_TYPE;
 import static fr.insset.jeanluc.ete.meta.model.core.PrimitiveDataTypes.DATE_TYPE;
@@ -21,10 +22,12 @@ import fr.insset.jeanluc.ete.meta.model.types.collections.MofOrderedSet;
 import fr.insset.jeanluc.ete.meta.model.types.collections.MofSequence;
 import fr.insset.jeanluc.ete.meta.model.types.collections.MofSet;
 import fr.insset.jeanluc.ete.util.XList;
+import fr.insset.jeanluc.util.factory.FactoryMethods;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -244,6 +247,18 @@ public interface JavaDialect extends Dialect {
         }
         builder.append("        return builder.toString();");
         return builder.toString();
+    }
+
+    public default Set<MofType> getImports(MofType inCurrent) throws InstantiationException {
+        System.out.println("getImports of " + inCurrent.getName());
+        System.out.println("dependencies : " + inCurrent.getAllDependencies() + " :" + inCurrent.getAllDependencies().size() + " item(s)");
+        Set<MofType>    result = FactoryMethods.newSet(MofType.class);
+        for (MofElement anElement : inCurrent.getAllDependencies()) {
+            if (anElement instanceof MofType) {
+                result.add((MofType) anElement);
+            }
+        }
+        return result;
     }
 
     /**
