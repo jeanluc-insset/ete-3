@@ -1,15 +1,19 @@
 package fr.insset.jeanluc.as2java;
 
 
+import fr.insset.jeanluc.action.semantics.builder.EnhancedMofClassImpl;
 import fr.insset.jeanluc.action.semantics.builder.EteQuery;
 import fr.insset.jeanluc.el.dialect.JavaDialect;
 import fr.insset.jeanluc.ete.gel.AttributeNav;
 import fr.insset.jeanluc.ete.gel.GelExpression;
 import fr.insset.jeanluc.ete.gel.Includes;
+import fr.insset.jeanluc.ete.gel.Nav;
 import fr.insset.jeanluc.ete.gel.Self;
 import fr.insset.jeanluc.ete.gel.Step;
 import fr.insset.jeanluc.ete.gel.impl.*;
 import fr.insset.jeanluc.ete.meta.model.emof.Feature;
+import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
+import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
 import fr.insset.jeanluc.ete.xlang.VariableDeclaration;
 import fr.insset.jeanluc.ete.xlang.to.xxx.Generator;
 import fr.insset.jeanluc.util.factory.FactoryMethods;
@@ -155,6 +159,35 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
         }       // jpaOperator != null
         buffer.append(")");
         return inExpression;
+    }
+
+
+    public String getDependentProperties(MofProperty inProperty, EnhancedMofClassImpl inTargetClass) {
+        StringBuilder   builder = new StringBuilder();
+        boolean         notTheFirstOne = false;
+        System.out.println("Requesting dependent properties of " + inProperty.getName() + " in " + inTargetClass.getName());
+        for (EteQuery aQuery : inTargetClass.getSupport().get(inProperty)) {
+            System.out.println("  Found a query");
+            for (VariableDeclaration aVar : aQuery.getVariables()) {
+                System.out.println("    Found a variable");
+                GelExpression initValue = aVar.getInitValue();
+                if (initValue instanceof AttributeNav) {
+                    if (notTheFirstOne) builder.append(' ');
+                    AttributeNav nav = (AttributeNav) initValue;
+                    System.out.println("    the variable is a navigation to " + nav.getToFeature().getName());
+                    builder.append(nav.getToFeature().getName());
+                    notTheFirstOne = true;
+                }
+            }
+        }
+        return builder.toString();
+        /*
+#foreach ($aQuery in $targetClass.support.get($var))
+#foreach ($aVar in $aQuery.variables)
+    $aVar.initValue.toFeature.name
+#end
+#end  
+*/
     }
 
 

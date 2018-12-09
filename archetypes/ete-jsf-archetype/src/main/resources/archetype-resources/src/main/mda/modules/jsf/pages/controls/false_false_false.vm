@@ -1,0 +1,9 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+## TODO : select the kind of input
+                    <h:inputSelectOne value="${symbol_pound}{${symbol_dollar}{scope}${symbol_dollar}{varName}}">
+                        <f:selectitems items="#{${dialect.i2lc($var.type.name)}Controller.itemsAvailableSelectOne}"/>
+## TODO : add the dependencies
+                        <f:ajax/>
+                    </h:inputSelectOne>

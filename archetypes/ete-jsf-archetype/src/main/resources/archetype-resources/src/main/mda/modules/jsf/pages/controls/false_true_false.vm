@@ -1,0 +1,6 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+                    <h:outputText value="template for ${symbol_dollar}{varName}  : "/>
+                    <h:outputText value="false_true_false"/>
+
