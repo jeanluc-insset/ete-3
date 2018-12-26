@@ -36,6 +36,7 @@ import java.util.logging.Logger;
  */
 public class JPAGenerator extends DynamicVisitorSupport implements Generator, JavaDialect  {
 
+    public final static Level       LOG_LEVEL = Level.INFO;
 
     public JPAGenerator() throws InstantiationException {
         this("    ");
@@ -164,21 +165,27 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
 
     public String getDependentProperties(MofProperty inProperty, EnhancedMofClassImpl inTargetClass) {
         StringBuilder   builder = new StringBuilder();
-        boolean         notTheFirstOne = false;
-        System.out.println("Requesting dependent properties of " + inProperty.getName() + " in " + inTargetClass.getName());
-        for (EteQuery aQuery : inTargetClass.getSupport().get(inProperty)) {
-            System.out.println("  Found a query");
-            for (VariableDeclaration aVar : aQuery.getVariables()) {
-                System.out.println("    Found a variable");
-                GelExpression initValue = aVar.getInitValue();
-                if (initValue instanceof AttributeNav) {
-                    if (notTheFirstOne) builder.append(' ');
-                    AttributeNav nav = (AttributeNav) initValue;
-                    System.out.println("    the variable is a navigation to " + nav.getToFeature().getName());
-                    builder.append(nav.getToFeature().getName());
-                    notTheFirstOne = true;
+        try {
+            boolean         notTheFirstOne = false;
+            Logger.getGlobal().log(LOG_LEVEL, "Requesting dependent properties of ");
+            Logger.getGlobal().log(LOG_LEVEL, "    {0} in {1}", new Object[]{inProperty, inTargetClass});
+            for (EteQuery aQuery : inTargetClass.getSupport().get(inProperty)) {
+                Logger.getGlobal().log(LOG_LEVEL, "  Found a query");
+                for (VariableDeclaration aVar : aQuery.getVariables()) {
+                    Logger.getGlobal().log(LOG_LEVEL, "    Found a variable");
+                    GelExpression initValue = aVar.getInitValue();
+                    if (initValue instanceof AttributeNav) {
+                        if (notTheFirstOne) builder.append(' ');
+                        AttributeNav nav = (AttributeNav) initValue;
+                        Logger.getGlobal().log(LOG_LEVEL, "    the variable is a navigation to {0}", nav.getToFeature().getName());
+                        builder.append(nav.getToFeature().getName());
+                        notTheFirstOne = true;
+                    }
                 }
             }
+        } catch (Exception ex) {
+            Logger.getGlobal().log(Level.WARNING, "Exception in JPAGenerator.getDependentProperties : {0}", ex);
+            return null;
         }
         return builder.toString();
         /*
