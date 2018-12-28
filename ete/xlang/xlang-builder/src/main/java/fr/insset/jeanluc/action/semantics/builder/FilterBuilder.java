@@ -29,31 +29,58 @@ import java.util.logging.Logger;
 
 /**
  * <div>
- * An instance of this class builds a filter for every property used in any
- * invariant.<br>
+ * An instance of this class builds a query for every property and adds a filter
+ * for every invariant involving that property.<br>
  * For example in the airflight domain, within the context of the Flight class,
  * the "crew invariant" states that the captain and the copilot must be two
  * distinct Pilots.<br>
- * This leads to build two operations :<br>
- * <code><pre>getCopilotForCrew(inContext : Flight) : Pilot[*]
- * filterCaptainForCrew(inContext : Flight) : Pilot[*]
- * </pre></code>
+ * This leads to build four operations :
+ * <ul>
+ * <li><code>getAllPilotAsCaptainForFlight(inContext : Flight) : Pilot[*]</code></li>
+ * <li><code>filterCaptainForCrew(inContext : Flight) : Pilot[*]</code></li>
+ * <li><code>getAllPilotAsCopilotForFlight(inContext : Flight) : Pilot[*]</code></li>
+ * <li><code>filterCopilotForCrew(inContext : Flight) : Pilot[*]</code></li>
+ * </ul>
+ * The getXxx operations are queries.<br>
+ * The filterXxx operations are ... filters !<br>
  * Furthermore, the captain must be licensed. The invariant<br>
  * context Flight inv captainMusBeLicenced: self.captain.licences.type -&gt; includes(self.plane.type)
  * <br>
- * leads to the operation<br>
- * Finally, two synthetic queries are added :<br>
- * <code>getCaptainForFlight(inFlight : Flight)<br>
- * getCopilotForFlight(inFlight : Flight)</code>
- * <code>filterCaptainForTheCaptainMustBeLicensed(inContext : Flight) : Pilot[*]</code><br>
- * Remark : these filters must be added to the Pilot class but they are built
- * while parsing the invariants of the Flight class.
+ * adds the filter<br>
+ * <code>filterCaptainForCaptainIsCertified(inContext : Flight)</code><br>
+ * Remark : these queries and filters are added to the Pilot class but they are
+ * built while parsing the invariants of the Flight class.
  * </div>
  * <div>
- * While traversing a GelExpression, the FilterBuilder builds a another
+ * While traversing a GelExpression, the FilterBuilder builds another
  * GelExpression ; this GelExpression is the same than the traversed
  * GelExpression but navigations are replaced by variables.<br>
  * </div>
+ * <div>
+ * Summary :<ul>
+ * <li>we add each property A.x : B to the "support" of B</li>
+ * <li>we add each invariant context A inv P(A.x, A.y, B.z) to the "dependances of each property involved in the invariant.rgt
+ * B can be reached transitively</li>
+ * <li>we build a filter expression for each property B.z involved in invariant P in A (B can be A)</li>
+ * <li>the filter means "filter instances of B such that A::P is true for a"</li>
+ * <li>when generating code, each variable in the support is translated to a query <code>getBbbAsXxxFor(aaa : Aaa)</code></li>
+ * <li>and each filter is translated to a... filter <code>filterBbbForPpp(aaa : Aaa)</code></li>
+ * <li>the query invokes the filters</li>
+ * </ul>
+ * </div>
+ * <div>
+ * Actually, the process is slightly more complicated. If an invariant P in
+ * context Aaa contains an expression such that : self.xxxx.yyy.zzz.ttt, we build
+ * four filters (Aaa.xxx is of type Xxx, Xxx.yyy is of type Yyy, Yyy.zzz is of
+ * type Zzz and Zzz.ttt is of type Ttt)
+ * <ul>
+ * <li><code>filterAllXxxAsXxxInPppFor(Aaa aaa)</code> in class Xxx</li>
+ * <li><code>filterAllYyyAsXxxInPppFor(Aaa aaa)</code> in class Yyy</li>
+ * <li><code>filterAllZzzAsXxxInPppFor(Aaa aaa)</code> in class Zzz</li>
+ * <li><code>filterAllTttAsXxxInPppFor(Aaa aaa)</code> in class Ttt</li>
+ * </ul>
+ * </div>
+ * 
  * 
  * @author jldeleage
  */
@@ -153,7 +180,7 @@ public class FilterBuilder extends DynamicVisitorSupport {
                 if (type instanceof EnhancedMofClassImpl) {
                     EnhancedMofClassImpl    targetClass = (EnhancedMofClassImpl) type;
                     System.out.println("Adding " + aProperty.getName() + " to the support of " + targetClass.getName());
-                    targetClass.getSupport().put(aProperty, FactoryMethods.newList(EteQuery.class));
+                    targetClass.getSupport().put(aProperty, FactoryMethods.newList(EteFilter.class));
                     // Debugging only : the next line MUST BE REMOVED
                     targetClass.getSupport();
                 }
@@ -193,7 +220,7 @@ public class FilterBuilder extends DynamicVisitorSupport {
                             aDeclaration.getInitValue().getClass(),
                             anInvariant.getSpecificationAsString()
                         });
-                MofType type = aDeclaration.getType();
+                MofType type = aDeclaration.getType().getRecBaseType();
                 if (type instanceof EnhancedMofClassImpl) {
                     buildOneQuery(inMofClass, (EnhancedMofClassImpl) type,
                             aDeclaration, anInvariant, copy, result);
@@ -209,7 +236,7 @@ public class FilterBuilder extends DynamicVisitorSupport {
     protected void buildOneQuery(MofClass inMofClass,
         EnhancedMofClassImpl targetClass, VariableDeclaration aDeclaration,
         Invariant anInvariant, GelExpression copy, List<VariableDeclaration> result) {
-        EteQuery query = new EteQuery();
+        EteFilter query = new EteFilter();
         query.setClientClass(inMofClass);
         AttributeNav nav = (AttributeNav) aDeclaration.getInitValue();
         MofProperty toFeature = (MofProperty) nav.getToFeature();
@@ -307,7 +334,7 @@ public class FilterBuilder extends DynamicVisitorSupport {
      * Builds the actual expression for a Query
      */
     public class ExpressionBuilder extends DynamicVisitorSupport {
-        public ExpressionBuilder(EteQuery inQuery) {
+        public ExpressionBuilder(EteFilter inQuery) {
         }
         public GelExpression visitAttributeNav(AttributeNav inNav, Object... inParameters) {
             return inNav;
