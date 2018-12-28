@@ -14,8 +14,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * A EteQuery aims to be translated to filter expressions in a stream, an
- * Observable or to "where" statements in an SQL query.<br>
+ * A EteFilter aims to be translated to filter expressions in a stream, an
+ Observable or to "where" statements in an SQL query.<br>
  * For example, the invariant <code>captain &lt;&gt; copilot</code> gives two
  * filters&nbsp;:<ul>
  * <li>
@@ -47,7 +47,7 @@ import java.util.logging.Logger;
  *
  * @author jldeleage
  */
-public class EteQuery {
+public class EteFilter {
 
     public MofClass getClientClass() {
         return clientClass;
