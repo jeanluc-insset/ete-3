@@ -32,8 +32,8 @@ public class XLangAction extends ActionSupport {
         registry.registerFactory(MOF_CLASS, EnhancedMofClassImpl.class);
         registry.registerFactory(MOF_OPERATION, EnhancedMofOperationImpl.class);
         registry.registerFactory(INVARIANT, EnhancedInvariantImpl.class);
-        registry.registerFactory(POSTCONDITION, EnhancedPostcondition.class);
-        registry.registerFactory(PRECONDITION, EnhancedPrecondition.class);
+        registry.registerFactory(POSTCONDITION, EnhancedPostconditionImpl.class);
+        registry.registerFactory(PRECONDITION, EnhancedPreconditionImpl.class);
     }
 
     @Override

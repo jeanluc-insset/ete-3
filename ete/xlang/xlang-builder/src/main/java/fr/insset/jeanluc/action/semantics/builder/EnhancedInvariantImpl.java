@@ -6,6 +6,8 @@ import fr.insset.jeanluc.ete.gel.GelExpression;
 import fr.insset.jeanluc.ete.meta.model.constraint.Invariant;
 import fr.insset.jeanluc.ete.meta.model.constraint.impl.InvariantImpl;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
+import fr.insset.jeanluc.util.factory.FactoryMethods;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,6 +17,13 @@ import java.util.List;
  */
 public class EnhancedInvariantImpl extends InvariantImpl implements Invariant {
 
+
+    public EnhancedInvariantImpl(GelExpression expression) throws InstantiationException {
+        this.expression = expression;
+        support = FactoryMethods.newList(MofProperty.class);
+    }
+
+
     public GelExpression getExpression() {
         return expression;
     }
@@ -23,11 +32,11 @@ public class EnhancedInvariantImpl extends InvariantImpl implements Invariant {
         this.expression = expression;
     }
 
-    public List<MofProperty> getSupport() {
+    public Collection<MofProperty> getSupport() {
         return support;
     }
 
-    public void setSupport(List<MofProperty> support) {
+    public void setSupport(Collection<MofProperty> support) {
         this.support = support;
     }
 
@@ -37,6 +46,10 @@ public class EnhancedInvariantImpl extends InvariantImpl implements Invariant {
 
 
     private     GelExpression               expression;
-    private     List<MofProperty>           support = new LinkedList<>();
+    /**
+     * The list of MofProperties involved in the invariant.<br>
+     * Any step of any navigation is stored here.
+     */
+    private     Collection<MofProperty>           support;
 
 }

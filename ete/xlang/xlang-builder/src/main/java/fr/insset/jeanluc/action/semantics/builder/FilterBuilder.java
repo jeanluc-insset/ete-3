@@ -180,7 +180,7 @@ public class FilterBuilder extends DynamicVisitorSupport {
                 if (type instanceof EnhancedMofClassImpl) {
                     EnhancedMofClassImpl    targetClass = (EnhancedMofClassImpl) type;
                     System.out.println("Adding " + aProperty.getName() + " to the support of " + targetClass.getName());
-                    targetClass.getSupport().put(aProperty, FactoryMethods.newList(EteFilter.class));
+                    targetClass.getSupport().put(aProperty, FactoryMethods.newList(EteQuery.class));
                     // Debugging only : the next line MUST BE REMOVED
                     targetClass.getSupport();
                 }
@@ -236,7 +236,7 @@ public class FilterBuilder extends DynamicVisitorSupport {
     protected void buildOneQuery(MofClass inMofClass,
         EnhancedMofClassImpl targetClass, VariableDeclaration aDeclaration,
         Invariant anInvariant, GelExpression copy, List<VariableDeclaration> result) {
-        EteFilter query = new EteFilter();
+        EteQuery query = new EteQuery();
         query.setClientClass(inMofClass);
         AttributeNav nav = (AttributeNav) aDeclaration.getInitValue();
         MofProperty toFeature = (MofProperty) nav.getToFeature();
@@ -334,7 +334,7 @@ public class FilterBuilder extends DynamicVisitorSupport {
      * Builds the actual expression for a Query
      */
     public class ExpressionBuilder extends DynamicVisitorSupport {
-        public ExpressionBuilder(EteFilter inQuery) {
+        public ExpressionBuilder(EteQuery inQuery) {
         }
         public GelExpression visitAttributeNav(AttributeNav inNav, Object... inParameters) {
             return inNav;

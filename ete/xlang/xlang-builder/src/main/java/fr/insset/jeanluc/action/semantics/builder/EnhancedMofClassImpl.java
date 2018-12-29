@@ -28,11 +28,11 @@ public class EnhancedMofClassImpl extends MofClassImpl {
     }
 
 
-    public void addQuery(EteFilter inFilter) {
+    public void addQuery(EteQuery inFilter) {
         MofProperty filteredProperty = inFilter.getFilteredProperty();
-        List<EteFilter> filters = support.computeIfAbsent(filteredProperty, f -> {
+        List<EteQuery> filters = support.computeIfAbsent(filteredProperty, f -> {
             try {
-                return FactoryMethods.newList(EteFilter.class);
+                return FactoryMethods.newList(EteQuery.class);
             } catch (InstantiationException ex) {
                 throw new EteException(ex);
             }
@@ -42,7 +42,7 @@ public class EnhancedMofClassImpl extends MofClassImpl {
 
 
 
-    public Map<MofProperty, List<EteFilter>> getSupport() {
+    public Map<MofProperty, List<EteQuery>> getSupport() {
         System.out.println("Requesting support of class " + getName() + " : " + support);
         return support;
     }
@@ -66,7 +66,7 @@ public class EnhancedMofClassImpl extends MofClassImpl {
      * the Flight entity and are used as keys in the support property of the
      * Pilot entity.
      */
-    private Map<MofProperty, List<EteFilter>>   support = new HashMap<>();
+    private Map<MofProperty, List<EteQuery>>   support = new HashMap<>();
 
 
 }

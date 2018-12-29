@@ -73,7 +73,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         register(Precondition.class, "visitPrecondition");
         register(Postcondition.class, "visitPostcondition");
         register(Invariant.class, "visitEnhancedInvariantImpl");
-        register(EnhancedPostcondition.class, "visitEnhancedPostcondition");
+        register(EnhancedPostconditionImpl.class, "visitEnhancedPostcondition");
         // Registration of the methods to visit gel expression
         register("gelVisit", "fr.insset.jeanluc.ete.gel");
         register(EteModel.class, "visitEteModel");
@@ -85,7 +85,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         inoutRegistry.registerFactory(MOF_CLASS, fr.insset.jeanluc.action.semantics.builder.EnhancedMofClassImpl.class);
         inoutRegistry.registerFactory(MOF_OPERATION, fr.insset.jeanluc.action.semantics.builder.EnhancedMofOperationImpl.class);
         inoutRegistry.registerFactory(INVARIANT, EnhancedInvariantImpl.class);
-        inoutRegistry.registerFactory(POSTCONDITION, EnhancedPostcondition.class);
+        inoutRegistry.registerFactory(POSTCONDITION, EnhancedPostconditionImpl.class);
     }
 
 
@@ -133,7 +133,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
 
 
 
-    public EnhancedPrecondition    visitEnhancedPrecondition(EnhancedPrecondition inCondition, Object... inParameters) throws InstantiationException {
+    public EnhancedPreconditionImpl    visitEnhancedPrecondition(EnhancedPreconditionImpl inCondition, Object... inParameters) throws InstantiationException {
         Logger logger = Logger.getLogger(getClass().getName());
         logger.log(Level.FINE, VISIT_OF, inCondition.getSpecificationAsString());
 
@@ -150,7 +150,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
 
 
 
-    public EnhancedPostcondition    visitEnhancedPostcondition(EnhancedPostcondition inCondition, Object... inParameters) throws InstantiationException {
+    public EnhancedPostconditionImpl    visitEnhancedPostcondition(EnhancedPostconditionImpl inCondition, Object... inParameters) throws InstantiationException {
         Logger logger = Logger.getLogger(getClass().getName());
         logger.log(Level.FINE, VISIT_OF, inCondition.getSpecificationAsString());
 
@@ -235,7 +235,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         gelContext.set("contextualClass", parser);
         TreeBuilder     treeBuilder           = new TreeBuilder(gelContext);
         GelExpression   expression            = treeBuilder.visitGelExpression(ctx);
-        ((EnhancedPostcondition)inCondition).setExpression(expression);
+        ((EnhancedPostconditionImpl)inCondition).setExpression(expression);
         logger.log(Level.FINER, "GelExpression : {0}", expression);
 
         return expression;

@@ -5,7 +5,7 @@ package fr.insset.jeanluc.xlang2java;
 
 import fr.insset.jeanluc.action.semantics.builder.ConditionVisitor;
 import fr.insset.jeanluc.action.semantics.builder.EnhancedMofClassImpl;
-import fr.insset.jeanluc.action.semantics.builder.EteFilter;
+import fr.insset.jeanluc.action.semantics.builder.EteQuery;
 import fr.insset.jeanluc.as2java.JPAGenerator;
 import fr.insset.jeanluc.ete.api.EteException;
 import fr.insset.jeanluc.ete.gel.Step;
@@ -95,9 +95,9 @@ public class JpaGeneratorTest {
         EnhancedMofClassImpl pilotClass = (EnhancedMofClassImpl) result.getElementByName("Pilot");
         EnhancedMofClassImpl flightClass = (EnhancedMofClassImpl) result.getElementByName("Flight");        
         MofProperty          captain = flightClass.getOwnedAttribute("captain");
-        Map<MofProperty, List<EteFilter>> support = pilotClass.getSupport();
-        List<EteFilter> queries = support.get(captain);
-        EteFilter    aQuery = queries.get(0);
+        Map<MofProperty, List<EteQuery>> support = pilotClass.getSupport();
+        List<EteQuery> queries = support.get(captain);
+        EteQuery    aQuery = queries.get(0);
         List<VariableDeclaration> variables = aQuery.getVariables();
         JPAGenerator    generator = new JPAGenerator();
         String jpa = generator.getPredicate(aQuery);
@@ -129,9 +129,9 @@ public class JpaGeneratorTest {
         EnhancedMofClassImpl pilotClass = (EnhancedMofClassImpl) result.getElementByName("Pilot");
         EnhancedMofClassImpl flightClass = (EnhancedMofClassImpl) result.getElementByName("Flight");        
         MofProperty          captain = flightClass.getOwnedAttribute("captain");
-        Map<MofProperty, List<EteFilter>> support = pilotClass.getSupport();
-        List<EteFilter> queries = support.get(captain);
-        EteFilter    aQuery = queries.get(0);
+        Map<MofProperty, List<EteQuery>> support = pilotClass.getSupport();
+        List<EteQuery> queries = support.get(captain);
+        EteQuery    aQuery = queries.get(0);
         List<VariableDeclaration> variables = aQuery.getVariables();
         JPAGenerator    generator = new JPAGenerator();
         String predicate = generator.getPredicate(aQuery);

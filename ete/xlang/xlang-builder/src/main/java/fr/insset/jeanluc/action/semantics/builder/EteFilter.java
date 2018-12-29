@@ -2,60 +2,90 @@ package fr.insset.jeanluc.action.semantics.builder;
 
 
 
-import fr.insset.jeanluc.ete.gel.GelExpression;
-import fr.insset.jeanluc.ete.gel.impl.IntegerLiteralImpl;
 import fr.insset.jeanluc.ete.meta.model.constraint.Invariant;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
-import fr.insset.jeanluc.ete.xlang.VariableDeclaration;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 /**
- * A EteFilter aims to be translated to filter expressions in a stream, an
- Observable or to "where" statements in an SQL query.<br>
- * For example, the invariant <code>captain &lt;&gt; copilot</code> gives two
- * filters&nbsp;:<ul>
- * <li>
- *      <ul>
- *          <li>filtered class : Pilot</li>
- *          <li>client class : Flight</li>
- *          <li>filtered property : captain</li>
- *          <li>invariant : crew</li>
- *          <li>gelExpression : captain &lt;&gt; copilot</li>
- *      </ul>
- *      <ul>
- *          <li>filtered class : Pilot</li>
- *          <li>client class : Flight</li>
- *          <li>filtered property : copilot</li>
- *          <li>invariant : crew</li>
- *          <li>gelExpression : captain &lt;&gt; copilot</li>
- *      </ul>
+ * <div>
+ * An EteFilter is used to add "where" clauses to an EteQuery.<br>
+ * 
+ * For every navigation step of every invariant one or more filters are generated.<br>
+ * Each filter is added to a query.
+ * </div>
+ * <div>
+ * For example, if the navigation self.xxx.yyy.zzz is used in an invariant Ppp of
+ * the A class, where A::xxx is instance of the X class, X::yyy is
+ * instance of the class Y and Y::zzz is instance of the Z class, we build
+ * the following queries and filters filters&nbsp;:<ul>
+ * <li>the query <code>getAllXAsXxxFor(A aaa)</code>. The query contains
+ * the filters&nbsp;:<ul>
+ *      <li>filterXAsXxxInPppFor(Aaa aaa, Object inoutQuery)</li>
+ *      <li>filterYAsYyyInPppFor(Aaa aaa, Object inoutQuery)</li>
+ *      <li>filterZAsZzzInPppFor(Aaa aaa, Object inoutQuery)</li>
+ * </ul>
+ * </li>
+ * <li>the query <code>getAllYAsYyyFor(X xxx)</code>. The query contains
+ * the filters&nbsp;:<ul>
+ *      <li>filterYAsYyyInPppFor(X xxx, Object inoutQuery)</li>
+ *      <li>filterZAsZzzInPppFor(Y yyy, Object inoutQuery)</li>
+ * </ul>
+ * </li>
+ * <li>the query <code>getAllZAsZzzFor(Y yyy)</code>. The query contains
+ * the filter&nbsp;:<ul>
+ *      <li>filterZAsZzzInPppFor(Y yyy, Object inoutQuery)</li>
+ * </ul>
  * </li>
  * </ul>
- * The first instance will hold the additional information :<ul>
- * <li></li>
+ * </div>
+ * <div>
+ * More concretely, let's consider the "captainIsCertified" invariant in
+ * Flight class, in the insset-airways sample&nbsp;:<br>
+ * <code>self.captain.certificates.planeModel->includes(self.plane.planeModel)</code><br>
+ * We build the queries and filters&nbsp;:<ul>
+ * <li>
+ * the query <code>getAllPilotAsCaptainFor(Flight flight)</code> which contains
+ * the filters&nbsp;:<ul>
+ *      <li><code>filterPilotAsCaptainInCaptainIsCertifiedFor(Flight flight)</code></li>
  * </ul>
- * With all this information, the JPA Generator will generate for that instance :<br>
- * <code><pre>public CriteriaQuery&lt;Pilot&gt; filterCaptainForCrew(Flight inFlight, CriteriaQuery inQuery) {
- *    
- *    return inQuery;
- * }
- * </pre></code>
- *
+ * </li>
+ * <li>
+ * the query <code> getAllCertificateAsCertificateFor(Pilot pilot)</code> which
+ * contains the filter&nbsp;:<ul>
+ *      <li>filterCertificateInCaptainIsCertifiedFor(Pilot pilot)*</li>
+ * </ul>
+ * </li>
+ * <li>
+ * the query <code>getAllPlaneModelAsPlaneModelFor(Certificate certificate)</code>
+ * which contains the filter&nbsp;:<ul>
+ *      <li>filterPlaneModelInCaptaintIsCertifiedFor(Certificate certificate)*</li>
+ * </ul>
+ * </li>
+ * <li>
+ * the query <code>getAllPlaneAsPlaneFor(Flight flight)</code>
+ * which contains the filter&nbsp;:<ul>
+ *      <li><code>filterPlaneAsPlaneInCaptainIsCertified(Flight flight)</code></li>
+ * </ul>
+ * </li>
+ * <li>
+ * the query <code>getAllPlaneModelAsPlaneModelFor(Plane plane)</code> which
+ * contains the filter&nbsp;:<ul>
+ *      <li><code>filterPlaneModelAsPlaneModelInCaptainIsCertifiedFor(Plane plane)</code></li>
+ * </ul>
+ * </li>
+ * </ul>
+ * The filters marked with "*" do not do anything.
+ * </div>
+ * 
+ * <div>
+ * A filter 
+ * </div>
+ * 
  * @author jldeleage
  */
 public class EteFilter {
 
-    public MofClass getClientClass() {
-        return clientClass;
-    }
-
-    public void setClientClass(MofClass clientClass) {
-        this.clientClass = clientClass;
-    }
 
     public MofProperty getFilteredProperty() {
         return filteredProperty;
@@ -73,70 +103,8 @@ public class EteFilter {
         this.invariant = invariant;
     }
 
-    public GelExpression getExpression() {
-        return expression;
-    }
 
-    public void setExpression(GelExpression expression) {
-        this.expression = expression;
-    }
-
-    public GelExpression getVariableValue(String inVariable) {
-        final String    QUARANTE_DEUX = "42";
-        Logger.getGlobal().log(Level.FINE, "getVariableValue for {0}", inVariable);
-        IntegerLiteralImpl result = new IntegerLiteralImpl();
-        result.setValueAsString(QUARANTE_DEUX);
-        return result;
-    }
-
-
-
-
-    public List<VariableDeclaration> getVariables() {
-        return variables;
-    }
-
-    public void setVariables(List<VariableDeclaration> variables) {
-        this.variables = variables;
-    }
-
-
-
-
-    public void addVariable(VariableDeclaration inValue) {
-        this.variables.add(inValue);
-    }
-
-
-
-    public String getPropertyName() {
-        return getFilteredProperty().getName();
-    }
-
-//    public void setPropertyName(String propertyName) {
-//        this.propertyName = propertyName;
-//    }
-
-    public VariableDeclaration getTargetVariable() {
-        return targetVariable;
-    }
-
-    public void setTargetVariable(VariableDeclaration targetVariable) {
-        this.targetVariable = targetVariable;
-    }
-
-
-
-    //========================================================================//
-
-
-    private     MofClass                    clientClass;
-    private     MofProperty                 filteredProperty;
-    private     VariableDeclaration         targetVariable;
-    private     Invariant                   invariant;
-    private     GelExpression               expression;
-//    private     String                      propertyName;
-    private     List<VariableDeclaration>   variables = new LinkedList<>();
-
+    MofProperty     filteredProperty;
+    Invariant       invariant;
 
 }
