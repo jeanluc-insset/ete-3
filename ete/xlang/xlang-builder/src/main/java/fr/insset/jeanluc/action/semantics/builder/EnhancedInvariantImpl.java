@@ -18,6 +18,11 @@ import java.util.List;
 public class EnhancedInvariantImpl extends InvariantImpl implements Invariant {
 
 
+    public EnhancedInvariantImpl() throws InstantiationException {
+        
+    }
+
+        
     public EnhancedInvariantImpl(GelExpression expression) throws InstantiationException {
         this.expression = expression;
         support = FactoryMethods.newList(MofProperty.class);
