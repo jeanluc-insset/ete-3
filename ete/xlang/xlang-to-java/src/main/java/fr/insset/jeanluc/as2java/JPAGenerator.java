@@ -101,7 +101,7 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
             buffer.append("inFor");
         }
     }
-    
+
 
     public String getFilter(AttributeNav inNav, String start) {
         StringBuilder buffer = new StringBuilder(start);
