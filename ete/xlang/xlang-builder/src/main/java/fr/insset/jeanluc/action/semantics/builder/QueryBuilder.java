@@ -84,10 +84,10 @@ import java.util.logging.Logger;
  * 
  * @author jldeleage
  */
-public class FilterBuilder extends DynamicVisitorSupport {
+public class QueryBuilder extends DynamicVisitorSupport {
 
 
-    public FilterBuilder() throws InstantiationException, NoSuchMethodException {
+    public QueryBuilder() throws InstantiationException, NoSuchMethodException {
         register("visit", "fr.insset.jeanluc.ete.gel");
         Method[] methods = getClass().getMethods();
         for (Method aMethod : methods) {
@@ -167,7 +167,7 @@ public class FilterBuilder extends DynamicVisitorSupport {
     //========================================================================//
 
 
-    public void buildQueries(EteModel inModel) throws InstantiationException, IllegalAccessException, InvocationTargetException {
+    public void buildQueries(EteModel inModel) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         Collection<MofClass> allClasses = inModel.getAllClasses();
 
         System.out.println("--------------------------------");
@@ -195,7 +195,7 @@ public class FilterBuilder extends DynamicVisitorSupport {
     }
 
 
-    public void buildQueries(MofClass inMofClass) throws InstantiationException, IllegalAccessException, InvocationTargetException {
+    public void buildQueries(MofClass inMofClass) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         Collection<Invariant> invariants = inMofClass.getInvariants();
         for (Invariant anInvariant : invariants) {
             // We should build a query for each navigation in this invariant
@@ -204,10 +204,10 @@ public class FilterBuilder extends DynamicVisitorSupport {
             // The variables are registered in the result inout parameter
             System.out.println("Building queries for " + anInvariant.getSpecificationAsString());
             List<VariableDeclaration>  result = FactoryMethods.newList(VariableDeclaration.class);
-            GelExpression copy = buildQueries((EnhancedInvariantImpl) anInvariant, inMofClass, result);
             // Now the result contains all the variables found across the invariants
             // of this class
             // For each variable, we must build a query in the TARGET class
+            FilterBuilder   filterBuilder = new FilterBuilder();
             for (VariableDeclaration aDeclaration : result) {
                 System.out.println("Variable found : " + aDeclaration.getName()
                         + " " + aDeclaration.getType().getName()
@@ -222,7 +222,7 @@ public class FilterBuilder extends DynamicVisitorSupport {
                         });
                 MofType type = aDeclaration.getType().getRecBaseType();
                 if (type instanceof EnhancedMofClassImpl) {
-                    buildOneFilter(inMofClass, (EnhancedMofClassImpl) type,
+                    filterBuilder.buildOneFilter(inMofClass, (EnhancedMofClassImpl) type,
                             aDeclaration, anInvariant, copy, result);
                 }
                 else {
@@ -233,52 +233,6 @@ public class FilterBuilder extends DynamicVisitorSupport {
     }       // buildQueries(MofClass)
 
 
-    protected void buildOneFilter(MofClass inMofClass,
-        EnhancedMofClassImpl targetClass, VariableDeclaration aDeclaration,
-        Invariant anInvariant, GelExpression copy, List<VariableDeclaration> result) {
-        EteFilter filter = new EteFilter();
-        AttributeNav nav = (AttributeNav) aDeclaration.getInitValue();
-        MofProperty toFeature = (MofProperty) nav.getToFeature();
-        String name = toFeature.getName();
-        String      invariantName = anInvariant.getName();
-        invariantName = invariantName.substring(0,1).toUpperCase() + invariantName.substring(1);
-        name += "For" + invariantName;
-        filter.setFilteredProperty(toFeature);
-        filter.setExpression(copy);
-//        query.setPropertyName(name);
-//        query.setTargetVariable(aDeclaration);
-        filter.setInvariant(anInvariant);
-//        result.stream().filter(other -> !(other.equals(aDeclaration))).forEach(query::addVariable);
-        targetClass.addQuery(filter);
-    }
-
-
-    /**
-     *  Adds a filter per navigation in the invariant.<br>At the same time, it builds a list of variables (a navigation,
-     *  a variable).<br>
-     * The returned GelExpression uses these variables instead of navigations.
-     * Each query is about one of these variables.
-     * @see{Query}
-     * 
-     * @param anInvariant
-     * @throws IllegalAccessException
-     * @throws IllegalArgumentException
-     * @throws InvocationTargetException 
-     */
-    private GelExpression buildQueries(EnhancedInvariantImpl anInvariant, MofClass inMofClass, List<VariableDeclaration> inoutVariables) throws IllegalAccessException, InvocationTargetException {
-        // Looks for "top level" roles (i.e. properties of self)
-        Object specification = anInvariant.getExpression();
-        if (specification == null) {
-            return null;
-        }
-        // This should add a filter per navigation in the invariant
-        // At the same time, it builds a list of variables (a navigation,
-        // a variable)
-        // The returned GelExpression uses these variables instead of
-        // navigations.
-        // Each query is about one of these variables.
-        return (GelExpression) genericVisit(specification, anInvariant, inMofClass, inoutVariables);
-    }
 
     //========================================================================//
 
@@ -313,26 +267,34 @@ public class FilterBuilder extends DynamicVisitorSupport {
 
 
     public GelExpression visitAttributeNav(AttributeNav inNav, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        System.out.println("Visit of a navigation to the attribute " + inNav.getToFeature().getName());
-        GelExpression operand = inNav.getOperand().get(0);
-        if (operand instanceof Self) {
-            VariableDeclaration  definition = new VariableDeclarationImpl();
-            definition.setInitValue(inNav);
-            definition.setType(inNav.getType());
-            Feature toFeature = inNav.getToFeature();
-            EnhancedInvariantImpl invariant = (EnhancedInvariantImpl) inParameters[0];
-            String  invariantName = invariant.getName();
-            invariantName = invariantName != null ? invariantName.substring(0,1).toUpperCase() + invariantName.substring(1) : "anon";
-            String  propertyName = toFeature.getName() + "In" + invariantName + numVar++;
-            definition.setName(propertyName);
-            List<VariableDeclaration> variables = (List<VariableDeclaration>) inParameters[2];
-            variables.add(definition);
-            return definition;
-        } else {
-            return (GelExpression) genericVisit(operand, inParameters);
-        }
+        addInnerJoin(inNav, (StringBuffer) inParameters[0]);
+        return inNav;
     }
 
+    /**
+     * Inspects recursively the navigation. If it starts with the property
+     * 
+     * @param inNav
+     * @param inoutBuffer 
+     */
+    public void addInnerJoin(AttributeNav inNav, StringBuffer inoutBuffer) {
+        GelExpression operand = inNav.getOperand().get(0);
+        if (operand instanceof Self) {
+            return;
+        }
+        addInnerJoin((AttributeNav)operand, inoutBuffer);
+        MofType operandType = operand.getType();
+        MofType operandRealType = operandType.getRecBaseType();
+        inoutBuffer.append(" INNER JOIN ");
+        inoutBuffer.append(operandRealType.getName());
+        inoutBuffer.append(" AS v");
+        inoutBuffer.append(numVar);
+        inoutBuffer.append(" ON v");
+        inoutBuffer.append(numVar);
+        inoutBuffer.append(".ID=");
+        inoutBuffer.append("");
+        numVar++;
+    }
 
     /**
      * Builds the actual expression for a Query
