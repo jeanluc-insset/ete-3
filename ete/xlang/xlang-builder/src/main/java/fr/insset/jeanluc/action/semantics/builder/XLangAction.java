@@ -16,6 +16,9 @@ import fr.insset.jeanluc.util.factory.FactoryRegistry;
  * An Ete Action to register factories for the following classes :<ul>
  * <li>EnhancedMofClassImpl for MofClass entry</li>
  * <li>EnhancedMofOperationImpl for MofOperation entry</li>
+ * <li>EnhancedInvariantImpl for Invariant entry</li>
+ * <li>EnhancedPrecondition for Precondition entry</li>
+ * <li>EnhancedPostcondition for Postcondition entry</li>
  * </ul>
  *
  * @author jldeleage
