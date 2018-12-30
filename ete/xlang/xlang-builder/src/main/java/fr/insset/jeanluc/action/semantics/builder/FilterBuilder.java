@@ -180,7 +180,7 @@ public class FilterBuilder extends DynamicVisitorSupport {
                 if (type instanceof EnhancedMofClassImpl) {
                     EnhancedMofClassImpl    targetClass = (EnhancedMofClassImpl) type;
                     System.out.println("Adding " + aProperty.getName() + " to the support of " + targetClass.getName());
-                    targetClass.getSupport().put(aProperty, FactoryMethods.newList(EteQuery.class));
+                    targetClass.getSupport().put(aProperty, FactoryMethods.newList(EteFilter.class));
                     // Debugging only : the next line MUST BE REMOVED
                     targetClass.getSupport();
                 }
@@ -236,8 +236,7 @@ public class FilterBuilder extends DynamicVisitorSupport {
     protected void buildOneQuery(MofClass inMofClass,
         EnhancedMofClassImpl targetClass, VariableDeclaration aDeclaration,
         Invariant anInvariant, GelExpression copy, List<VariableDeclaration> result) {
-        EteQuery query = new EteQuery();
-        query.setClientClass(inMofClass);
+        EteFilter query = new EteFilter();
         AttributeNav nav = (AttributeNav) aDeclaration.getInitValue();
         MofProperty toFeature = (MofProperty) nav.getToFeature();
         String name = toFeature.getName();
@@ -247,9 +246,9 @@ public class FilterBuilder extends DynamicVisitorSupport {
         query.setFilteredProperty(toFeature);
         query.setExpression(copy);
 //        query.setPropertyName(name);
-        query.setTargetVariable(aDeclaration);
+//        query.setTargetVariable(aDeclaration);
         query.setInvariant(anInvariant);
-        result.stream().filter(other -> !(other.equals(aDeclaration))).forEach(query::addVariable);
+//        result.stream().filter(other -> !(other.equals(aDeclaration))).forEach(query::addVariable);
         targetClass.addQuery(query);
     }
 
@@ -334,7 +333,7 @@ public class FilterBuilder extends DynamicVisitorSupport {
      * Builds the actual expression for a Query
      */
     public class ExpressionBuilder extends DynamicVisitorSupport {
-        public ExpressionBuilder(EteQuery inQuery) {
+        public ExpressionBuilder(EteFilter inQuery) {
         }
         public GelExpression visitAttributeNav(AttributeNav inNav, Object... inParameters) {
             return inNav;

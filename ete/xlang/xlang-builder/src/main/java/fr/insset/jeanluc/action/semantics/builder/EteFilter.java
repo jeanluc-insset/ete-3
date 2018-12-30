@@ -2,8 +2,8 @@ package fr.insset.jeanluc.action.semantics.builder;
 
 
 
+import fr.insset.jeanluc.ete.gel.GelExpression;
 import fr.insset.jeanluc.ete.meta.model.constraint.Invariant;
-import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
 
 
@@ -104,7 +104,17 @@ public class EteFilter {
     }
 
 
+    public GelExpression getExpression() {
+        return expression;
+    }
+
+    public void setExpression(GelExpression expression) {
+        this.expression = expression;
+    }
+
+
     MofProperty     filteredProperty;
     Invariant       invariant;
+    GelExpression   expression;
 
 }

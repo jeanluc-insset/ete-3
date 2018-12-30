@@ -97,10 +97,10 @@ public class FilterBuilderTest {
 
         // 4- check result
         EnhancedMofClassImpl pilotClass = (EnhancedMofClassImpl) result.getElementByName("Pilot");
-        Map<MofProperty, List<EteQuery>> support = pilotClass.getSupport();
+        Map<MofProperty, List<EteFilter>> support = pilotClass.getSupport();
         for (MofProperty aProperty : support.keySet()) {
-            List<EteQuery>  queries = support.get(aProperty);
-            for (EteQuery aQuery : queries) {
+            List<EteFilter>  queries = support.get(aProperty);
+            for (EteFilter aQuery : queries) {
                 try {
                     System.out.println(aQuery.getExpression().getClass());
                 }
