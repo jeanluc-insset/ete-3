@@ -28,45 +28,42 @@ public class EnhancedMofClassImpl extends MofClassImpl {
     }
 
 
-    public void addQuery(EteFilter inFilter) {
-        MofProperty filteredProperty = inFilter.getFilteredProperty();
-        List<EteFilter> filters = support.computeIfAbsent(filteredProperty, f -> {
-            try {
-                return FactoryMethods.newList(EteFilter.class);
-            } catch (InstantiationException ex) {
-                throw new EteException(ex);
-            }
-        });
-        filters.add(inFilter);
+    public void addQuery(EteQuery inQuery) {
+        MofProperty property = inQuery.getProperty();
+        support.put(property, inQuery);
     }
 
 
-
-    public Map<MofProperty, List<EteFilter>> getSupport() {
+    public Map<MofProperty, EteQuery> getSupport() {
         System.out.println("Requesting support of class " + getName() + " : " + support);
         return support;
     }
 
 
-
     //========================================================================//
 
 
-
     /**
-     * Every invariant of the class is scanned.<br>
-     * It is added to the list associated with any property it contains.<br>
-     * That list helps to build requests to find out matching values for
-     * an in work entity.<br>
-     * Remark : the MofProperties used as keys do not need to be owned by
-     * the "this" object. Usually they do not.<br>
-     * For example, in the "airways" model, the constraint<br>
-     * <code>captain &lt;&gt; copilot</code><br>
-     * the properties <code>captain</code> and <code>copilot</code> belong to
-     * the Flight entity and are used as keys in the support property of the
-     * Pilot entity.
+     * <div>
+     * We need to generate a "query" for every property in the model.<br>
+     * For example, in the "airways" model, the properties {@code Flight::captain}
+     * and {@code Flight::copilot} are mirrored by queries in the {@code
+     * PilotJDO} class {@code getPilotAvailableAsCaptainFor(Flight aFlight)}
+     * and {@code getPilotAvailableAsCopilotFor(Flight aFlight}.<br>
+     * The {@code Pilot} class is the "target" class, the {@code Flight} class
+     * is the "client" class of the query.
+     * </div>
+     * <div>
+     * Furthermore, the property may be involved in invariants.<br>
+     * In the same example, we have such an invariant&nbsp;:<br>
+     * {@code captain.certificates.planeModel-&gt;includes(self.plane.planeMode)}<br>
+     * The query must be able to select only pilots which are certified for the
+     * plane of flight.<br>
+     * So the query performs joins to select the certificates and contains a
+     * "filter" which is translated to a "where" clause.
+     * </div>
      */
-    private Map<MofProperty, List<EteFilter>>   support = new HashMap<>();
+    private Map<MofProperty, EteQuery>   support = new HashMap<>();
 
 
 }

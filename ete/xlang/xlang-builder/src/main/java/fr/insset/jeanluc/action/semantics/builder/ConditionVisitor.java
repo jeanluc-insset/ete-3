@@ -198,8 +198,8 @@ public class ConditionVisitor extends DynamicVisitorSupport {
     public EteModel visitEteModel(EteModel inModel, Object... inParameters) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         BodyBuilder builder = new BodyBuilder();
         builder.buildStatements(inModel);
-        FilterBuilder filterBuilder = new FilterBuilder();
-        filterBuilder.buildQueries(inModel);
+        QueryBuilder queryBuilder = new QueryBuilder();
+        queryBuilder.buildQueries(inModel);
         return inModel;
     }
 

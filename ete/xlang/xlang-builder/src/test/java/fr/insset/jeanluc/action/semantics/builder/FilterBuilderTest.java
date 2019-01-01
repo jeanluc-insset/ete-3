@@ -96,18 +96,13 @@ public class FilterBuilderTest {
         EteModel result = instance.readModel(MODEL_PATH);
 
         // 4- check result
+        EnhancedMofClassImpl flightClass = (EnhancedMofClassImpl) result.getElementByName("Flight");
+        MofProperty captain = flightClass.getOwnedAttribute("captain");
         EnhancedMofClassImpl pilotClass = (EnhancedMofClassImpl) result.getElementByName("Pilot");
-        Map<MofProperty, List<EteFilter>> support = pilotClass.getSupport();
-        for (MofProperty aProperty : support.keySet()) {
-            List<EteFilter>  queries = support.get(aProperty);
-            for (EteFilter aQuery : queries) {
-                try {
-                    System.out.println(aQuery.getExpression().getClass());
-                }
-                catch (Exception ex) {
-                    System.out.println(ex.getMessage() + " (" + ex.getClass() + ")");
-                }
-            }
+        Map<MofProperty, EteQuery> support = pilotClass.getSupport();
+        EteQuery captainQuery = support.get(captain);
+        for (EteFilter aFilter : captainQuery.getFilters()) {
+            System.out.println("Filter : " + aFilter.getFilteredProperty().getName() + " : " + aFilter.getInvariant().getName());
         }
     }
 

@@ -167,89 +167,10 @@ public class FilterBuilder extends DynamicVisitorSupport {
     //========================================================================//
 
 
-    public void buildQueries(EteModel inModel) throws InstantiationException, IllegalAccessException, InvocationTargetException {
-        Collection<MofClass> allClasses = inModel.getAllClasses();
-
-        System.out.println("--------------------------------");
-        System.out.println("B U I L D I N G   Q U E R I E S");
-        System.out.println("1- building supports");
-        for (MofClass aMofClass : allClasses) {
-            System.out.println("Examining " + aMofClass.getName());
-            for (MofProperty aProperty : aMofClass.getAllAttributes()) {
-                MofType type = aProperty.getType();
-                if (type instanceof EnhancedMofClassImpl) {
-                    EnhancedMofClassImpl    targetClass = (EnhancedMofClassImpl) type;
-                    System.out.println("Adding " + aProperty.getName() + " to the support of " + targetClass.getName());
-                    targetClass.getSupport().put(aProperty, FactoryMethods.newList(EteFilter.class));
-                    // Debugging only : the next line MUST BE REMOVED
-                    targetClass.getSupport();
-                }
-            }       // loop on properties
-        }       // loop on classes
-        System.out.println("2- Actual building of queries");
-        for (MofClass aMofClass : allClasses) {
-            buildQueries(aMofClass);
-        }
-        System.out.println("Q U E R I E S   A R E   B U I L T");
-        System.out.println("---------------------------------");
-    }
-
-
-    public void buildQueries(MofClass inMofClass) throws InstantiationException, IllegalAccessException, InvocationTargetException {
-        Collection<Invariant> invariants = inMofClass.getInvariants();
-        for (Invariant anInvariant : invariants) {
-            // We should build a query for each navigation in this invariant
-            // First we build a copy of the expression, subsituting a variable
-            // to any navigation.
-            // The variables are registered in the result inout parameter
-            System.out.println("Building queries for " + anInvariant.getSpecificationAsString());
-            List<VariableDeclaration>  result = FactoryMethods.newList(VariableDeclaration.class);
-            GelExpression copy = buildQueries((EnhancedInvariantImpl) anInvariant, inMofClass, result);
-            // Now the result contains all the variables found across the invariants
-            // of this class
-            // For each variable, we must build a query in the TARGET class
-            for (VariableDeclaration aDeclaration : result) {
-                System.out.println("Variable found : " + aDeclaration.getName()
-                        + " " + aDeclaration.getType().getName()
-                        + " " + aDeclaration.getInitValue().getClass()
-                        + " dans " + anInvariant.getSpecificationAsString());
-                Logger.getGlobal().log(Level.INFO,"Variable found : {0} ({1}) = {2} in {3}",
-                        new Object[]{
-                            aDeclaration.getName(),
-                            aDeclaration.getType().getName(),
-                            aDeclaration.getInitValue().getClass(),
-                            anInvariant.getSpecificationAsString()
-                        });
-                MofType type = aDeclaration.getType().getRecBaseType();
-                if (type instanceof EnhancedMofClassImpl) {
-                    buildOneFilter(inMofClass, (EnhancedMofClassImpl) type,
-                            aDeclaration, anInvariant, copy, result);
-                }
-                else {
-                    Logger.getGlobal().info("That navigation is not a MofClass");
-                }
-            }       // loop on variables
-        }       // loop on invariants
-    }       // buildQueries(MofClass)
-
 
     protected void buildOneFilter(MofClass inMofClass,
         EnhancedMofClassImpl targetClass, VariableDeclaration aDeclaration,
         Invariant anInvariant, GelExpression copy, List<VariableDeclaration> result) {
-        EteFilter filter = new EteFilter();
-        AttributeNav nav = (AttributeNav) aDeclaration.getInitValue();
-        MofProperty toFeature = (MofProperty) nav.getToFeature();
-        String name = toFeature.getName();
-        String      invariantName = anInvariant.getName();
-        invariantName = invariantName.substring(0,1).toUpperCase() + invariantName.substring(1);
-        name += "For" + invariantName;
-        filter.setFilteredProperty(toFeature);
-        filter.setExpression(copy);
-//        query.setPropertyName(name);
-//        query.setTargetVariable(aDeclaration);
-        filter.setInvariant(anInvariant);
-//        result.stream().filter(other -> !(other.equals(aDeclaration))).forEach(query::addVariable);
-        targetClass.addQuery(filter);
     }
 
 

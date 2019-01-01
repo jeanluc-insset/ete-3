@@ -21,6 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -80,7 +81,35 @@ import java.util.logging.Logger;
  * <li><code>filterAllTttAsXxxInPppFor(Aaa aaa)</code> in class Ttt</li>
  * </ul>
  * </div>
+ * <div>
+ * The EteQuery aims to help the SqlDialect to generate the following
+ * statements&nbsp;:<ul>
+ * <li>{@code SELECT DISTINCT p.* FROM APP.PILOT AS p
+ *      INNER JOIN PILOT_CERTIFICATE ON p.ID = PILOT_CERTIFICATE.PILOT_ID
+ *      INNER JOIN CERTIFICATE ON PILOT_CERTIFICATE.CERTIFICATES_ID = CERTIFICATE.ID
+ *      INNER JOIN PLANEMODEL ON CERTIFICATE.PLANEMODEL_ID = PLANEMODEL.ID
+ *      WHERE PLANEMODEL.ID = 101
+ *          AND p.ID &lt;&gt; 105}&nbsp;: the captain must be certified for the
+ *          plane of the flight, the model of the plane has ID 101&nbsp; furthermore
+ *          the captain must be different from the copilote whose ID is 105</li>
+ * <li>{@code SELECT * FROM APP.PLANE
+        INNER JOIN PLANEMODEL ON PLANE.PLANEMODEL_ID = PLANEMODEL.ID
+        WHERE PLANEMODEL.ID IN
+            (SELECT pm1.ID FROM PLANEMODEL AS pm1
+                INNER JOIN CERTIFICATE AS c2 ON c2.PLANEMODEL_ID = pm1.ID
+                INNER JOIN PILOT_CERTIFICATE AS pc3 ON pc3.CERTIFICATES_ID = c2.ID
+                INNER JOIN PILOT AS p4 ON pc3.PILOT_ID = p4.ID
+                INNER JOIN CERTIFICATE AS c5 ON c5.PLANEMODEL_ID = pm1.ID
+                INNER JOIN PILOT_CERTIFICATE AS pc6 ON pc6.CERTIFICATES_ID = c5.ID
+                INNER JOIN PILOT AS p7 ON pc6.PILOT_ID = p7.ID
+                WHERE p4.ID = 103
+                AND p7.ID = 105)}&nbsp;: the captain (ID 103) and the copilot (ID
+                105) must be certified for the (model of the) plane</li>
+ * </ul>
+ * In order to build these queries, two EteQuery instances are created.<br>
+ * The first one contains two navigations&nbsp;:<br>
  * 
+ * </div>
  * 
  * @author jldeleage
  */
@@ -176,13 +205,13 @@ public class QueryBuilder extends DynamicVisitorSupport {
         for (MofClass aMofClass : allClasses) {
             System.out.println("Examining " + aMofClass.getName());
             for (MofProperty aProperty : aMofClass.getAllAttributes()) {
+                // By default it is a "plain" query, without any join nor filter
+                EteQuery    query = new EteQuery();
+                query.setProperty(aProperty);
                 MofType type = aProperty.getType();
                 if (type instanceof EnhancedMofClassImpl) {
                     EnhancedMofClassImpl    targetClass = (EnhancedMofClassImpl) type;
-                    System.out.println("Adding " + aProperty.getName() + " to the support of " + targetClass.getName());
-                    targetClass.getSupport().put(aProperty, FactoryMethods.newList(EteFilter.class));
-                    // Debugging only : the next line MUST BE REMOVED
-                    targetClass.getSupport();
+                    targetClass.addQuery(query);
                 }
             }       // loop on properties
         }       // loop on classes
@@ -195,40 +224,40 @@ public class QueryBuilder extends DynamicVisitorSupport {
     }
 
 
+    /**
+     * <div>
+     * Plain queries have been instantiated by the {@link buildQueries(EteModel)}
+     * method.<br>
+     * This method parses the invariants of the inMofClass and adds corresponding
+     * filters and joins to the corresponding queries.<br>
+     * When a property is found in an invariant the query is is retrieved in the
+     * "target" class' support.
+     * </div>
+     * <div>
+     * Currently, only "first steps" of navigations are stored in the queries.<br>
+     * For example,the {@code captain.certificates.planeModel-&gt;includes(self.plane.planeMode)}
+     * does not generate any filter nor join in the {@code Pilot::certificates},
+     * {@code Plane::planeModel} and {@code Certificate::planeModel} properties
+     * but in the {@code Flight::captain} and {@code Flight::plane} properties.
+     * </div>
+     * 
+     * @param inMofClass
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws InvocationTargetException
+     * @throws NoSuchMethodException 
+     */
     public void buildQueries(MofClass inMofClass) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         Collection<Invariant> invariants = inMofClass.getInvariants();
         for (Invariant anInvariant : invariants) {
-            // We should build a query for each navigation in this invariant
+            // We should build a filter for each navigation in this invariant
             // First we build a copy of the expression, subsituting a variable
             // to any navigation.
             // The variables are registered in the result inout parameter
             System.out.println("Building queries for " + anInvariant.getSpecificationAsString());
-            List<VariableDeclaration>  result = FactoryMethods.newList(VariableDeclaration.class);
-            // Now the result contains all the variables found across the invariants
-            // of this class
-            // For each variable, we must build a query in the TARGET class
-            FilterBuilder   filterBuilder = new FilterBuilder();
-            for (VariableDeclaration aDeclaration : result) {
-                System.out.println("Variable found : " + aDeclaration.getName()
-                        + " " + aDeclaration.getType().getName()
-                        + " " + aDeclaration.getInitValue().getClass()
-                        + " dans " + anInvariant.getSpecificationAsString());
-                Logger.getGlobal().log(Level.INFO,"Variable found : {0} ({1}) = {2} in {3}",
-                        new Object[]{
-                            aDeclaration.getName(),
-                            aDeclaration.getType().getName(),
-                            aDeclaration.getInitValue().getClass(),
-                            anInvariant.getSpecificationAsString()
-                        });
-                MofType type = aDeclaration.getType().getRecBaseType();
-                if (type instanceof EnhancedMofClassImpl) {
-                    filterBuilder.buildOneFilter(inMofClass, (EnhancedMofClassImpl) type,
-                            aDeclaration, anInvariant, copy, result);
-                }
-                else {
-                    Logger.getGlobal().info("That navigation is not a MofClass");
-                }
-            }       // loop on variables
+            EnhancedInvariantImpl   inv = (EnhancedInvariantImpl) anInvariant;
+            GelExpression expression = inv.getExpression();
+            genericVisit(expression, anInvariant, inMofClass);
         }       // loop on invariants
     }       // buildQueries(MofClass)
 
@@ -267,9 +296,10 @@ public class QueryBuilder extends DynamicVisitorSupport {
 
 
     public GelExpression visitAttributeNav(AttributeNav inNav, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        addInnerJoin(inNav, (StringBuffer) inParameters[0]);
+        addInnerJoin(inNav, inNav, (EnhancedInvariantImpl) inParameters[0]);
         return inNav;
     }
+
 
     /**
      * Inspects recursively the navigation. If it starts with the property
@@ -277,42 +307,25 @@ public class QueryBuilder extends DynamicVisitorSupport {
      * @param inNav
      * @param inoutBuffer 
      */
-    public void addInnerJoin(AttributeNav inNav, StringBuffer inoutBuffer) {
+    public void addInnerJoin(AttributeNav inNav, AttributeNav inFullNav, EnhancedInvariantImpl inInvariant) {
         GelExpression operand = inNav.getOperand().get(0);
         if (operand instanceof Self) {
-            return;
+            Feature toFeature = inNav.getToFeature();
+            MofType type = toFeature.getType().getRecBaseType();
+            if (type instanceof EnhancedMofClassImpl) {
+                EnhancedMofClassImpl mofClass = (EnhancedMofClassImpl)type;
+                Map<MofProperty, EteQuery> support = mofClass.getSupport();
+                EteQuery query = support.get(toFeature);
+                query.addJoin(inFullNav);
+            }
+        } else {
+            addInnerJoin((AttributeNav)operand, inFullNav, inInvariant);
         }
-        addInnerJoin((AttributeNav)operand, inoutBuffer);
-        MofType operandType = operand.getType();
-        MofType operandRealType = operandType.getRecBaseType();
-        inoutBuffer.append(" INNER JOIN ");
-        inoutBuffer.append(operandRealType.getName());
-        inoutBuffer.append(" AS v");
-        inoutBuffer.append(numVar);
-        inoutBuffer.append(" ON v");
-        inoutBuffer.append(numVar);
-        inoutBuffer.append(".ID=");
-        inoutBuffer.append("");
-        numVar++;
     }
-
-    /**
-     * Builds the actual expression for a Query
-     */
-    public class ExpressionBuilder extends DynamicVisitorSupport {
-        public ExpressionBuilder(EteFilter inQuery) {
-        }
-        public GelExpression visitAttributeNav(AttributeNav inNav, Object... inParameters) {
-            return inNav;
-        }
-    }       // ExpressionBuilder
-
 
     //========================================================================//
 
 
-    private     int                 numVar;
 
-
-}       // FilterBuilder
+}       // QueryBuilder
 
