@@ -331,32 +331,6 @@ public class QueryBuilder extends DynamicVisitorSupport {
 
 
 
-    /**
-     * Inspects recursively the navigation.
-     * 
-     * @param inNav
-     * @param inoutBuffer 
-     */
-//    public void addInnerJoin(AttributeNav inNav, Step inFullNav, EnhancedInvariantImpl inInvariant) {
-//        GelExpression operand = inNav.getOperand().get(0);
-//        if (operand instanceof Self) {
-//            Feature toFeature = inNav.getToFeature();
-//            MofType targetType = toFeature.getType().getRecBaseType();
-//            if (targetType instanceof EnhancedMofClassImpl) {
-//                EnhancedMofClassImpl mofClass = (EnhancedMofClassImpl)targetType;
-//                Map<MofProperty, EteQuery> support = mofClass.getSupport();
-//                EteQuery query = support.get(toFeature);
-////                query.addJoin(inFullNav);
-//                EteFilter   filter = new EteFilter();
-//                filter.setInvariant(inInvariant);
-//                filter.setFilteredProperty((MofProperty) toFeature);
-//                filter.setExpression(inFullNav);
-//                query.addFilter(filter);
-//            }
-//        } else {
-//            addInnerJoin((AttributeNav)operand, inFullNav, inInvariant);
-//        }
-//    }
 
     //========================================================================//
 
