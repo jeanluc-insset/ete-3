@@ -8,9 +8,12 @@ import static fr.insset.jeanluc.ete.api.Action.BASE_DIR;
 import fr.insset.jeanluc.ete.api.EteException;
 import fr.insset.jeanluc.ete.api.impl.VelocityAction;
 import fr.insset.jeanluc.ete.gel.GelExpression;
+import fr.insset.jeanluc.ete.gel.Self;
+import fr.insset.jeanluc.ete.gel.Step;
 import fr.insset.jeanluc.ete.meta.model.constraint.Invariant;
 import fr.insset.jeanluc.ete.meta.model.core.PrimitiveDataTypes;
 import fr.insset.jeanluc.ete.meta.model.core.impl.Factories;
+import fr.insset.jeanluc.ete.meta.model.emof.Feature;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
@@ -46,8 +49,7 @@ public class FilterBuilderTest {
 
 
     public final String     MODEL_PATH    = "../../../samples/insset-airways/src/main/mda/Model.xml";
-    public final String     SRC_DIR       = "target/";
-//    public final String     TEMPLATES_DIR = "../../../src/main/mda/modules/c/";
+    public final String     TARGET_DIR    = "target/";
     public final String     TEMPLATES_DIR = "src/test/mda/modules/c/";
 
 
@@ -99,8 +101,31 @@ public class FilterBuilderTest {
         EteModel result = instance.readModel(MODEL_PATH);
 
         // 4- check result
+        // 4-a  "invariant support" : the (target properties) of the navigations
+        // in the expression
         EnhancedMofClassImpl flightClass = (EnhancedMofClassImpl) result.getElementByName("Flight");
-        Collection<Invariant> invariants = flightClass.getInvariants();
+        List<Invariant> invariants = (List<Invariant>) flightClass.getInvariants();
+        EnhancedInvariantImpl captainIsCertified = (EnhancedInvariantImpl) invariants.get(1);
+        Collection<Step> invariantSupport = captainIsCertified.getSupport();
+        System.out.println("Size of the invariant support : " + invariantSupport);
+        for (Step aStep : invariantSupport) {
+            MofProperty aProperty = (MofProperty) aStep.getToFeature();
+            Step    root = aStep;
+            do {
+                List<GelExpression> operand = root.getOperand();
+                if (operand == null) break;
+                if (operand.size() == 0) break;
+                GelExpression first = operand.get(0);
+                if (first instanceof Self) break;
+                root = (Step) first;
+            } while (true);
+            System.out.println("    "
+                    + aProperty.getName() + ":" + aProperty.getType().getRecBaseType().getName()
+                    + " in " + aProperty.getOwningMofClass().getName()
+                    + " starting with " + root.getToFeature().getName());
+        }
+
+        // 4-b
         MofProperty captain = flightClass.getOwnedAttribute("captain");
         EnhancedMofClassImpl pilotClass = (EnhancedMofClassImpl) result.getElementByName("Pilot");
         Map<MofProperty, EteQuery> support = pilotClass.getSupport();
@@ -141,7 +166,7 @@ SELECT DISTINCT v0.* FROM PILOT AS v0
         action.addParameter(BASE_DIR, "src/test/mda/");
         action.addParameter(DIALECT, "fr.insset.jeanluc.xlang.to.c.CGenerator");
 //        action.addParameter("output_base", "target/test/generated-sources/ete/");
-        action.addParameter("output_base", SRC_DIR);
+        action.addParameter("output_base", TARGET_DIR);
         action.addParameter("items", "${classes}");
         action.addParameter("target", target);
         String absolutePath = new File(".").getAbsolutePath();

@@ -3,6 +3,7 @@
 package fr.insset.jeanluc.action.semantics.builder;
 
 import fr.insset.jeanluc.ete.gel.GelExpression;
+import fr.insset.jeanluc.ete.gel.Step;
 import fr.insset.jeanluc.ete.meta.model.constraint.Invariant;
 import fr.insset.jeanluc.ete.meta.model.constraint.impl.InvariantImpl;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
@@ -19,13 +20,13 @@ public class EnhancedInvariantImpl extends InvariantImpl implements Invariant {
 
 
     public EnhancedInvariantImpl() throws InstantiationException {
-        
+        support = FactoryMethods.newList(Step.class);
     }
 
         
     public EnhancedInvariantImpl(GelExpression expression) throws InstantiationException {
         this.expression = expression;
-        support = FactoryMethods.newList(MofProperty.class);
+        support = FactoryMethods.newList(Step.class);
     }
 
 
@@ -38,29 +39,27 @@ public class EnhancedInvariantImpl extends InvariantImpl implements Invariant {
     }
 
 
-    public void addToSupport(MofProperty inProperty) {
+    public void addToSupport(Step inProperty) {
         support.add(inProperty);
     }
 
 
-    public Collection<MofProperty> getSupport() {
+    public Collection<Step> getSupport() {
         return support;
     }
 
-    public void setSupport(Collection<MofProperty> support) {
-        this.support = support;
-    }
+
 
 
 
     //========================================================================//
 
 
-    private     GelExpression               expression;
+    private     GelExpression      expression;
     /**
      * The list of MofProperties involved in the invariant.<br>
      * Any step of any navigation is stored here.
      */
-    private     Collection<MofProperty>     support = new LinkedList<>();
+    private     Collection<Step>   support;
 
 }

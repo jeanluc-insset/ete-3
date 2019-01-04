@@ -296,13 +296,18 @@ public class QueryBuilder extends DynamicVisitorSupport {
 
 
     public GelExpression visitAttributeNav(AttributeNav inNav, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        System.out.println("Visiting the navigation : " + inNav.getToFeature().getName());
+        MofProperty property = (MofProperty) inNav.getToFeature();
+        EnhancedInvariantImpl invariant = (EnhancedInvariantImpl) inParameters[0];
+        invariant.addToSupport(inNav);
         addInnerJoin(inNav, inNav, (EnhancedInvariantImpl) inParameters[0]);
         return inNav;
     }
     
     public GelExpression visitCollect(Collect inCollect, Object... inParameters) {
-        addInnerJoin(inCollect, inCollect, (EnhancedInvariantImpl) inParameters[0]);
+        MofProperty property = (MofProperty) inCollect.getToFeature();
+        EnhancedInvariantImpl invariant = (EnhancedInvariantImpl) inParameters[0];
+        invariant.addToSupport(inCollect);
+        addInnerJoin(inCollect, inCollect, invariant);
         return inCollect;
     }
 
