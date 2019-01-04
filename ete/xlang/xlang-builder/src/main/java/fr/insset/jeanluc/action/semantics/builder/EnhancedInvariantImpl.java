@@ -37,6 +37,12 @@ public class EnhancedInvariantImpl extends InvariantImpl implements Invariant {
         this.expression = expression;
     }
 
+
+    public void addToSupport(MofProperty inProperty) {
+        support.add(inProperty);
+    }
+
+
     public Collection<MofProperty> getSupport() {
         return support;
     }
@@ -55,6 +61,6 @@ public class EnhancedInvariantImpl extends InvariantImpl implements Invariant {
      * The list of MofProperties involved in the invariant.<br>
      * Any step of any navigation is stored here.
      */
-    private     Collection<MofProperty>           support;
+    private     Collection<MofProperty>     support = new LinkedList<>();
 
 }

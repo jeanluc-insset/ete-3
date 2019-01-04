@@ -89,6 +89,11 @@ public class EteQuery {
 
 
     private     List<Step>                 joins = new LinkedList<>();
+    /**
+     * Every navigation starting with another property than the associated one
+     * is replaced by a variable.<br>
+     * When code is generated, the 
+     */
     private     List<VariableDefinition>   variables = new LinkedList<>();
     private     List<EteFilter>            filters = new LinkedList<>();
     private     MofProperty                property;
