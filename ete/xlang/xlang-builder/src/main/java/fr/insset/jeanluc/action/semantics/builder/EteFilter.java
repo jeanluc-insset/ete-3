@@ -2,9 +2,12 @@ package fr.insset.jeanluc.action.semantics.builder;
 
 
 
+import fr.insset.jeanluc.ete.gel.AttributeNav;
 import fr.insset.jeanluc.ete.gel.GelExpression;
 import fr.insset.jeanluc.ete.meta.model.constraint.Invariant;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
+import java.util.LinkedList;
+import java.util.List;
 
 
 /**
@@ -95,6 +98,10 @@ public class EteFilter {
         this.filteredProperty = filteredProperty;
     }
 
+
+    //==========================================================================//
+
+
     public Invariant getInvariant() {
         return invariant;
     }
@@ -102,6 +109,9 @@ public class EteFilter {
     public void setInvariant(Invariant invariant) {
         this.invariant = invariant;
     }
+
+
+    //==========================================================================//
 
 
     public GelExpression getExpression() {
@@ -113,8 +123,25 @@ public class EteFilter {
     }
 
 
-    MofProperty     filteredProperty;
-    Invariant       invariant;
-    GelExpression   expression;
+    //==========================================================================//
+
+
+    public List<AttributeNav> getNavigations() {
+        return navigations;
+    }
+
+
+    public void addNavigation(AttributeNav inNav) {
+        navigations.add(inNav);
+    }
+
+
+    //==========================================================================//
+
+
+    List<AttributeNav>  navigations = new LinkedList<>(); 
+    MofProperty         filteredProperty;
+    Invariant           invariant;
+    GelExpression       expression;
 
 }

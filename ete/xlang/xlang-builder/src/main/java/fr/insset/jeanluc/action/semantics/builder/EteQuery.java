@@ -3,6 +3,8 @@ package fr.insset.jeanluc.action.semantics.builder;
 
 
 import fr.insset.jeanluc.ete.gel.AttributeNav;
+import fr.insset.jeanluc.ete.gel.Step;
+import fr.insset.jeanluc.ete.gel.VariableDefinition;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
 import java.util.LinkedList;
@@ -65,12 +67,12 @@ public class EteQuery {
     }
 
 
-    public List<AttributeNav> getJoins() {
+    public List<Step> getJoins() {
         return joins;
     }
 
 
-    public void addJoin(AttributeNav inNav) {
+    public void addJoin(Step inNav) {
         joins.add(inNav);
     }
 
@@ -86,8 +88,9 @@ public class EteQuery {
     }
 
 
-    private     List<AttributeNav>  joins = new LinkedList();
-    private     List<EteFilter>     filters = new LinkedList();
-    private     MofProperty         property;
+    private     List<Step>                 joins = new LinkedList<>();
+    private     List<VariableDefinition>   variables = new LinkedList<>();
+    private     List<EteFilter>            filters = new LinkedList<>();
+    private     MofProperty                property;
 
 }

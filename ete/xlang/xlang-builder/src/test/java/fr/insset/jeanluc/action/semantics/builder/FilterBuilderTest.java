@@ -7,6 +7,8 @@ import static fr.insset.jeanluc.el.dialect.Dialect.DIALECT;
 import static fr.insset.jeanluc.ete.api.Action.BASE_DIR;
 import fr.insset.jeanluc.ete.api.EteException;
 import fr.insset.jeanluc.ete.api.impl.VelocityAction;
+import fr.insset.jeanluc.ete.gel.GelExpression;
+import fr.insset.jeanluc.ete.meta.model.constraint.Invariant;
 import fr.insset.jeanluc.ete.meta.model.core.PrimitiveDataTypes;
 import fr.insset.jeanluc.ete.meta.model.core.impl.Factories;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
@@ -25,6 +27,7 @@ import fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import org.junit.After;
@@ -97,14 +100,39 @@ public class FilterBuilderTest {
 
         // 4- check result
         EnhancedMofClassImpl flightClass = (EnhancedMofClassImpl) result.getElementByName("Flight");
+        Collection<Invariant> invariants = flightClass.getInvariants();
         MofProperty captain = flightClass.getOwnedAttribute("captain");
         EnhancedMofClassImpl pilotClass = (EnhancedMofClassImpl) result.getElementByName("Pilot");
         Map<MofProperty, EteQuery> support = pilotClass.getSupport();
         EteQuery captainQuery = support.get(captain);
-        for (EteFilter aFilter : captainQuery.getFilters()) {
-            System.out.println("Filter : " + aFilter.getFilteredProperty().getName() + " : " + aFilter.getInvariant().getName());
-        }
+        QueryToSql  translator = new QueryToSql();
+        String sql = translator.getSql(captainQuery);
+        // We should get something like :
+        /*
+        SELECT DISTINCT v0.* FROM PILOT AS v0
+            INNER JOIN PILOT_CERTIFICATE AS v1 ON v0.ID = v1.PILOT_ID
+            INNER JOIN CERTIFICATE AS v2 ON v1.CERTIFICATES_ID = v2.ID
+            INNER JOIN PLANEMODEL AS v3 ON v2.PLANEMODEL_ID = v3.ID
+        WHERE v0.ID <> 105
+            AND v3.ID = 101
+        */
+        // Currently, we get :
+        /*
+SELECT DISTINCT v0.* FROM PILOT AS v0
+     INNER JOIN PILOT_CERTIFICATE AS v1 ON v0.ID=v1.PILOT_ID
+     INNER JOIN CERTIFICATE AS v2 ON v2.ID=v1.CERTIFICATES_ID
+     INNER JOIN PLANEMODEL AS v3 ON v3.ID=v2.PLANEMODEL_ID
+        WHERE v0.ID <> 105
+            AND v3.ID = 101
+        */
+        // We can see the following defaults :
+        // 1- the numbering is wrong
+        // 2- the conditions are not OK at all
+        System.out.println("SQL : [[[ " + sql + " ]]]");
     }
+
+
+
 
     protected void velocityAction(EteModel model, String template, String target) throws EteException {
         VelocityAction    action = new VelocityAction();

@@ -296,32 +296,67 @@ public class QueryBuilder extends DynamicVisitorSupport {
 
 
     public GelExpression visitAttributeNav(AttributeNav inNav, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        System.out.println("Visiting the navigation : " + inNav.getToFeature().getName());
         addInnerJoin(inNav, inNav, (EnhancedInvariantImpl) inParameters[0]);
         return inNav;
     }
+    
+    public GelExpression visitCollect(Collect inCollect, Object... inParameters) {
+        addInnerJoin(inCollect, inCollect, (EnhancedInvariantImpl) inParameters[0]);
+        return inCollect;
+    }
+
+
+
+    public void addInnerJoin(Step inNav, Step inFullNav, EnhancedInvariantImpl inInvariant) {
+        GelExpression operand = inNav.getOperand().get(0);
+        if (operand instanceof Self) {
+            Feature toFeature = inNav.getToFeature();
+            MofType targetType = toFeature.getType().getRecBaseType();
+            if (targetType instanceof EnhancedMofClassImpl) {
+                EnhancedMofClassImpl mofClass = (EnhancedMofClassImpl)targetType;
+                Map<MofProperty, EteQuery> support = mofClass.getSupport();
+                EteQuery query = support.get(toFeature);
+                query.addJoin(inFullNav);
+                EteFilter   filter = new EteFilter();
+                filter.setInvariant(inInvariant);
+                filter.setFilteredProperty((MofProperty) toFeature);
+                filter.setExpression(inFullNav);
+                query.addFilter(filter);
+            }
+        } else {
+            addInnerJoin((Step)operand, inFullNav, inInvariant);
+        }
+    }
+
 
 
     /**
-     * Inspects recursively the navigation. If it starts with the property
+     * Inspects recursively the navigation.
      * 
      * @param inNav
      * @param inoutBuffer 
      */
-    public void addInnerJoin(AttributeNav inNav, AttributeNav inFullNav, EnhancedInvariantImpl inInvariant) {
-        GelExpression operand = inNav.getOperand().get(0);
-        if (operand instanceof Self) {
-            Feature toFeature = inNav.getToFeature();
-            MofType type = toFeature.getType().getRecBaseType();
-            if (type instanceof EnhancedMofClassImpl) {
-                EnhancedMofClassImpl mofClass = (EnhancedMofClassImpl)type;
-                Map<MofProperty, EteQuery> support = mofClass.getSupport();
-                EteQuery query = support.get(toFeature);
-                query.addJoin(inFullNav);
-            }
-        } else {
-            addInnerJoin((AttributeNav)operand, inFullNav, inInvariant);
-        }
-    }
+//    public void addInnerJoin(AttributeNav inNav, Step inFullNav, EnhancedInvariantImpl inInvariant) {
+//        GelExpression operand = inNav.getOperand().get(0);
+//        if (operand instanceof Self) {
+//            Feature toFeature = inNav.getToFeature();
+//            MofType targetType = toFeature.getType().getRecBaseType();
+//            if (targetType instanceof EnhancedMofClassImpl) {
+//                EnhancedMofClassImpl mofClass = (EnhancedMofClassImpl)targetType;
+//                Map<MofProperty, EteQuery> support = mofClass.getSupport();
+//                EteQuery query = support.get(toFeature);
+////                query.addJoin(inFullNav);
+//                EteFilter   filter = new EteFilter();
+//                filter.setInvariant(inInvariant);
+//                filter.setFilteredProperty((MofProperty) toFeature);
+//                filter.setExpression(inFullNav);
+//                query.addFilter(filter);
+//            }
+//        } else {
+//            addInnerJoin((AttributeNav)operand, inFullNav, inInvariant);
+//        }
+//    }
 
     //========================================================================//
 
