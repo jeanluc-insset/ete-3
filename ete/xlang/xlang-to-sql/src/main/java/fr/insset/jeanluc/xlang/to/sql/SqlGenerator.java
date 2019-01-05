@@ -28,7 +28,7 @@ public class SqlGenerator  extends DynamicVisitorSupport implements Generator {
     }
 
 
-
+/*
     public String   getQuery(MofProperty property) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         int     numVar = 1;
         StringBuffer buffer = new StringBuffer("SELECT * FROM ");
@@ -45,7 +45,7 @@ public class SqlGenerator  extends DynamicVisitorSupport implements Generator {
         }
         return buffer.toString();
     }
-
+*/
 
     //==========================================================================//
     //                              Q U E R I E S                               //
