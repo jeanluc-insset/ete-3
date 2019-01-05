@@ -17,7 +17,13 @@ import java.util.List;
  * @author jldeleage
  */
 public class QueryToSql {
-    
+
+
+    public String getSql(MofProperty inRoot) {
+        EnhancedMofClassImpl targetClass = (EnhancedMofClassImpl) inRoot.getType().getRecBaseType();
+        EteQuery query = targetClass.getSupport().get(inRoot);
+        return getSql(query);
+    }
 
     public String   getSql(EteQuery inRoot) {
         int     numVar = 1;
@@ -107,7 +113,7 @@ public class QueryToSql {
      */
     protected void addJoin(StringBuilder inoutBuilder, int srcNumber, int targetNumber, String joinTable, String propName, boolean reverseNumbers) {
         System.out.println("target:" + targetNumber + ", joinTable:" + joinTable);
-        inoutBuilder.append("     INNER JOIN ");
+        inoutBuilder.append("     LEFT JOIN ");
         inoutBuilder.append(joinTable);
         inoutBuilder.append(" AS v");
         inoutBuilder.append(targetNumber);
