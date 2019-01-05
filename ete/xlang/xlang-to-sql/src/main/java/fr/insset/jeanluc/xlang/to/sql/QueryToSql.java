@@ -21,6 +21,9 @@ import java.util.List;
  */
 public class QueryToSql {
 
+    //==========================================================================//
+    //                              Q U E R I E S                               //
+    //==========================================================================//
 
     public String getSql(MofProperty inRoot) {
         EnhancedMofClassImpl targetClass = (EnhancedMofClassImpl) inRoot.getType().getRecBaseType();
@@ -133,5 +136,17 @@ public class QueryToSql {
         inoutBuilder.append(propName);
         inoutBuilder.append("_ID\n");
     }
+
+
+    //==========================================================================//
+    //                              F I L T E R S                               //
+    //==========================================================================//
+
+
+    public String getFilter(EteFilter filter, boolean inFirstOne) {
+        StringBuilder   builder = new StringBuilder();
+        return builder.toString();
+    }
+
 
 }

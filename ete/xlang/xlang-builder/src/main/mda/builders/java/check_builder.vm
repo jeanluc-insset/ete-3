@@ -1,0 +1,40 @@
+## This template generates the CheckBuilder class.
+## The model is the GEL abstract syntax model.
+package     fr.insset.jeanluc.ete.xlang.builder;
+
+
+import fr.insset.jeanluc.ete.gel.*;
+import fr.insset.jeanluc.ete.xlang.*;
+import fr.insset.jeanluc.ete.xlang.impl.*;
+import fr.insset.jeanluc.util.factory.FactoryRegistry;
+import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.List;
+
+
+public class CheckBuilder extends DynamicVisitorSupport {
+
+    public CheckBuilder() {
+        register("visit", "fr.insset.jeanluc.ete.gel");
+        FactoryRegistry.getRegistry().registerDefaultFactory(Assignment.class, AssignmentImpl.class);
+    }
+
+    public void buildStatements(GelExpression inExpression, List<Statement> inoutStatements) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        genericVisit(inExpression, inoutStatements);
+    }
+
+
+    //========================================================================//
+
+#foreach ($anOperator in $current.classes)
+#if ($anOperator.getValueOf("symbol"))
+    public ${anOperator.name} visit${anOperator.name}(${anOperator.name} inOperator, Object... inParameters) {
+        
+        return inOperator;
+    }
+#end
+#end
+
+}
+

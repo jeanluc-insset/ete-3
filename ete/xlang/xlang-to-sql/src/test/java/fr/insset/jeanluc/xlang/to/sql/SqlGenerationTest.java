@@ -1,8 +1,14 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package fr.insset.jeanluc.xlang.to.sql;
 
-package fr.insset.jeanluc.action.semantics.builder;
-
-
-
+import fr.insset.jeanluc.action.semantics.builder.ConditionVisitor;
+import fr.insset.jeanluc.action.semantics.builder.EnhancedInvariantImpl;
+import fr.insset.jeanluc.action.semantics.builder.EnhancedMofClassImpl;
+import fr.insset.jeanluc.action.semantics.builder.EteQuery;
 import static fr.insset.jeanluc.el.dialect.Dialect.DIALECT;
 import static fr.insset.jeanluc.ete.api.Action.BASE_DIR;
 import fr.insset.jeanluc.ete.api.EteException;
@@ -29,21 +35,20 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  *
  * @author jldeleage
  */
-public class FilterBuilderTest {
-
+public class SqlGenerationTest {
+    
 
     public final String     MODEL_PATH    = "../../../samples/insset-airways/src/main/mda/Model.xml";
-    public final String     TARGET_DIR    = "target/";
-    public final String     TEMPLATES_DIR = "src/test/mda/modules/c/";
+    public final String     TARGET_DIR    = "target/test/generated-sources/java/";
+    public final String     TEMPLATES_DIR = "src/test/mda/";
 
 
-    public FilterBuilderTest() {
-    }
 
     @BeforeClass
     public static void setUpClass() {
@@ -61,13 +66,16 @@ public class FilterBuilderTest {
     public void tearDown() {
     }
 
+
     /**
      * 
      * @throws InstantiationException
      * @throws ClassNotFoundException
      * @throws IllegalAccessException
      * @throws IOException
-     * @throws EteException 
+     * @throws EteException
+     * @throws IllegalArgumentException
+     * @throws InvocationTargetException 
      */
     @Test
     public void testFilterBuilder() throws InstantiationException, ClassNotFoundException, IllegalAccessException, IOException, EteException, IllegalArgumentException, InvocationTargetException {
@@ -86,60 +94,15 @@ public class FilterBuilderTest {
         PrimitiveDataTypes.init(parent);
         EteModel result = instance.readModel(MODEL_PATH);
 
-        // 4- check result
-        // 4-a  "invariant support" : the (target properties) of the navigations
-        // in the expression
-        EnhancedMofClassImpl flightClass = (EnhancedMofClassImpl) result.getElementByName("Flight");
-        List<Invariant> invariants = (List<Invariant>) flightClass.getInvariants();
-        EnhancedInvariantImpl captainIsCertified = (EnhancedInvariantImpl) invariants.get(1);
-        Collection<Step> invariantSupport = captainIsCertified.getSupport();
-        System.out.println("Size of the invariant support : " + invariantSupport);
-        for (Step aStep : invariantSupport) {
-            MofProperty aProperty = (MofProperty) aStep.getToFeature();
-            Step    root = aStep;
-            do {
-                List<GelExpression> operand = root.getOperand();
-                if (operand == null) break;
-                if (operand.size() == 0) break;
-                GelExpression first = operand.get(0);
-                if (first instanceof Self) break;
-                root = (Step) first;
-            } while (true);
-            System.out.println("    "
-                    + aProperty.getName() + ":" + aProperty.getType().getRecBaseType().getName()
-                    + " in " + aProperty.getOwningMofClass().getName()
-                    + " starting with " + root.getToFeature().getName());
-        }
+        // 4- apply template
+        System.out.println(new File(".").getAbsolutePath());
+        velocityAction(result, "entity2dao.vm", TARGET_DIR + "${current.name}.java");
 
-        // 4-b
-        MofProperty captain = flightClass.getOwnedAttribute("captain");
-        EnhancedMofClassImpl pilotClass = (EnhancedMofClassImpl) result.getElementByName("Pilot");
-        Map<MofProperty, EteQuery> support = pilotClass.getSupport();
-        EteQuery captainQuery = support.get(captain);
-        QueryToSql  translator = new QueryToSql();
-        String sql = translator.getSql(captainQuery);
-        // We should get something like :
-        /*
-        SELECT DISTINCT v0.* FROM PILOT AS v0
-            LEFT JOIN PILOT_CERTIFICATE AS v1 ON v0.ID = v1.PILOT_ID
-            LEFT JOIN CERTIFICATE AS v2 ON v1.CERTIFICATES_ID = v2.ID
-            LEFT JOIN PLANEMODEL AS v3 ON v2.PLANEMODEL_ID = v3.ID
-        WHERE v0.ID <> 105
-            AND v3.ID = 101
-        */
-        // Currently, we get :
-        /*
-SELECT DISTINCT v0.* FROM PILOT AS v0
-     LEFT JOIN PILOT_CERTIFICATE AS v1 ON v0.ID=v1.PILOT_ID
-     LEFT JOIN CERTIFICATE AS v2 ON v2.ID=v1.CERTIFICATES_ID
-     LEFT JOIN PLANEMODEL AS v3 ON v3.ID=v2.PLANEMODEL_ID
-        WHERE v0.ID <> 105
-            AND v3.ID = 101
-        */
-        // We can see the following defaults :
-        // 1- the numbering is wrong
-        // 2- the conditions are not OK at all
-        System.out.println("SQL : [[[ " + sql + " ]]]");
+        // 5- check result
+        // 5-a  compile the generated files
+
+        // 5-b load the java class
+        
     }
 
 
@@ -147,7 +110,6 @@ SELECT DISTINCT v0.* FROM PILOT AS v0
 
     protected void velocityAction(EteModel model, String template, String target) throws EteException {
         VelocityAction    action = new VelocityAction();
-        System.out.println(new File(".").getAbsolutePath());
         action.setModel(model);
         action.addParameter(BASE_DIR, "src/test/mda/");
         action.addParameter(DIALECT, "fr.insset.jeanluc.xlang.to.c.CGenerator");
@@ -157,9 +119,9 @@ SELECT DISTINCT v0.* FROM PILOT AS v0
         action.addParameter("target", target);
         String absolutePath = new File(".").getAbsolutePath();
         System.out.println(absolutePath);
-        action.addParameter("template", TEMPLATES_DIR + template);
+        action.addParameter("template", template);
         action.process(model);
     }
 
-}       // EnhancedPostConditionTest
 
+}

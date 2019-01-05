@@ -22,6 +22,7 @@ import static fr.insset.jeanluc.ete.meta.model.emof.MofOperation.MOF_OPERATION;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
 import fr.insset.jeanluc.ete.meta.model.types.MofType;
 import fr.insset.jeanluc.ete.xlang.builder.BodyBuilder;
+// import fr.insset.jeanluc.ete.xlang.builder.BodyBuilder;
 import fr.insset.jeanluc.meta.model.io.ModelReader;
 import fr.insset.jeanluc.util.factory.FactoryMethods;
 import fr.insset.jeanluc.util.factory.FactoryRegistry;

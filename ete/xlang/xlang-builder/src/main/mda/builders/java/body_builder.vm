@@ -13,7 +13,7 @@ import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 ##import ${aClass.owningPackage.name}.impl.${aClass.name}Impl;
 #end
 #end
-import fr.insset.jeanluc.action.semantics.builder.EnhancedMofOperationImpl;
+import fr.insset.jeanluc.action.semantics.builder.EnhancedMofOperation;
 import fr.insset.jeanluc.action.semantics.builder.EnhancedPostconditionImpl;
 import fr.insset.jeanluc.ete.gel.*;
 import fr.insset.jeanluc.ete.gel.impl.*;
@@ -76,14 +76,14 @@ public class BodyBuilder extends DynamicVisitorSupport {
     public void buildStatements(EteModel inModel) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         for (MofClass aClass : inModel.getClasses()) {
             for (MofOperation anOperation : aClass.getOwnedOperation()) {
-                EnhancedMofOperationImpl thisOperation = (EnhancedMofOperationImpl) anOperation;
+                EnhancedMofOperation thisOperation = (EnhancedMofOperation) anOperation;
                 buildStatements(thisOperation);
             }
         }
     }
 
 
-    public void buildStatements(EnhancedMofOperationImpl inOperation) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    public void buildStatements(EnhancedMofOperation inOperation) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         System.out.println("   building statements for " + inOperation.getName());
         List<Statement>   statements = FactoryMethods.newList(Statement.class);
         List<Postcondition> postconditions = inOperation.getPostconditions();

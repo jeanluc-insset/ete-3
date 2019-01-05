@@ -35,6 +35,7 @@ public class EnhancedMofClassImpl extends MofClassImpl {
 
 
     public Map<MofProperty, EteQuery> getSupport() {
+        System.out.println("Requesting support of " + getName() + " -> " + support.size() + " queries");
         return support;
     }
 

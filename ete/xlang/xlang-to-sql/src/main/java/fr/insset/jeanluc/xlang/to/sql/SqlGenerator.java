@@ -85,6 +85,9 @@ public class SqlGenerator  extends DynamicVisitorSupport implements Generator {
     //==========================================================================//
 
 
+    /**
+     * The filter must be generated if all arguments are present.<br>
+     */
     public String getFilter(EteFilter inFilter, boolean inFirstOne) {
         StringBuffer buffer = new StringBuffer();
         if (inFirstOne) {
@@ -92,6 +95,7 @@ public class SqlGenerator  extends DynamicVisitorSupport implements Generator {
         } else {
             buffer.append("and ");
         }
+        
         return buffer.toString();
     }
 
