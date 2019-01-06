@@ -119,6 +119,7 @@ public class SqlGenerationTest {
         action.addParameter("target", target);
         String absolutePath = new File(".").getAbsolutePath();
         System.out.println(absolutePath);
+        action.addParameter("sql", new QueryToSql());
         action.addParameter("template", template);
         action.process(model);
     }

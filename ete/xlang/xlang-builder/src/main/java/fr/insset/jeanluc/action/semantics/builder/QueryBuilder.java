@@ -107,7 +107,10 @@ import java.util.logging.Logger;
                 105) must be certified for the (model of the) plane</li>
  * </ul>
  * In order to build these queries, two EteQuery instances are created.<br>
- * The first one contains two navigations&nbsp;:<br>
+ * The first one c
+ * </div>
+ * 
+ * <div>
  * 
  * </div>
  * 

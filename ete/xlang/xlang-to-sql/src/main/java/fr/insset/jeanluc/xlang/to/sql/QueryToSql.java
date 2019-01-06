@@ -35,14 +35,9 @@ public class QueryToSql {
         int     numVar = 1;
         StringBuilder   builder = new StringBuilder("SELECT DISTINCT v0.* FROM ");
         builder.append(inRoot.getTargetClass().getName().toUpperCase());
-        builder.append(" AS v0\n");
+        builder.append(" AS v0");
         for (Step aJoin : inRoot.getJoins()) {
             numVar = buildJoins(builder, aJoin, numVar);
-        }
-        boolean     firstClause = true;
-        for (EteFilter aFilter : inRoot.getFilters()) {
-            addWhere(builder, aFilter, firstClause);
-            firstClause = false;
         }
         return builder.toString();
     }
@@ -91,18 +86,8 @@ public class QueryToSql {
 
 
 
-    protected void addWhere(StringBuilder builder, EteFilter aFilter, boolean firstClause) {
-        if (firstClause) {
-            builder.append("WHERE ");
-        } else {
-            builder.append("    AND ");
-        }
-        builder.append(aFilter.getInvariant().getSpecificationAsString());
-    }
-
 
     protected void addJoinTable(StringBuilder inoutBuilder, int start, int end, String startName, String targetName, String propName) {
-        System.out.println("Adding a join table from " + startName + " to " + targetName + " for property " + propName);
         String  betweenName = startName + "_" + targetName;
         addJoin(inoutBuilder, start, end, betweenName, startName, true);
         addJoin(inoutBuilder, end, end+1, targetName, propName, false);
@@ -119,7 +104,7 @@ public class QueryToSql {
      */
     protected void addJoin(StringBuilder inoutBuilder, int srcNumber, int targetNumber, String joinTable, String propName, boolean reverseNumbers) {
         System.out.println("target:" + targetNumber + ", joinTable:" + joinTable);
-        inoutBuilder.append("     LEFT JOIN ");
+        inoutBuilder.append(" LEFT JOIN ");
         inoutBuilder.append(joinTable);
         inoutBuilder.append(" AS v");
         inoutBuilder.append(targetNumber);
@@ -134,7 +119,7 @@ public class QueryToSql {
         inoutBuilder.append(srcNumber);
         inoutBuilder.append(".");
         inoutBuilder.append(propName);
-        inoutBuilder.append("_ID\n");
+        inoutBuilder.append("_ID");
     }
 
 

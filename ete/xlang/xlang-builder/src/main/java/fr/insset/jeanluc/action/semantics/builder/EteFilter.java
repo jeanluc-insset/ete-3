@@ -136,12 +136,29 @@ public class EteFilter {
     }
 
 
+
     //==========================================================================//
 
 
     List<AttributeNav>  navigations = new LinkedList<>(); 
     MofProperty         filteredProperty;
     Invariant           invariant;
+    /**
+     * <div>
+     * It is the original expression of the invariant where all navigations are
+     * replaced by variables but the navigations starting with the
+     * filteredProperty.
+     * </div>
+     * <div>
+     * In the airways sample, the {@code captain} property is associated to two
+     * filters.<br>
+     * The first one is created from the {@code captain <> copilot}
+     * invariant and the second one is created from
+     * {@code captain.certificates.planeModel->includes(self.plane.planeModel)}.<br>
+     * The second filter has the expression&nbsp;<br>
+     * {@code v3 = v4}<br>
+     * </div>
+     */
     GelExpression       expression;
 
 }

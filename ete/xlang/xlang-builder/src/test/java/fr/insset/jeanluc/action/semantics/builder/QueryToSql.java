@@ -20,24 +20,21 @@ public class QueryToSql {
 
 
     public String getSql(MofProperty inRoot) {
+        System.out.println("Generating SQL for property " + inRoot.getName());
         EnhancedMofClassImpl targetClass = (EnhancedMofClassImpl) inRoot.getType().getRecBaseType();
         EteQuery query = targetClass.getSupport().get(inRoot);
         return getSql(query);
     }
 
     public String   getSql(EteQuery inRoot) {
-        int     numVar = 1;
+        int     numVar = inRoot.getNextVariableNum();
         StringBuilder   builder = new StringBuilder("SELECT DISTINCT v0.* FROM ");
         builder.append(inRoot.getTargetClass().getName().toUpperCase());
-        builder.append(" AS v0\n");
+        builder.append(" AS v0 ");
         for (Step aJoin : inRoot.getJoins()) {
             numVar = buildJoins(builder, aJoin, numVar);
         }
-        boolean     firstClause = true;
-        for (EteFilter aFilter : inRoot.getFilters()) {
-            addWhere(builder, aFilter, firstClause);
-            firstClause = false;
-        }
+        inRoot.setNextVariableNum(numVar);
         return builder.toString();
     }
 
@@ -113,7 +110,7 @@ public class QueryToSql {
      */
     protected void addJoin(StringBuilder inoutBuilder, int srcNumber, int targetNumber, String joinTable, String propName, boolean reverseNumbers) {
         System.out.println("target:" + targetNumber + ", joinTable:" + joinTable);
-        inoutBuilder.append("     LEFT JOIN ");
+        inoutBuilder.append(" LEFT JOIN ");
         inoutBuilder.append(joinTable);
         inoutBuilder.append(" AS v");
         inoutBuilder.append(targetNumber);
@@ -128,7 +125,7 @@ public class QueryToSql {
         inoutBuilder.append(srcNumber);
         inoutBuilder.append(".");
         inoutBuilder.append(propName);
-        inoutBuilder.append("_ID\n");
+        inoutBuilder.append("_ID");
     }
 
 }

@@ -85,37 +85,27 @@ public class ${current.name}Jpa extends AbstractJpa<${current.name}> {
 
     /**
      * Should return all the instances of ${current.name} which are acceptable
-     * as values of ${aProperty.name} of ${aProperty.owningMofClass.name}
-     * without violating any constraint on that class.
-     */
-/*
-    public List<${current.name}> getAll${current.name}As${dialect.i2uc($aProperty.name)}For${aProperty.owningMofClass.name}(${aProperty.owningMofClass.name} inFor) {
-        CriteriaBuilder cb = getCriteriaBuilder();
-        CriteriaQuery<${current.name}> cq = cb.createQuery(${current.name}.class);
-        Root<${current.name}> root = cq.from(${current.name}.class);
-        cq.select(root);
-#foreach ($aQuery in $current.support.get(${aProperty}))
-#if ($aProperty.owningMofClass.equals($aQuery.clientClass))
-        select${dialect.i2uc($aProperty.name)}For${dialect.i2uc($aQuery.invariant.name)}(cq, root, inFor);
-#end
-#end
-        TypedQuery<${current.name}> query = em.createQuery(cq);
-        return query.getResultList();
-    }
-*/
-    /**
-     * Should return all the instances of ${current.name} which are acceptable
      * as values of ${aProperty.name} property for the {@code inFor} instance of
      * ${aProperty.owningMofClass.name} without violating any constraint on that
-     * class.
+     * class.<br>
+     * ${sql}
      */
     public List<${current.name}> getAll${current.name}As${dialect.i2uc($aProperty.name)}For${aProperty.owningMofClass.name}(${aProperty.owningMofClass.name} inFor) {
         EntityManager   em = getEntityManager();
         StringBuilder   builder = new StringBuilder();
+        builder.append("${sql.getSql($aProperty)}");
+        String          where = " WHERE ";
+#foreach ($aFilter in $current.support.get($aProperty).filters)
+        // add the select for ${aFilter}
+#foreach ($anExpression in $aFilter.navigations)
+        ${dialect.getOptional($anExpression)}
+        builder.append(where);
+        if (${dialect.getVariable($anExpression)}.isPresent()) {
+            where = " AND ";
+        }
+#end
+#end
         String sqlString = builder.toString();
-        #foreach ($aQuery in $current.support.get(${aProperty}))
-        // add the select for ${aQuery}
-        #end
         TypedQuery<${current.name}> query = em.createNativeQuery(sqlString);
         return query.getResultList();
     }
