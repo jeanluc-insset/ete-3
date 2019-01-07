@@ -2,6 +2,7 @@ package fr.insset.jeanluc.action.semantics.builder;
 
 
 
+import fr.insset.jeanluc.el.dialect.Dialect;
 import fr.insset.jeanluc.ete.gel.AttributeNav;
 import fr.insset.jeanluc.ete.gel.GelExpression;
 import fr.insset.jeanluc.ete.gel.Self;
@@ -10,25 +11,32 @@ import fr.insset.jeanluc.ete.meta.model.emof.Feature;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
 import fr.insset.jeanluc.ete.meta.model.types.MofType;
+import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 /**
  *
  * @author jldeleage
  */
-public class QueryToSql {
+public class QueryToSql extends DynamicVisitorSupport implements Dialect {
+
+
+    public QueryToSql() {
+        register("visit", "fr.insset.jeanluc.ete.gel");
+    }
 
 
     public String getSql(MofProperty inRoot) {
         System.out.println("Generating SQL for property " + inRoot.getName());
         EnhancedMofClassImpl targetClass = (EnhancedMofClassImpl) inRoot.getType().getRecBaseType();
         EteQuery query = targetClass.getSupport().get(inRoot);
-        return getSql(query);
+        return getSql(query, new StringBuilder());
     }
 
-    public String   getSql(EteQuery inRoot) {
+    public String   getSql(EteQuery inRoot, StringBuilder builder) {
         int     numVar = inRoot.getNextVariableNum();
-        StringBuilder   builder = new StringBuilder("SELECT DISTINCT v0.* FROM ");
+        builder.append("SELECT DISTINCT v0.* FROM ");
         builder.append(inRoot.getTargetClass().getName().toUpperCase());
         builder.append(" AS v0 ");
         for (Step aJoin : inRoot.getJoins()) {
@@ -82,13 +90,13 @@ public class QueryToSql {
 
 
 
-    protected void addWhere(StringBuilder builder, EteFilter aFilter, boolean firstClause) {
+    protected void addWhere(StringBuilder builder, EteFilter aFilter, boolean firstClause) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         if (firstClause) {
-            builder.append("WHERE ");
+            builder.append(" WHERE ");
         } else {
             builder.append("    AND ");
         }
-        builder.append(aFilter.getInvariant().getSpecificationAsString());
+        genericVisit(aFilter.getExpression(), builder);
     }
 
 
@@ -127,5 +135,15 @@ public class QueryToSql {
         inoutBuilder.append(propName);
         inoutBuilder.append("_ID");
     }
+
+
+    //==========================================================================//
+
+
+    public GelExpression visitGelExpression(GelExpression inExpression, Object... inParameters) {
+        return inExpression;
+    }
+
+
 
 }

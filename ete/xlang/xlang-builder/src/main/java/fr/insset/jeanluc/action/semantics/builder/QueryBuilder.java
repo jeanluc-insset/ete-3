@@ -8,7 +8,9 @@ import fr.insset.jeanluc.ete.gel.impl.*;
 import fr.insset.jeanluc.ete.meta.model.constraint.Invariant;
 import fr.insset.jeanluc.ete.meta.model.emof.Feature;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
+import fr.insset.jeanluc.ete.meta.model.emof.TagValueDeclaration;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
+import fr.insset.jeanluc.ete.meta.model.types.Classifier;
 import fr.insset.jeanluc.ete.meta.model.types.MofType;
 import fr.insset.jeanluc.ete.xlang.Assignment;
 import fr.insset.jeanluc.ete.xlang.VariableDeclaration;
@@ -185,6 +187,7 @@ public class QueryBuilder extends DynamicVisitorSupport {
         registry.registerDefaultFactory("allocation", AllocationImpl.class);
         registry.registerDefaultFactory("loop", LoopImpl.class);
         registry.registerDefaultFactory("variabledeclaration", VariableDeclarationImpl.class);
+        registry.registerDefaultFactory(VariableDefinition.class, VariableDefinitionImpl.class);
         registry.registerDefaultFactory("methodinvocation", MethodInvocationImpl.class);
         registry.registerDefaultFactory("xlangexception", XLangExceptionImpl.class);
         registry.registerDefaultFactory("forloop", ForLoopImpl.class);
@@ -206,7 +209,7 @@ public class QueryBuilder extends DynamicVisitorSupport {
         System.out.println("B U I L D I N G   Q U E R I E S");
         System.out.println("1- building supports");
         for (MofClass aMofClass : allClasses) {
-            System.out.println("Examining " + aMofClass.getName());
+            System.out.println("    examining " + aMofClass.getName());
             for (MofProperty aProperty : aMofClass.getAllAttributes()) {
                 // By default it is a "plain" query, without any join nor filter
                 EteQuery    query = new EteQuery();
@@ -218,9 +221,13 @@ public class QueryBuilder extends DynamicVisitorSupport {
                 }
             }       // loop on properties
         }       // loop on classes
-        System.out.println("2- Actual building of queries");
+        System.out.println("2- Actual building of queries and filters");
         for (MofClass aMofClass : allClasses) {
             buildQueries(aMofClass);
+        }
+        System.out.println("3- Building and numbering variables");
+        for (MofClass aMofClass : allClasses) {
+            buildVariables((EnhancedMofClassImpl) aMofClass);
         }
         System.out.println("Q U E R I E S   A R E   B U I L T");
         System.out.println("---------------------------------");
@@ -257,13 +264,47 @@ public class QueryBuilder extends DynamicVisitorSupport {
             // First we build a copy of the expression, subsituting a variable
             // to any navigation.
             // The variables are registered in the result inout parameter
-            System.out.println("Building queries for " + anInvariant.getSpecificationAsString());
+            System.out.println("    building filters for " + anInvariant.getSpecificationAsString());
             EnhancedInvariantImpl   inv = (EnhancedInvariantImpl) anInvariant;
             GelExpression expression = inv.getExpression();
             genericVisit(expression, anInvariant, inMofClass);
         }       // loop on invariants
     }       // buildQueries(MofClass)
 
+
+
+    //========================================================================//
+
+    /**
+     * Once we get all filters of a 
+     * 
+     * @param inMofClass 
+     */
+    public void buildVariables(EnhancedMofClassImpl inMofClass) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        if (! "Pilot".equals(inMofClass.getName())) return;
+        Map<MofProperty, EteQuery> support = inMofClass.getSupport();
+        for (MofProperty aProperty : support.keySet()) {
+            EteQuery query = support.get(aProperty);
+            VariableBuilder builder = new VariableBuilder();
+            System.out.println("  Building variables for the query of " + aProperty.getName() + " in the class " + aProperty.getOwningMofClass().getName());
+            for (EteFilter aFilter : query.getFilters()) {
+                EnhancedInvariantImpl invariant = (EnhancedInvariantImpl) aFilter.getInvariant();
+                GelExpression specification = invariant.getExpression();
+                aFilter.setExpression((GelExpression) builder.genericVisit(specification, aFilter, query, aProperty, inMofClass));
+            }
+        }
+    }
+
+    /**
+     * This will replace expressions by variables, number them and add
+     * dependencies to the filter
+     * 
+     * @param aFilter
+     * @param query
+     * @param aProperty 
+     */
+    private void buildVariables(EteFilter aFilter, EteQuery query, MofProperty aProperty) {
+    }
 
 
     //========================================================================//
@@ -341,6 +382,100 @@ public class QueryBuilder extends DynamicVisitorSupport {
 
 
     //========================================================================//
+
+    public class VariableBuilder extends DynamicVisitorSupport {
+
+        public VariableBuilder() {
+            register("visit", "fr.insset.jeanluc.ete.gel");
+        }
+
+        /**
+         * By default, recursively clones the expression:
+         * the children
+         * of the clone are themselves the result of the visit of the operands
+         * of {@code inExpression}, they can be variables, parameters or clones
+         * of these operands.
+         * 
+         * @param inExpression
+         * @param inParameters
+         * @return 
+         */
+        public GelExpression visitGelExpression(GelExpression inExpression, Object... inParameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+            GelExpression result = (GelExpression) FactoryRegistry.newInstance(inExpression.getClass());
+            result.setType(inExpression.getType());
+            Map<TagValueDeclaration, Object> tagValues = inExpression.getTagValues();
+            result.setTagValues(tagValues);
+            List<GelExpression> operand = inExpression.getOperand();
+            if (operand == null)
+                return result;
+            List<GelExpression> resultOperand = FactoryMethods.newList(GelExpression.class);
+            result.setOperand(resultOperand);
+            for (GelExpression anOperand : operand) {
+                GelExpression clone = (GelExpression) genericVisit(anOperand, inParameters);
+                resultOperand.add(clone);
+            }
+            return result;
+        }
+
+        /**
+         * Currently an Includes expression is a kind of Step (this should be
+         * fixed in a future release). If we let the standard handling for step
+         * expressions, only the first operand is parsed.<br>
+         * On the other hand, the standard handling of ordinary expression works
+         * fine... So this method invokes visitGelExpression.
+         */
+        public GelExpression visitIncludes(Includes inExpression, Object... inParameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+            return visitGelExpression(inExpression, inParameters);
+        }
+
+        /**
+         * The parameters are the filter matching the expression the navigation
+         * belongs to, the query containing that filter and its macthing
+         * property
+         */
+        public GelExpression visitStep(Step inStep, Object... inParameters) throws InstantiationException, IllegalAccessException {
+            MofProperty queriedProperty = (MofProperty) inParameters[2];
+            Feature toFeature = inStep.getToFeature();
+            if (toFeature != null)
+                System.out.println("    Visiting a step to "
+                    + toFeature.getName()
+                    + " during creation of variables of the query for " + queriedProperty.getName());
+            Step startStep = inStep;
+            StringBuilder   builder = new StringBuilder();
+            do {
+                List<GelExpression> operand = startStep.getOperand();
+                if (operand == null || operand.size() == 0) break;
+                Step previous = (Step) operand.get(0);
+                if (previous instanceof Self) break;
+                startStep = previous;
+            } while (true);
+            MofProperty startProperty = (MofProperty) startStep.getToFeature();
+            System.out.println("        starting step : " + startProperty.getName());
+            Classifier  owningMofClass = startProperty.getOwningMofClass();
+            MofClass    targetClass = (MofClass) inParameters[3];
+            System.out.println("           owning class : " + owningMofClass.getName() + " target class : " + targetClass.getName());
+            if (queriedProperty.equals(startProperty)) {
+                System.out.println("      the start property is the one we are building variables for");
+            } else {
+                // the start property is not the property we are building
+                // variables for
+                // We must therefore substitute a variable to the whole navigation
+                // and add the start property to the dependances of the filter
+                VariableDefinition variable = (VariableDefinition) FactoryRegistry.newInstance(VariableDefinition.class);
+                variable.setValue(inStep);
+                EteQuery query = (EteQuery) inParameters[1];
+                int         numVar = query.getNextVariableNum();
+                String      variableName = "p" + numVar;
+                variable.setName(variableName);
+                System.out.println("           *** WE CREATE THE PARAMETER " + variableName + " FOR THIS NAVIGATION ***");
+                numVar++;
+                query.setNextVariableNum(numVar);
+                return variable;
+            }
+            return inStep;
+        }
+
+    }       // VariableBuilder
 
 
 

@@ -117,7 +117,13 @@ public class FilterBuilderTest {
         Map<MofProperty, EteQuery> support = pilotClass.getSupport();
         EteQuery captainQuery = support.get(captain);
         QueryToSql  translator = new QueryToSql();
-        String sql = translator.getSql(captainQuery);
+        StringBuilder builder = new StringBuilder();
+        String sql = translator.getSql(captainQuery, builder);
+        boolean     firstOne = true;
+        for (EteFilter aFilter : captainQuery.getFilters()) {
+            translator.addWhere(builder, aFilter, firstOne);
+            firstOne = false;
+        }
         // We should get something like :
         /*
         SELECT DISTINCT v0.* FROM PILOT AS v0
@@ -141,7 +147,7 @@ public class FilterBuilderTest {
         // We can see the following defaults :
         // 1- the numbering is wrong
         // 2- the conditions are not OK at all
-        System.out.println("SQL : [[[ " + sql + " ]]]");
+        System.out.println("SQL : [[[ " + builder.toString() + " ]]]");
     }
 
 
