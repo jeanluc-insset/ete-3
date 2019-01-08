@@ -5,14 +5,19 @@ package fr.insset.jeanluc.action.semantics.builder;
 import fr.insset.jeanluc.el.dialect.Dialect;
 import fr.insset.jeanluc.ete.gel.AttributeNav;
 import fr.insset.jeanluc.ete.gel.GelExpression;
+import fr.insset.jeanluc.ete.gel.Includes;
+import fr.insset.jeanluc.ete.gel.Literal;
 import fr.insset.jeanluc.ete.gel.Self;
 import fr.insset.jeanluc.ete.gel.Step;
+import fr.insset.jeanluc.ete.gel.StringLiteral;
+import fr.insset.jeanluc.ete.gel.VariableDefinition;
 import fr.insset.jeanluc.ete.meta.model.emof.Feature;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
 import fr.insset.jeanluc.ete.meta.model.types.MofType;
 import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 
 /**
@@ -140,10 +145,93 @@ public class QueryToSql extends DynamicVisitorSupport implements Dialect {
     //==========================================================================//
 
 
-    public GelExpression visitGelExpression(GelExpression inExpression, Object... inParameters) {
+    public GelExpression visitGelExpression(GelExpression inExpression, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException {
+        StringBuilder builder = (StringBuilder) inParameters[0];
+        List<GelExpression> operand = inExpression.getOperand();
+        if (operand != null) {
+            switch (operand.size()) {
+                case 0:
+                    System.out.println("noop");
+                    return inExpression;
+                case 1:
+                    addSymbol(inExpression, builder);
+                    genericVisit(operand.get(0), inParameters);
+                    return inExpression;
+                case 2:
+                    genericVisit(operand.get(0), inParameters);
+                    addSymbol(inExpression, builder);
+                    genericVisit(operand.get(1), inParameters);
+                    return inExpression;
+            }
+        }
         return inExpression;
     }
 
+
+    protected void addSymbol(GelExpression inExpression, StringBuilder builder) throws NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        Object symbol;
+        Method method = inExpression.getClass().getMethod("getSymbol", new Class[0]);
+        if (method == null) {
+            symbol = inExpression.getValueOf("symbol");
+        } else {
+            symbol = method.invoke(inExpression, new Object[0]);
+        }
+        if (symbol != null) {
+            builder.append(symbol);
+        } else {
+            builder.append(inExpression.getClass().getName());
+        }
+    }
+
+
+    public GelExpression visitStep(Step inStep, Object... inParameters) {
+        StringBuilder builder = (StringBuilder) inParameters[0];
+        Feature toFeature = inStep.getToFeature();
+        if (toFeature == null) {
+            return inStep;
+        }
+        builder.append(toFeature.getName());
+        builder.append(".ID");
+        return  inStep;
+    }
+
+    public Includes visitIncludes(Includes inIncludes, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        StringBuilder builder = (StringBuilder) inParameters[0];
+        List<GelExpression> operand = inIncludes.getOperand();
+        genericVisit(operand.get(0), inParameters);
+        builder.append(" contains ");
+        genericVisit(operand.get(1), inParameters);
+        return inIncludes;
+    }
+
+    public Self visitSelf(Self inSelf, Object... inParameters) {
+        StringBuilder builder = (StringBuilder) inParameters[0];
+        builder.append("v0.ID");
+        return inSelf;
+    }
+
+
+    public VariableDefinition visitVariableDefinition(VariableDefinition inVariable, Object... inParameters) {
+        StringBuilder builder = (StringBuilder) inParameters[0];
+        builder.append(":");
+        builder.append(inVariable.getName());
+        return inVariable;
+    }
+
+
+    public Literal  visitLiteral(Literal inLiteral, Object... inParameters) {
+        StringBuilder builder = (StringBuilder) inParameters[0];
+        builder.append(inLiteral.getValue());
+        return inLiteral;
+    }
+
+    public StringLiteral visitStringLiteral(StringLiteral inLiteral, Object... inParameters) {
+        StringBuilder builder = (StringBuilder) inParameters[0];
+        builder.append("'");
+        builder.append(inLiteral.getValue());
+        builder.append("'");
+        return inLiteral;
+    }
 
 
 }

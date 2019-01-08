@@ -147,7 +147,7 @@ public class FilterBuilderTest {
         // We can see the following defaults :
         // 1- the numbering is wrong
         // 2- the conditions are not OK at all
-        System.out.println("SQL : [[[ " + builder.toString() + " ]]]");
+        System.out.println("SQL : [[[\n" + builder.toString() + "\n]]]");
     }
 
 

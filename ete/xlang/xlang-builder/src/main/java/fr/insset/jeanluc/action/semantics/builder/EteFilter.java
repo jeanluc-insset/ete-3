@@ -4,10 +4,14 @@ package fr.insset.jeanluc.action.semantics.builder;
 
 import fr.insset.jeanluc.ete.gel.AttributeNav;
 import fr.insset.jeanluc.ete.gel.GelExpression;
+import fr.insset.jeanluc.ete.gel.Step;
+import fr.insset.jeanluc.ete.gel.VariableDefinition;
 import fr.insset.jeanluc.ete.meta.model.constraint.Invariant;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
+import fr.insset.jeanluc.util.factory.FactoryMethods;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -89,6 +93,10 @@ import java.util.List;
  */
 public class EteFilter {
 
+    public EteFilter() throws InstantiationException {
+        variables = FactoryMethods.newMap(Step.class, VariableDefinition.class);
+    }
+
 
     public MofProperty getFilteredProperty() {
         return filteredProperty;
@@ -140,14 +148,32 @@ public class EteFilter {
     //==========================================================================//
 
 
+
+    public Map<Step, VariableDefinition> getVariables() {
+        return variables;
+    }
+
+    public void setVariables(Map<Step, VariableDefinition> variables) {
+        this.variables = variables;
+    }
+
+    public void addVariable(Step inStep, VariableDefinition inVariable) {
+        variables.put(inStep, inVariable);
+    }
+
+
+    //==========================================================================//
+
+
     List<AttributeNav>  navigations = new LinkedList<>(); 
     MofProperty         filteredProperty;
     Invariant           invariant;
     /**
      * <div>
-     * It is the original expression of the invariant where all navigations are
-     * replaced by variables but the navigations starting with the
-     * filteredProperty.
+     * It is the original expression of the invariant where some navigations are
+     * replaced by parameters (actually variables). The navigations starting with
+     * the filteredProperty are associated to variable but are not substituted,
+     * other navigations are substituted.
      * </div>
      * <div>
      * In the airways sample, the {@code captain} property is associated to two
@@ -159,6 +185,7 @@ public class EteFilter {
      * {@code v3 = v4}<br>
      * </div>
      */
-    GelExpression       expression;
+    GelExpression                   expression;
+    Map<Step, VariableDefinition>   variables;
 
 }

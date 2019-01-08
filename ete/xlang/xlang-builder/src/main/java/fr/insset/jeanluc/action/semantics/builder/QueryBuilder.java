@@ -339,7 +339,7 @@ public class QueryBuilder extends DynamicVisitorSupport {
     }
 
 
-    public GelExpression visitAttributeNav(AttributeNav inNav, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    public GelExpression visitAttributeNav(AttributeNav inNav, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException {
         MofProperty property = (MofProperty) inNav.getToFeature();
         EnhancedInvariantImpl invariant = (EnhancedInvariantImpl) inParameters[0];
         invariant.addToSupport(inNav);
@@ -347,7 +347,7 @@ public class QueryBuilder extends DynamicVisitorSupport {
         return inNav;
     }
     
-    public GelExpression visitCollect(Collect inCollect, Object... inParameters) {
+    public GelExpression visitCollect(Collect inCollect, Object... inParameters) throws InstantiationException {
         MofProperty property = (MofProperty) inCollect.getToFeature();
         EnhancedInvariantImpl invariant = (EnhancedInvariantImpl) inParameters[0];
         invariant.addToSupport(inCollect);
@@ -357,7 +357,7 @@ public class QueryBuilder extends DynamicVisitorSupport {
 
 
 
-    public void addInnerJoin(Step inNav, Step inFullNav, EnhancedInvariantImpl inInvariant) {
+    public void addInnerJoin(Step inNav, Step inFullNav, EnhancedInvariantImpl inInvariant) throws InstantiationException {
         GelExpression operand = inNav.getOperand().get(0);
         if (operand instanceof Self) {
             Feature toFeature = inNav.getToFeature();
@@ -441,7 +441,6 @@ public class QueryBuilder extends DynamicVisitorSupport {
                     + toFeature.getName()
                     + " during creation of variables of the query for " + queriedProperty.getName());
             Step startStep = inStep;
-            StringBuilder   builder = new StringBuilder();
             do {
                 List<GelExpression> operand = startStep.getOperand();
                 if (operand == null || operand.size() == 0) break;
@@ -454,17 +453,21 @@ public class QueryBuilder extends DynamicVisitorSupport {
             Classifier  owningMofClass = startProperty.getOwningMofClass();
             MofClass    targetClass = (MofClass) inParameters[3];
             System.out.println("           owning class : " + owningMofClass.getName() + " target class : " + targetClass.getName());
+            VariableDefinition variable = (VariableDefinition) FactoryRegistry.newInstance(VariableDefinition.class);
+            variable.setValue(inStep);
+            EteQuery query = (EteQuery) inParameters[1];
+            int         numVar = query.getNextVariableNum();
             if (queriedProperty.equals(startProperty)) {
                 System.out.println("      the start property is the one we are building variables for");
+                String      variableName = "v" + numVar;
+                variable.setName(variableName);
+                EteFilter filter = (EteFilter) inParameters[0];
+                filter.addVariable(inStep, variable);
             } else {
                 // the start property is not the property we are building
                 // variables for
                 // We must therefore substitute a variable to the whole navigation
                 // and add the start property to the dependances of the filter
-                VariableDefinition variable = (VariableDefinition) FactoryRegistry.newInstance(VariableDefinition.class);
-                variable.setValue(inStep);
-                EteQuery query = (EteQuery) inParameters[1];
-                int         numVar = query.getNextVariableNum();
                 String      variableName = "p" + numVar;
                 variable.setName(variableName);
                 System.out.println("           *** WE CREATE THE PARAMETER " + variableName + " FOR THIS NAVIGATION ***");
@@ -472,12 +475,12 @@ public class QueryBuilder extends DynamicVisitorSupport {
                 query.setNextVariableNum(numVar);
                 return variable;
             }
+            numVar++;
+            query.setNextVariableNum(numVar);                
             return inStep;
         }
 
     }       // VariableBuilder
-
-
 
 }       // QueryBuilder
 
