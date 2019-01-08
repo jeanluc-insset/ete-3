@@ -366,7 +366,6 @@ public class QueryBuilder extends DynamicVisitorSupport {
                 EnhancedMofClassImpl mofClass = (EnhancedMofClassImpl)targetType;
                 Map<MofProperty, EteQuery> support = mofClass.getSupport();
                 EteQuery query = support.get(toFeature);
-                query.addJoin(inFullNav);
                 EteFilter   filter = new EteFilter();
                 filter.setInvariant(inInvariant);
                 filter.setFilteredProperty((MofProperty) toFeature);

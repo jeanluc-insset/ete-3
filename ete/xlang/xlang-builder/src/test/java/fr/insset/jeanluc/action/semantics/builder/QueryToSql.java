@@ -44,9 +44,9 @@ public class QueryToSql extends DynamicVisitorSupport implements Dialect {
         builder.append("SELECT DISTINCT v0.* FROM ");
         builder.append(inRoot.getTargetClass().getName().toUpperCase());
         builder.append(" AS v0 ");
-        for (Step aJoin : inRoot.getJoins()) {
-            numVar = buildJoins(builder, aJoin, numVar);
-        }
+//        for (Step aJoin : inRoot.getJoins()) {
+//            numVar = buildJoins(builder, aJoin, numVar);
+//        }
         inRoot.setNextVariableNum(numVar);
         return builder.toString();
     }

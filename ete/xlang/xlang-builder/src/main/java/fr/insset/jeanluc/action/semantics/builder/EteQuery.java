@@ -67,13 +67,13 @@ public class EteQuery {
     }
 
 
-    public List<Step> getJoins() {
+    public List<Join> getJoins() {
         return joins;
     }
 
 
-    public void addJoin(Step inNav) {
-        joins.add(inNav);
+    public void addJoin(Join inJoin) {
+        joins.add(inJoin);
     }
 
 
@@ -99,7 +99,7 @@ public class EteQuery {
 
 
 
-    private     List<Step>                 joins = new LinkedList<>();
+    private     List<Join>                  joins = new LinkedList<>();
     /**
      * Every navigation starting with another property than the associated one
      * is replaced by a variable.<br>
