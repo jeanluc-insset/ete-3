@@ -24,10 +24,6 @@ import java.util.List;
  * <div>
  * As expected, this class builds an SQL query from an EteQuery instance.
  * </div>
- * <div>
- * It achieves this goal visiting Join instances (to build the join clauses) and
- * GelExpression instances (to build the where/and clauses).
- * </div>
  * 
  * @author jldeleage
  */
@@ -35,8 +31,6 @@ public class QueryToSql extends DynamicVisitorSupport implements Dialect {
 
 
     public QueryToSql() {
-        // these methods build the join statements
-        register("build", "fr.insset.jeanluc.action.semantics.builder");
         // there methods build the where/and statements
         register("visit", "fr.insset.jeanluc.ete.gel");
     }
@@ -63,97 +57,26 @@ public class QueryToSql extends DynamicVisitorSupport implements Dialect {
      * @param builder
      * @return 
      */
-    public String getJoin(Join inJoin) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
-        StringBuilder builder = new StringBuilder();
-        genericVisit(inJoin, builder);
-        return builder.toString();
-    }
-
-
-    protected void addJoin(Join inJoin, StringBuilder builder) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        genericVisit(inJoin, builder);
-    }
- 
-
-    public Join buildJoin(Join inJoin, Object... inParameters) {
-        StringBuilder builder = (StringBuilder) inParameters[0];
+    public void addJoin(Join inJoin, StringBuilder builder) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
         builder.append(" LEFT OUTER JOIN ");
-        Feature targetFeature = inJoin.getTargetFeature();
-        MofType type = targetFeature.getType().getRecBaseType();
-        String  name = type.getName().toUpperCase();
-        builder.append(name);
+        builder.append(inJoin.getTargetTable());
         builder.append(" AS ");
-        String targetVariableName = inJoin.getTargetVariableName();
-        builder.append(targetVariableName);
+        builder.append(inJoin.getTargetVariable());
         builder.append(" ON ");
-        if (inJoin.isReverseNames()) {
-            builder.append("TODO");
-        } else {
-            // "normal" order : the src table holds a foreign key to the
-            // primary key of the target table
-            builder.append(inJoin.getSrcVariableNameAndField());
-            builder.append(".");
-            builder.append(inJoin.getTargetFeature().getName().toUpperCase());
-            builder.append("_ID=");
-            builder.append(inJoin.getTargetVariableName());
-            builder.append(".ID");
-        }
-        return inJoin;
-    }
-
-
-    public DoubleJoin buildDoubleJoin(DoubleJoin inDoubleJoin, Object... inParameters) {
-        StringBuilder builder = (StringBuilder) inParameters[0];
-        buildJoin(inDoubleJoin.getFirstJoin(), builder);
-        buildJoin(inDoubleJoin.getSecondJoin(), builder);
-        return inDoubleJoin;
-    }
-
-
-    /**
-     * Walks recursively to the "leaf" of the navigation (i.e.the "start" of
-     * the navigation which should be self) and then builds joins.
-     * 
-     * @param builder : builder where the query is built
-     * @param step : partial navigation to join
-     * @param numVar : number of the variable to name the joined table
-     * @return : next number to use for the variable
-     */
-    protected int buildJoins(StringBuilder builder, Step step, int numVar) {
-        List<GelExpression> operand = step.getOperand();
-        // NO : we must consider that some subnavigations can start from
-        // other entity than the initial context
-        if (operand == null) return 1;
-        if (operand.size() == 0) return 1;
-        GelExpression first = operand.get(0);
-        if (first instanceof Self) return 1;
-        // Let's first build previous joins
-        numVar               = buildJoins(builder, (Step) first, numVar);
-        // Now we build this step
-        MofProperty property = (MofProperty) step.getToFeature();
-        MofClass    srcClass = (MofClass) property.getOwningMofClass();
-        String      srcName  = srcClass.getName().toUpperCase();
-        String      name     = property.getName().toUpperCase();
-        MofType     type     = property.getType();
-        MofType     baseType = type.getRecBaseType();
-        if (!(baseType instanceof MofClass)) {
-            return numVar;
-        }
-        String typeName = baseType.getName().toUpperCase();
-        if (type.isCollection()) {
-            addJoinTable(builder, numVar-1, numVar,
-                    srcName, typeName, name);
-            numVar +=2 ;
-        } else {
-            addJoin(builder, numVar-1, numVar, typeName, name, false);
-            numVar++;
-        }
-        return numVar;
+        builder.append(inJoin.getStartVariable());
+        builder.append(".");
+        builder.append(inJoin.getStartProperty());
+        builder.append("=");
+        builder.append(inJoin.getTargetVariable());
+        builder.append(".");
+        builder.append(inJoin.getTargetProperty());
     }
 
 
 
-    protected void addWhere(StringBuilder builder, EteFilter aFilter, boolean firstClause) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+
+
+    protected void addWhere(EteFilter aFilter, StringBuilder builder, boolean firstClause) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         if (firstClause) {
             builder.append(" WHERE ");
         } else {
@@ -162,42 +85,6 @@ public class QueryToSql extends DynamicVisitorSupport implements Dialect {
         genericVisit(aFilter.getExpression(), builder);
     }
 
-
-    protected void addJoinTable(StringBuilder inoutBuilder, int start, int end, String startName, String targetName, String propName) {
-        System.out.println("Adding a join table from " + startName + " to " + targetName + " for property " + propName);
-        String  betweenName = startName + "_" + targetName;
-        addJoin(inoutBuilder, start, end, betweenName, startName, true);
-        addJoin(inoutBuilder, end, end+1, targetName, propName, false);
-    }
-
-
-    /**
-     * 
-     * @param inoutBuilder : the builder where to build the joins
-     * @param srcNumber : number of the variable associated to the table containing the foreign key
-     * @param targetNumber : number of the variable associated to the table containing the primary key
-     * @param joinTable : name of the table to join
-     * @param propName  : name of... the property!
-     */
-    protected void addJoin(StringBuilder inoutBuilder, int srcNumber, int targetNumber, String joinTable, String propName, boolean reverseNumbers) {
-        System.out.println("target:" + targetNumber + ", joinTable:" + joinTable);
-        inoutBuilder.append(" LEFT JOIN ");
-        inoutBuilder.append(joinTable);
-        inoutBuilder.append(" AS v");
-        inoutBuilder.append(targetNumber);
-        if (reverseNumbers) {
-            int aux = srcNumber;
-            srcNumber = targetNumber;
-            targetNumber = aux;
-        }
-        inoutBuilder.append(" ON v");
-        inoutBuilder.append(targetNumber);
-        inoutBuilder.append(".ID=v");
-        inoutBuilder.append(srcNumber);
-        inoutBuilder.append(".");
-        inoutBuilder.append(propName);
-        inoutBuilder.append("_ID");
-    }
 
 
     //==========================================================================//

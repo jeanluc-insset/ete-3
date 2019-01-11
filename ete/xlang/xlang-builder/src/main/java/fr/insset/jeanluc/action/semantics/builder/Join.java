@@ -18,69 +18,66 @@ import fr.insset.jeanluc.ete.meta.model.types.MofType;
  */
 public class Join {
 
-    public Join() {
-    }
 
-
-    /**
-     * <div>
-     * An instance of this class is intented to make the generation of SQL
-     * queries with complex navigations easy.<br>
-     * Typically, an instance gives the following clause&nbsp;<pre><code>
-     * LEFT OUTER JOIN &lt;targetTableName&gt; AS &lt;targetAliasName&gt;
-     *     ON &lt;targetAliasName&gt;.&lt;propName&gt; = v&lt;srcAliasNumber&gt;.ID
-     * </code></pre>
-     * </div>
-     */
-    public Join(Feature targetFeature, String targetVariableName, String srcVariableNameAndField, boolean reverseNames) {
-        this.targetFeature = targetFeature;
-        this.targetVariableName = targetVariableName;
-        this.srcVariableNameAndField = srcVariableNameAndField;
-        this.reverseNames = reverseNames;
-    }
-
-    public Feature getTargetFeature() {
-        return targetFeature;
-    }
-
-    public void setTargetFeature(Feature targetFeature) {
-        this.targetFeature = targetFeature;
-    }
-
-    public String getTargetVariableName() {
-        return targetVariableName;
-    }
-
-    public void setTargetVariableName(String targetVariableName) {
-        this.targetVariableName = targetVariableName;
-    }
-
-    public String getSrcVariableNameAndField() {
-        return srcVariableNameAndField;
-    }
-
-    public void setSrcVariableNameAndField(String srcVariableNameAndField) {
-        this.srcVariableNameAndField = srcVariableNameAndField;
-    }
-
-    public boolean isReverseNames() {
-        return reverseNames;
-    }
-
-    public void setReverseNames(boolean reverseNames) {
-        this.reverseNames = reverseNames;
+    public Join(String startVariable, String startProperty, String targetVariable, String targetTable, String targetProperty) {
+        this.startVariable = startVariable;
+        this.startProperty = startProperty;
+        this.targetVariable = targetVariable;
+        this.targetTable = targetTable;
+        this.targetProperty = targetProperty;
     }
 
 
 
-    private Feature     targetFeature;
-    private String      targetVariableName;
-    private String      srcVariableNameAndField;
-    /** If false, the join is "ManyToOne"
-     * otherwise it is "OneToMany"
-     */
-    private boolean     reverseNames;
+    public String getStartVariable() {
+        return startVariable;
+    }
+
+    public void setStartVariable(String startVariable) {
+        this.startVariable = startVariable;
+    }
+
+    public String getStartProperty() {
+        return startProperty;
+    }
+
+    public void setStartProperty(String startProperty) {
+        this.startProperty = startProperty;
+    }
+
+    public String getTargetVariable() {
+        return targetVariable;
+    }
+
+    public void setTargetVariable(String targetVariable) {
+        this.targetVariable = targetVariable;
+    }
+
+    public String getTargetTable() {
+        return targetTable;
+    }
+
+    public void setTargetTable(String targetTable) {
+        this.targetTable = targetTable;
+    }
+
+    public String getTargetProperty() {
+        return targetProperty;
+    }
+
+    public void setTargetProperty(String targetProperty) {
+        this.targetProperty = targetProperty;
+    }
 
 
+
+
+
+
+    private String      startVariable;
+    private String      startProperty;
+    private String      targetVariable;
+    private String      targetTable;
+    private String      targetProperty;
 
 }
