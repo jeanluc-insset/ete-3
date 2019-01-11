@@ -21,34 +21,92 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 /**
- *
+ * <div>
+ * As expected, this class builds an SQL query from an EteQuery instance.
+ * </div>
+ * <div>
+ * It achieves this goal visiting Join instances (to build the join clauses) and
+ * GelExpression instances (to build the where/and clauses).
+ * </div>
+ * 
  * @author jldeleage
  */
 public class QueryToSql extends DynamicVisitorSupport implements Dialect {
 
 
     public QueryToSql() {
+        // these methods build the join statements
+        register("build", "fr.insset.jeanluc.action.semantics.builder");
+        // there methods build the where/and statements
         register("visit", "fr.insset.jeanluc.ete.gel");
     }
 
 
-    public String getSql(MofProperty inRoot) {
-        System.out.println("Generating SQL for property " + inRoot.getName());
-        EnhancedMofClassImpl targetClass = (EnhancedMofClassImpl) inRoot.getType().getRecBaseType();
-        EteQuery query = targetClass.getSupport().get(inRoot);
-        return getSql(query, new StringBuilder());
+    //==========================================================================//
+
+
+    public String addSelect(EteQuery inQuery, StringBuilder builder) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        MofProperty root = inQuery.getProperty();
+        EnhancedMofClassImpl targetClass = (EnhancedMofClassImpl) root.getType().getRecBaseType();
+        EteQuery query = targetClass.getSupport().get(root);
+        builder.append("SELECT DISTINCT v0.* FROM ");
+        builder.append(query.getTargetClass().getName().toUpperCase());
+        builder.append(" AS v0");
+        return builder.toString();
     }
 
-    public String   getSql(EteQuery inRoot, StringBuilder builder) {
-        int     numVar = inRoot.getNextVariableNum();
-        builder.append("SELECT DISTINCT v0.* FROM ");
-        builder.append(inRoot.getTargetClass().getName().toUpperCase());
-        builder.append(" AS v0 ");
-//        for (Step aJoin : inRoot.getJoins()) {
-//            numVar = buildJoins(builder, aJoin, numVar);
-//        }
-        inRoot.setNextVariableNum(numVar);
+
+    /**
+     * If all parameters of a filter are present we must add the joins.<br>
+     * 
+     * @param inJoin
+     * @param builder
+     * @return 
+     */
+    public String getJoin(Join inJoin) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+        StringBuilder builder = new StringBuilder();
+        genericVisit(inJoin, builder);
         return builder.toString();
+    }
+
+
+    protected void addJoin(Join inJoin, StringBuilder builder) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        genericVisit(inJoin, builder);
+    }
+ 
+
+    public Join buildJoin(Join inJoin, Object... inParameters) {
+        StringBuilder builder = (StringBuilder) inParameters[0];
+        builder.append(" LEFT OUTER JOIN ");
+        Feature targetFeature = inJoin.getTargetFeature();
+        MofType type = targetFeature.getType().getRecBaseType();
+        String  name = type.getName().toUpperCase();
+        builder.append(name);
+        builder.append(" AS ");
+        String targetVariableName = inJoin.getTargetVariableName();
+        builder.append(targetVariableName);
+        builder.append(" ON ");
+        if (inJoin.isReverseNames()) {
+            builder.append("TODO");
+        } else {
+            // "normal" order : the src table holds a foreign key to the
+            // primary key of the target table
+            builder.append(inJoin.getSrcVariableNameAndField());
+            builder.append(".");
+            builder.append(inJoin.getTargetFeature().getName().toUpperCase());
+            builder.append("_ID=");
+            builder.append(inJoin.getTargetVariableName());
+            builder.append(".ID");
+        }
+        return inJoin;
+    }
+
+
+    public DoubleJoin buildDoubleJoin(DoubleJoin inDoubleJoin, Object... inParameters) {
+        StringBuilder builder = (StringBuilder) inParameters[0];
+        buildJoin(inDoubleJoin.getFirstJoin(), builder);
+        buildJoin(inDoubleJoin.getSecondJoin(), builder);
+        return inDoubleJoin;
     }
 
 

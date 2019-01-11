@@ -3,12 +3,19 @@ package fr.insset.jeanluc.action.semantics.builder;
 
 
 import fr.insset.jeanluc.ete.gel.AttributeNav;
+import fr.insset.jeanluc.ete.gel.GelExpression;
+import fr.insset.jeanluc.ete.gel.Self;
 import fr.insset.jeanluc.ete.gel.Step;
 import fr.insset.jeanluc.ete.gel.VariableDefinition;
+import fr.insset.jeanluc.ete.meta.model.emof.Feature;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
+import fr.insset.jeanluc.ete.meta.model.types.MofType;
+import fr.insset.jeanluc.util.factory.FactoryMethods;
+import fr.insset.jeanluc.util.factory.FactoryRegistry;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 
 
@@ -46,6 +53,9 @@ import java.util.List;
  */
 public class EteQuery {
 
+    public EteQuery() throws InstantiationException {
+        parameters = FactoryMethods.newMap(Step.class, VariableDefinition.class);
+    }
 
 
     public List<EteFilter> getFilters() {
@@ -67,15 +77,6 @@ public class EteQuery {
     }
 
 
-    public List<Join> getJoins() {
-        return joins;
-    }
-
-
-    public void addJoin(Join inJoin) {
-        joins.add(inJoin);
-    }
-
 
 
     public MofClass     getTargetClass() {
@@ -88,26 +89,107 @@ public class EteQuery {
     }
 
 
-    public int getNextVariableNum() {
-        return nextVariableNum;
+    public int getNextParameterNum() {
+        return nextParameterNum;
     }
 
-    public void setNextVariableNum(int nextVariableNum) {
-        this.nextVariableNum = nextVariableNum;
+    public void setNextParameterNum(int nextParameterNum) {
+        this.nextParameterNum = nextParameterNum;
     }
 
 
 
+    public Map<Step, VariableDefinition> getParameters() {
+        return parameters;
+    }
 
-    private     List<Join>                  joins = new LinkedList<>();
+    public void setParameters(Map<Step, VariableDefinition> parameters) {
+        this.parameters = parameters;
+    }
+
+    public VariableDefinition addParameter(Step inStep) throws InstantiationException, IllegalAccessException {
+        VariableDefinition variable = (VariableDefinition) FactoryRegistry.newInstance(VariableDefinition.class);
+        variable.setValue(inStep);
+        variable.setName("" + nextParameterNum++);
+        parameters.put(inStep, variable);
+        return variable;
+    }
+
+    public void addVariable(Step inStep, VariableDefinition inVariable) {
+        parameters.put(inStep, inVariable);
+    }
+
+
+    public VariableDefinition   getParameter(Step inStep) {
+        return parameters.get(inStep);
+    }
+
+
+    //=========================================================================//
+
+
+    public Join addJoin(Step inStep) throws InstantiationException, IllegalAccessException {
+        Feature feature = inStep.getToFeature();
+        MofType featureType = feature.getType();
+        String  featureName = feature.getName();
+        MofType targetType  = featureType.getRecBaseType();
+        String  targetTableName = targetType.getName().toUpperCase();
+        String  startParameterName;
+        Step firstOperand = (Step)inStep.getOperand().get(0);
+        if (firstOperand instanceof Self) {
+            startParameterName = "v0";
+        } else {
+            VariableDefinition exp = parameters.get(firstOperand);
+            startParameterName = exp.getName();
+        }
+        Join    join = null;
+        if (featureType.isCollection()) {
+            Join    firstJoin = new Join();
+            Join    secondJoin = new Join();
+            firstJoin.setTargetFeature(feature);
+            firstJoin.setReverseNames(false);
+            firstJoin.setSrcVariableNameAndField(startParameterName);
+            VariableDefinition definition = newVariable();
+            firstJoin.setTargetVariableName(definition.getName());
+            secondJoin.setTargetFeature(feature);
+            secondJoin.setReverseNames(false);
+            secondJoin.setSrcVariableNameAndField(targetTableName);
+            definition = newVariable();
+            secondJoin.setTargetVariableName(definition.getName());
+            join = new DoubleJoin(firstJoin, secondJoin);
+            parameters.put(inStep, definition);
+        } else {
+            join = new Join();
+            VariableDefinition definition = newVariable();        
+            join.setTargetFeature(feature);
+            join.setReverseNames(false);
+            join.setSrcVariableNameAndField(startParameterName);
+            join.setTargetVariableName(definition.getName());
+        }
+
+//        Join join = new Join(startParameterName, nextJoinNum, targetTableName, propName, true);
+        return join;
+    }
+
+    protected VariableDefinition newVariable() throws InstantiationException, IllegalAccessException {
+        VariableDefinition definition = (VariableDefinition) FactoryRegistry.newInstance(VariableDefinition.class);
+        definition.setName("v" + nextJoinNum++);
+        return definition;
+    }
+
+    //=========================================================================//
+
     /**
      * Every navigation starting with another property than the associated one
-     * is replaced by a variable.<br>
+     * is replaced by a parameter.<br>
+     * Every step of a navigation starting from the property associated to the
+     * query is replaced by a variable.
      * 
      */
-    private     List<VariableDefinition>    variables = new LinkedList<>();
-    private     List<EteFilter>             filters = new LinkedList<>();
-    private     MofProperty                 property;
-    private     int                         nextVariableNum=1;
+    private     Map<Step, VariableDefinition>   parameters;
+    private     List<EteFilter>                 filters = new LinkedList<>();
+    private     MofProperty                     property;
+    private     int                             nextParameterNum=1;
+    private     int                             nextJoinNum=1;
 
 }

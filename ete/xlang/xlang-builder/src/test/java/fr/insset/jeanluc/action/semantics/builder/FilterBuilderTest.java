@@ -93,7 +93,6 @@ public class FilterBuilderTest {
         List<Invariant> invariants = (List<Invariant>) flightClass.getInvariants();
         EnhancedInvariantImpl captainIsCertified = (EnhancedInvariantImpl) invariants.get(1);
         Collection<Step> invariantSupport = captainIsCertified.getSupport();
-        System.out.println("Size of the invariant support : " + invariantSupport);
         for (Step aStep : invariantSupport) {
             MofProperty aProperty = (MofProperty) aStep.getToFeature();
             Step    root = aStep;
@@ -118,12 +117,14 @@ public class FilterBuilderTest {
         EteQuery captainQuery = support.get(captain);
         QueryToSql  translator = new QueryToSql();
         StringBuilder builder = new StringBuilder();
-        String sql = translator.getSql(captainQuery, builder);
+        translator.addSelect(captainQuery, builder);
         boolean     firstOne = true;
         for (EteFilter aFilter : captainQuery.getFilters()) {
-            translator.addWhere(builder, aFilter, firstOne);
-            firstOne = false;
+            for (Join aJoin : aFilter.getJoins()) {
+                translator.addJoin(aJoin, builder);
+            }
         }
+
         // We should get something like :
         /*
         SELECT DISTINCT v0.* FROM PILOT AS v0
@@ -135,18 +136,14 @@ public class FilterBuilderTest {
         */
         // Currently, we get :
         /*
-
-        SELECT DISTINCT v0.* FROM PILOT AS v0
-            LEFT JOIN PILOT_CERTIFICATE AS v1 ON v0.ID=v1.PILOT_ID
-            LEFT JOIN CERTIFICATE AS v2 ON v2.ID=v1.CERTIFICATES_ID
-            LEFT JOIN PLANEMODEL AS v3 ON v3.ID=v2.PLANEMODEL_ID
-            LEFT JOIN ADDRESS AS v1 ON v1.ID=v0.ADDRESS_ID
-        WHERE v0.ID <> 105
-            AND v3.ID = 101
+    SELECT DISTINCT v0.* FROM PILOT AS v0
+        LEFT OUTER JOIN CERTIFICATE AS v1 ON v0.CERTIFICATES_ID=v1.ID
+        LEFT OUTER JOIN CERTIFICATE AS v2 ON CERTIFICATE.CERTIFICATES_ID=v2.ID
+        LEFT OUTER JOIN PLANEMODEL AS v3 ON null.PLANEMODEL_ID=v3.ID
+        LEFT OUTER JOIN ADDRESS AS v4 ON v0.ADDRESS_ID=v4.ID
+        LEFT OUTER JOIN STRING AS v5 ON null.TOWN_ID=v5.ID
         */
-        // We can see the following defaults :
-        // 1- the numbering is wrong
-        // 2- the conditions are not OK at all
+
         System.out.println("SQL : [[[\n" + builder.toString() + "\n]]]");
     }
 
