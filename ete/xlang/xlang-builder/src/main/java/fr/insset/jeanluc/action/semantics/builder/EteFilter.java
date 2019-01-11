@@ -95,6 +95,7 @@ public class EteFilter {
 
     public EteFilter() throws InstantiationException {
         variables = FactoryMethods.newMap(Step.class, VariableDefinition.class);
+        joins     = FactoryMethods.newList(Join.class);
     }
 
 
@@ -131,22 +132,25 @@ public class EteFilter {
     }
 
 
-    //==========================================================================//
-
-
-    public List<AttributeNav> getNavigations() {
-        return navigations;
-    }
-
-
-    public void addNavigation(AttributeNav inNav) {
-        navigations.add(inNav);
-    }
-
-
 
     //==========================================================================//
 
+
+    public List<Join> getJoins() {
+        return joins;
+    }
+
+    public void setJoins(List<Join> joins) {
+        this.joins = joins;
+    }
+
+    public void addJoin(Join inJoin) {
+        joins.add(inJoin);
+    }
+
+
+
+    //==========================================================================//
 
 
     public Map<Step, VariableDefinition> getVariables() {
@@ -161,13 +165,16 @@ public class EteFilter {
         variables.put(inStep, inVariable);
     }
 
+    public VariableDefinition getVariable(Step inStep) {
+        return variables.get(inStep);
+    }
+
 
     //==========================================================================//
 
-
-    List<AttributeNav>  navigations = new LinkedList<>(); 
-    MofProperty         filteredProperty;
-    Invariant           invariant;
+    
+    private     MofProperty         filteredProperty;
+    private     Invariant           invariant;
     /**
      * <div>
      * It is the original expression of the invariant where some navigations are
@@ -185,7 +192,13 @@ public class EteFilter {
      * {@code v3 = v4}<br>
      * </div>
      */
-    GelExpression                   expression;
-    Map<Step, VariableDefinition>   variables;
+    private     GelExpression                 expression;
+    private     List<Join>                    joins;
+    /**
+     * Every navigation starting with another property than the associated one
+     * is replaced by a variable.<br>
+     * 
+     */
+    private     Map<Step, VariableDefinition>   variables;
 
 }

@@ -275,8 +275,18 @@ public class QueryBuilder extends DynamicVisitorSupport {
 
     //========================================================================//
 
+
     /**
-     * Once we get all filters of a 
+     * <div>
+     * Once we get a filter we build the actual expression in that filter.<br>
+     * This could be done while creating the filter but it is easier to do after.
+     * </div>
+     * <div>
+     * A filter is created for a property and an expression.<br>
+     * Every navigation starting with that property in this expression must be
+     * kept and joins must be computer; every other navigation must be replaced
+     * with a variable.
+     * </div>
      * 
      * @param inMofClass 
      */
@@ -290,34 +300,15 @@ public class QueryBuilder extends DynamicVisitorSupport {
             for (EteFilter aFilter : query.getFilters()) {
                 EnhancedInvariantImpl invariant = (EnhancedInvariantImpl) aFilter.getInvariant();
                 GelExpression specification = invariant.getExpression();
-                aFilter.setExpression((GelExpression) builder.genericVisit(specification, aFilter, query, aProperty, inMofClass));
+                GelExpression expression = (GelExpression) builder.genericVisit(specification, aFilter, query, aProperty, inMofClass);
+                aFilter.setExpression(expression);
             }
         }
-    }
+    }       // buildVariables
 
-    /**
-     * This will replace expressions by variables, number them and add
-     * dependencies to the filter
-     * 
-     * @param aFilter
-     * @param query
-     * @param aProperty 
-     */
-    private void buildVariables(EteFilter aFilter, EteQuery query, MofProperty aProperty) {
-    }
 
 
     //========================================================================//
-
-
-    public Object examineObject(Object obj, Object... inParameters) {
-        Logger.getGlobal().log(Level.INFO, "This object has been visited without any specific treatment : {0}", obj);
-        return null;
-    }
-
-
-    //========================================================================//
-
 
 
     public GelExpression visitGelExpression(GelExpression inExpression, Object... inParameters) throws IllegalAccessException, InvocationTargetException, InstantiationException {
@@ -378,25 +369,32 @@ public class QueryBuilder extends DynamicVisitorSupport {
     }
 
 
-
-
     //========================================================================//
 
+    /**
+     * Visits an expression for an EteFilter AND a property.
+     */
     public class VariableBuilder extends DynamicVisitorSupport {
+
 
         public VariableBuilder() {
             register("visit", "fr.insset.jeanluc.ete.gel");
         }
 
+
         /**
          * By default, recursively clones the expression:
-         * the children
-         * of the clone are themselves the result of the visit of the operands
-         * of {@code inExpression}, they can be variables, parameters or clones
-         * of these operands.
+         * the children of the clone are themselves the result of the visit of
+         * the operands of {@code inExpression}, they can be variables,
+         * parameters or clones of these operands.
          * 
          * @param inExpression
          * @param inParameters
+         *      EteFilter a filter we visit the expression for, EteQuery the query
+         * the filter belongs to, MofProperty the property we visit the expression
+         * for, EnhancedMofClass an EnhancedMofClassImpl the support class of
+         * that property
+         * aFilter, query, aProperty, inMofClass
          * @return 
          */
         public GelExpression visitGelExpression(GelExpression inExpression, Object... inParameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
@@ -416,6 +414,7 @@ public class QueryBuilder extends DynamicVisitorSupport {
             return result;
         }
 
+
         /**
          * Currently an Includes expression is a kind of Step (this should be
          * fixed in a future release). If we let the standard handling for step
@@ -427,56 +426,134 @@ public class QueryBuilder extends DynamicVisitorSupport {
             return visitGelExpression(inExpression, inParameters);
         }
 
+
         /**
+         * 
          * The parameters are the filter matching the expression the navigation
          * belongs to, the query containing that filter and its macthing
          * property
+         * @param inStep root of the navigation subtree (last step of the navigation)
+         * @param Object[] inParameters : filter, query, filtered property. The
+         * filter is not used in this method
+         * @return inStep if the navigation starts with the property we are
+         * building the joins for, a new variable otherwise
+         * @throws java.lang.InstantiationException
+         * @throws java.lang.IllegalAccessException
          */
         public GelExpression visitStep(Step inStep, Object... inParameters) throws InstantiationException, IllegalAccessException {
             MofProperty queriedProperty = (MofProperty) inParameters[2];
-            Feature toFeature = inStep.getToFeature();
-            if (toFeature != null)
-                System.out.println("    Visiting a step to "
-                    + toFeature.getName()
-                    + " during creation of variables of the query for " + queriedProperty.getName());
-            Step startStep = inStep;
-            do {
-                List<GelExpression> operand = startStep.getOperand();
-                if (operand == null || operand.size() == 0) break;
-                Step previous = (Step) operand.get(0);
-                if (previous instanceof Self) break;
-                startStep = previous;
-            } while (true);
-            MofProperty startProperty = (MofProperty) startStep.getToFeature();
-            System.out.println("        starting step : " + startProperty.getName());
-            Classifier  owningMofClass = startProperty.getOwningMofClass();
-            MofClass    targetClass = (MofClass) inParameters[3];
-            System.out.println("           owning class : " + owningMofClass.getName() + " target class : " + targetClass.getName());
-            VariableDefinition variable = (VariableDefinition) FactoryRegistry.newInstance(VariableDefinition.class);
-            variable.setValue(inStep);
-            EteQuery query = (EteQuery) inParameters[1];
-            int         numVar = query.getNextVariableNum();
-            if (queriedProperty.equals(startProperty)) {
-                System.out.println("      the start property is the one we are building variables for");
-                String      variableName = "v" + numVar;
-                variable.setName(variableName);
-                EteFilter filter = (EteFilter) inParameters[0];
-                filter.addVariable(inStep, variable);
-            } else {
-                // the start property is not the property we are building
-                // variables for
-                // We must therefore substitute a variable to the whole navigation
-                // and add the start property to the dependances of the filter
-                String      variableName = "p" + numVar;
-                variable.setName(variableName);
-                System.out.println("           *** WE CREATE THE PARAMETER " + variableName + " FOR THIS NAVIGATION ***");
-                numVar++;
-                query.setNextVariableNum(numVar);
+            EteQuery query = (EteQuery) inParameters[1];   
+            EteFilter eteFilter = (EteFilter)inParameters[0];
+            Step    initialStep = buildJoins(inStep, queriedProperty, query, eteFilter);
+            VariableDefinition  variable;
+            if (initialStep == null) {
+                // We must replace the current expression by a new variable
+                System.out.println("      the start property is not the one we are building variables for");
+//                EteFilter filter = (EteFilter) inParameters[0];
+                variable = query.addParameter(inStep);
+                eteFilter.addVariable(inStep, variable);
                 return variable;
+            } else {
+                variable = (VariableDefinition) FactoryRegistry.newInstance(VariableDefinition.class);
+                variable.setValue(inStep);
+                variable.setType(queriedProperty.getType());
+                variable.setName("v0");
+                eteFilter.addVariable(inStep, variable);
             }
-            numVar++;
-            query.setNextVariableNum(numVar);                
+            // The initial step "is" the filtered property, we keep it.
             return inStep;
+        }
+
+
+        /**
+         * Walks recursively through a navigation.
+         * 
+         * @param step
+         * @param numVar
+         * @return 
+         */
+        protected Step buildJoins(Step step, MofProperty inProperty, EteQuery inQuery, EteFilter inFilter) throws InstantiationException, IllegalAccessException {
+            List<GelExpression> operand = step.getOperand();
+            // NO : we must consider that some subnavigations can start from
+            // other entity than the initial context
+            if (operand == null) return null;
+            if (operand.size() == 0) return null;
+            GelExpression first = operand.get(0);
+            if (first instanceof Self) {
+                Feature initialProperty = step.getToFeature();
+                if (inProperty.equals(initialProperty)) {
+                    VariableDefinition  variable = (VariableDefinition) FactoryRegistry.newInstance(VariableDefinition.class);
+                    variable.setValue(step);
+                    variable.setType(initialProperty.getType());
+                    variable.setName("v0");
+                    inFilter.addVariable(step, variable);
+                    inQuery.addVariable(step, variable);
+                    return step;
+                }
+                return null;
+            }
+            // Let's first build previous joins
+            Step initialStep = buildJoins((Step)first, inProperty, inQuery, inFilter);
+            if (initialStep == null) {
+                // The initial step is not the filtered property, the whole
+                // navigation must be replaced by a variable
+                return null;
+            } else {
+                Join join = inQuery.addJoin(step);
+                inFilter.addJoin(join);
+            }
+
+            // Now we build this step
+//            MofProperty property = (MofProperty) step.getToFeature();
+//            MofClass    srcClass = (MofClass) property.getOwningMofClass();
+//            String      srcName  = srcClass.getName().toUpperCase();
+//            String      name     = property.getName().toUpperCase();
+//            MofType     type     = property.getType();
+//            MofType     baseType = type.getRecBaseType();
+//            if (!(baseType instanceof MofClass)) {
+//                return initialStep;
+//            }
+//            String typeName = baseType.getName().toUpperCase();
+//            if (type.isCollection()) {
+//                // OneToMany or ManyToMany : there is an additional table
+//                addJoinTable(numVar-1, numVar,
+//                        srcName, typeName, name);
+//                numVar +=2 ;
+//                String  betweenName = startName + "_" + targetName;
+//                addJoin(start, end, betweenName, startName, true);
+//                addJoin(end, end+1, targetName, propName, false);
+//            } else {
+//                addJoin(numVar-1, numVar, typeName, name, false);
+//            }
+            return initialStep;
+        }
+
+
+        protected void addJoinTable(int start, int end, String startName, String targetName, String propName) {
+            System.out.println("Adding a join table from " + startName + " to " + targetName + " for property " + propName);
+            String  betweenName = startName + "_" + targetName;
+            addJoin(start, end, betweenName, startName, true);
+            addJoin(end, end+1, targetName, propName, false);
+        }
+
+        protected void addJoin(int srcNumber, int targetNumber, String joinTable, String propName, boolean reverseNumbers) {
+            System.out.println("target:" + targetNumber + ", joinTable:" + joinTable);
+//            inoutBuilder.append(" LEFT JOIN ");
+//            inoutBuilder.append(joinTable);
+//            inoutBuilder.append(" AS v");
+//            inoutBuilder.append(targetNumber);
+            if (reverseNumbers) {
+                int aux = srcNumber;
+                srcNumber = targetNumber;
+                targetNumber = aux;
+            }
+//            inoutBuilder.append(" ON v");
+//            inoutBuilder.append(targetNumber);
+//            inoutBuilder.append(".ID=v");
+//            inoutBuilder.append(srcNumber);
+//            inoutBuilder.append(".");
+//            inoutBuilder.append(propName);
+//            inoutBuilder.append("_ID");
         }
 
     }       // VariableBuilder
