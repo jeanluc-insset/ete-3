@@ -76,13 +76,13 @@ public class QueryToSql extends DynamicVisitorSupport implements Dialect {
 
 
 
-    protected void addWhere(EteFilter aFilter, StringBuilder builder, boolean firstClause) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    protected void addWhere(EteFilter aFilter, StringBuilder builder, boolean firstClause, EteQuery inQuery) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         if (firstClause) {
             builder.append(" WHERE ");
         } else {
             builder.append("    AND ");
         }
-        genericVisit(aFilter.getExpression(), builder);
+        genericVisit(aFilter.getExpression(), builder, inQuery);
     }
 
 
@@ -129,23 +129,43 @@ public class QueryToSql extends DynamicVisitorSupport implements Dialect {
     }
 
 
+    //==========================================================================//
+
+
     public GelExpression visitStep(Step inStep, Object... inParameters) {
         StringBuilder builder = (StringBuilder) inParameters[0];
         Feature toFeature = inStep.getToFeature();
         if (toFeature == null) {
             return inStep;
         }
-        builder.append(toFeature.getName());
-        builder.append(".ID");
+        EteQuery query = (EteQuery) inParameters[1];
+        VariableDefinition parameter = query.getParameter(inStep);
+        if (parameter == null) {
+            Step    previous = (Step)inStep.getOperand().get(0);
+            parameter = query.getParameter(previous);
+            builder.append(parameter.getName());
+            builder.append(".");
+            builder.append(toFeature.getName().toUpperCase());
+        } else {
+            builder.append(parameter.getName());
+            builder.append(".ID");
+        }
         return  inStep;
     }
 
     public Includes visitIncludes(Includes inIncludes, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         StringBuilder builder = (StringBuilder) inParameters[0];
         List<GelExpression> operand = inIncludes.getOperand();
-        genericVisit(operand.get(0), inParameters);
-        builder.append(" contains ");
-        genericVisit(operand.get(1), inParameters);
+        GelExpression firstOperand = operand.get(0);
+        if (firstOperand.getType().isCollection()) {
+            genericVisit(firstOperand, inParameters);
+            builder.append("=");
+            genericVisit(operand.get(1), inParameters);
+        } else {
+            genericVisit(operand.get(1), inParameters);
+            builder.append(" IN ");
+            genericVisit(firstOperand, inParameters);
+        }
         return inIncludes;
     }
 
@@ -173,7 +193,7 @@ public class QueryToSql extends DynamicVisitorSupport implements Dialect {
     public StringLiteral visitStringLiteral(StringLiteral inLiteral, Object... inParameters) {
         StringBuilder builder = (StringBuilder) inParameters[0];
         builder.append("'");
-        builder.append(inLiteral.getValue());
+        builder.append(inLiteral.getValueAsString());
         builder.append("'");
         return inLiteral;
     }

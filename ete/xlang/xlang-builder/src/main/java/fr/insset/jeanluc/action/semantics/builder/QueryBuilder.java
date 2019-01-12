@@ -372,7 +372,9 @@ public class QueryBuilder extends DynamicVisitorSupport {
     //========================================================================//
 
     /**
-     * Visits an expression for an EteFilter AND a property.
+     * Visits an expression for a couple (EteFilter, MofProperty).<br>
+     * Builds a kind of clone of the expression, replacing some expressions with
+     * parameters
      */
     public class VariableBuilder extends DynamicVisitorSupport {
 
@@ -424,6 +426,22 @@ public class QueryBuilder extends DynamicVisitorSupport {
          */
         public GelExpression visitIncludes(Includes inExpression, Object... inParameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
             return visitGelExpression(inExpression, inParameters);
+        }
+
+
+        /**
+         * We don't need to clone a Literal.<br>
+         * We must override the default visit which clones the expression but
+         * does not copy the value.
+         * 
+         * @param inLiteral
+         * @param inParameters
+         * @return
+         * @throws InstantiationException
+         * @throws IllegalAccessException 
+         */
+        public Literal visitLiteral(Literal inLiteral, Object... inParameters) throws InstantiationException, IllegalAccessException {
+            return inLiteral;
         }
 
 

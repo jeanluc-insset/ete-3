@@ -127,6 +127,7 @@ public class EteQuery {
     protected VariableDefinition newVariable(Step inStep) throws InstantiationException, IllegalAccessException {
         VariableDefinition result = newVariable();
         result.setValue(inStep);
+        result.setType(inStep.getToFeature().getType());
         parameters.put(inStep, result);
         return result;
     }

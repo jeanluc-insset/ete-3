@@ -118,11 +118,15 @@ public class FilterBuilderTest {
         QueryToSql  translator = new QueryToSql();
         StringBuilder builder = new StringBuilder();
         translator.addSelect(captainQuery, builder);
-        boolean     firstOne = true;
         for (EteFilter aFilter : captainQuery.getFilters()) {
             for (Join aJoin : aFilter.getJoins()) {
                 translator.addJoin(aJoin, builder);
             }
+        }
+        boolean     firstOne = true;
+        for (EteFilter aFilter : captainQuery.getFilters()) {
+            translator.addWhere(aFilter, builder, firstOne, captainQuery);
+            firstOne = false;
         }
 
         // We should get something like :
@@ -141,6 +145,7 @@ public class FilterBuilderTest {
         LEFT OUTER JOIN CERTIFICATE AS v2 ON v1.CERTIFICATES_ID=v2.ID
         LEFT OUTER JOIN PLANEMODEL AS v3 ON v2.PLANEMODEL_ID=v3.ID
         LEFT OUTER JOIN ADDRESS AS v4 ON v0.ADDRESS_ID=v4.ID
+    WHERE v0.ID<>:p1    AND v3.ID=:p2    AND v4.TOWN='null'
         */
 
         System.out.println("SQL : [[[\n" + builder.toString() + "\n]]]");
