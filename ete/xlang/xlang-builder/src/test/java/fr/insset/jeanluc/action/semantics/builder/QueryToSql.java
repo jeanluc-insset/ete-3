@@ -1,4 +1,4 @@
-package fr.insset.jeanluc.action.semantics.builder;
+    package fr.insset.jeanluc.action.semantics.builder;
 
 
 
@@ -50,44 +50,6 @@ public class QueryToSql extends DynamicVisitorSupport implements Dialect {
     }
 
 
-    protected void addJoin(Join inJoin, StringBuilder builder) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        genericVisit(inJoin, builder);
-    }
- 
-
-    public Join buildJoin(Join inJoin, Object... inParameters) {
-        StringBuilder builder = (StringBuilder) inParameters[0];
-        builder.append(" LEFT OUTER JOIN ");
-        Feature targetFeature = inJoin.getTargetFeature();
-        MofType type = targetFeature.getType().getRecBaseType();
-        String  name = type.getName().toUpperCase();
-        builder.append(name);
-        builder.append(" AS ");
-        String targetVariableName = inJoin.getTargetVariableName();
-        builder.append(targetVariableName);
-        builder.append(" ON ");
-        if (inJoin.isReverseNames()) {
-            builder.append("TODO");
-        } else {
-            // "normal" order : the src table holds a foreign key to the
-            // primary key of the target table
-            builder.append(inJoin.getSrcVariableNameAndField());
-            builder.append(".");
-            builder.append(inJoin.getTargetFeature().getName().toUpperCase());
-            builder.append("_ID=");
-            builder.append(inJoin.getTargetVariableName());
-            builder.append(".ID");
-        }
-        return inJoin;
-    }
-
-
-    public DoubleJoin buildDoubleJoin(DoubleJoin inDoubleJoin, Object... inParameters) {
-        StringBuilder builder = (StringBuilder) inParameters[0];
-        buildJoin(inDoubleJoin.getFirstJoin(), builder);
-        buildJoin(inDoubleJoin.getSecondJoin(), builder);
-        return inDoubleJoin;
-    }
 
 
     /**
