@@ -2,6 +2,7 @@ package ${current.owningPackage}.model;
 
 
 
+import fr.mis.ete.util.optional.OptionalList;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,92 +19,77 @@ import javax.persistence.OneToMany;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
+ * Convenient class to manage complex navigations without worrying of null
+ * references.<br>
+ * Holds the same getters and methods than the ${current.name} class.
  *
  * @author jldeleage
  */
-@Entity
-@XmlRootElement
-@NamedQueries({
-#foreach ($aProperty in $current.allAttributes)
-    @NamedQuery(name = "${current.name}.findBy${dialect.i2uc($aProperty.name)}", query = "SELECT f FROM ${current.name} f WHERE f.${aProperty.name} = :param"),
-#end
-    @NamedQuery(name = "${current.name}.findAll", query = "SELECT f FROM ${current.name} f")
-})
 public class Optional${current.name} #if (${current.superClass.size()}>0)extends ${current.superClass.get(0).owningPackage.name}.model.Optional${current.superClass.get(0).name} #end {
 
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-
-    //========================================================================//
-
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ${current.name})) {
-            return false;
-        }
-        ${current.name} other = (${current.name}) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+    public static Optional${current.name} ofNullable(${current.name} inDelegate) {
+        Optional${current.name} result = new Optional${current.name}();
+        result.delegate = inDelegate;
+        return result;
     }
 
 
-    //========================================================================//
-
-
-#foreach ($tagValue in ${current.getTagValues().keySet()})
-    public default String get${dialect.i2uc($tagValue.name)}() {
-        return "${current.getValueOf($tagValue.name)}";
+    public boolean isPresent() {
+        return delegate != null;
     }
-#end
+
+
+    public ${current.name} get() {
+        return delegate;
+    }
 
 
     //========================================================================//
 
 #foreach ($aProperty in $current.ownedAttribute)
-    public $dialect.mt2lt($aProperty.type) get${dialect.i2uc($aProperty.name)}() {
-        return ${aProperty.name};
-    }
 
-    public void set${dialect.i2uc($aProperty.name)}(${dialect.mt2lt($aProperty.type)} inValue) {
-        ${aProperty.name} = inValue;
-    }
+#set ($t = $aProperty.type.recBaseType)
 
 #if ($aProperty.type.collection)
-    public void add${dialect.i2uc($aProperty.name)}(${dialect.mt2lt($aProperty.type.baseType)} inValue) {
-        ${aProperty.name}.add(inValue);
+    public OptionalList<Optional${t.name}>  get${dialect.i2uc($aProperty.name)}() {
+        OptionalList<Optional${t.name}> result = new OptionalList<>();
+        if (isPresent()) {
+            result.setPresent(true);
+            for (${t.name} anItem : delegate.get${dialect.i2uc($aProperty.name)}()) {
+                result.add(Optional${t.name}.ofNullable(anItem));
+            }
+        }
+        return result;
     }
+#elseif ($t.hasStereotype("Entity"))
+    public Optional$dialect.mt2lt($aProperty.type) get${dialect.i2uc($aProperty.name)}() {
+        $dialect.mt2lt($aProperty.type) newDelegate;
+        if (!isPresent()) {
+            newDelegate = null;
+        } else {
+            newDelegate = delegate.get${dialect.i2uc($aProperty.name)}();
+        }
+        return Optional${aProperty.type}.ofNullable(newDelegate);
+    }
+#else
+#if ($t=="int") #set($t = "Integer")
+#elseif ($t=="double") #set($t="Double")
+#elseif ($t=="date") #set($t="java.util.Date")
+#end
+    public Optional<$t> get${dialect.i2uc($aProperty.name)}() {
+        $t newDelegate;
+        if (!isPresent()) {
+            newDelegate = null;
+        } else {
+            newDelegate = delegate.get${dialect.i2uc($aProperty.name)}();
+        }
+        return Optional.ofNullable(newDelegate);
+    }
+#end
+#end
 
-    public void remove${dialect.i2uc($aProperty.name)}(${dialect.mt2lt($aProperty.type.baseType)} inValue) {
-        ${aProperty.name}.remove(inValue);
-    }
-#elseif ($aProperty.type.recBaseType.hasStereotype("Entity") || $aProperty.type.recBaseType.name.equals("String"))
-    public Optional<${aProperty.type}> get${dialect.i2uc($aProperty.name)}$() {
-        return Optional.ofNullable(${aProperty.name});
-    }
-#elseif ($aProperty.type.recBaseType.name.equals("date"))
-    public Optional<java.util.Date> get${dialect.i2uc($aProperty.name)}$() {
-        return Optional.ofNullable(${aProperty.name});
-    }
-#end
-#end
+
 
 
     //========================================================================//
@@ -111,41 +97,18 @@ public class Optional${current.name} #if (${current.superClass.size()}>0)extends
 
 #foreach ($aMethod in $current.ownedOperation)
     public $dialect.moft2lt($aMethod.type.name) ${aMethod.name}(#foreach($aParam in ${aMethod.ownedParameter})${dialect.mt2lt($aParam.type)} ${aParam.name}#if( $foreach.hasNext ), #end #end) {
-${dialect.getOperationBody($aMethod, "    ")}
+        if (isPresent()) {
+            #if (! $dialect.moft2lt($aMethod.type.name).equals("void"))return #end${aMethod.name}(#foreach($aParam in ${aMethod.ownedParameter})${aParam.name}#if( $foreach.hasNext ), #end #end);
+        }
     }
 #end
 
 
-    @Override
-    public String toString() {
-#if ($current.ownedAttribute.size() > 0)
-        return "" + ${current.ownedAttribute.get(0)};
-#else
-        return super.toString();
-#end
-    }
+
 
     //========================================================================//
 
-#foreach ($aProperty in $current.ownedAttribute)
-    #if ($aProperty.type.hasStereotype("Entity"))
-    @ManyToOne 
-    #end
-    #if ($aProperty.type.isCollection())
-    #if ($aProperty.type.baseType.hasStereotype("Entity"))
-    @OneToMany 
-    #end
-    #elseif ($aProperty.type.name == "date")
-    @javax.persistence.Temporal(javax.persistence.TemporalType.DATE)
-    #end
-    $dialect.mt2lt($aProperty.type)      ${aProperty.name};
-#end
-
-    private static final long serialVersionUID = 1L;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private     ${current.name}     delegate;
 
 
 }

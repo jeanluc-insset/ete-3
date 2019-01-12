@@ -22,21 +22,19 @@
             <!-- JPA -->
             <velocity   template="abstract_jpa.vm"
                         target="fr/insset/jeanluc/ete/jpa/AbstractJpa.java"/>
-<!--            <velocity items="${classes}"
-                        dialect="fr.insset.jeanluc.as2java.JavaGenerator"
-                        template="class2entity.vm"
-                        target="${current.owningPackage.name.replace('.', '/')}/model/${current.name}.java"/>-->
-            <velocity items='${classes.filter(c -> c.hasStereotype("Entity"))}'
-                        dialect="fr.insset.jeanluc.as2java.JavaGenerator"
-                        template="class2entity.vm"
-                        target="${current.owningPackage.name.replace('.', '/')}/model/${current.name}.java"/>
-            
-            <velocity items='${classes.filter(c -> c.hasStereotype("Entity"))}'
-                        dialect="fr.insset.jeanluc.as2java.JPAGenerator"
-                        template="class2jpa.vm"
-                        target="${current.owningPackage.name.replace('.', '/')}/jpa/${current.name}Jpa.java">
-                <dialect name="sql" class="fr.insset.jeanluc.xlang.to.sql.SqlGenerator"/>
-            </velocity>
+            <transformation-set  items='${classes.filter(c -> c.hasStereotype("Entity"))}'>
+                <velocity dialect="fr.insset.jeanluc.as2java.JavaGenerator"
+                            template="class2entity.vm"
+                            target="${current.owningPackage.name.replace('.', '/')}/model/${current.name}.java"/>
+                <velocity dialect="fr.insset.jeanluc.as2java.JavaGenerator"
+                            template="class2optional.vm"
+                            target="${current.owningPackage.name.replace('.', '/')}/model/Optional${current.name}.java"/>
+                <velocity dialect="fr.insset.jeanluc.as2java.JPAGenerator"
+                            template="class2jpa.vm"
+                            target="${current.owningPackage.name.replace('.', '/')}/jpa/${current.name}Jpa.java">
+                    <dialect name="sql" class="fr.insset.jeanluc.xlang.to.sql.SqlGenerator"/>
+                </velocity>
+            </transformation-set>
         </transformation-set>
 
         <velocity   template="pu.vm"
