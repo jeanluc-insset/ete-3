@@ -162,6 +162,9 @@ public class EteFilter {
     }
 
     public void addVariable(Step inStep, VariableDefinition inVariable) {
+        if (inVariable.getName().equals("v0")) {
+            return;
+        }
         variables.put(inStep, inVariable);
     }
 
