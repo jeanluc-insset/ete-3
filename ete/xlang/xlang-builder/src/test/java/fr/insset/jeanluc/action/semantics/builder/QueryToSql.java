@@ -24,10 +24,6 @@ import java.util.List;
  * <div>
  * As expected, this class builds an SQL query from an EteQuery instance.
  * </div>
- * <div>
- * It achieves this goal visiting Join instances (to build the join clauses) and
- * GelExpression instances (to build the where/and clauses).
- * </div>
  * 
  * @author jldeleage
  */
@@ -35,8 +31,6 @@ public class QueryToSql extends DynamicVisitorSupport implements Dialect {
 
 
     public QueryToSql() {
-        // these methods build the join statements
-        register("build", "fr.insset.jeanluc.action.semantics.builder");
         // there methods build the where/and statements
         register("visit", "fr.insset.jeanluc.ete.gel");
     }
@@ -52,20 +46,6 @@ public class QueryToSql extends DynamicVisitorSupport implements Dialect {
         builder.append("SELECT DISTINCT v0.* FROM ");
         builder.append(query.getTargetClass().getName().toUpperCase());
         builder.append(" AS v0");
-        return builder.toString();
-    }
-
-
-    /**
-     * If all parameters of a filter are present we must add the joins.<br>
-     * 
-     * @param inJoin
-     * @param builder
-     * @return 
-     */
-    public String getJoin(Join inJoin) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
-        StringBuilder builder = new StringBuilder();
-        genericVisit(inJoin, builder);
         return builder.toString();
     }
 
@@ -111,93 +91,40 @@ public class QueryToSql extends DynamicVisitorSupport implements Dialect {
 
 
     /**
-     * Walks recursively to the "leaf" of the navigation (i.e.the "start" of
-     * the navigation which should be self) and then builds joins.
+     * If all parameters of a filter are present we must add the joins.<br>
      * 
-     * @param builder : builder where the query is built
-     * @param step : partial navigation to join
-     * @param numVar : number of the variable to name the joined table
-     * @return : next number to use for the variable
+     * @param inJoin
+     * @param builder
+     * @return 
      */
-    protected int buildJoins(StringBuilder builder, Step step, int numVar) {
-        List<GelExpression> operand = step.getOperand();
-        // NO : we must consider that some subnavigations can start from
-        // other entity than the initial context
-        if (operand == null) return 1;
-        if (operand.size() == 0) return 1;
-        GelExpression first = operand.get(0);
-        if (first instanceof Self) return 1;
-        // Let's first build previous joins
-        numVar               = buildJoins(builder, (Step) first, numVar);
-        // Now we build this step
-        MofProperty property = (MofProperty) step.getToFeature();
-        MofClass    srcClass = (MofClass) property.getOwningMofClass();
-        String      srcName  = srcClass.getName().toUpperCase();
-        String      name     = property.getName().toUpperCase();
-        MofType     type     = property.getType();
-        MofType     baseType = type.getRecBaseType();
-        if (!(baseType instanceof MofClass)) {
-            return numVar;
-        }
-        String typeName = baseType.getName().toUpperCase();
-        if (type.isCollection()) {
-            addJoinTable(builder, numVar-1, numVar,
-                    srcName, typeName, name);
-            numVar +=2 ;
-        } else {
-            addJoin(builder, numVar-1, numVar, typeName, name, false);
-            numVar++;
-        }
-        return numVar;
+    public void addJoin(Join inJoin, StringBuilder builder) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+        builder.append(" LEFT OUTER JOIN ");
+        builder.append(inJoin.getTargetTable());
+        builder.append(" AS ");
+        builder.append(inJoin.getTargetVariable());
+        builder.append(" ON ");
+        builder.append(inJoin.getStartVariable());
+        builder.append(".");
+        builder.append(inJoin.getStartProperty());
+        builder.append("=");
+        builder.append(inJoin.getTargetVariable());
+        builder.append(".");
+        builder.append(inJoin.getTargetProperty());
     }
 
 
 
-    protected void addWhere(StringBuilder builder, EteFilter aFilter, boolean firstClause) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+
+
+    protected void addWhere(EteFilter aFilter, StringBuilder builder, boolean firstClause, EteQuery inQuery) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         if (firstClause) {
             builder.append(" WHERE ");
         } else {
             builder.append("    AND ");
         }
-        genericVisit(aFilter.getExpression(), builder);
+        genericVisit(aFilter.getExpression(), builder, inQuery);
     }
 
-
-    protected void addJoinTable(StringBuilder inoutBuilder, int start, int end, String startName, String targetName, String propName) {
-        System.out.println("Adding a join table from " + startName + " to " + targetName + " for property " + propName);
-        String  betweenName = startName + "_" + targetName;
-        addJoin(inoutBuilder, start, end, betweenName, startName, true);
-        addJoin(inoutBuilder, end, end+1, targetName, propName, false);
-    }
-
-
-    /**
-     * 
-     * @param inoutBuilder : the builder where to build the joins
-     * @param srcNumber : number of the variable associated to the table containing the foreign key
-     * @param targetNumber : number of the variable associated to the table containing the primary key
-     * @param joinTable : name of the table to join
-     * @param propName  : name of... the property!
-     */
-    protected void addJoin(StringBuilder inoutBuilder, int srcNumber, int targetNumber, String joinTable, String propName, boolean reverseNumbers) {
-        System.out.println("target:" + targetNumber + ", joinTable:" + joinTable);
-        inoutBuilder.append(" LEFT JOIN ");
-        inoutBuilder.append(joinTable);
-        inoutBuilder.append(" AS v");
-        inoutBuilder.append(targetNumber);
-        if (reverseNumbers) {
-            int aux = srcNumber;
-            srcNumber = targetNumber;
-            targetNumber = aux;
-        }
-        inoutBuilder.append(" ON v");
-        inoutBuilder.append(targetNumber);
-        inoutBuilder.append(".ID=v");
-        inoutBuilder.append(srcNumber);
-        inoutBuilder.append(".");
-        inoutBuilder.append(propName);
-        inoutBuilder.append("_ID");
-    }
 
 
     //==========================================================================//
@@ -242,23 +169,43 @@ public class QueryToSql extends DynamicVisitorSupport implements Dialect {
     }
 
 
+    //==========================================================================//
+
+
     public GelExpression visitStep(Step inStep, Object... inParameters) {
         StringBuilder builder = (StringBuilder) inParameters[0];
         Feature toFeature = inStep.getToFeature();
         if (toFeature == null) {
             return inStep;
         }
-        builder.append(toFeature.getName());
-        builder.append(".ID");
+        EteQuery query = (EteQuery) inParameters[1];
+        VariableDefinition parameter = query.getParameter(inStep);
+        if (parameter == null) {
+            Step    previous = (Step)inStep.getOperand().get(0);
+            parameter = query.getParameter(previous);
+            builder.append(parameter.getName());
+            builder.append(".");
+            builder.append(toFeature.getName().toUpperCase());
+        } else {
+            builder.append(parameter.getName());
+            builder.append(".ID");
+        }
         return  inStep;
     }
 
     public Includes visitIncludes(Includes inIncludes, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         StringBuilder builder = (StringBuilder) inParameters[0];
         List<GelExpression> operand = inIncludes.getOperand();
-        genericVisit(operand.get(0), inParameters);
-        builder.append(" contains ");
-        genericVisit(operand.get(1), inParameters);
+        GelExpression firstOperand = operand.get(0);
+        if (firstOperand.getType().isCollection()) {
+            genericVisit(firstOperand, inParameters);
+            builder.append("=");
+            genericVisit(operand.get(1), inParameters);
+        } else {
+            genericVisit(operand.get(1), inParameters);
+            builder.append(" IN ");
+            genericVisit(firstOperand, inParameters);
+        }
         return inIncludes;
     }
 
@@ -286,7 +233,7 @@ public class QueryToSql extends DynamicVisitorSupport implements Dialect {
     public StringLiteral visitStringLiteral(StringLiteral inLiteral, Object... inParameters) {
         StringBuilder builder = (StringBuilder) inParameters[0];
         builder.append("'");
-        builder.append(inLiteral.getValue());
+        builder.append(inLiteral.getValueAsString());
         builder.append("'");
         return inLiteral;
     }

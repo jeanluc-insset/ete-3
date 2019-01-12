@@ -118,31 +118,16 @@ public class FilterBuilderTest {
         QueryToSql  translator = new QueryToSql();
         StringBuilder builder = new StringBuilder();
         translator.addSelect(captainQuery, builder);
-        boolean     firstOne = true;
         for (EteFilter aFilter : captainQuery.getFilters()) {
             for (Join aJoin : aFilter.getJoins()) {
                 translator.addJoin(aJoin, builder);
             }
         }
-
-        // We should get something like :
-        /*
-        SELECT DISTINCT v0.* FROM PILOT AS v0
-            LEFT JOIN PILOT_CERTIFICATE AS v1 ON v0.ID = v1.PILOT_ID
-            LEFT JOIN CERTIFICATE AS v2 ON v1.CERTIFICATES_ID = v2.ID
-            LEFT JOIN PLANEMODEL AS v3 ON v2.PLANEMODEL_ID = v3.ID
-        WHERE v0.ID <> 105
-            AND v3.ID = 101
-        */
-        // Currently, we get :
-        /*
-    SELECT DISTINCT v0.* FROM PILOT AS v0
-        LEFT OUTER JOIN CERTIFICATE AS v1 ON v0.CERTIFICATES_ID=v1.ID
-        LEFT OUTER JOIN CERTIFICATE AS v2 ON CERTIFICATE.CERTIFICATES_ID=v2.ID
-        LEFT OUTER JOIN PLANEMODEL AS v3 ON null.PLANEMODEL_ID=v3.ID
-        LEFT OUTER JOIN ADDRESS AS v4 ON v0.ADDRESS_ID=v4.ID
-        LEFT OUTER JOIN STRING AS v5 ON null.TOWN_ID=v5.ID
-        */
+        boolean     firstOne = true;
+        for (EteFilter aFilter : captainQuery.getFilters()) {
+            translator.addWhere(aFilter, builder, firstOne, captainQuery);
+            firstOne = false;
+        }
 
         System.out.println("SQL : [[[\n" + builder.toString() + "\n]]]");
     }

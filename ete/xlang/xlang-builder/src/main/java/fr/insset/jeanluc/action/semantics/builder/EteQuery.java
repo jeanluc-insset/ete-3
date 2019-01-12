@@ -110,7 +110,7 @@ public class EteQuery {
     public VariableDefinition addParameter(Step inStep) throws InstantiationException, IllegalAccessException {
         VariableDefinition variable = (VariableDefinition) FactoryRegistry.newInstance(VariableDefinition.class);
         variable.setValue(inStep);
-        variable.setName("" + nextParameterNum++);
+        variable.setName("p" + nextParameterNum++);
         parameters.put(inStep, variable);
         return variable;
     }
@@ -124,15 +124,32 @@ public class EteQuery {
         return parameters.get(inStep);
     }
 
+    protected VariableDefinition newVariable(Step inStep) throws InstantiationException, IllegalAccessException {
+        VariableDefinition result = newVariable();
+        result.setValue(inStep);
+        result.setType(inStep.getToFeature().getType());
+        parameters.put(inStep, result);
+        return result;
+    }
+
+    protected VariableDefinition newVariable() throws InstantiationException, IllegalAccessException {
+        VariableDefinition definition = (VariableDefinition) FactoryRegistry.newInstance(VariableDefinition.class);
+        definition.setName("v" + nextJoinNum++);
+        return definition;
+    }
+
 
     //=========================================================================//
 
 
-    public Join addJoin(Step inStep) throws InstantiationException, IllegalAccessException {
+    public Join addJoin(Step inStep, EteFilter inFilter) throws InstantiationException, IllegalAccessException {
         Feature feature = inStep.getToFeature();
         MofType featureType = feature.getType();
-        String  featureName = feature.getName();
+        String  featureName = feature.getName().toUpperCase();
         MofType targetType  = featureType.getRecBaseType();
+        if (! (targetType instanceof MofClass)) {
+            return null;
+        }
         String  targetTableName = targetType.getName().toUpperCase();
         String  startParameterName;
         Step firstOperand = (Step)inStep.getOperand().get(0);
@@ -144,38 +161,27 @@ public class EteQuery {
         }
         Join    join = null;
         if (featureType.isCollection()) {
-            Join    firstJoin = new Join();
-            Join    secondJoin = new Join();
-            firstJoin.setTargetFeature(feature);
-            firstJoin.setReverseNames(false);
-            firstJoin.setSrcVariableNameAndField(startParameterName);
-            VariableDefinition definition = newVariable();
-            firstJoin.setTargetVariableName(definition.getName());
-            secondJoin.setTargetFeature(feature);
-            secondJoin.setReverseNames(false);
-            secondJoin.setSrcVariableNameAndField(targetTableName);
-            definition = newVariable();
-            secondJoin.setTargetVariableName(definition.getName());
-            join = new DoubleJoin(firstJoin, secondJoin);
-            parameters.put(inStep, definition);
+            VariableDefinition firstVariable = newVariable(inStep);
+            String  startTableName = firstOperand.getType().getRecBaseType().getName().toUpperCase();
+            String  joinTableName = startTableName + "_" + targetTableName;
+            join = new Join(startParameterName, "ID", firstVariable.getName(), joinTableName, startTableName + "_ID");
+            inFilter.addJoin(join);
+            VariableDefinition secondVariable = newVariable(inStep);
+            join = new Join(firstVariable.getName(), featureName + "_ID", secondVariable.getName(), targetTableName, "ID");
+            inFilter.addJoin(join);
         } else {
-            join = new Join();
-            VariableDefinition definition = newVariable();        
-            join.setTargetFeature(feature);
-            join.setReverseNames(false);
-            join.setSrcVariableNameAndField(startParameterName);
-            join.setTargetVariableName(definition.getName());
+            VariableDefinition newVariable = newVariable(inStep);
+            join = new Join(
+                    startParameterName,
+                    featureName + "_ID",
+                    newVariable.getName(),
+                    targetTableName,
+                    "ID");
+            inFilter.addJoin(join);
         }
-
-//        Join join = new Join(startParameterName, nextJoinNum, targetTableName, propName, true);
         return join;
     }
 
-    protected VariableDefinition newVariable() throws InstantiationException, IllegalAccessException {
-        VariableDefinition definition = (VariableDefinition) FactoryRegistry.newInstance(VariableDefinition.class);
-        definition.setName("v" + nextJoinNum++);
-        return definition;
-    }
 
     //=========================================================================//
 

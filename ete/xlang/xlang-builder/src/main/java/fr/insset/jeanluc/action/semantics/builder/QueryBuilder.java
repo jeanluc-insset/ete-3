@@ -372,7 +372,9 @@ public class QueryBuilder extends DynamicVisitorSupport {
     //========================================================================//
 
     /**
-     * Visits an expression for an EteFilter AND a property.
+     * Visits an expression for a couple (EteFilter, MofProperty).<br>
+     * Builds a kind of clone of the expression, replacing some expressions with
+     * parameters
      */
     public class VariableBuilder extends DynamicVisitorSupport {
 
@@ -428,6 +430,22 @@ public class QueryBuilder extends DynamicVisitorSupport {
 
 
         /**
+         * We don't need to clone a Literal.<br>
+         * We must override the default visit which clones the expression but
+         * does not copy the value.
+         * 
+         * @param inLiteral
+         * @param inParameters
+         * @return
+         * @throws InstantiationException
+         * @throws IllegalAccessException 
+         */
+        public Literal visitLiteral(Literal inLiteral, Object... inParameters) throws InstantiationException, IllegalAccessException {
+            return inLiteral;
+        }
+
+
+        /**
          * 
          * The parameters are the filter matching the expression the navigation
          * belongs to, the query containing that filter and its macthing
@@ -448,8 +466,6 @@ public class QueryBuilder extends DynamicVisitorSupport {
             VariableDefinition  variable;
             if (initialStep == null) {
                 // We must replace the current expression by a new variable
-                System.out.println("      the start property is not the one we are building variables for");
-//                EteFilter filter = (EteFilter) inParameters[0];
                 variable = query.addParameter(inStep);
                 eteFilter.addVariable(inStep, variable);
                 return variable;
@@ -466,7 +482,11 @@ public class QueryBuilder extends DynamicVisitorSupport {
 
 
         /**
-         * Walks recursively through a navigation.
+         * Walks recursively through a navigation.<br>
+ If the navigation starts with the queried property, Join instances
+ are created and the navigation is returned.<br>
+         * If the navigation starts with another property, a parameter is created
+         * and returned.
          * 
          * @param step
          * @param numVar
@@ -474,10 +494,10 @@ public class QueryBuilder extends DynamicVisitorSupport {
          */
         protected Step buildJoins(Step step, MofProperty inProperty, EteQuery inQuery, EteFilter inFilter) throws InstantiationException, IllegalAccessException {
             List<GelExpression> operand = step.getOperand();
-            // NO : we must consider that some subnavigations can start from
-            // other entity than the initial context
-            if (operand == null) return null;
-            if (operand.size() == 0) return null;
+            if (operand == null || operand.size() == 0){
+                System.out.println("No operand in this step");
+                return null;
+            }
             GelExpression first = operand.get(0);
             if (first instanceof Self) {
                 Feature initialProperty = step.getToFeature();
@@ -490,6 +510,8 @@ public class QueryBuilder extends DynamicVisitorSupport {
                     inQuery.addVariable(step, variable);
                     return step;
                 }
+                // The navigation starts from another property than the queried
+                // one, we must replace the navigation by a parameter
                 return null;
             }
             // Let's first build previous joins
@@ -499,32 +521,8 @@ public class QueryBuilder extends DynamicVisitorSupport {
                 // navigation must be replaced by a variable
                 return null;
             } else {
-                Join join = inQuery.addJoin(step);
-                inFilter.addJoin(join);
+                inQuery.addJoin(step, inFilter);
             }
-
-            // Now we build this step
-//            MofProperty property = (MofProperty) step.getToFeature();
-//            MofClass    srcClass = (MofClass) property.getOwningMofClass();
-//            String      srcName  = srcClass.getName().toUpperCase();
-//            String      name     = property.getName().toUpperCase();
-//            MofType     type     = property.getType();
-//            MofType     baseType = type.getRecBaseType();
-//            if (!(baseType instanceof MofClass)) {
-//                return initialStep;
-//            }
-//            String typeName = baseType.getName().toUpperCase();
-//            if (type.isCollection()) {
-//                // OneToMany or ManyToMany : there is an additional table
-//                addJoinTable(numVar-1, numVar,
-//                        srcName, typeName, name);
-//                numVar +=2 ;
-//                String  betweenName = startName + "_" + targetName;
-//                addJoin(start, end, betweenName, startName, true);
-//                addJoin(end, end+1, targetName, propName, false);
-//            } else {
-//                addJoin(numVar-1, numVar, typeName, name, false);
-//            }
             return initialStep;
         }
 
@@ -538,22 +536,11 @@ public class QueryBuilder extends DynamicVisitorSupport {
 
         protected void addJoin(int srcNumber, int targetNumber, String joinTable, String propName, boolean reverseNumbers) {
             System.out.println("target:" + targetNumber + ", joinTable:" + joinTable);
-//            inoutBuilder.append(" LEFT JOIN ");
-//            inoutBuilder.append(joinTable);
-//            inoutBuilder.append(" AS v");
-//            inoutBuilder.append(targetNumber);
             if (reverseNumbers) {
                 int aux = srcNumber;
                 srcNumber = targetNumber;
                 targetNumber = aux;
             }
-//            inoutBuilder.append(" ON v");
-//            inoutBuilder.append(targetNumber);
-//            inoutBuilder.append(".ID=v");
-//            inoutBuilder.append(srcNumber);
-//            inoutBuilder.append(".");
-//            inoutBuilder.append(propName);
-//            inoutBuilder.append("_ID");
         }
 
     }       // VariableBuilder
