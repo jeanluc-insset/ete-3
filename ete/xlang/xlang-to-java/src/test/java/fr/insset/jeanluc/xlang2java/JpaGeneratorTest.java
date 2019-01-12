@@ -6,6 +6,7 @@ package fr.insset.jeanluc.xlang2java;
 import fr.insset.jeanluc.action.semantics.builder.ConditionVisitor;
 import fr.insset.jeanluc.action.semantics.builder.EnhancedMofClassImpl;
 import fr.insset.jeanluc.action.semantics.builder.EteFilter;
+import fr.insset.jeanluc.action.semantics.builder.EteQuery;
 import fr.insset.jeanluc.as2java.JPAGenerator;
 import fr.insset.jeanluc.ete.api.EteException;
 import fr.insset.jeanluc.ete.gel.Step;
@@ -16,6 +17,7 @@ import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.impl.EteModelImpl;
 import fr.insset.jeanluc.ete.xlang.VariableDeclaration;
 import fr.insset.jeanluc.ete.xlang.builder.BodyBuilder;
+import fr.insset.jeanluc.xlang.to.sql.SqlGenerator;
 import fr.insset.jeanluc.xmi.io.impl.XmiModelReader;
 import fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor;
 import java.io.IOException;
@@ -95,15 +97,11 @@ public class JpaGeneratorTest {
         EnhancedMofClassImpl pilotClass = (EnhancedMofClassImpl) result.getElementByName("Pilot");
         EnhancedMofClassImpl flightClass = (EnhancedMofClassImpl) result.getElementByName("Flight");        
         MofProperty          captain = flightClass.getOwnedAttribute("captain");
-        Map<MofProperty, List<EteFilter>> support = pilotClass.getSupport();
-        List<EteFilter> queries = support.get(captain);
-        EteFilter    aQuery = queries.get(0);
-//        List<VariableDeclaration> variables = aQuery.getVariables();
+        Map<MofProperty, EteQuery> support = pilotClass.getSupport();
+        EteQuery eteQuery = support.get(captain);
+        List<EteFilter> filters = eteQuery.getFilters();
         JPAGenerator    generator = new JPAGenerator();
-        String jpa = generator.getPredicate(aQuery);
-        System.out.println("Predicate : [" + jpa + "]");
-  //      String checking = generator.addChecking((Step) variables.get(0).getInitValue());
- //       System.out.println("CHECKING : " + checking);
+        SqlGenerator      sql = new SqlGenerator();
     }
 
     @Test
@@ -126,19 +124,21 @@ public class JpaGeneratorTest {
         EteModel result = instance.readModel(MODEL_PATH);
 
         // 4- build a predicate
+        JPAGenerator    jpaGenerator = new JPAGenerator();
+        SqlGenerator      sqlGenerator = new SqlGenerator();
         EnhancedMofClassImpl pilotClass = (EnhancedMofClassImpl) result.getElementByName("Pilot");
         EnhancedMofClassImpl flightClass = (EnhancedMofClassImpl) result.getElementByName("Flight");        
         MofProperty          captain = flightClass.getOwnedAttribute("captain");
-        Map<MofProperty, List<EteFilter>> support = pilotClass.getSupport();
-        List<EteFilter> queries = support.get(captain);
-        EteFilter    aQuery = queries.get(0);
+        Map<MofProperty, EteQuery> support = pilotClass.getSupport();
+        EteQuery aQuery = support.get(captain);
+        EteFilter    aFilter = aQuery.getFilters().get(0);
+        System.out.println(sqlGenerator.getSelect(aQuery));
+        System.out.println(sqlGenerator.getJoin(aFilter));
+        System.out.println(sqlGenerator.getWhere(aFilter, aQuery));
 //        List<VariableDeclaration> variables = aQuery.getVariables();
         JPAGenerator    generator = new JPAGenerator();
-        String predicate = generator.getPredicate(aQuery);
 
         // 5- check result
-        System.out.println("Predicate : " + predicate);
-//        assertEquals("\n                cb.notEqual(root, copilotInCrew1)", predicate);
     }
 
 

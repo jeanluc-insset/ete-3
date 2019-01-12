@@ -1,4 +1,4 @@
-package ${current.owningPackage.name}.dao;
+package ${current.owningPackage.name}.jpa;
 
 
 import fr.insset.jeanluc.ete.jpa.AbstractJpa;
@@ -9,10 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.ejb.Stateless;
-#if (true == $javase)
-#import javax.persistence.EntityManagerFactory;
-#import javax.persistence.Persistence;
-#end
 import javax.persistence.*;
 import javax.persistence.criteria.*;
 import javax.persistence.metamodel.*;
@@ -81,54 +77,40 @@ public class ${current.name}Jpa extends AbstractJpa<${current.name}> {
     //========================================================================//
 
 
-#foreach ($aProperty in $current.support.keySet())
-
+#set ($support = $current.support)
+#foreach ($aProperty in $support.keySet())
     /**
      * Should return all the instances of ${current.name} which are acceptable
-     * as values of ${aProperty.name} property for the {@code inFor} instance of
-     * ${aProperty.owningMofClass.name} without violating any constraint on that
-     * class.<br>
-     * ${sql}
+     * as values of ${dialect.i2uc($aProperty.name)} of ${aProperty.owningMofClass.name}
+     * without violating any constraint on ${aQuery.clientClass.name}
      */
     public List<${current.name}> getAll${current.name}As${dialect.i2uc($aProperty.name)}For${aProperty.owningMofClass.name}(${aProperty.owningMofClass.name} inFor) {
-        EntityManager   em = getEntityManager();
-        StringBuilder   builder = new StringBuilder();
-        builder.append("${sql.getSql($aProperty)}");
+        StringBuilder   builder = new StringBuilder("${sql.getSql($aProperty)}");
         String          where = " WHERE ";
-#foreach ($aFilter in $current.support.get($aProperty).filters)
-        // add the select for ${aFilter}
-#foreach ($anExpression in $aFilter.navigations)
-        ${dialect.getOptional($anExpression)}
-        builder.append(where);
-        if (${dialect.getVariable($anExpression)}.isPresent()) {
-            where = " AND ";
-        }
+#foreach ($aFilter in $support.get($aProperty).filters}
+        // we must check whether all values in ${aFilter.parameters} are present
 #end
-#end
-        String sqlString = builder.toString();
-        TypedQuery<${current.name}> query = em.createNativeQuery(sqlString);
+        String sqlQuery = builder.toString();
+        Query  query = getEntityManager.createQuery(sqlQuery);
         return query.getResultList();
     }
 
+
+
 #foreach ($aQuery in $current.support.get($aProperty))
-#foreach ($aVar in $aQuery.variables)
-    // $aVar (${aVar.class.name}) : $aVar.initValue.toFeature.name
-#end
     public void select${dialect.i2uc($aProperty.name)}For${dialect.i2uc($aQuery.invariant.name)}(CriteriaQuery cq,
                                 Root<${current.name}> root,
                                 ${aQuery.clientClass.name} inFor) {
         CriteriaBuilder cb = getCriteriaBuilder();
 #foreach ($aVariable in $aQuery.variables)
-        #if ($aVariable.type.collection
-                )Optional<${dialect.mt2lt($aVariable.type)}>
-        #else Optional${dialect.mt2lt($aVariable.type)}#end ${aVariable.name}Opt = null;  // ${dialect.addChecking($aVariable.initValue)};
+        Optional<${dialect.mt2lt($aVariable.type)}> ${aVariable.name}Opt = ${dialect.addChecking($aVariable.initValue)};
         if (! ${aVariable.name}Opt.isPresent()) {
             return;
         }
 #end
 #foreach ($aVariable in $aQuery.variables)
         Expression<${dialect.mt2lt($aVariable.type)}> ${aVariable.name} = cb.literal(${aVariable.name}Opt.get());
-        cq.where(/* ${dialect.getPredicate($aQuery)} */);
+        cq.where(${dialect.getPredicate($aQuery)});
 #end
     }
 
@@ -138,4 +120,3 @@ public class ${current.name}Jpa extends AbstractJpa<${current.name}> {
 
 
 }
-

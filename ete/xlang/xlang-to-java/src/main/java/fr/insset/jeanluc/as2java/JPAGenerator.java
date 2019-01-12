@@ -28,13 +28,12 @@ import java.util.logging.Logger;
 
 
 /**
- * This class is a dialect so it can be used in velocity templates.<br>
- * It overrides the getOperationBody method with the cross compilation of
- * all the statements associated to the method.
+ * This class is intented to be used in velocity templates.<br>
+ * It provides the body of methods which call SQL queries
  *
  * @author jldeleage
  */
-public class JPAGenerator extends DynamicVisitorSupport implements Generator, JavaDialect  {
+public class JPAGenerator implements Generator, JavaDialect  {
 
     public final static Level       LOG_LEVEL = Level.INFO;
 
@@ -45,26 +44,7 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
 
     public JPAGenerator(String indentation) throws InstantiationException {
         this.indentation = indentation;
-        register("visit", "fr.insset.jeanluc.ete.gel");
-        register("visit", "fr.insset.jeanluc.ete.xlang");
-        operators = FactoryMethods.newMap(Class.class, String.class);
-        operators.put(DifferentImpl.class, "notEqual");
-        operators.put(EqualImpl.class, "equal");
-        operators.put(GreaterThanImpl.class, "greaterThan");
-        operators.put(LessThanImpl.class, "lessThan");
-        operators.put(GreaterOrEqualImpl.class, "ge");
-        operators.put(LessOrEqualImpl.class, "le");
-        operators.put(AddImpl.class, "sum");
-        operators.put(SubImpl.class, "diff");
-        operators.put(MultImpl.class, "prod");
-        operators.put(DivImpl.class, "quot");
     }
-
-
-    //========================================================================//
-    //            G E N E R A T O R   I M P L E M E N T A T I O N             //
-    //========================================================================//
-
 
 
     //========================================================================//
@@ -72,192 +52,20 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
     //========================================================================//
 
 
-    public String getPredicate(EteFilter inQuery) throws IllegalAccessException, InvocationTargetException {
-        StringBuilder    buffer = new StringBuilder();
-        genericVisit(inQuery.getExpression(), buffer, indentation + indentation, inQuery);
-        return buffer.toString();
+    public String   getJava(EteFilter aFilter) {
+        return getJava(aFilter, "        ");
     }
-
-    public String addChecking(Step inStep) {
-        StringBuilder    buffer = new StringBuilder();
-        addChecking(inStep, buffer);
-        return buffer.toString();
-    }
-
-
-    protected void addChecking(Step inStep, StringBuilder buffer) {
-        Logger.getGlobal().log(Level.FINE, "Dans addChecking : {0} ({1})", new Object[]{inStep, inStep.getClass().getName()});
-        if (inStep instanceof AttributeNav) {
-            AttributeNav nav = (AttributeNav) inStep;
-            List<GelExpression> operand = inStep.getOperand();
-            if (operand != null && !operand.isEmpty())
-                addChecking((Step) operand.get(0), buffer);
-            Feature toFeature = nav.getToFeature();
-            buffer.append(".get");
-            buffer.append(i2uc(toFeature.getName()));
-            buffer.append("$()");
-        }
-        else {
-            buffer.append("inFor");
-        }
-    }
-
-
-    public String getFilter(AttributeNav inNav, String start) {
-        StringBuilder buffer = new StringBuilder(start);
-        addNavInFilter(inNav, buffer);
-        return buffer.toString();
-    }
-
-    protected void addNavInFilter(Step inStep, StringBuilder inoutBuffer) {
-        List<GelExpression> operand = inStep.getOperand();
-        if (operand == null || operand.isEmpty()) {
-            return;
-        }
-        AttributeNav nav = (AttributeNav) inStep;
-        addNavInFilter((Step) operand.get(0), inoutBuffer);
-        inoutBuffer.append(i2uc(nav.getToFeature().getName()));
-    }
-
-    /**
-     * This method is used to pass the value to a parameter.
-     * 
-     * @param VariableDeclaration inDeclaration : variable waiting for its value
-     * @return String : the expression getting the value of this variable
-     */
-    public String getJpa(VariableDeclaration inDeclaration) throws IllegalAccessException, InvocationTargetException {
-        GelExpression initValue = inDeclaration.getInitValue();
-        StringBuilder buffer = new StringBuilder();
-        genericVisit(initValue, buffer);
-        return buffer.toString();
-    }
-
-
-    //========================================================================//
-    //            V I S I T S   O F   G E L   E X P R E S S I O N S           //
-    //========================================================================//
-
-
-    public GelExpression visitGelExpression(GelExpression inExpression, Object... inParameters) throws IllegalAccessException, InvocationTargetException {
-        StringBuilder buffer = (StringBuilder) inParameters[0];
-        String localIndentation = (String) inParameters[1];
-        buffer.append("\n");
-        buffer.append(localIndentation);
-        buffer.append(localIndentation);
-        String jpaOperator = operators.get(inExpression.getClass());
-        if (jpaOperator != null) {
-            buffer.append("cb.");
-            buffer.append(jpaOperator);
-            buffer.append("(");
-            boolean notTheFirstOne = false;
-            for (GelExpression anExpression : inExpression.getOperand()) {
-                if (notTheFirstOne) {
-                    buffer.append(", ");
-                }
-                notTheFirstOne = true;
-                genericVisit(anExpression, inParameters);
-            }       // for anOperand
-        }       // jpaOperator != null
-        buffer.append(")");
-        return inExpression;
-    }
-
-
-    public String getDependentProperties(MofProperty inProperty, EnhancedMofClassImpl inTargetClass) {
-        StringBuilder   builder = new StringBuilder();
-        try {
-            boolean         notTheFirstOne = false;
-            Logger.getGlobal().log(LOG_LEVEL, "Requesting dependent properties of ");
-            Logger.getGlobal().log(LOG_LEVEL, "    {0} in {1}", new Object[]{inProperty, inTargetClass});
-            for (EteFilter aQuery : inTargetClass.getSupport().get(inProperty)) {
-                Logger.getGlobal().log(LOG_LEVEL, "  Found a query");
-                for (VariableDeclaration aVar : aQuery.getVariables()) {
-                    Logger.getGlobal().log(LOG_LEVEL, "    Found a variable");
-                    GelExpression initValue = aVar.getInitValue();
-                    if (initValue instanceof AttributeNav) {
-                        if (notTheFirstOne) builder.append(' ');
-                        AttributeNav nav = (AttributeNav) initValue;
-                        Logger.getGlobal().log(LOG_LEVEL, "    the variable is a navigation to {0}", nav.getToFeature().getName());
-                        builder.append(nav.getToFeature().getName());
-                        notTheFirstOne = true;
-                    }
-                }
-            }
-        } catch (Exception ex) {
-            Logger.getGlobal().log(Level.WARNING, "Exception in JPAGenerator.getDependentProperties : {0}", ex);
-            return null;
-        }
-        return builder.toString();
-        /*
-#foreach ($aQuery in $targetClass.support.get($var))
-#foreach ($aVar in $aQuery.variables)
-    $aVar.initValue.toFeature.name
-#end
-#end  
-*/
-    }
-
-
-    public VariableDeclaration visitVariableDeclaration(VariableDeclaration inDeclaration, Object... inParameters) {
-        StringBuilder buffer = (StringBuilder) inParameters[0];
-        EteFilter query = (EteFilter) inParameters[2];
-        if (inDeclaration == query.getTargetVariable()) {
-            buffer.append("root");
-        }
-        else {
-            String name = inDeclaration.getName();
-            buffer.append(name);
-        }
-        return inDeclaration;
-    }
-
-
-    public Self visitSelf(Self inSelf, Object... inParameters) {
-        StringBuilder buffer = (StringBuilder) inParameters[0];
-        buffer.append("inFor");
-        return inSelf;
-    }
-
-
-    public AttributeNav visitAttributeNav(AttributeNav inNav, Object... inParameters) throws IllegalAccessException, InvocationTargetException {
-        StringBuilder buffer = (StringBuilder) inParameters[0];
-        List<GelExpression> operand = inNav.getOperand();
-        GelExpression firstOperand = operand.get(0);
-        genericVisit(firstOperand, inParameters);
-        buffer.append(".get");
-        String name = inNav.getToFeature().getName();
-        name = i2uc(name);
-        buffer.append(name);
-        buffer.append("$()");
-        return inNav;
-    }
-
-
-
-    public Includes visitIncludes(Includes inIncludes, Object... inParameters) {
-        return inIncludes;
-    }
-
     
-    //========================================================================//
-    //
-    //========================================================================//
-
-
-
-
-    public String getIndentation() {
-        return indentation;
+    public String getJava(EteFilter aFilter, String inIndentation) {
+        StringBuilder   builder = new StringBuilder();
+        return builder.toString();
     }
 
 
-
-    //========================================================================//
     //========================================================================//
 
 
-    private     String                  indentation;
-    private     Map<Class, String>     operators;
+    private     String                 indentation;
 
 
 }       // JpaGenerator

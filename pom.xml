@@ -17,7 +17,8 @@
         <module>ete</module>
         <module>archetypes</module>
         <module>samples</module>
-  </modules>
+        <module>test-utils</module>
+    </modules>
   
   <build>
       <plugins>
