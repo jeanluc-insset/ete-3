@@ -16,6 +16,9 @@ import fr.insset.jeanluc.util.factory.FactoryRegistry;
  * An Ete Action to register factories for the following classes :<ul>
  * <li>EnhancedMofClassImpl for MofClass entry</li>
  * <li>EnhancedMofOperationImpl for MofOperation entry</li>
+ * <li>EnhancedInvariantImpl for Invariant entry</li>
+ * <li>EnhancedPrecondition for Precondition entry</li>
+ * <li>EnhancedPostcondition for Postcondition entry</li>
  * </ul>
  *
  * @author jldeleage
@@ -32,8 +35,8 @@ public class XLangAction extends ActionSupport {
         registry.registerFactory(MOF_CLASS, EnhancedMofClassImpl.class);
         registry.registerFactory(MOF_OPERATION, EnhancedMofOperationImpl.class);
         registry.registerFactory(INVARIANT, EnhancedInvariantImpl.class);
-        registry.registerFactory(POSTCONDITION, EnhancedPostcondition.class);
-        registry.registerFactory(PRECONDITION, EnhancedPrecondition.class);
+        registry.registerFactory(POSTCONDITION, EnhancedPostconditionImpl.class);
+        registry.registerFactory(PRECONDITION, EnhancedPreconditionImpl.class);
     }
 
     @Override

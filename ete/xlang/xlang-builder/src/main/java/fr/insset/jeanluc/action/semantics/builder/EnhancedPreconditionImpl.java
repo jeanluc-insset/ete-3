@@ -12,10 +12,10 @@ import java.util.List;
  *
  * @author jldeleage
  */
-public class EnhancedPrecondition extends PreconditionImpl implements EnhancedCondition {
+public class EnhancedPreconditionImpl extends PreconditionImpl implements EnhancedCondition {
 
 
-    public EnhancedPrecondition() throws InstantiationException {
+    public EnhancedPreconditionImpl() throws InstantiationException {
         statements = FactoryMethods.newList(Statement.class);
     }
 

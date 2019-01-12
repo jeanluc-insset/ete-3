@@ -37,6 +37,11 @@
             <artifactId>xlang-to-xxx</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>fr.insset.jeanluc</groupId>
+            <artifactId>xlang-to-sql</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>junit</groupId>

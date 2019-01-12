@@ -2,7 +2,7 @@ package fr.insset.jeanluc.as2java;
 
 
 import fr.insset.jeanluc.action.semantics.builder.EnhancedMofClassImpl;
-import fr.insset.jeanluc.action.semantics.builder.EteQuery;
+import fr.insset.jeanluc.action.semantics.builder.EteFilter;
 import fr.insset.jeanluc.el.dialect.JavaDialect;
 import fr.insset.jeanluc.ete.gel.AttributeNav;
 import fr.insset.jeanluc.ete.gel.GelExpression;
@@ -72,7 +72,7 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
     //========================================================================//
 
 
-    public String getPredicate(EteQuery inQuery) throws IllegalAccessException, InvocationTargetException {
+    public String getPredicate(EteFilter inQuery) throws IllegalAccessException, InvocationTargetException {
         StringBuilder    buffer = new StringBuilder();
         genericVisit(inQuery.getExpression(), buffer, indentation + indentation, inQuery);
         return buffer.toString();
@@ -101,7 +101,7 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
             buffer.append("inFor");
         }
     }
-    
+
 
     public String getFilter(AttributeNav inNav, String start) {
         StringBuilder buffer = new StringBuilder(start);
@@ -169,7 +169,7 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
             boolean         notTheFirstOne = false;
             Logger.getGlobal().log(LOG_LEVEL, "Requesting dependent properties of ");
             Logger.getGlobal().log(LOG_LEVEL, "    {0} in {1}", new Object[]{inProperty, inTargetClass});
-            for (EteQuery aQuery : inTargetClass.getSupport().get(inProperty)) {
+            for (EteFilter aQuery : inTargetClass.getSupport().get(inProperty)) {
                 Logger.getGlobal().log(LOG_LEVEL, "  Found a query");
                 for (VariableDeclaration aVar : aQuery.getVariables()) {
                     Logger.getGlobal().log(LOG_LEVEL, "    Found a variable");
@@ -200,7 +200,7 @@ public class JPAGenerator extends DynamicVisitorSupport implements Generator, Ja
 
     public VariableDeclaration visitVariableDeclaration(VariableDeclaration inDeclaration, Object... inParameters) {
         StringBuilder buffer = (StringBuilder) inParameters[0];
-        EteQuery query = (EteQuery) inParameters[2];
+        EteFilter query = (EteFilter) inParameters[2];
         if (inDeclaration == query.getTargetVariable()) {
             buffer.append("root");
         }

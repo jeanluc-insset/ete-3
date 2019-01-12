@@ -14,10 +14,10 @@ import java.util.List;
  *
  * @author jldeleage
  */
-public class EnhancedPostcondition extends PostconditionImpl implements EnhancedCondition, Postcondition {
+public class EnhancedPostconditionImpl extends PostconditionImpl implements EnhancedCondition, Postcondition {
 
 
-    public EnhancedPostcondition() throws InstantiationException {
+    public EnhancedPostconditionImpl() throws InstantiationException {
         statements = FactoryMethods.newList(Statement.class);
     }
 
@@ -52,10 +52,10 @@ public class EnhancedPostcondition extends PostconditionImpl implements Enhanced
         if (isResult()) {
             return 1;
         }
-        if (! (inOther instanceof EnhancedPostcondition)) {
+        if (! (inOther instanceof EnhancedPostconditionImpl)) {
             return -1;
         }
-        EnhancedPostcondition other = (EnhancedPostcondition) inOther;
+        EnhancedPostconditionImpl other = (EnhancedPostconditionImpl) inOther;
         if (other.isResult()) {
             return -1;
         }
