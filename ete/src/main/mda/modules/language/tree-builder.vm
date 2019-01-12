@@ -131,8 +131,22 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
 //============================================================================//
 
 
+
 #foreach ($aClass in $current.classes)
 #if ($aClass.getValueOf("literalType"))
+#if ($aClass.getValueOf("literalType").equals("String"))
+    @Override
+    public GelExpression visitStringLiteral(GelParser.StringLiteralContext ctx) {
+        try {
+            String text = ctx.getText();
+            StringLiteral newInstance = (StringLiteral)FactoryRegistry.newInstance("String");
+            newInstance.setValueAsString(text.substring(1, text.length()-1));
+            return newInstance;
+        } catch (InstantiationException | IllegalAccessException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+#else
     // LITERAL TYPE : ${aClass.getValueOf("literalType")}
     @Override
     public ${dialect.i2uc($projectName)}Expression visit${dialect.i2uc($aClass.name)}(${dialect.i2uc($projectName)}Parser.${dialect.i2uc($aClass.name)}Context ctx) {
@@ -145,7 +159,7 @@ public class TreeBuilder extends ${dialect.i2uc($projectName)}ParserBaseVisitor<
             throw new RuntimeException(ex);
         }
     }
-
+#end
 #end
 #end
 

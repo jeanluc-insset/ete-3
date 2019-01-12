@@ -103,11 +103,11 @@ public class TreeBuilderTest {
     @Test
     public void testStringLiteral() {
         System.out.println("string literal");
-        String      helloWorld  = "\"hello world\"";
+        String      helloWorld  = "hello world";
         StringLiteralImpl stringLiteralImpl = new StringLiteralImpl();
         
         stringLiteralImpl.setValueAsString(helloWorld);
-        testAny(stringLiteralImpl,  helloWorld, null, null);
+        testAny(stringLiteralImpl,  '"' + helloWorld + '"', null, null);
     }
 
     @Test
