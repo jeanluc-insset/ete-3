@@ -110,6 +110,7 @@ public class EteQuery {
     public VariableDefinition addParameter(Step inStep) throws InstantiationException, IllegalAccessException {
         VariableDefinition variable = (VariableDefinition) FactoryRegistry.newInstance(VariableDefinition.class);
         variable.setValue(inStep);
+        variable.setType(inStep.getType());
         variable.setName("p" + nextParameterNum++);
         parameters.put(inStep, variable);
         return variable;

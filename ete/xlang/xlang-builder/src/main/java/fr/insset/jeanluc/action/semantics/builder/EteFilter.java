@@ -170,6 +170,18 @@ public class EteFilter {
     }
 
 
+    public List<VariableDefinition> getParameters() throws InstantiationException {
+        List<VariableDefinition>    result = FactoryMethods.newList(VariableDefinition.class);
+        for (VariableDefinition def : variables.values()) {
+            if (! (def.getName()).equals("v0")) {
+                result.add(def);
+            }
+        }
+        return result;
+    }
+
+
+
     //==========================================================================//
 
     
