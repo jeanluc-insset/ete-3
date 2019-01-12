@@ -1,4 +1,4 @@
-    package fr.insset.jeanluc.xlang.to.sql;
+package fr.insset.jeanluc.xlang.to.sql;
 
 
 
@@ -26,7 +26,15 @@ import java.util.List;
 
 /**
  * <div>
- * As expected, this class builds an SQL query from an EteQuery instance.
+ * As expected, this class builds an SQL query from an EteQuery instance.<br>
+ * Provides three methods which are intented to be called from templates:<ul>
+ * <li>getSelect returns the SELECT clause, without any join</li>
+ * <li>getJoin returns a JOIN clause</li>
+ * <li>getWhere returns a WHERE/AND clause</li>
+ * </ul>
+ * The first method should always been called.<br>
+ * The other methods should not be called but when all the parameters are
+ * present.
  * </div>
  * 
  * @author jldeleage
@@ -43,7 +51,8 @@ public class QueryToSql extends DynamicVisitorSupport implements Dialect {
     //==========================================================================//
 
 
-    public String addSelect(EteQuery inQuery, StringBuilder builder) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    public String getSelect(EteQuery inQuery) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        StringBuilder   builder = new StringBuilder();
         MofProperty root = inQuery.getProperty();
         EnhancedMofClassImpl targetClass = (EnhancedMofClassImpl) root.getType().getRecBaseType();
         EteQuery query = targetClass.getSupport().get(root);
@@ -54,6 +63,17 @@ public class QueryToSql extends DynamicVisitorSupport implements Dialect {
     }
 
 
+    //==========================================================================//
+
+
+
+    public String getJoin(EteFilter aFilter) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+        StringBuilder   builder = new StringBuilder();
+        for (Join aJoin : aFilter.getJoins()) {
+            addJoin(aJoin, builder);
+        }
+        return builder.toString();
+    }
 
 
     /**
@@ -79,16 +99,14 @@ public class QueryToSql extends DynamicVisitorSupport implements Dialect {
     }
 
 
+    //==========================================================================//
 
 
 
-    protected void addWhere(EteFilter aFilter, StringBuilder builder, boolean firstClause, EteQuery inQuery) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        if (firstClause) {
-            builder.append(" WHERE ");
-        } else {
-            builder.append("    AND ");
-        }
+    public String getWhere(EteFilter aFilter, EteQuery inQuery) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        StringBuilder   builder = new StringBuilder();
         genericVisit(aFilter.getExpression(), builder, inQuery);
+        return builder.toString();
     }
 
 
