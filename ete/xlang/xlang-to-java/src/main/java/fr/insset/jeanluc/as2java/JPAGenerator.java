@@ -10,6 +10,7 @@ import fr.insset.jeanluc.ete.gel.Includes;
 import fr.insset.jeanluc.ete.gel.Nav;
 import fr.insset.jeanluc.ete.gel.Self;
 import fr.insset.jeanluc.ete.gel.Step;
+import fr.insset.jeanluc.ete.gel.VariableDefinition;
 import fr.insset.jeanluc.ete.gel.impl.*;
 import fr.insset.jeanluc.ete.meta.model.emof.Feature;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
@@ -52,13 +53,32 @@ public class JPAGenerator implements Generator, JavaDialect  {
     //========================================================================//
 
 
-    public String   getJava(EteFilter aFilter) {
-        return getJava(aFilter, "        ");
-    }
-    
-    public String getJava(EteFilter aFilter, String inIndentation) {
+    public String   getValueOfParameter(VariableDefinition inDef) {
         StringBuilder   builder = new StringBuilder();
+        GelExpression expression = (GelExpression) inDef.getValue();
+        addNavigation(expression, builder);
         return builder.toString();
+    }
+
+
+    protected void addNavigation(GelExpression aStep, StringBuilder builder) {
+        if (aStep instanceof Self) {
+            builder.append("inFor");
+        }
+        List<GelExpression> operand = aStep.getOperand();
+        if (operand == null || operand.size() == 0) {
+            return;
+        }
+        GelExpression previous = operand.get(0);
+        addNavigation(previous, builder);
+        builder.append(".get");
+        Step thisStep = (Step) aStep;
+        Feature toFeature = thisStep.getToFeature();
+        builder.append(i2uc(toFeature.getName()));
+        if (previous instanceof Self) {
+            builder.append('$');
+        }
+        builder.append("()");
     }
 
 

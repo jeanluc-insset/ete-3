@@ -94,12 +94,24 @@ public class ${current.name} #if (${current.superClass.size()}>0)extends ${curre
     public void remove${dialect.i2uc($aProperty.name)}(${dialect.mt2lt($aProperty.type.baseType)} inValue) {
         ${aProperty.name}.remove(inValue);
     }
-#elseif ($aProperty.type.recBaseType.hasStereotype("Entity") || $aProperty.type.recBaseType.name.equals("String"))
-    public Optional<${aProperty.type}> get${dialect.i2uc($aProperty.name)}$() {
-        return Optional.ofNullable(${aProperty.name});
+#elseif ($aProperty.type.recBaseType.hasStereotype("Entity"))
+    public Optional${aProperty.type} get${dialect.i2uc($aProperty.name)}$() {
+        return Optional${aProperty.type}.ofNullable(${aProperty.name});
     }
 #elseif ($aProperty.type.recBaseType.name.equals("date"))
     public Optional<java.util.Date> get${dialect.i2uc($aProperty.name)}$() {
+        return Optional.ofNullable(${aProperty.name});
+    }
+#elseif ($aProperty.type.recBaseType.name.equals("String"))
+    public Optional<String> get${dialect.i2uc($aProperty.name)}$() {
+        return Optional.ofNullable(${aProperty.name});
+    }
+#elseif ($aProperty.type.recBaseType.name.equals("int"))
+    public Optional<Integer> get${dialect.i2uc($aProperty.name)}$() {
+        return Optional.ofNullable(${aProperty.name});
+    }
+#elseif ($aProperty.type.recBaseType.name.equals("double"))
+    public Optional<Double> get${dialect.i2uc($aProperty.name)}$() {
         return Optional.ofNullable(${aProperty.name});
     }
 #end
