@@ -39,10 +39,10 @@ import java.util.List;
  * 
  * @author jldeleage
  */
-public class QueryToSql extends DynamicVisitorSupport implements Dialect {
+public class SqlGenerator extends DynamicVisitorSupport implements Dialect {
 
 
-    public QueryToSql() {
+    public SqlGenerator() {
         // there methods build the where/and statements
         register("visit", "fr.insset.jeanluc.ete.gel");
     }
