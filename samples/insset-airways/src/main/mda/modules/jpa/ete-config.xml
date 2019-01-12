@@ -30,7 +30,7 @@
                             template="class2optional.vm"
                             target="${current.owningPackage.name.replace('.', '/')}/model/Optional${current.name}.java"/>
                 <velocity dialect="fr.insset.jeanluc.as2java.JPAGenerator"
-                            template="class2jpa.vm"
+                            template="class2dao.vm"
                             target="${current.owningPackage.name.replace('.', '/')}/jpa/${current.name}Jpa.java">
                     <dialect name="sql" class="fr.insset.jeanluc.xlang.to.sql.SqlGenerator"/>
                 </velocity>
