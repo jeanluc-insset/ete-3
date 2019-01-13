@@ -52,8 +52,8 @@ public class Optional${current.name} #if (${current.superClass.size()}>0)extends
 #set ($t = $aProperty.type.recBaseType)
 
 #if ($aProperty.type.collection)
-    public OptionalList<Optional${t.name}>  get${dialect.i2uc($aProperty.name)}() {
-        OptionalList<Optional${t.name}> result = new OptionalList<>();
+    public OptionalList${t.name}  get${dialect.i2uc($aProperty.name)}() {
+        OptionalList${t.name} result = new OptionalList${t.name}();
         if (isPresent()) {
             result.setPresent(true);
             for (${t.name} anItem : delegate.get${dialect.i2uc($aProperty.name)}()) {

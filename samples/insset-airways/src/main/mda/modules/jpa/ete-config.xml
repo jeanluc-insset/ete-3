@@ -29,6 +29,9 @@
                 <velocity dialect="fr.insset.jeanluc.as2java.JavaGenerator"
                             template="class2optional.vm"
                             target="${current.owningPackage.name.replace('.', '/')}/model/Optional${current.name}.java"/>
+                <velocity dialect="fr.insset.jeanluc.as2java.JavaGenerator"
+                            template="class2optional_list.vm"
+                            target="${current.owningPackage.name.replace('.', '/')}/model/OptionalList${current.name}.java"/>
                 <velocity dialect="fr.insset.jeanluc.as2java.JPAGenerator"
                             template="class2dao.vm"
                             target="${current.owningPackage.name.replace('.', '/')}/jpa/${current.name}Jpa.java">

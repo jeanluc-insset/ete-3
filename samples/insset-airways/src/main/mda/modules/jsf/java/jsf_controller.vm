@@ -256,7 +256,7 @@ ${aMethod.name}${dialect.i2uc($aParameter.name)}#if( $foreach.hasNext ), #end
     }
 
 #foreach ($aProperty in ${current.support.keySet()})
-    public SelectItem[] getItemsAvailableAs${dialect.i2uc($aProperty.name)}For${aProperty.owningMofClass.name}SelectOne(${aProperty.owningMofClass.name} inFor) {
+    public SelectItem[] getItemsAvailableAs${dialect.i2uc($aProperty.name)}For${aProperty.owningMofClass.name}SelectOne(${aProperty.owningMofClass.name} inFor) throws InstantiationException {
         return JsfUtil.getSelectItems(ejbFacade.getAll${current.name}As${dialect.i2uc($aProperty.name)}For${aProperty.owningMofClass.name}(inFor), true);
     }
 #end
