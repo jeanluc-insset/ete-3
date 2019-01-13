@@ -291,7 +291,6 @@ public class QueryBuilder extends DynamicVisitorSupport {
      * @param inMofClass 
      */
     public void buildVariables(EnhancedMofClassImpl inMofClass) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        if (! "Pilot".equals(inMofClass.getName())) return;
         Map<MofProperty, EteQuery> support = inMofClass.getSupport();
         for (MofProperty aProperty : support.keySet()) {
             EteQuery query = support.get(aProperty);
@@ -510,6 +509,8 @@ public class QueryBuilder extends DynamicVisitorSupport {
                     inQuery.addVariable(step, variable);
                     return step;
                 }
+                System.out.println("Adding " + initialProperty.getName() + " to the dependencies of " + inProperty.getName());
+                inQuery.addDependency((MofProperty) initialProperty);
                 // The navigation starts from another property than the queried
                 // one, we must replace the navigation by a parameter
                 return null;

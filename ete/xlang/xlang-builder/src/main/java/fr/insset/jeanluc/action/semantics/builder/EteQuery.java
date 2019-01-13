@@ -55,6 +55,8 @@ public class EteQuery {
 
     public EteQuery() throws InstantiationException {
         parameters = FactoryMethods.newMap(Step.class, VariableDefinition.class);
+        dependencies = FactoryMethods.newList(MofProperty.class);
+        filters = FactoryMethods.newList(EteFilter.class);
     }
 
 
@@ -183,6 +185,20 @@ public class EteQuery {
         return join;
     }
 
+    //=========================================================================//
+
+
+    public List<MofProperty> getDependencies() {
+        System.out.println("Getting dependencies of " + property.getName()
+                + " -> " + dependencies.size() + " dependency(ies)");
+        return dependencies;
+    }
+
+
+    public void addDependency(MofProperty aProperty) {
+        dependencies.add(aProperty);
+    }
+
 
     //=========================================================================//
 
@@ -194,9 +210,14 @@ public class EteQuery {
      * 
      */
     private     Map<Step, VariableDefinition>   parameters;
-    private     List<EteFilter>                 filters = new LinkedList<>();
+    private     List<EteFilter>                 filters;
     private     MofProperty                     property;
     private     int                             nextParameterNum=1;
     private     int                             nextJoinNum=1;
+    /**
+     * List of properties with the same owning class than property (not the type
+     * of property) which are involved in a filter of this query
+     */
+    private     List<MofProperty>               dependencies;
 
 }
