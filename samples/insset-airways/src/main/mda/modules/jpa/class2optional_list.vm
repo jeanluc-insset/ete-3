@@ -75,10 +75,11 @@ public class OptionalList${current.name} extends LinkedList<Optional${current.na
     }
 */
 #else
-##         not a collection    
-#if ($t=="int") #set($tn = "Integer")
-#elseif ($t=="double") #set($tn="Double")
-#elseif ($t=="date") #set($tn="java.util.Date")
+##         not a collection 
+#if ($t.name.equals("int")) #set($tn = "Integer")
+#elseif ($t.name.equals("double")) #set($tn="Double")
+#elseif ($t.name.equals("date")) #set($tn="java.util.Date")
+#elseif ($t.name.equals("boolean")) #set($tn="Boolean")
 #else #set($tn=$t.name)
 #end
 

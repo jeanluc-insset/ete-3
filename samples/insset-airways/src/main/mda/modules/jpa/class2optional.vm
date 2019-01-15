@@ -73,9 +73,10 @@ public class Optional${current.name} #if (${current.superClass.size()}>0)extends
         return Optional${aProperty.type}.ofNullable(newDelegate);
     }
 #else
-#if ($t=="int") #set($t = "Integer")
-#elseif ($t=="double") #set($t="Double")
-#elseif ($t=="date") #set($t="java.util.Date")
+#if ($t.name.equals("int")) #set($t = "Integer")
+#elseif ($t.name.equals("double")) #set($t="Double")
+#elseif ($t.name.equals("boolean")) #set($t="Boolean")
+#elseif ($t.name.equals("date")) #set($t="java.util.Date")
 #end
     public Optional<$t> get${dialect.i2uc($aProperty.name)}() {
         $t newDelegate;
