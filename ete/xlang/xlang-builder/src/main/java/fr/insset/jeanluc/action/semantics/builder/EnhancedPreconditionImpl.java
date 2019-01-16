@@ -28,16 +28,20 @@ public class EnhancedPreconditionImpl extends PreconditionImpl implements Enhanc
         this.statements = statements;
     }
 
+
+
     @Override
-    public GelExpression getExpression() {
-        return gelExpression;
+    public Object getExpression() {
+        return expression;
     }
 
-    public void setExpression(GelExpression gelExpression) {
-        this.gelExpression = gelExpression;
+    @Override
+    public void setExpression(Object expression) {
+        this.expression = expression;
     }
 
 
     private     List<Statement>     statements;
-    private     GelExpression       gelExpression;
+    private     Object              expression;
+
 }

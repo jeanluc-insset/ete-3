@@ -9,6 +9,7 @@ import fr.insset.jeanluc.ete.gel.AttributeNav;
 import fr.insset.jeanluc.ete.gel.Collect;
 import fr.insset.jeanluc.ete.gel.Flatten;
 import fr.insset.jeanluc.ete.gel.GelExpression;
+import fr.insset.jeanluc.ete.gel.Literal;
 import fr.insset.jeanluc.ete.gel.OclOperation;
 import fr.insset.jeanluc.ete.gel.Self;
 import fr.insset.jeanluc.ete.gel.Step;
@@ -155,7 +156,7 @@ public class JavaGenerator extends CBasedGenerator implements Generator, JavaDia
         StringWriter    buffer = new StringWriter();
         PrintWriter output = new PrintWriter(buffer);
         output.append("if (!(");
-        Object specification = inPrecondition.getSpecification();
+        Object specification = inPrecondition.getExpression();
         genericVisit(specification, output, inIndentation);
         // TODO : we should allow the developer to customize this message
         output.print(")) throw new RuntimeException(\"");
@@ -423,12 +424,19 @@ public class JavaGenerator extends CBasedGenerator implements Generator, JavaDia
     public StringLiteral gelVisitStringLiteral(StringLiteral inLiteral, Object... inParameters) {
         PrintWriter output = (PrintWriter)inParameters[0];
         output.print('"');
-        output.print(inLiteral.getValue());
+        output.print(inLiteral.getValueAsString());
         output.print('"');
         return inLiteral;
     }
 
 
+    public Object gelVisitLiteral(Literal inExpression, Object... inParameters) {
+        PrintWriter output      = (PrintWriter)inParameters[0];
+        output.print(inExpression.getValueAsString());
+        return inExpression;
+    }
+
+  
     //------------------------------------------------------------------------//
 
 

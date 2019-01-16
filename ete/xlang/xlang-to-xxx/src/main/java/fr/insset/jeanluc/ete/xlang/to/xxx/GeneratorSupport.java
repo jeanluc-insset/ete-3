@@ -28,7 +28,7 @@ public class GeneratorSupport extends DynamicVisitorSupport implements Generator
 
 
     public final void setSymbol(Class inClass, String inSymbol) {
-        symbols.put(inClass, DATE);
+        symbols.put(inClass, inSymbol);
     }
 
     @Override

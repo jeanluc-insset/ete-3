@@ -1,9 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package fr.insset.jeanluc.xlang2java;
+
 
 import fr.insset.jeanluc.action.semantics.builder.ConditionVisitor;
 import fr.insset.jeanluc.action.semantics.builder.EnhancedInvariantImpl;
@@ -89,6 +85,7 @@ public class AirwaysTest {
         for (Precondition aPrecondition : preconditions) {
             System.out.println(generator.getCheckCondition(record, aPrecondition, "        "));
         }
-         System.out.println(generator.getOperationBody(record, "        "));
+        System.out.println(generator.getCheckCondition(record, preconditions.get(1), "        "));
+        System.out.println(generator.getOperationBody(record, "        "));
      }
 }

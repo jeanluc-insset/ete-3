@@ -75,6 +75,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         register(Postcondition.class, "visitPostcondition");
         register(Invariant.class, "visitEnhancedInvariantImpl");
         register(EnhancedPostconditionImpl.class, "visitEnhancedPostcondition");
+        register(EnhancedPreconditionImpl.class, "visitEnhancedPrecondition");
         // Registration of the methods to visit gel expression
         register("gelVisit", "fr.insset.jeanluc.ete.gel");
         register(EteModel.class, "visitEteModel");
@@ -139,12 +140,13 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         logger.log(Level.FINE, VISIT_OF, inCondition.getSpecificationAsString());
 
         logger.info(PARSING_PRECONDITION);
-        
-
         EnhancedMofOperationImpl    context = (EnhancedMofOperationImpl)inParameters[0];
 
+        EteModel        model               = (EteModel)inParameters[1];
         Map<String, VariableDefinition> variables  = FactoryMethods.newMap(String.class, VariableDefinition.class);
         addVariable("result", context.getType(), variables);
+        GelExpression expression = visitACondition(inCondition, model, context);
+        inCondition.setExpression(expression);
 
         return inCondition;
     }
@@ -236,7 +238,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         gelContext.set("contextualClass", parser);
         TreeBuilder     treeBuilder           = new TreeBuilder(gelContext);
         GelExpression   expression            = treeBuilder.visitGelExpression(ctx);
-        ((EnhancedPostconditionImpl)inCondition).setExpression(expression);
+        inCondition.setExpression(expression);
         logger.log(Level.FINER, "GelExpression : {0}", expression);
 
         return expression;
