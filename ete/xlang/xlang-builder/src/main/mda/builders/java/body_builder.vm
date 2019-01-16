@@ -381,7 +381,11 @@ public class BodyBuilder extends DynamicVisitorSupport {
 
 
         public Boolean visitGelExpression(GelExpression inExpression, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-            for (GelExpression anOperand : inExpression.getOperand()) {
+            List<GelExpression> operand = inExpression.getOperand();
+            if (operand == null) {
+                return Boolean.FALSE;
+            }
+            for (GelExpression anOperand : operand) {
                 Boolean bool = (Boolean) genericVisit(anOperand, inParameters);
                 if (bool) {
                     return bool;

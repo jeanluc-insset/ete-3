@@ -17,6 +17,7 @@ import fr.insset.jeanluc.ete.gel.Sum;
 import fr.insset.jeanluc.ete.gel.VariableDefinition;
 import fr.insset.jeanluc.ete.gel.VariableReference;
 import fr.insset.jeanluc.ete.meta.model.constraint.Condition;
+import fr.insset.jeanluc.ete.meta.model.constraint.Precondition;
 import fr.insset.jeanluc.ete.meta.model.emof.Feature;
 import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
@@ -150,6 +151,20 @@ public class JavaGenerator extends CBasedGenerator implements Generator, JavaDia
     }
 
 
+    public String getCheckCondition(MofOperation inOperation, Precondition inPrecondition, String inIndentation) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        StringWriter    buffer = new StringWriter();
+        PrintWriter output = new PrintWriter(buffer);
+        output.append("if (!(");
+        Object specification = inPrecondition.getSpecification();
+        genericVisit(specification, output, inIndentation);
+        // TODO : we should allow the developer to customize this message
+        output.print(")) throw new RuntimeException(\"");
+        output.print(inPrecondition.getName());
+        output.print(" is invalid\"");
+        output.println(");");
+        output.flush();
+        return buffer.toString();
+    }
 
 
     //========================================================================//

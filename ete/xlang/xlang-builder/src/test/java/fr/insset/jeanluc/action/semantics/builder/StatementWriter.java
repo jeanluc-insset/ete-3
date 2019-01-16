@@ -6,6 +6,11 @@
 package fr.insset.jeanluc.action.semantics.builder;
 
 import fr.insset.jeanluc.ete.gel.GelExpression;
+import fr.insset.jeanluc.ete.gel.Literal;
+import fr.insset.jeanluc.ete.xlang.Assignment;
+import fr.insset.jeanluc.ete.xlang.Conditional;
+import fr.insset.jeanluc.ete.xlang.Statement;
+import fr.insset.jeanluc.ete.xlang.VariableDeclaration;
 import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -205,6 +210,45 @@ public class StatementWriter extends DynamicVisitorSupport {
         return inExpression;
     }
 
+
+
+    //==========================================================================//
+
+    
+    public GelExpression Literal(Literal inStatement, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        builder.append(inStatement.getValueAsString());
+        return inStatement;
+    }
+
+    //==========================================================================//
+
+    
+    public Statement visitVariableDeclaration(VariableDeclaration inStatement, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        builder.append(inStatement.getIdentifier());
+        GelExpression initValue = inStatement.getInitValue();
+        if (initValue != null) {
+            builder.append(" ← ");
+            genericVisit(initValue, inParameters);
+        }
+        return inStatement;
+    }
+
+
+
+    public Statement visitConditional(Conditional inStatement, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        builder.append("if (");
+        genericVisit(inStatement.getCondition());
+        builder.append(")\n");
+        genericVisit(inStatement.getOperand().get(0));
+        return inStatement;
+    }
+
+    public Statement visitAssignment(Assignment inStatement, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        genericVisit(inStatement.getOperand().get(0));
+        builder.append(" ← ");
+        genericVisit(inStatement.getOperand().get(1));
+        return inStatement;
+    }
 
 
     //==========================================================================//
