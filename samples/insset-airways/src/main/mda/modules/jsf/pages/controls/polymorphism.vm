@@ -6,7 +6,7 @@
 #if ($aProperty.type.baseType.hasStereotype("Entity"))
 #set ($control = "controls/one_to_many.vm") 
 #end
-#elseif ($aProperty.type.name == "date")
+#elseif ($aProperty.type.name.equals("date"))
 #set ($control = "controls/calendar.vm")
 #end
 #parse($control)
