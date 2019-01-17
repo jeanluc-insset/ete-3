@@ -15,6 +15,7 @@ import static fr.insset.jeanluc.ete.meta.model.constraint.Invariant.INVARIANT;
 import fr.insset.jeanluc.ete.meta.model.constraint.Postcondition;
 import static fr.insset.jeanluc.ete.meta.model.constraint.Postcondition.POSTCONDITION;
 import fr.insset.jeanluc.ete.meta.model.constraint.Precondition;
+import static fr.insset.jeanluc.ete.meta.model.constraint.Precondition.PRECONDITION;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 import static fr.insset.jeanluc.ete.meta.model.emof.MofClass.MOF_CLASS;
 import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
@@ -88,6 +89,7 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         inoutRegistry.registerFactory(MOF_OPERATION, fr.insset.jeanluc.action.semantics.builder.EnhancedMofOperationImpl.class);
         inoutRegistry.registerFactory(INVARIANT, EnhancedInvariantImpl.class);
         inoutRegistry.registerFactory(POSTCONDITION, EnhancedPostconditionImpl.class);
+        inoutRegistry.registerFactory(PRECONDITION, EnhancedPreconditionImpl.class);
     }
 
 
@@ -143,8 +145,6 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         EnhancedMofOperationImpl    context = (EnhancedMofOperationImpl)inParameters[0];
 
         EteModel        model               = (EteModel)inParameters[1];
-        Map<String, VariableDefinition> variables  = FactoryMethods.newMap(String.class, VariableDefinition.class);
-        addVariable("result", context.getType(), variables);
         GelExpression expression = visitACondition(inCondition, model, context);
         inCondition.setExpression(expression);
 
@@ -239,8 +239,14 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         TreeBuilder     treeBuilder           = new TreeBuilder(gelContext);
         GelExpression   expression            = treeBuilder.visitGelExpression(ctx);
         inCondition.setExpression(expression);
-        logger.log(Level.FINER, "GelExpression : {0}", expression);
-
+        logger.log(Level.INFO, "GelExpression : {0}", expression);
+        if (expression == null) {
+            System.out.println("THE EXPRESSION IS NULL");
+        } else {
+            System.out.println(expression.getClass().getName()
+                    + " is stored in [" + inCondition.getSpecificationAsString() + "]"
+                    + inCondition.getClass().getName());
+        }
         return expression;
     }
 

@@ -155,15 +155,14 @@ public class JavaGenerator extends CBasedGenerator implements Generator, JavaDia
     public String getCheckCondition(MofOperation inOperation, Precondition inPrecondition, String inIndentation) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         StringWriter    buffer = new StringWriter();
         PrintWriter output = new PrintWriter(buffer);
-        output.append("if (!(");
+//        output.append("if (!(");
         Object specification = inPrecondition.getExpression();
         genericVisit(specification, output, inIndentation);
-        // TODO : we should allow the developer to customize this message
-        output.print(")) throw new RuntimeException(\"");
-        output.print(inPrecondition.getName());
-        output.print(" is invalid\"");
-        output.println(");");
-        output.flush();
+//        output.print(")) throw new RuntimeException(\"");
+//        output.print(inPrecondition.getName());
+//        output.print(" is invalid\"");
+//        output.println(");");
+//        output.flush();
         return buffer.toString();
     }
 
