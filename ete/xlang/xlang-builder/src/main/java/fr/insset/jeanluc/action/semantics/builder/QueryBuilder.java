@@ -420,10 +420,24 @@ public class QueryBuilder extends DynamicVisitorSupport {
          * Currently an Includes expression is a kind of Step (this should be
          * fixed in a future release). If we let the standard handling for step
          * expressions, only the first operand is parsed.<br>
-         * On the other hand, the standard handling of ordinary expression works
-         * fine... So this method invokes visitGelExpression.
+         * If a 
          */
         public GelExpression visitIncludes(Includes inExpression, Object... inParameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+            MofProperty queriedProperty = (MofProperty) inParameters[2];
+            EteQuery query = (EteQuery) inParameters[1];
+            EteFilter eteFilter = (EteFilter) inParameters[0];
+            List<GelExpression> operand = inExpression.getOperand();
+            Step    left  = (Step) operand.get(0);
+            Step current = left;
+            do {
+                if (current instanceof Self) {
+                    
+                    break;
+                }
+                current = (Step) left.getOperand().get(0);
+            } while (true);
+            Step    right = (Step) operand.get(1);
+            
             return visitGelExpression(inExpression, inParameters);
         }
 
@@ -482,8 +496,8 @@ public class QueryBuilder extends DynamicVisitorSupport {
 
         /**
          * Walks recursively through a navigation.<br>
- If the navigation starts with the queried property, Join instances
- are created and the navigation is returned.<br>
+         * If the navigation starts with the queried property, Join instances
+         * are created and the navigation is returned.<br>
          * If the navigation starts with another property, a parameter is created
          * and returned.
          * 
@@ -526,6 +540,7 @@ public class QueryBuilder extends DynamicVisitorSupport {
             }
             return initialStep;
         }
+
 
 
         protected void addJoinTable(int start, int end, String startName, String targetName, String propName) {

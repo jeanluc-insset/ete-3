@@ -16,9 +16,9 @@ import java.util.Map;
 
 /**
  * <div>
- * An EteFilter is used to add "where" clauses to an EteQuery.<br>
+ * An EteFilter is used to add "join" and "where" clauses to an EteQuery.<br>
  * 
- * For every navigation step of every invariant one or more filters are generated.<br>
+ * For every navigation of every invariant one or more filters are generated.<br>
  * Each filter is added to a query.
  * </div>
  * <div>
