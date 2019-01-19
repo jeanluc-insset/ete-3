@@ -14,9 +14,9 @@
 ## See the controlTypes.txt for details
 <h:outputText value="${dialect.cc2sw($varName)}"/>
 #set($dp = $dialect.getDependentProperties($var, ${var.type}))
-#if ($var.type.name == "String" || $var.type.name == "int" || $var.type.name == "float")
+#if ($var.type.name.equals("String") || $var.type.equals("int") || $var.type.name.equals("float"))
 #parse("controls/input.vm")
-#elseif ($var.type.name == "date")
+#elseif ($var.type.name.equals("date"))
 #parse("controls/calendar.vm")
 #else
 #set($coll = $var.type.collection)

@@ -1,4 +1,5 @@
-                    <h:inputText id="${var.name}" value="#{${scope}${varName}}" title="#{bundle.Create${current.name}Title_street}">
+                    <p:calendar xmlns:p="http://primefaces.org/ui"
+                             id="${var.name}" value="#{${scope}${varName}}" title="#{bundle.Create${current.name}Title_street}">
                         <f:convertDateTime pattern="dd/MM/yy"/>
                         <f:ajax #if($dp)render="${dp}"#end/>
-                    </h:inputText>
+                    </p:calendar>

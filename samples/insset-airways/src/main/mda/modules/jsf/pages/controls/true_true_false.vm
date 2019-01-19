@@ -1,13 +1,13 @@
             <ui:repeat var="var" value="#{cc.attrs.selection.${aProperty}}">
-                <p:accordionPanel>
+                <p:accordionPanel xmlns:p="http://primefaces.org/ui">
                     <p:tab title="#{var}">
-                       <ete:${var.type.baseType.name}_form
+                       <ete:${var.type.baseType.name}_form xmlns:ete="http://xmlns.jcp.org/jsf/composite/ete"
                              selection="#{var}"/>
                     </p:tab>
                 </p:accordionPanel>
             </ui:repeat>
                 <h:outputLabel value="new" for="new" />
-                <ete:${var.type.baseType.name}_form
+                <ete:${var.type.baseType.name}_form xmlns:ete="http://xmlns.jcp.org/jsf/composite/ete"
                            selection="#{${dialect.i2lc($current.name)}Controller.new${dialect.i2uc($varName)}}"
                 />
                 <h:outputText value=" "/>
