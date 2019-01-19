@@ -431,10 +431,13 @@ public class QueryBuilder extends DynamicVisitorSupport {
             Step current = left;
             do {
                 if (current instanceof Self) {
-                    
                     break;
                 }
-                current = (Step) left.getOperand().get(0);
+                List<GelExpression> currentOperand = current.getOperand();
+                if (currentOperand == null) {
+                    break;
+                }
+                current = (Step) currentOperand.get(0);
             } while (true);
             Step    right = (Step) operand.get(1);
             
