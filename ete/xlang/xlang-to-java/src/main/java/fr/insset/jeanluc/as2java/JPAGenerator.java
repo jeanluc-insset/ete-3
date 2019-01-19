@@ -3,6 +3,7 @@ package fr.insset.jeanluc.as2java;
 
 import fr.insset.jeanluc.action.semantics.builder.EnhancedMofClassImpl;
 import fr.insset.jeanluc.action.semantics.builder.EteFilter;
+import fr.insset.jeanluc.action.semantics.builder.EteQuery;
 import fr.insset.jeanluc.el.dialect.JavaDialect;
 import fr.insset.jeanluc.ete.gel.AttributeNav;
 import fr.insset.jeanluc.ete.gel.GelExpression;
@@ -15,6 +16,7 @@ import fr.insset.jeanluc.ete.gel.impl.*;
 import fr.insset.jeanluc.ete.meta.model.emof.Feature;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
+import fr.insset.jeanluc.ete.meta.model.types.MofType;
 import fr.insset.jeanluc.ete.xlang.VariableDeclaration;
 import fr.insset.jeanluc.ete.xlang.to.xxx.Generator;
 import fr.insset.jeanluc.util.factory.FactoryMethods;
@@ -80,6 +82,26 @@ public class JPAGenerator implements Generator, JavaDialect  {
         }
         builder.append("()");
     }
+
+
+    public String   getDependentProperties(MofProperty inProperty) {
+        System.out.println("    the dialect is asked for the dependences of " + inProperty.getName());
+        StringBuilder   builder = new StringBuilder();
+        MofType type = inProperty.getType().getRecBaseType();
+        if (type instanceof EnhancedMofClassImpl) {
+            EnhancedMofClassImpl theClass = (EnhancedMofClassImpl) type;
+            Map<MofProperty, EteQuery> support = theClass.getSupport();
+            EteQuery query = support.get(inProperty);
+            List<MofProperty> dependencies = query.getDependencies();
+            for (MofProperty aProperty : dependencies) {
+//                if (aProperty.getOwningMofClass().equals(inProperty.getOwningMofClass()))
+                    builder.append(aProperty.getName());
+                    builder.append(' ');
+            }
+        }
+        return builder.toString();
+    }
+
 
 
     //========================================================================//

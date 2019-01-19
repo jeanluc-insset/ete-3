@@ -13,7 +13,7 @@
 ## The third value is whether the property is qualified or not
 ## See the controlTypes.txt for details
 <h:outputText value="${dialect.cc2sw($varName)}"/>
-#set($dp = $dialect.getDependentProperties($var, ${var.type}))
+#set($dp = $dialect.getDependentProperties($var))
 #if ($var.type.name.equals("String") || $var.type.equals("int") || $var.type.name.equals("float"))
 #parse("controls/input.vm")
 #elseif ($var.type.name.equals("date"))
