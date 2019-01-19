@@ -12,6 +12,11 @@ import ${aDependance.owningPackage.name}.model.${aDependance.name};
 #foreach ($aProperty in $current.support.keySet())
 import ${aProperty.owningMofClass.owningPackage.name}.model.${aProperty.owningMofClass.name};
 #end
+#foreach ($aProperty in $current.ownedAttribute)
+#if ($aProperty.composite)
+import ${aProperty.type.recBaseType.owningPackage.name}.model.${aProperty.type.recBaseType.name};
+#end
+#end
 
 import java.io.Serializable;
 import java.util.ResourceBundle;
@@ -36,6 +41,11 @@ public class ${current.name}Controller implements Serializable {
     private ${current.name}Jpa ejbFacade;
     private PaginationHelper pagination;
     private int selectedItemIndex;
+#foreach ($aProperty in $current.ownedAttribute)
+#if ($aProperty.composite && $aProperty.type.collection)
+    private ${aProperty.type.recBaseType.name}  new${dialect.i2uc($aProperty.name)} = new ${aProperty.type.recBaseType.name}();
+#end
+#end
 #foreach ($aMethod in $current.ownedOperation)
 #foreach ($aParameter in $aMethod.ownedParameter)
     private ${dialect.mt2lt($aParameter.type)}  ${aMethod.name}${dialect.i2uc($aParameter.name)};
@@ -60,6 +70,29 @@ public class ${current.name}Controller implements Serializable {
     private ${current.name}Jpa getFacade() {
         return ejbFacade;
     }
+
+    //========================================================================//
+    //                          C O M P O N E N T S                           //
+    //========================================================================//
+
+
+#foreach ($aProperty in $current.ownedAttribute)
+#if ($aProperty.composite && $aProperty.type.collection)
+    public ${aProperty.type.recBaseType.name}  getNew${dialect.i2uc($aProperty.name)}() {
+        return new${dialect.i2uc($aProperty.name)};
+    }
+
+    public void  setNew${dialect.i2uc($aProperty.name)}(${aProperty.type.recBaseType.name} inValue) {
+        new${dialect.i2uc($aProperty.name)} = inValue;
+    }
+
+    public void addNew${dialect.i2uc($aProperty.name)}() {
+        getSelected().get${dialect.i2uc($aProperty.name)}().add(new${dialect.i2uc($aProperty.name)});
+        new${dialect.i2uc($aProperty.name)} = new ${aProperty.type.recBaseType.name}();
+    }
+#end
+#end
+
 
     //========================================================================//
     //                          P A G I N A T I O N                           //
