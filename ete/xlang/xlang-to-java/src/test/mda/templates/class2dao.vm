@@ -87,7 +87,7 @@ public class ${current.name}Jpa extends AbstractJpa<${current.name}> {
     public List<${current.name}> getAll${current.name}As${dialect.i2uc($aProperty.name)}For${aProperty.owningMofClass.name}(${aProperty.owningMofClass.name} inFor) {
         StringBuilder   builder = new StringBuilder("${sql.getSql($aProperty)}");
         String          where = " WHERE ";
-#foreach ($aFilter in $support.get($aProperty).filters}
+#foreach ($aFilter in $support.get($aProperty).filters)
         // we must check whether all values in ${aFilter.parameters} are present
 #end
         String sqlQuery = builder.toString();
