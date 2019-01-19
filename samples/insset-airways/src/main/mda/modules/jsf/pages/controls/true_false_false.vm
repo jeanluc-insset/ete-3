@@ -1,0 +1,3 @@
+                    <h:outputText value="template for ${varName}  : "/>
+                    <h:outputText value="true_false_false"/>
+

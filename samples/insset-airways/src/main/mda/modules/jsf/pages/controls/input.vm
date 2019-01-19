@@ -1,3 +1,3 @@
                     <h:inputText id="${var.name}" value="#{${scope}${varName}}" title="#{bundle.Create${current.name}Title_street}">
-                        <f:ajax #if ($dep.size()>0)render="#foreach($aVariable in $dep)${aVariable.name} #end"#end/>
+                        <f:ajax #if($dp)render="${dp}"#end/>
                     </h:inputText>

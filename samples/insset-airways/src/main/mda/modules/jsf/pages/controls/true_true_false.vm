@@ -1,0 +1,14 @@
+            <ui:repeat var="var" value="#{cc.attrs.selection.${aProperty}}">
+                <p:accordionPanel>
+                    <p:tab title="#{var}">
+                       <ete:${var.type.baseType.name}_form
+                             selection="#{var}"/>
+                    </p:tab>
+                </p:accordionPanel>
+            </ui:repeat>
+                <h:outputLabel value="new" for="new" />
+                <ete:${var.type.baseType.name}_form
+                           selection="#{${dialect.i2lc($current.name)}Controller.new${dialect.i2uc($varName)}}"
+                />
+                <h:outputText value=" "/>
+                <h:commandButton action="#{${dialect.i2lc($current.name)}Controller.addNew${dialect.i2uc($varName)}}" value="Add"/>
