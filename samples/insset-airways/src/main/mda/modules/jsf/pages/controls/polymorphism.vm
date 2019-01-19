@@ -4,8 +4,12 @@
 #set ($control = "controls/many_to_one.vm") 
 #elseif ($aProperty.type.isCollection())
 #if ($aProperty.type.baseType.hasStereotype("Entity"))
-#set ($control = "controls/one_to_many.vm") 
-#end
+#if ($aProperty.composite)
+#set ($control = "controls/one_to_one_composition.vm")
+#else
+#set ($control = "controls/one_to_many.vm")
+#end##composite
+#end## entity
 #elseif ($aProperty.type.name.equals("date"))
 #set ($control = "controls/calendar.vm")
 #end
