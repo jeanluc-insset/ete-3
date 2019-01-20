@@ -20,7 +20,11 @@
 #parse("controls/calendar.vm")
 #else
 #set($coll = $var.type.collection)
-#set($composite = $var.composite)
+#if ($var.composite)
+#set($composite = true)
+#else
+#set($composite = false)
+#end
 #if ($var.qualifierType)
 #set($qual = true)
 #else

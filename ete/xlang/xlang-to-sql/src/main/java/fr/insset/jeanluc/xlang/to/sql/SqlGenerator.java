@@ -80,10 +80,19 @@ public class SqlGenerator extends DynamicVisitorSupport implements Dialect {
     }
 
 
+    /**
+     * This code is intented to be executed at runtime.<br>
+     * TODO
+     */
     protected boolean allVariablesArePresent(EteFilter inFilter, Object inFor) {
         Map<Step, VariableDefinition> variables = inFilter.getVariables();
+//        GelEvaluator evaluator;
         for (Step aNavigation : variables.keySet()) {
-            
+            try {
+                
+            } catch (Exception ex) {
+                return false;
+            }
         }
         return true;
     }
@@ -277,6 +286,7 @@ public class SqlGenerator extends DynamicVisitorSupport implements Dialect {
         builder.append("'");
         return inLiteral;
     }
+
 
 
 }
