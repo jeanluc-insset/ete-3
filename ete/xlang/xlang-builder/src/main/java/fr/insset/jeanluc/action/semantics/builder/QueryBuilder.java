@@ -346,6 +346,23 @@ public class QueryBuilder extends DynamicVisitorSupport {
     }
 
 
+    public GelExpression visitIncludes(Includes inExpression, Object... inParameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        Class<? extends GelExpression> aClass = inExpression.getClass();
+        GelExpression result = aClass.newInstance();
+        List<GelExpression> operand = inExpression.getOperand();
+        if (operand != null) {
+             List<GelExpression> resultOperands = FactoryMethods.newList(GelExpression.class);
+            result.setOperand(resultOperands);
+            result.setType(inExpression.getType());
+            for (GelExpression anExpression : operand) {
+                GelExpression anOperand = (GelExpression) genericVisit(anExpression, inParameters);
+                if (anOperand != null) {
+                    resultOperands.add(anOperand);
+                }
+            }
+        }
+        return result;
+    }
 
     public void addInnerJoin(Step inNav, Step inFullNav, EnhancedInvariantImpl inInvariant) throws InstantiationException {
         GelExpression operand = inNav.getOperand().get(0);
@@ -423,7 +440,7 @@ public class QueryBuilder extends DynamicVisitorSupport {
          * If a 
          */
         public GelExpression visitIncludes(Includes inExpression, Object... inParameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-            MofProperty queriedProperty = (MofProperty) inParameters[2];
+//            MofProperty queriedProperty = (MofProperty) inParameters[2];
             EteQuery query = (EteQuery) inParameters[1];
             EteFilter eteFilter = (EteFilter) inParameters[0];
             List<GelExpression> operand = inExpression.getOperand();
@@ -440,7 +457,6 @@ public class QueryBuilder extends DynamicVisitorSupport {
                 current = (Step) currentOperand.get(0);
             } while (true);
             Step    right = (Step) operand.get(1);
-            
             return visitGelExpression(inExpression, inParameters);
         }
 

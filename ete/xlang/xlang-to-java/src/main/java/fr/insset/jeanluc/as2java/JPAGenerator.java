@@ -91,12 +91,15 @@ public class JPAGenerator implements Generator, JavaDialect  {
         if (type instanceof EnhancedMofClassImpl) {
             EnhancedMofClassImpl theClass = (EnhancedMofClassImpl) type;
             Map<MofProperty, EteQuery> support = theClass.getSupport();
-            EteQuery query = support.get(inProperty);
-            List<MofProperty> dependencies = query.getDependencies();
-            for (MofProperty aProperty : dependencies) {
-//                if (aProperty.getOwningMofClass().equals(inProperty.getOwningMofClass()))
-                    builder.append(aProperty.getName());
-                    builder.append(' ');
+            if (support != null) {
+                EteQuery query = support.get(inProperty);
+                if (query != null) {
+                    List<MofProperty> dependencies = query.getDependencies();
+                    for (MofProperty aProperty : dependencies) {
+                        builder.append(aProperty.getName());
+                        builder.append(' ');
+                    }
+                }
             }
         }
         return builder.toString();

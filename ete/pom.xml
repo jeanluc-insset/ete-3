@@ -21,12 +21,12 @@
         <!-- constraints -->
         <module>gel</module>
         <module>xlang</module>
-        <module>constraints</module>
+<!--        <module>constraints</module>-->
 
         <!-- other constraint languages -->
 <!--        <module>sbvr_old</module>-->
-        <module>methodeb</module>
-        <module>database</module>
+<!--        <module>methodeb</module>
+        <module>database</module>-->
 
     </modules>
 </project>

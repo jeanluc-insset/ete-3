@@ -24,6 +24,12 @@ import java.util.Objects;
  */
 public class GelEvaluator extends DynamicVisitorSupport {
 
+    public GelEvaluator() {
+        register("visit", "fr.insset.jeanluc.ete.gel");
+    }
+
+
+
 
     public Object eval(GelExpression inExpression, Object inSelf) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         Map<String, Object> context = new HashMap<>();

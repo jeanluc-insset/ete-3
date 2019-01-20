@@ -23,6 +23,7 @@ import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <div>
@@ -48,18 +49,62 @@ public class SqlGenerator extends DynamicVisitorSupport implements Dialect {
     }
 
 
+
+    /**
+     * Builds the SQL query to get all instances complying to all the invariants
+     * of {@code inFor} which the inProperty could be set to.
+     * 
+     * @param inProperty a property the type of wich is an entity
+     * @param inFor instance of inProperty.getOwningClass()
+     * @return 
+     */
+    public String getSql(MofProperty inProperty, Object inFor) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+        StringBuilder builder = new StringBuilder();
+        MofType type = inProperty.getType();
+        if (type instanceof EnhancedMofClassImpl) {
+            // 1- add select
+            EnhancedMofClassImpl theSupportClass = (EnhancedMofClassImpl)type;
+            Map<MofProperty, EteQuery> support = theSupportClass.getSupport();
+            EteQuery eteQuery = support.get(inProperty);
+            addSelect(eteQuery, builder);
+            // 2- add joins
+            for (EteFilter aFilter : eteQuery.getFilters()) {
+                addJoins(aFilter, builder);
+            }
+            // 3- add where clauses
+            for (EteFilter aFilter : eteQuery.getFilters()) {
+                addWhere(aFilter, eteQuery, builder);
+            }
+        }
+        return builder.toString();
+    }
+
+
+    protected boolean allVariablesArePresent(EteFilter inFilter, Object inFor) {
+        Map<Step, VariableDefinition> variables = inFilter.getVariables();
+        for (Step aNavigation : variables.keySet()) {
+            
+        }
+        return true;
+    }
+
+
     //==========================================================================//
 
 
     public String getSelect(EteQuery inQuery) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         StringBuilder   builder = new StringBuilder();
+        addSelect(inQuery, builder);
+        return builder.toString();
+    }
+
+    protected void addSelect(EteQuery inQuery, StringBuilder inBuilder) {
         MofProperty root = inQuery.getProperty();
         EnhancedMofClassImpl targetClass = (EnhancedMofClassImpl) root.getType().getRecBaseType();
         EteQuery query = targetClass.getSupport().get(root);
-        builder.append("SELECT DISTINCT v0.* FROM ");
-        builder.append(query.getTargetClass().getName().toUpperCase());
-        builder.append(" AS v0");
-        return builder.toString();
+        inBuilder.append("SELECT DISTINCT v0.* FROM ");
+        inBuilder.append(query.getTargetClass().getName().toUpperCase());
+        inBuilder.append(" AS v0");
     }
 
 
@@ -73,6 +118,13 @@ public class SqlGenerator extends DynamicVisitorSupport implements Dialect {
             addJoin(aJoin, builder);
         }
         return builder.toString();
+    }
+
+
+    public void addJoins(EteFilter aFilter, StringBuilder inBuilder) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+        for (Join aJoin : aFilter.getJoins()) {
+            addJoin(aJoin, inBuilder);
+        }        
     }
 
 
@@ -109,6 +161,10 @@ public class SqlGenerator extends DynamicVisitorSupport implements Dialect {
         return builder.toString();
     }
 
+
+    public void addWhere(EteFilter inFilter, EteQuery inQuery, StringBuilder inBuilder) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        genericVisit(inFilter.getExpression(), inBuilder, inQuery);
+    } 
 
 
     //==========================================================================//
