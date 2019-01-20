@@ -82,7 +82,7 @@ public class QueryToSql extends DynamicVisitorSupport implements Dialect {
         if (firstClause) {
             builder.append(" WHERE ");
         } else {
-            builder.append("    AND ");
+            builder.append("\n     AND ");
         }
         genericVisit(aFilter.getExpression(), builder, inQuery);
     }

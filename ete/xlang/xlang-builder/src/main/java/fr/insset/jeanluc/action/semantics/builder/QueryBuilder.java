@@ -87,31 +87,35 @@ import java.util.logging.Logger;
  * The EteQuery aims to help the SqlDialect to generate the following
  * statements&nbsp;:<ul>
  * <li>{@code SELECT DISTINCT p.* FROM APP.PILOT AS p
- *      INNER JOIN PILOT_CERTIFICATE ON p.ID = PILOT_CERTIFICATE.PILOT_ID
- *      INNER JOIN CERTIFICATE ON PILOT_CERTIFICATE.CERTIFICATES_ID = CERTIFICATE.ID
- *      INNER JOIN PLANEMODEL ON CERTIFICATE.PLANEMODEL_ID = PLANEMODEL.ID
+ *      LEFT JOIN PILOT_CERTIFICATE ON p.ID = PILOT_CERTIFICATE.PILOT_ID
+ *      LEFT JOIN CERTIFICATE ON PILOT_CERTIFICATE.CERTIFICATES_ID = CERTIFICATE.ID
+ *      LEFT JOIN PLANEMODEL ON CERTIFICATE.PLANEMODEL_ID = PLANEMODEL.ID
  *      WHERE PLANEMODEL.ID = 101
  *          AND p.ID &lt;&gt; 105}&nbsp;: the captain must be certified for the
  *          plane of the flight, the model of the plane has ID 101&nbsp; furthermore
  *          the captain must be different from the copilote whose ID is 105</li>
- * <li>{@code SELECT * FROM APP.PLANE
-        INNER JOIN PLANEMODEL ON PLANE.PLANEMODEL_ID = PLANEMODEL.ID
-        WHERE PLANEMODEL.ID IN
-            (SELECT pm1.ID FROM PLANEMODEL AS pm1
-                INNER JOIN CERTIFICATE AS c2 ON c2.PLANEMODEL_ID = pm1.ID
-                INNER JOIN PILOT_CERTIFICATE AS pc3 ON pc3.CERTIFICATES_ID = c2.ID
-                INNER JOIN PILOT AS p4 ON pc3.PILOT_ID = p4.ID
-                INNER JOIN CERTIFICATE AS c5 ON c5.PLANEMODEL_ID = pm1.ID
-                INNER JOIN PILOT_CERTIFICATE AS pc6 ON pc6.CERTIFICATES_ID = c5.ID
-                INNER JOIN PILOT AS p7 ON pc6.PILOT_ID = p7.ID
-                WHERE p4.ID = 103
-                AND p7.ID = 105)}&nbsp;: the captain (ID 103) and the copilot (ID
-                105) must be certified for the (model of the) plane</li>
+ * <li>{@code SELECT * FROM APP.PLANE AS v0
+        LEFT JOIN PLANEMODEL AS v1 ON v0.PLANEMODEL_ID = v1.ID
+        LEFT JOIN CERTIFICATE AS v2 ON v2.PLANEMODEL_ID = v1.ID
+        LEFT JOIN PILOT_CERTIFICATE AS v3 ON v3.CERTIFICATES_ID = v2.ID
+        LEFT JOIN PILOT AS v4 ON v3.PILOT_ID = v4.ID
+        LEFT JOIN PLANEMODEL AS v5 ON v0.PLANEMODEL_ID = v5.ID
+        LEFT JOIN CERTIFICATE AS v6 ON v6.PLANEMODEL_ID = v5.ID
+        LEFT JOIN PILOT_CERTIFICATE AS v7 ON .CERTIFICATES_ID = v6.ID
+        LEFT JOIN PILOT AS v8 ON v7.PILOT_ID = v8.ID
+    WHERE v4.ID = 103
+        AND v8.ID = 105)}: the captain (ID 103) and the copilot (ID
+   105) must be certified for the (model of the) plane</li>
  * </ul>
  * In order to build these queries, two EteQuery instances are created.<br>
- * The first one c
  * </div>
- * 
+ * BEWARE : an includes operator must be traversed in reversed order when the
+ * filter for the right expression is built.<br>
+ * For example, the above query for the plane in the Flight class translates
+ * {@code captain.certificates.planeModel->includes...} to
+ * {@code LEFT JOIN CERTIFICATE AS v2 ON v2.PLANEMODEL_ID = v1.ID
+        LEFT JOIN PILOT_CERTIFICATE AS v3 ON v3.CERTIFICATES_ID = v2.ID
+        LEFT JOIN PILOT AS v4 ON v3.PILOT_ID = v4.ID}<br>
  * <div>
  * 
  * </div>
@@ -223,7 +227,7 @@ public class QueryBuilder extends DynamicVisitorSupport {
         }       // loop on classes
         System.out.println("2- Actual building of queries and filters");
         for (MofClass aMofClass : allClasses) {
-            buildQueries(aMofClass);
+            buildFilters(aMofClass);
         }
         System.out.println("3- Building and numbering variables");
         for (MofClass aMofClass : allClasses) {
@@ -257,19 +261,84 @@ public class QueryBuilder extends DynamicVisitorSupport {
      * @throws InvocationTargetException
      * @throws NoSuchMethodException 
      */
-    public void buildQueries(MofClass inMofClass) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+    public void buildFilters(MofClass inMofClass) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+        System.out.println("    building filters for " + inMofClass.getName());
         Collection<Invariant> invariants = inMofClass.getInvariants();
         for (Invariant anInvariant : invariants) {
             // We should build a filter for each navigation in this invariant
             // First we build a copy of the expression, subsituting a variable
             // to any navigation.
             // The variables are registered in the result inout parameter
-            System.out.println("    building filters for " + anInvariant.getSpecificationAsString());
+            System.out.println("        building filters for " + anInvariant.getName() + ": " + anInvariant.getSpecificationAsString());
             EnhancedInvariantImpl   inv = (EnhancedInvariantImpl) anInvariant;
             GelExpression expression = inv.getExpression();
             genericVisit(expression, anInvariant, inMofClass);
         }       // loop on invariants
-    }       // buildQueries(MofClass)
+    }       // buildFilters(MofClass)
+
+
+    //========================================================================//
+
+
+    public GelExpression visitGelExpression(GelExpression inExpression, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        List<GelExpression> operand = inExpression.getOperand();
+        if (operand == null) return inExpression;
+        for (GelExpression anOperand : operand) {
+            genericVisit(anOperand, inParameters);
+        }
+        return inExpression;
+    }
+
+
+    /**
+     * Creates a filter linked to the first step of this navigation
+     * 
+     * @param inStep
+     * @param inParameters
+     * @return
+     * @throws InstantiationException 
+     */
+    public Step visitStep(Step inStep, Object... inParameters) throws InstantiationException {
+        // 1 Create a new filter
+        System.out.println("            Creating a new filter for "
+                + inStep.getToFeature().getOwningMofClass().getName()
+                + "::" + inStep.getToFeature().getName());
+        EteFilter filter = new EteFilter();
+        // 2 Link the filter to the invariant
+        EnhancedInvariantImpl invariant = (EnhancedInvariantImpl) inParameters[0];
+        filter.setInvariant(invariant);
+        // 3 Set the filtered property
+        Step first = getFirst(inStep);
+        System.out.println("               the first step is "
+                + first.getToFeature().getOwningMofClass().getName()
+                + "::" + first.getToFeature().getName());
+        MofProperty prop = (MofProperty) first.getToFeature();
+        filter.setFilteredProperty(prop);
+        // 4 Link the query to the filter
+        EnhancedMofClassImpl type = (EnhancedMofClassImpl) prop.getType();
+        Map<MofProperty, EteQuery> support = type.getSupport();
+        EteQuery eteQuery = support.get(prop);
+        eteQuery.addFilter(filter);
+        return inStep;
+    }
+
+
+    public GelExpression visitIncludes(Includes inIncludes, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        return visitGelExpression(inIncludes, inParameters);
+    }
+
+    public static Step getFirst(Step inExpression) {
+        Step result = inExpression;
+        do {
+            List<GelExpression> operand = result.getOperand();
+            if (operand == null) return result;
+            GelExpression prev = operand.get(0);
+            if (prev instanceof Self) {
+                return result;
+            }
+            result = (Step) prev;
+        } while (true);
+    }
 
 
 
@@ -292,293 +361,157 @@ public class QueryBuilder extends DynamicVisitorSupport {
      */
     public void buildVariables(EnhancedMofClassImpl inMofClass) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         Map<MofProperty, EteQuery> support = inMofClass.getSupport();
+        VariableBuilder builder = new VariableBuilder();
         for (MofProperty aProperty : support.keySet()) {
             EteQuery query = support.get(aProperty);
-            VariableBuilder builder = new VariableBuilder();
             System.out.println("  Building variables for the query of " + aProperty.getName() + " in the class " + aProperty.getOwningMofClass().getName());
             for (EteFilter aFilter : query.getFilters()) {
-                EnhancedInvariantImpl invariant = (EnhancedInvariantImpl) aFilter.getInvariant();
-                GelExpression specification = invariant.getExpression();
-                GelExpression expression = (GelExpression) builder.genericVisit(specification, aFilter, query, aProperty, inMofClass);
-                aFilter.setExpression(expression);
+                builder.buildFor(aFilter);
             }
         }
     }       // buildVariables
 
 
-
     //========================================================================//
 
-
-    public GelExpression visitGelExpression(GelExpression inExpression, Object... inParameters) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-        Class<? extends GelExpression> aClass = inExpression.getClass();
-        GelExpression result = aClass.newInstance();
-        List<GelExpression> operand = inExpression.getOperand();
-        if (operand != null) {
-             List<GelExpression> resultOperands = FactoryMethods.newList(GelExpression.class);
-            result.setOperand(resultOperands);
-            result.setType(inExpression.getType());
-            for (GelExpression anExpression : operand) {
-                GelExpression anOperand = (GelExpression) genericVisit(anExpression, inParameters);
-                if (anOperand != null) {
-                    resultOperands.add(anOperand);
-                }
-            }
-        }
-        return result;
-    }
-
-
-    public GelExpression visitAttributeNav(AttributeNav inNav, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException {
-        MofProperty property = (MofProperty) inNav.getToFeature();
-        EnhancedInvariantImpl invariant = (EnhancedInvariantImpl) inParameters[0];
-        invariant.addToSupport(inNav);
-        addInnerJoin(inNav, inNav, (EnhancedInvariantImpl) inParameters[0]);
-        return inNav;
-    }
-    
-    public GelExpression visitCollect(Collect inCollect, Object... inParameters) throws InstantiationException {
-        MofProperty property = (MofProperty) inCollect.getToFeature();
-        EnhancedInvariantImpl invariant = (EnhancedInvariantImpl) inParameters[0];
-        invariant.addToSupport(inCollect);
-        addInnerJoin(inCollect, inCollect, invariant);
-        return inCollect;
-    }
-
-
-    public GelExpression visitIncludes(Includes inExpression, Object... inParameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        Class<? extends GelExpression> aClass = inExpression.getClass();
-        GelExpression result = aClass.newInstance();
-        List<GelExpression> operand = inExpression.getOperand();
-        if (operand != null) {
-             List<GelExpression> resultOperands = FactoryMethods.newList(GelExpression.class);
-            result.setOperand(resultOperands);
-            result.setType(inExpression.getType());
-            for (GelExpression anExpression : operand) {
-                GelExpression anOperand = (GelExpression) genericVisit(anExpression, inParameters);
-                if (anOperand != null) {
-                    resultOperands.add(anOperand);
-                }
-            }
-        }
-        return result;
-    }
-
-    public void addInnerJoin(Step inNav, Step inFullNav, EnhancedInvariantImpl inInvariant) throws InstantiationException {
-        GelExpression operand = inNav.getOperand().get(0);
-        if (operand instanceof Self) {
-            Feature toFeature = inNav.getToFeature();
-            MofType targetType = toFeature.getType().getRecBaseType();
-            if (targetType instanceof EnhancedMofClassImpl) {
-                EnhancedMofClassImpl mofClass = (EnhancedMofClassImpl)targetType;
-                Map<MofProperty, EteQuery> support = mofClass.getSupport();
-                EteQuery query = support.get(toFeature);
-                EteFilter   filter = new EteFilter();
-                filter.setInvariant(inInvariant);
-                filter.setFilteredProperty((MofProperty) toFeature);
-                filter.setExpression(inFullNav);
-                query.addFilter(filter);
-            }
-        } else {
-            addInnerJoin((Step)operand, inFullNav, inInvariant);
-        }
-    }
-
-
-    //========================================================================//
 
     /**
-     * Visits an expression for a couple (EteFilter, MofProperty).<br>
-     * Builds a kind of clone of the expression, replacing some expressions with
-     * parameters
+     * Parses the expression of an invariant for a filter. This gives two
+     * results:<ul>
+     * <li>builds a quasi-clone of the expression of the invariant</li>
+     * <li>builds joins of that filter</li>
+     * </ul>
      */
-    public class VariableBuilder extends DynamicVisitorSupport {
+    public static class VariableBuilder extends DynamicVisitorSupport {
+
+        private final static int    FILTER = 0,
+                                    PROPERTY = 1,
+                                    QUERY = 2;
 
 
         public VariableBuilder() {
-            register("visit", "fr.insset.jeanluc.ete.gel");
+            register("build", "fr.insset.jeanluc.ete.gel");
         }
 
 
         /**
-         * By default, recursively clones the expression:
-         * the children of the clone are themselves the result of the visit of
-         * the operands of {@code inExpression}, they can be variables,
-         * parameters or clones of these operands.
+         * Actually builds the expression of the filter. This expression contains
+         * variable instead of navigations.<br>
+         * By the way, builds the joins of the filter.
+         */
+        public void buildFor(EteFilter inFilter) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+            EnhancedInvariantImpl invariant = (EnhancedInvariantImpl) inFilter.getInvariant();
+            GelExpression expression = invariant.getExpression();
+            MofProperty filteredProperty = inFilter.getFilteredProperty();
+            EnhancedMofClassImpl mofClass = (EnhancedMofClassImpl) filteredProperty.getType();
+            Map<MofProperty, EteQuery> support = mofClass.getSupport();
+            EteQuery eteQuery = support.get(filteredProperty);
+            GelExpression clone = (GelExpression) genericVisit(expression, inFilter, filteredProperty, eteQuery);
+            inFilter.setExpression(clone);
+        }
+
+
+        /**
+         * Builds a kind of clone of the input expression.<br>
+         * The result is not a true clone since the navigations are substituted
+         * with variables.<br>
+         * At the same time, builds joins and registers them in the filter.
          * 
          * @param inExpression
-         * @param inParameters
-         *      EteFilter a filter we visit the expression for, EteQuery the query
-         * the filter belongs to, MofProperty the property we visit the expression
-         * for, EnhancedMofClass an EnhancedMofClassImpl the support class of
-         * that property
-         * aFilter, query, aProperty, inMofClass
-         * @return 
-         */
-        public GelExpression visitGelExpression(GelExpression inExpression, Object... inParameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-            GelExpression result = (GelExpression) FactoryRegistry.newInstance(inExpression.getClass());
-            result.setType(inExpression.getType());
-            Map<TagValueDeclaration, Object> tagValues = inExpression.getTagValues();
-            result.setTagValues(tagValues);
-            List<GelExpression> operand = inExpression.getOperand();
-            if (operand == null)
-                return result;
-            List<GelExpression> resultOperand = FactoryMethods.newList(GelExpression.class);
-            result.setOperand(resultOperand);
-            for (GelExpression anOperand : operand) {
-                GelExpression clone = (GelExpression) genericVisit(anOperand, inParameters);
-                resultOperand.add(clone);
-            }
-            return result;
-        }
-
-
-        /**
-         * Currently an Includes expression is a kind of Step (this should be
-         * fixed in a future release). If we let the standard handling for step
-         * expressions, only the first operand is parsed.<br>
-         * If a 
-         */
-        public GelExpression visitIncludes(Includes inExpression, Object... inParameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-//            MofProperty queriedProperty = (MofProperty) inParameters[2];
-            EteQuery query = (EteQuery) inParameters[1];
-            EteFilter eteFilter = (EteFilter) inParameters[0];
-            List<GelExpression> operand = inExpression.getOperand();
-            Step    left  = (Step) operand.get(0);
-            Step current = left;
-            do {
-                if (current instanceof Self) {
-                    break;
-                }
-                List<GelExpression> currentOperand = current.getOperand();
-                if (currentOperand == null) {
-                    break;
-                }
-                current = (Step) currentOperand.get(0);
-            } while (true);
-            Step    right = (Step) operand.get(1);
-            return visitGelExpression(inExpression, inParameters);
-        }
-
-
-        /**
-         * We don't need to clone a Literal.<br>
-         * We must override the default visit which clones the expression but
-         * does not copy the value.
-         * 
-         * @param inLiteral
          * @param inParameters
          * @return
          * @throws InstantiationException
          * @throws IllegalAccessException 
          */
-        public Literal visitLiteral(Literal inLiteral, Object... inParameters) throws InstantiationException, IllegalAccessException {
-            return inLiteral;
+        public GelExpression buildGelExpression(GelExpression inExpression, Object... inParameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+            GelExpression result = (GelExpression) FactoryRegistry.newInstance(inExpression.getClass());
+            result.setType(inExpression.getType());
+            List<GelExpression> operand = inExpression.getOperand();
+            List<GelExpression> resultOperand = FactoryMethods.newList(GelExpression.class);
+            result.setOperand(resultOperand);
+            if (operand == null) return result;
+            for (GelExpression anOperand : operand) {
+                resultOperand.add((GelExpression) genericVisit(anOperand, inParameters));
+            }
+            return result;
         }
 
-
         /**
-         * 
-         * The parameters are the filter matching the expression the navigation
-         * belongs to, the query containing that filter and its macthing
-         * property
-         * @param inStep root of the navigation subtree (last step of the navigation)
-         * @param Object[] inParameters : filter, query, filtered property. The
-         * filter is not used in this method
-         * @return inStep if the navigation starts with the property we are
-         * building the joins for, a new variable otherwise
-         * @throws java.lang.InstantiationException
-         * @throws java.lang.IllegalAccessException
+         * Builds the joins and returns the variable linked to the last join.
          */
-        public GelExpression visitStep(Step inStep, Object... inParameters) throws InstantiationException, IllegalAccessException {
-            MofProperty queriedProperty = (MofProperty) inParameters[2];
-            EteQuery query = (EteQuery) inParameters[1];   
-            EteFilter eteFilter = (EteFilter)inParameters[0];
-            Step    initialStep = buildJoins(inStep, queriedProperty, query, eteFilter);
-            VariableDefinition  variable;
-            if (initialStep == null) {
-                // We must replace the current expression by a new variable
-                variable = query.addParameter(inStep);
-                eteFilter.addVariable(inStep, variable);
-                return variable;
-            } else {
-                variable = (VariableDefinition) FactoryRegistry.newInstance(VariableDefinition.class);
-                variable.setValue(inStep);
-                variable.setType(queriedProperty.getType());
-                variable.setName("v0");
-                eteFilter.addVariable(inStep, variable);
-            }
-            // The initial step "is" the filtered property, we keep it.
+        public GelExpression buildStep(Step inStep, Object... inParameters) {
+            EteQuery query = (EteQuery)inParameters[QUERY];
+            
             return inStep;
         }
 
 
         /**
-         * Walks recursively through a navigation.<br>
-         * If the navigation starts with the queried property, Join instances
-         * are created and the navigation is returned.<br>
-         * If the navigation starts with another property, a parameter is created
-         * and returned.
+         * If the left hand of the includes is not the filtered property we must
+         * traverse it in reverse order.
          * 
-         * @param step
-         * @param numVar
+         * @param inIncludes
+         * @param inParameters
          * @return 
          */
-        protected Step buildJoins(Step step, MofProperty inProperty, EteQuery inQuery, EteFilter inFilter) throws InstantiationException, IllegalAccessException {
-            List<GelExpression> operand = step.getOperand();
-            if (operand == null || operand.size() == 0){
-                System.out.println("No operand in this step");
-                return null;
-            }
-            GelExpression first = operand.get(0);
-            if (first instanceof Self) {
-                Feature initialProperty = step.getToFeature();
-                if (inProperty.equals(initialProperty)) {
-                    VariableDefinition  variable = (VariableDefinition) FactoryRegistry.newInstance(VariableDefinition.class);
-                    variable.setValue(step);
-                    variable.setType(initialProperty.getType());
-                    variable.setName("v0");
-                    inFilter.addVariable(step, variable);
-                    inQuery.addVariable(step, variable);
-                    return step;
-                }
-                System.out.println("Adding " + initialProperty.getName() + " to the dependencies of " + inProperty.getName());
-                inQuery.addDependency((MofProperty) initialProperty);
-                // The navigation starts from another property than the queried
-                // one, we must replace the navigation by a parameter
-                return null;
-            }
-            // Let's first build previous joins
-            Step initialStep = buildJoins((Step)first, inProperty, inQuery, inFilter);
-            if (initialStep == null) {
-                // The initial step is not the filtered property, the whole
-                // navigation must be replaced by a variable
-                return null;
+        public GelExpression buildIncludes(Includes inIncludes, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException {
+            List<GelExpression> operand = inIncludes.getOperand();
+            Step    left = (Step) operand.get(0);
+            Step    right = (Step) operand.get(1);
+            Step firstLeft = getFirst(left);
+            Step firstRight = getFirst(right);
+            MofProperty filteredProperty = (MofProperty) inParameters[PROPERTY];
+            GelExpression result = (GelExpression) FactoryRegistry.newInstance("includes");
+            List<GelExpression> resultOperand = FactoryMethods.newList(GelExpression.class);
+            result.setOperand(resultOperand);
+            if (firstLeft.getToFeature().equals(filteredProperty)) {
+                GelExpression leftResult = (GelExpression) genericVisit(left, inParameters);
+                GelExpression rightResult = (GelExpression) genericVisit(right, inParameters);
+                resultOperand.add(leftResult);
+                resultOperand.add(rightResult);
             } else {
-                inQuery.addJoin(step, inFilter);
+                GelExpression rightResult = (GelExpression) genericVisit(right, inParameters);
+                resultOperand.add(rightResult);
+                GelExpression leftResult = reverseVisit(left, inParameters);
+                resultOperand.add(leftResult);
             }
-            return initialStep;
+            return result;
         }
 
 
-
-        protected void addJoinTable(int start, int end, String startName, String targetName, String propName) {
-            System.out.println("Adding a join table from " + startName + " to " + targetName + " for property " + propName);
-            String  betweenName = startName + "_" + targetName;
-            addJoin(start, end, betweenName, startName, true);
-            addJoin(end, end+1, targetName, propName, false);
-        }
-
-        protected void addJoin(int srcNumber, int targetNumber, String joinTable, String propName, boolean reverseNumbers) {
-            System.out.println("target:" + targetNumber + ", joinTable:" + joinTable);
-            if (reverseNumbers) {
-                int aux = srcNumber;
-                srcNumber = targetNumber;
-                targetNumber = aux;
+        protected GelExpression reverseVisit(Step inStep, Object... inParameters) throws InstantiationException, IllegalAccessException {
+            Step    current = inStep;
+            while (current != null) {
+                addJoin(current, (EteFilter)inParameters[FILTER], (EteQuery)inParameters[QUERY]);
+                List<GelExpression> operand = current.getOperand();
+                if (operand == null || operand.size() == 0) break;
+                current = (Step) operand.get(0);
             }
+            // No : we should return a variable pointing to the first step (the
+            // last traversed step)
+            VariableDefinition  variable = (VariableDefinition) FactoryRegistry.newInstance(VariableDefinition.class);
+            return variable;
         }
+
+        protected void addJoin(Step inStep, EteFilter inFilter, EteQuery inQuery) {
+            Feature toFeature = inStep.getToFeature();
+            if (toFeature == null) return;
+            if (toFeature.getOwningMofClass()==null) {
+                System.out.println("The feature " + toFeature.getName() + " has no owning class");
+                return;
+            }
+            if (toFeature.getType() == null) {
+                System.out.println("The feature " + toFeature.getName() + " has no type");
+            }
+            System.out.println("                adding a join for "
+                    + toFeature.getOwningMofClass().getName()
+                    + "::" + toFeature.getName()
+                    + " -> " + toFeature.getType().getName());
+        }
+
 
     }       // VariableBuilder
+
 
 }       // QueryBuilder
 
