@@ -317,7 +317,7 @@ public class QueryBuilder extends DynamicVisitorSupport {
         // 4 Link the query to the filter
         EnhancedMofClassImpl type = (EnhancedMofClassImpl) prop.getType();
         Map<MofProperty, EteQuery> support = type.getSupport();
-        EteQuery eteQuery = support.get(prop);
+        EteQuery eteQuery = support.get(first.getToFeature());
         eteQuery.addFilter(filter);
         return inStep;
     }
@@ -437,12 +437,27 @@ public class QueryBuilder extends DynamicVisitorSupport {
         }
 
         /**
-         * Builds the joins and returns the variable linked to the last join.
+         * Builds the joins and returns the variable linked to the first join.
          */
-        public GelExpression buildStep(Step inStep, Object... inParameters) {
+        public GelExpression buildStep(Step inStep, Object... inParameters) throws InstantiationException, IllegalAccessException {
             EteQuery query = (EteQuery)inParameters[QUERY];
-            
+            VariableDefinition addJoins = addJoins(inStep, inParameters);
             return inStep;
+        }
+
+
+        protected VariableDefinition addJoins(Step inStep, Object... inParameters) throws InstantiationException, IllegalAccessException {
+            List<GelExpression> operand = inStep.getOperand();
+            if (operand == null) return null;
+            String  startVariable = "v0";
+            VariableDefinition previousVariable = null;
+            if (operand.size()>0) {
+                VariableDefinition addJoins = addJoins((Step) operand.get(0), inParameters);
+                startVariable = addJoins.getName();
+            };
+            new Join(startVariable, startProperty, targetVariable, targetTable, targetProperty);
+            VariableDefinition  variable = (VariableDefinition) FactoryRegistry.newInstance("");
+            return variable;
         }
 
 
@@ -497,11 +512,11 @@ public class QueryBuilder extends DynamicVisitorSupport {
             Feature toFeature = inStep.getToFeature();
             if (toFeature == null) return;
             if (toFeature.getOwningMofClass()==null) {
-                System.out.println("The feature " + toFeature.getName() + " has no owning class");
+                System.out.println("*** The feature " + toFeature.getName() + " has no owning class");
                 return;
             }
             if (toFeature.getType() == null) {
-                System.out.println("The feature " + toFeature.getName() + " has no type");
+                System.out.println("*** The feature " + toFeature.getName() + " has no type");
             }
             System.out.println("                adding a join for "
                     + toFeature.getOwningMofClass().getName()
