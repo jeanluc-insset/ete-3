@@ -1,195 +1,214 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package fr.insset.jeanluc.gel.evaluation;
 
-
-import static fr.insset.jeanluc.ete.defs.Constants.NOT_IMPLEMENTED_YET;
-import fr.insset.jeanluc.el.evaluator.Evaluator;
-import fr.insset.jeanluc.gel.*;
+import fr.insset.jeanluc.ete.gel.*;
+import fr.insset.jeanluc.ete.meta.model.emof.Feature;
+import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
 import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import java.util.Map;
+import java.util.Objects;
 
 /**
- * For all visiting methods, the parameters are :<ul>
- *      <li>the (meta)-model</li>
- *      <li>the contextual class (a MofClass)</li>
- *      <li>the context (the contextual MofClass or a MofOperation of the contextual MofClass)</li>
- *      <li>the objects and variables defined at runtime</li>
- * </ul>
- * 
+ *
  * @author jldeleage
  */
-public class GelEvaluator extends DynamicVisitorSupport implements Evaluator {
+public class GelEvaluator extends DynamicVisitorSupport {
 
-    public GelEvaluator() {
-        register("evaluate", "fr.insset.jeanluc.gel");
+
+    public Object eval(GelExpression inExpression, Object inSelf) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        Map<String, Object> context = new HashMap<>();
+        context.put("self", inSelf);
+        context.put("this", inSelf);
+        return genericVisit(inExpression, context);
+    }
+
+    public Object eval(GelExpression inExpression, Map<String, Object> inContext) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        return genericVisit(inExpression, inContext);
     }
 
 
-    //========================================================================//
+    //==========================================================================//
 
 
-    @Override
-    public void addParameter(String inName, Object inValue) {
-        throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Object evaluate(String inExpression) {
-        throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET); //To change body of generated methods, choose Tools | Templates.
-    }
-
-
-    //========================================================================//
-
-
-    private static class TypeResult {
-        Double      leftDouble, rightDouble;
-        Integer     leftInt, rightInt;
-    }
-
-    private static TypeResult castValues(Object inLeft, Object inRight) {
-        TypeResult result = new TypeResult();
-        if (inLeft instanceof Integer &&inRight instanceof Integer) {
-            result.leftInt = (Integer) inLeft;
-            result.rightInt = (Integer) inRight;
-            return result;
+    public Object visitAdd(Add inExp, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        List<GelExpression> operand = inExp.getOperand();
+        Number a = (Number) genericVisit(operand.get(0), inParameters);
+        Number b = (Number) genericVisit(operand.get(1), inParameters);
+        if (a instanceof Double || b instanceof Double) {
+            return a.doubleValue() + b.doubleValue();
+        } else if (a instanceof Float || b instanceof Float) {
+            return a.floatValue() + b.floatValue();
+        } else if (a instanceof Long || b instanceof Long) {
+            return a.longValue() + b.longValue();
+        } else {
+            return a.intValue() + b.intValue();
         }
-        result.leftDouble = convertToDouble(inLeft);
-        result.rightDouble = convertToDouble(inRight);
+    }
+
+    public Object visitSub(Sub inExp, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        List<GelExpression> operand = inExp.getOperand();
+        Number a = (Number) genericVisit(operand.get(0), inParameters);
+        Number b = (Number) genericVisit(operand.get(1), inParameters);
+        if (a instanceof Double || b instanceof Double) {
+            return a.doubleValue() - b.doubleValue();
+        } else if (a instanceof Float || b instanceof Float) {
+            return a.floatValue() - b.floatValue();
+        } else if (a instanceof Long || b instanceof Long) {
+            return a.longValue() - b.longValue();
+        } else {
+            return a.intValue() - b.intValue();
+        }
+    }
+
+    public Object visitMult(Mult inExp, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        List<GelExpression> operand = inExp.getOperand();
+        Number a = (Number) genericVisit(operand.get(0), inParameters);
+        Number b = (Number) genericVisit(operand.get(1), inParameters);
+        if (a instanceof Double || b instanceof Double) {
+            return a.doubleValue() * b.doubleValue();
+        } else if (a instanceof Float || b instanceof Float) {
+            return a.floatValue() * b.floatValue();
+        } else if (a instanceof Long || b instanceof Long) {
+            return a.longValue() * b.longValue();
+        } else {
+            return a.intValue() * b.intValue();
+        }
+    }
+
+    public Object visitDiv(Div inExp, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        List<GelExpression> operand = inExp.getOperand();
+        Number a = (Number) genericVisit(operand.get(0), inParameters);
+        Number b = (Number) genericVisit(operand.get(1), inParameters);
+        if (a instanceof Double || b instanceof Double) {
+            return a.doubleValue() / b.doubleValue();
+        } else if (a instanceof Float || b instanceof Float) {
+            return a.floatValue() / b.floatValue();
+        } else if (a instanceof Long || b instanceof Long) {
+            return a.longValue() / b.longValue();
+        } else {
+            return a.intValue() / b.intValue();
+        }
+    }
+
+    public Object visitGreaterThan(GreaterThan inExp, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        List<GelExpression> operand = inExp.getOperand();
+        Comparable a = (Comparable) genericVisit(operand.get(0), inParameters);
+        Comparable b = (Comparable) genericVisit(operand.get(1), inParameters);
+        return (a.compareTo(b) > 0);
+    }
+
+
+    public Object visitGreaterOrEqual(GreaterOrEqual inExp, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        List<GelExpression> operand = inExp.getOperand();
+        Comparable a = (Comparable) genericVisit(operand.get(0), inParameters);
+        Comparable b = (Comparable) genericVisit(operand.get(1), inParameters);
+        return (a.compareTo(b) >= 0);
+    }
+
+
+    public Object visitLessThan(LessThan inExp, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        List<GelExpression> operand = inExp.getOperand();
+        Comparable a = (Comparable) genericVisit(operand.get(0), inParameters);
+        Comparable b = (Comparable) genericVisit(operand.get(1), inParameters);
+        return (a.compareTo(b) < 0);
+    }
+
+
+    public Object visitLessOrEqual(LessOrEqual inExp, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        List<GelExpression> operand = inExp.getOperand();
+        Comparable a = (Comparable) genericVisit(operand.get(0), inParameters);
+        Comparable b = (Comparable) genericVisit(operand.get(1), inParameters);
+        return (a.compareTo(b) > 0);
+    }
+
+
+    public Object visitEqual(Equal inExp, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        List<GelExpression> operand = inExp.getOperand();
+        Object a = genericVisit(operand.get(0), inParameters);
+        Object b = genericVisit(operand.get(1), inParameters);
+        return Objects.equals(a, b);
+    }
+
+
+    public Object visitDifferent(Different inExp, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        List<GelExpression> operand = inExp.getOperand();
+        Object a = genericVisit(operand.get(0), inParameters);
+        Object b = genericVisit(operand.get(1), inParameters);
+        return ! (Objects.equals(a, b));
+    }
+
+
+    public Object visitAnd(And inExp, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        List<GelExpression> operand = inExp.getOperand();
+        Boolean a = (Boolean) genericVisit(operand.get(0), inParameters);
+        Boolean b = (Boolean) genericVisit(operand.get(1), inParameters);
+        return (a && b);
+    }
+
+
+    public Object visitOr(Or inExp, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        List<GelExpression> operand = inExp.getOperand();
+        Boolean a = (Boolean) genericVisit(operand.get(0), inParameters);
+        Boolean b = (Boolean) genericVisit(operand.get(1), inParameters);
+        return (a || b);
+    }
+
+    public Object visitXor(Xor inExp, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        List<GelExpression> operand = inExp.getOperand();
+        Boolean a = (Boolean) genericVisit(operand.get(0), inParameters);
+        Boolean b = (Boolean) genericVisit(operand.get(1), inParameters);
+        return (a ^ b);
+    }
+
+    //==========================================================================//
+
+    public Object visitStep(Step inExp, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException {
+        List<GelExpression> operand = inExp.getOperand();
+        Object a = genericVisit(operand.get(0), inParameters);
+        Feature toFeature = inExp.getToFeature();
+        if (toFeature instanceof MofProperty) {
+            MofProperty property = (MofProperty) toFeature;
+            String name = property.getName();
+            name = "get"
+                    + name.substring(0,1).toUpperCase()
+                    + name.substring(1);
+            if (a instanceof Collection) {
+                List result = new LinkedList();
+                Collection b = (Collection) a;
+                for (Object anItem : b) {
+                    result.add(get(anItem, name));
+                }
+                return result;
+            } else {
+                return get(a, name);
+            }
+        }
+        return null;
+    }
+
+
+    protected Object get(Object inSrc, String inTarget) throws NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        Method method = inSrc.getClass().getMethod(inTarget, new Class[0]);
+        Object result = method.invoke(inSrc, new Object[0]);
         return result;
     }
 
-    private static Double convertToDouble(Object inValue) {
-        if (inValue instanceof Integer) {
-            Integer integerValue = (Integer) inValue;
-            int     intValue = integerValue;
-            return (double)intValue;
-        }
-        return (Double)inValue;
-    }
 
-    /**
-     * 
-     */
-//
-//    public Object evaluateAdd(Add inAdd, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-//        Logger      logger = Logger.getGlobal();
-//        logger.log(Level.FINE, "Evaluate Add");
-//        List<GelExpression> operands = inAdd.getOperand();
-//        Object left = genericVisit(operands.get(0), inParameters);
-//        Object right = genericVisit(operands.get(1), inParameters);
-//        TypeResult castValues = castValues(left, right);
-//        if (castValues.rightInt != null) {
-//            return castValues.leftInt + castValues.rightInt;
-//        }
-//        return castValues.leftDouble + castValues.rightDouble;
-//    }
-//
-//    public Object evaluateAnd(And inAnd, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-//        List<GelExpression> operands = inAnd.getOperand();
-//        Boolean left = (Boolean) genericVisit(operands.get(0), inParameters);
-//        if (left) {
-//            return (Boolean) genericVisit(operands.get(1), inParameters);
-//        }
-//        return false;
-//    }
-//
-//    public Object evaluateArrow(Arrow inExp, Object... inParameters) {
-//        return null;
-//    }
-//
-//    public Object evaluateAtPre(AtPre inExp, Object... inParameters) {
-//        
-//        return null;
-//    }
-//
-//    public Object evaluateBooleanLiteral(BooleanLiteral inExp, Object... inParameters) {
-//        return null;
-//    }
-//
-//    public Object evaluateDateLiteral(DateLiteral inExp, Object... inParameters) {
-//        return null;
-//    }
-//
-//    public Object evaluateDifferent(Different inExp, Object... inParameters) {
-//        return null;
-//    }
-//
-//    public Object evaluateDiv(Div inExp, Object... inParameters) {
-//        return null;
-//    }
-//
-//    public Object evaluateDot(Dot inExp, Object... inParameters) {
-//        return null;
-//    }
-//
-//    public Object evaluateEqual(Equal inExp, Object... inParameters) {
-//        return null;
-//    }
-//
-//    public Object evaluateFloatingPointLiteral(FloatingPointLiteral inExp, Object... inParameters) {
-//        return null;
-//    }
-//
-//    public Object evaluateGreaterOrEqual(GreaterOrEqual inExp, Object... inParameters) {
-//        return null;
-//    }
-//
-//    public Object evaluateGreaterThan(GreaterThan inExp, Object... inParameters) {
-//        return null;
-//    }
-//
-//    public Object evaluateIntegerLiteral(IntegerLiteral inExp, Object... inParameters) {
-//        int parseInt = Integer.parseInt(inExp.getValue().toString());
-//        return parseInt;
-//    }
-//
-//    public Object evaluateLambda(Lambda inExp, Object... inParameters) {
-//        return null;
-//    }
-//
-//    public Object evaluateLessOrEqual(LessOrEqual inExp, Object... inParameters) {
-//        return null;
-//    }
-//
-//    public Object evaluateLessThan(LessThan inExp, Object... inParameters) {
-//        return null;
-//    }
-//
-//    public Object evaluateMinus(Minus inExp, Object... inParameters) {
-//        return null;
-//    }
-//
-//    public Object evaluateMult(Mult inExp, Object... inParameters) {
-//        return null;
-//    }
-//
-//    public Object evaluateOpp(Opp inExp, Object... inParameters) {
-//        return null;
-//    }
-//
-//    public Object evaluateOr(Or inExp, Object... inParameters) {
-//        return null;
-//    }
-//
-//    public Object evaluateSelf(Self inExp, Object... inParameters) {
-//        return null;
-//    }
-//
-//    public Object evaluateStringLiteral(StringLiteral inExp, Object... inParameters) {
-//        return inExp.getValue().toString();
-//    }
-//
-//    public Object evaluateVariableDefinition(VariableDefinition inExp, Object... inParameters) {
-//        return null;
-//    }
-//
-//    public Object evaluateVariableReference(VariableReference inExp, Object... inParameters) {
-//        VariableDefinition declaration = inExp.getDeclaration();
-//        return null;
-//    }
+    public Object visitIdentifier(Identifier inExp, Object... inParameters) {
+        Map<String, Object> context = (Map<String, Object>) inParameters[0];
+        String name = inExp.getName();
+        System.out.println("Looking for the object " + name);
+        return context.get(name);
+    }
 
 }

@@ -1,5 +1,6 @@
 package fr.insset.jeanluc.gel.evaluation;
 
+import fr.insset.jeanluc.ete.gel.*;
 import fr.insset.jeanluc.ete.meta.model.core.NamedElement;
 import fr.insset.jeanluc.ete.meta.model.core.PrimitiveDataTypes;
 import static fr.insset.jeanluc.ete.meta.model.core.PrimitiveDataTypes.FLOAT_TYPE;
@@ -17,12 +18,15 @@ import fr.insset.jeanluc.ete.meta.model.mofpackage.MofPackage;
 import static fr.insset.jeanluc.ete.meta.model.mofpackage.MofPackage.MOF_PACKAGE;
 import fr.insset.jeanluc.ete.meta.model.types.MofType;
 import fr.insset.jeanluc.util.factory.FactoryRegistry;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Test;
 
 /**
  *
@@ -108,39 +112,37 @@ public class EvaluatorTest {
     @After
     public void tearDown() {
     }
-//
-//    /**
-//     * Test of evaluateAdd method, of class Evaluator.
-//     */
-////    @Test
-//    public void testEvaluateAdd() throws Exception {
-//        System.out.println("evaluateAdd");
-//        Add inAdd = null;
-//        Object[] inParameters = null;
-//        GelEvaluator instance = new GelEvaluator();
-//        Object expResult = null;
-//        Object result = instance.evaluateAdd(inAdd, inParameters);
-//        assertEquals(expResult, result);
-//    }
-//
-//    /**
-//     * Test of evaluateAnd method, of class Evaluator.
-//     */
-////    @Test
+
+    /**
+     * Test of evaluateAdd method, of class Evaluator.
+     */
+    @Test
+    public void testEvaluateAdd() throws Exception {
+        System.out.println("evaluate add");
+        Add inAdd = null;
+        GelEvaluator instance = new GelEvaluator();
+        Object expResult = null;
+        Object result = instance.eval(inAdd, null);
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of evaluateAnd method, of class Evaluator.
+     */
+//    @Test
 //    public void testEvaluateAnd() throws Exception {
 //        System.out.println("evaluateAnd");
 //        And inAnd = null;
-//        Object[] inParameters = null;
 //        GelEvaluator instance = new GelEvaluator();
 //        Object expResult = null;
-//        Object result = instance.evaluateAnd(inAnd, inParameters);
+//        Object result = instance.eval(inAnd, null);
 //        assertEquals(expResult, result);
 //    }
-//
-//    /**
-//     * Test of evaluateArrow method, of class Evaluator.
-//     */
-////    @Test
+
+    /**
+     * Test of evaluateArrow method, of class Evaluator.
+     */
+//    @Test
 //    public void testEvaluateArrow() {
 //        System.out.println("evaluateArrow");
 //        Arrow inExp = null;
@@ -150,7 +152,7 @@ public class EvaluatorTest {
 //        Object result = instance.evaluateArrow(inExp, inParameters);
 //        assertEquals(expResult, result);
 //    }
-//
+
 //    /**
 //     * Test of evaluateAtPre method, of class Evaluator.
 //     */
@@ -164,21 +166,21 @@ public class EvaluatorTest {
 //        Object result = instance.evaluateAtPre(inExp, inParameters);
 //        assertEquals(expResult, result);
 //    }
-//
-//    /**
-//     * Test of evaluateBooleanLiteral method, of class Evaluator.
-//     */
-////    @Test
-//    public void testEvaluateBooleanLiteral() {
+
+    /**
+     * Test of evaluateBooleanLiteral method, of class Evaluator.
+     */
+//    @Test
+//    public void testEvaluateBooleanLiteral() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 //        System.out.println("evaluateBooleanLiteral");
 //        BooleanLiteral inExp = null;
-//        Object[] inParameters = null;
 //        GelEvaluator instance = new GelEvaluator();
 //        Object expResult = null;
-//        Object result = instance.evaluateBooleanLiteral(inExp, inParameters);
+//        Object result = instance.eval(inExp, null);
 //        assertEquals(expResult, result);
 //    }
-//
+
+
 //    /**
 //     * Test of evaluateDateLiteral method, of class Evaluator.
 //     */
@@ -192,7 +194,7 @@ public class EvaluatorTest {
 //        Object result = instance.evaluateDateLiteral(inExp, inParameters);
 //        assertEquals(expResult, result);
 //    }
-//
+
 //    /**
 //     * Test of evaluateDifferent method, of class Evaluator.
 //     */
