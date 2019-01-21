@@ -563,6 +563,7 @@ public class QueryBuilder extends DynamicVisitorSupport {
                 Classifier owningMofClass = toFeature.getOwningMofClass();
                 MofType targetType = toFeature.getType();
                 if (targetType.isCollection()) {
+                    targetType = targetType.getRecBaseType();
                     String  targetTableName = owningMofClass.getName().toUpperCase();
                     String  auxTableName = targetTableName + "_" + targetType.getName().toUpperCase();
                     variable = query.newVariable();
