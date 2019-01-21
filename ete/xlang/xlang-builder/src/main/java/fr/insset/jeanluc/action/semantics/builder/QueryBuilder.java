@@ -569,6 +569,7 @@ public class QueryBuilder extends DynamicVisitorSupport {
                     variable = query.newVariable();
                     Join join = new Join(previous.getName(), "ID", variable.getName(), auxTableName, featureName + "_ID");
                     filter.addJoin(join);
+                    variable = query.newVariable();
                     join = new Join(previous.getName(), featureName + "_ID", variable.getName(), targetTableName, "ID");
                     filter.addJoin(join);
                 } else {
