@@ -44,57 +44,7 @@ public class SqlGenerator extends DynamicVisitorSupport implements Dialect {
 
 
     public SqlGenerator() {
-        // there methods build the where/and statements
         register("visit", "fr.insset.jeanluc.ete.gel");
-    }
-
-
-
-    /**
-     * Builds the SQL query to get all instances complying to all the invariants
-     * of {@code inFor} which the inProperty could be set to.
-     * 
-     * @param inProperty a property the type of wich is an entity
-     * @param inFor instance of inProperty.getOwningClass()
-     * @return 
-     */
-    public String getSql(MofProperty inProperty, Object inFor) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
-        StringBuilder builder = new StringBuilder();
-        MofType type = inProperty.getType();
-        if (type instanceof EnhancedMofClassImpl) {
-            // 1- add select
-            EnhancedMofClassImpl theSupportClass = (EnhancedMofClassImpl)type;
-            Map<MofProperty, EteQuery> support = theSupportClass.getSupport();
-            EteQuery eteQuery = support.get(inProperty);
-            addSelect(eteQuery, builder);
-            // 2- add joins
-            for (EteFilter aFilter : eteQuery.getFilters()) {
-                addJoins(aFilter, builder);
-            }
-            // 3- add where clauses
-            for (EteFilter aFilter : eteQuery.getFilters()) {
-                addWhere(aFilter, eteQuery, builder);
-            }
-        }
-        return builder.toString();
-    }
-
-
-    /**
-     * This code is intented to be executed at runtime.<br>
-     * TODO
-     */
-    protected boolean allVariablesArePresent(EteFilter inFilter, Object inFor) {
-        Map<Step, VariableDefinition> variables = inFilter.getVariables();
-//        GelEvaluator evaluator;
-        for (Step aNavigation : variables.keySet()) {
-            try {
-                
-            } catch (Exception ex) {
-                return false;
-            }
-        }
-        return true;
     }
 
 
@@ -102,40 +52,28 @@ public class SqlGenerator extends DynamicVisitorSupport implements Dialect {
 
 
     public String getSelect(EteQuery inQuery) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        StringBuilder   builder = new StringBuilder();
+        StringBuilder builder = new StringBuilder();
         addSelect(inQuery, builder);
         return builder.toString();
     }
 
-    protected void addSelect(EteQuery inQuery, StringBuilder inBuilder) {
+
+    public void addSelect(EteQuery inQuery, StringBuilder builder) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         MofProperty root = inQuery.getProperty();
         EnhancedMofClassImpl targetClass = (EnhancedMofClassImpl) root.getType().getRecBaseType();
         EteQuery query = targetClass.getSupport().get(root);
-        inBuilder.append("SELECT DISTINCT v0.* FROM ");
-        inBuilder.append(query.getTargetClass().getName().toUpperCase());
-        inBuilder.append(" AS v0");
+        builder.append("SELECT DISTINCT v0.* FROM ");
+        builder.append(query.getTargetClass().getName().toUpperCase());
+        builder.append(" AS v0");
     }
 
 
-    //==========================================================================//
 
-
-
-    public String getJoin(EteFilter aFilter) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
-        StringBuilder   builder = new StringBuilder();
-        for (Join aJoin : aFilter.getJoins()) {
-            addJoin(aJoin, builder);
-        }
+    public String getJoin(Join inJoin) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+        StringBuilder builder = new StringBuilder();
+        addJoin(inJoin, builder);
         return builder.toString();
     }
-
-
-    public void addJoins(EteFilter aFilter, StringBuilder inBuilder) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
-        for (Join aJoin : aFilter.getJoins()) {
-            addJoin(aJoin, inBuilder);
-        }        
-    }
-
 
     /**
      * If all parameters of a filter are present we must add the joins.<br>
@@ -160,20 +98,18 @@ public class SqlGenerator extends DynamicVisitorSupport implements Dialect {
     }
 
 
-    //==========================================================================//
-
 
 
     public String getWhere(EteFilter aFilter, EteQuery inQuery) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        StringBuilder   builder = new StringBuilder();
-        genericVisit(aFilter.getExpression(), builder, inQuery);
+        StringBuilder builder = new StringBuilder();
+        addWhere(aFilter, builder, inQuery);
         return builder.toString();
     }
 
+    public void addWhere(EteFilter aFilter, StringBuilder builder, EteQuery inQuery) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        genericVisit(aFilter.getExpression(), builder, inQuery);
+    }
 
-    public void addWhere(EteFilter inFilter, EteQuery inQuery, StringBuilder inBuilder) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        genericVisit(inFilter.getExpression(), inBuilder, inQuery);
-    } 
 
 
     //==========================================================================//
@@ -221,23 +157,36 @@ public class SqlGenerator extends DynamicVisitorSupport implements Dialect {
     //==========================================================================//
 
 
-    public GelExpression visitStep(Step inStep, Object... inParameters) {
+    public GelExpression visitStep(Step inStep, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         StringBuilder builder = (StringBuilder) inParameters[0];
         Feature toFeature = inStep.getToFeature();
         if (toFeature == null) {
             return inStep;
         }
         EteQuery query = (EteQuery) inParameters[1];
-        VariableDefinition parameter = query.getParameter(inStep);
-        if (parameter == null) {
-            Step    previous = (Step)inStep.getOperand().get(0);
-            parameter = query.getParameter(previous);
-            builder.append(parameter.getName());
+        VariableDefinition variable = query.getVariable(inStep);
+        if (variable == null) {
+            List<GelExpression> operand = inStep.getOperand();
+            if (operand == null) {
+                return inStep;
+            }
+            GelExpression    previous = inStep.getOperand().get(0);
+            if (previous instanceof VariableDefinition) {
+                VariableDefinition prevVariable = (VariableDefinition) previous;
+                builder.append(prevVariable.getName());
+            } else {
+                genericVisit(previous, inParameters);
+            }
             builder.append(".");
             builder.append(toFeature.getName().toUpperCase());
         } else {
-            builder.append(parameter.getName());
-            builder.append(".ID");
+            builder.append(variable.getName());
+            if (toFeature.getType().getRecBaseType() instanceof MofClass) {
+                builder.append(".ID");
+            } else {
+                builder.append('.');
+                builder.append(toFeature.getName());
+            }
         }
         return  inStep;
     }
@@ -267,8 +216,14 @@ public class SqlGenerator extends DynamicVisitorSupport implements Dialect {
 
     public VariableDefinition visitVariableDefinition(VariableDefinition inVariable, Object... inParameters) {
         StringBuilder builder = (StringBuilder) inParameters[0];
-        builder.append(":");
-        builder.append(inVariable.getName());
+        EteQuery query = (EteQuery) inParameters[1];
+        if (query.isParameter(inVariable)) {
+            builder.append(":");
+            builder.append(inVariable.getName());
+        } else {
+            builder.append(inVariable.getName());
+            builder.append(".ID");
+        }
         return inVariable;
     }
 

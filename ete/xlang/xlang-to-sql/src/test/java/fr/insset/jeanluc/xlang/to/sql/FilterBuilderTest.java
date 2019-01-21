@@ -124,7 +124,7 @@ public class FilterBuilderTest {
         EteQuery captainQuery = support.get(captain);
         SqlGenerator  translator = new SqlGenerator();
         StringBuilder builder = new StringBuilder();
-        builder.append(translator.getSelect(captainQuery));
+        translator.addSelect(captainQuery, builder);
         for (EteFilter aFilter : captainQuery.getFilters()) {
             for (Join aJoin : aFilter.getJoins()) {
                 translator.addJoin(aJoin, builder);
@@ -133,10 +133,10 @@ public class FilterBuilderTest {
         String     where = " WHERE";
         for (EteFilter aFilter : captainQuery.getFilters()) {
             builder.append(where);
-            builder.append(translator.getWhere(aFilter, captainQuery));
+            translator.addWhere(aFilter, builder, captainQuery);
             where = " AND ";
         }
-        assertEquals("SELECT DISTINCT v0.* FROM PILOT AS v0 LEFT OUTER JOIN PILOT_CERTIFICATE AS v1 ON v0.ID=v1.PILOT_ID LEFT OUTER JOIN CERTIFICATE AS v2 ON v1.CERTIFICATES_ID=v2.ID LEFT OUTER JOIN PLANEMODEL AS v3 ON v2.PLANEMODEL_ID=v3.ID LEFT OUTER JOIN ADDRESS AS v4 ON v0.ADDRESS_ID=v4.ID WHEREv0.ID<>:p1 AND v3.ID=:p2 AND v4.TOWN='Paris'", builder.toString());
+        assertEquals("SELECT DISTINCT v0.* FROM PILOT AS v0 LEFT OUTER JOIN PILOT_CERTIFICATE AS v1 ON v0.ID=v1.Pilot_ID LEFT OUTER JOIN CERTIFICATE AS v2 ON v1.certificates_ID=v2.ID LEFT OUTER JOIN PLANEMODEL AS v3 ON v2.planeModel_ID=v3.ID LEFT OUTER JOIN ADDRESS AS v4 ON v0.address_ID=v4.ID WHEREv0.ID<>:p1 AND v3.ID=:p2 AND v4.TOWN='Paris'", builder.toString());
     }
 
 
