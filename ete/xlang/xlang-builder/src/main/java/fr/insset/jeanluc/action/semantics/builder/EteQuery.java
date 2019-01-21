@@ -55,6 +55,7 @@ public class EteQuery {
 
     public EteQuery() throws InstantiationException {
         parameters = FactoryMethods.newMap(Step.class, VariableDefinition.class);
+        variables = FactoryMethods.newMap(Step.class, VariableDefinition.class);
         dependencies = FactoryMethods.newList(MofProperty.class);
         filters = FactoryMethods.newList(EteFilter.class);
     }
@@ -115,23 +116,23 @@ public class EteQuery {
         variable.setType(inStep.getType());
         variable.setName("p" + nextParameterNum++);
         parameters.put(inStep, variable);
+        variables.put(inStep, variable);
         return variable;
+    }
+
+    public VariableDefinition   getParameter(Step inStep) {
+        return parameters.get(inStep);
     }
 
     public void addVariable(Step inStep, VariableDefinition inVariable) {
         parameters.put(inStep, inVariable);
     }
 
-
-    public VariableDefinition   getParameter(Step inStep) {
-        return parameters.get(inStep);
-    }
-
     protected VariableDefinition newVariable(Step inStep) throws InstantiationException, IllegalAccessException {
         VariableDefinition result = newVariable();
         result.setValue(inStep);
         result.setType(inStep.getToFeature().getType());
-        parameters.put(inStep, result);
+        variables.put(inStep, result);
         return result;
     }
 
@@ -141,6 +142,14 @@ public class EteQuery {
         return definition;
     }
 
+    public VariableDefinition getVariable(Step inStep) {
+        return variables.get(inStep);
+    }
+
+
+    public boolean isParameter(VariableDefinition inVariable) {
+        return parameters.values().contains(inVariable);
+    }
 
     //=========================================================================//
 
@@ -159,7 +168,7 @@ public class EteQuery {
         if (firstOperand instanceof Self) {
             startParameterName = "v0";
         } else {
-            VariableDefinition exp = parameters.get(firstOperand);
+            VariableDefinition exp = variables.get(firstOperand);
             startParameterName = exp.getName();
         }
         Join    join = null;
@@ -210,6 +219,7 @@ public class EteQuery {
      * 
      */
     private     Map<Step, VariableDefinition>   parameters;
+    private     Map<Step, VariableDefinition>   variables;
     private     List<EteFilter>                 filters;
     private     MofProperty                     property;
     private     int                             nextParameterNum=1;
