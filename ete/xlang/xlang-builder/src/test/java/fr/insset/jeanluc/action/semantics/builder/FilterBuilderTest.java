@@ -62,7 +62,24 @@ public class FilterBuilderTest {
     }
 
     /**
-     * 
+SELECT DISTINCT v0.* FROM PILOT AS v0
+        LEFT OUTER JOIN PILOT_CERTIFICATE AS v1 ON v0.ID=v1.Pilot_ID
+        LEFT OUTER JOIN CERTIFICATE AS v2 ON v1.certificates_ID=v2.ID
+        LEFT OUTER JOIN PLANEMODEL AS v3 ON v2.planeModel_ID=v3.ID
+        LEFT OUTER JOIN ADDRESS AS v4 ON v0.address_ID=v4.ID
+        LEFT OUTER JOIN STRING AS v5 ON v4.town_ID=v5.ID WHERE :v0<>:p1
+     AND :p2 IN :v3
+     AND :v5='null'
+
+SELECT DISTINCT v0.* FROM PLANE AS v0
+        LEFT OUTER JOIN PLANEMODEL AS v1 ON v0.planeModel_ID=v1.ID
+        LEFT OUTER JOIN CERTIFICATE AS v2 ON v1.planeModel_ID=v2.ID
+        LEFT OUTER JOIN PILOT_SEQUENCE<CERTIFICATE> AS v3 ON v2.ID=v3.certificates_ID
+        LEFT OUTER JOIN PILOT AS v3 ON v2.certificates_ID=v3.ID
+        LEFT OUTER JOIN FLIGHT AS v4 ON v3.captain_ID=v4.ID
+WHERE :v4 IN :v1
+
+* 
      * @throws InstantiationException
      * @throws ClassNotFoundException
      * @throws IllegalAccessException
@@ -115,24 +132,32 @@ public class FilterBuilderTest {
         EnhancedMofClassImpl pilotClass = (EnhancedMofClassImpl) result.getElementByName("Pilot");
         Map<MofProperty, EteQuery> support = pilotClass.getSupport();
         EteQuery captainQuery = support.get(captain);
+        visualise(captainQuery);
+        MofProperty plane = flightClass.getOwnedAttribute("plane");
+        EnhancedMofClassImpl planeClass = (EnhancedMofClassImpl) result.getElementByName("Plane");
+        support = planeClass.getSupport();
+        EteQuery planeQuery = support.get(plane);
+        visualise(planeQuery);
+    }
+
+
+    protected  void visualise(EteQuery inQuery) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         QueryToSql  translator = new QueryToSql();
         StringBuilder builder = new StringBuilder();
-        translator.addSelect(captainQuery, builder);
-        for (EteFilter aFilter : captainQuery.getFilters()) {
+        translator.addSelect(inQuery, builder);
+        for (EteFilter aFilter : inQuery.getFilters()) {
             for (Join aJoin : aFilter.getJoins()) {
                 translator.addJoin(aJoin, builder);
             }
         }
         boolean     firstOne = true;
-        for (EteFilter aFilter : captainQuery.getFilters()) {
-            translator.addWhere(aFilter, builder, firstOne, captainQuery);
+        for (EteFilter aFilter : inQuery.getFilters()) {
+            translator.addWhere(aFilter, builder, firstOne, inQuery);
             firstOne = false;
         }
 
         System.out.println("SQL : [[[\n" + builder.toString() + "\n]]]");
     }
-
-
 
 
     protected void velocityAction(EteModel model, String template, String target) throws EteException {

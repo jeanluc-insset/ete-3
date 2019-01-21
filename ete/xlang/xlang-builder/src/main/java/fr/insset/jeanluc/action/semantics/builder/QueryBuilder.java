@@ -366,6 +366,7 @@ public class QueryBuilder extends DynamicVisitorSupport {
             EteQuery query = support.get(aProperty);
             System.out.println("  Building variables for the query of " + aProperty.getName() + " in the class " + aProperty.getOwningMofClass().getName());
             for (EteFilter aFilter : query.getFilters()) {
+                System.out.println("    Building variables and joins for " + aProperty.getName() + " invariant " + aFilter.getInvariant().getName());
                 builder.buildFor(aFilter);
             }
         }
@@ -441,8 +442,14 @@ public class QueryBuilder extends DynamicVisitorSupport {
          */
         public GelExpression buildStep(Step inStep, Object... inParameters) throws InstantiationException, IllegalAccessException {
             EteQuery query = (EteQuery)inParameters[QUERY];
+            MofProperty property = query.getProperty();
+            Step first = getFirst(inStep);
+            if (!first.getToFeature().equals(property)) {
+                VariableDefinition addParameter = query.addParameter(inStep);
+                return addParameter;
+            }
             VariableDefinition addJoins = addJoins(inStep, inParameters);
-            return inStep;
+            return addJoins;
         }
 
 
@@ -452,13 +459,50 @@ public class QueryBuilder extends DynamicVisitorSupport {
             String  startVariable = "v0";
             VariableDefinition previousVariable = null;
             if (operand.size()>0) {
+                // First we build the previous joins
+                Step src = (Step) operand.get(0);
+                if (src instanceof Self) {
+                    EteQuery query = (EteQuery) inParameters[QUERY];
+                    VariableDefinition result = (VariableDefinition) FactoryRegistry.newInstance(VariableDefinition.class);
+                    result.setName("v0");
+                    result.setType(inStep.getType());
+                    query.addVariable(inStep, previousVariable);
+                    return result;
+                }
                 VariableDefinition addJoins = addJoins((Step) operand.get(0), inParameters);
-                startVariable = addJoins.getName();
+                if (addJoins == null) {
+                    startVariable = "v0";
+                } else {
+                    startVariable = addJoins.getName();
+                }
             };
-            new Join(startVariable, startProperty, targetVariable, targetTable, targetProperty);
-            VariableDefinition  variable = (VariableDefinition) FactoryRegistry.newInstance("");
-            return variable;
+            // Now we build this one (or these ones since a single step can be
+            // translated to two joins)
+            Feature toFeature = inStep.getToFeature();
+            String  featureName = toFeature.getName();
+            Classifier owningMofClass = toFeature.getOwningMofClass();
+            MofType targetType = toFeature.getType();
+            EteQuery query = (EteQuery)inParameters[QUERY];
+            EteFilter filter = (EteFilter)inParameters[FILTER];
+            String  targetTableName = targetType.getRecBaseType().getName().toUpperCase();
+            if (targetType.isCollection()) {
+                String  auxTableName = owningMofClass.getName().toUpperCase() + "_" + targetTableName;
+                System.out.println("             auxTableName :" + auxTableName);
+                VariableDefinition firstVariable= query.newVariable();
+                Join firstJoin = new Join(startVariable, "ID", firstVariable.getName(), auxTableName, owningMofClass.getName() + "_ID");
+                VariableDefinition secondVariable= query.newVariable(inStep);
+                Join secondJoin = new Join(firstVariable.getName(), featureName + "_ID",secondVariable.getName(), targetTableName, "ID");
+                filter.addJoin(firstJoin);
+                filter.addJoin(secondJoin);
+                return secondVariable;
+            } else {        // The target type is not a collection
+                VariableDefinition variable = query.newVariable(inStep);
+                Join join = new Join(startVariable, featureName + "_ID", variable.getName(), targetTableName, "ID");
+                filter.addJoin(join);
+                return variable;
+            }
         }
+
 
 
         /**
@@ -485,26 +529,60 @@ public class QueryBuilder extends DynamicVisitorSupport {
                 resultOperand.add(leftResult);
                 resultOperand.add(rightResult);
             } else {
-                GelExpression rightResult = (GelExpression) genericVisit(right, inParameters);
+                VariableDefinition rightResult = (VariableDefinition) genericVisit(right, inParameters);
                 resultOperand.add(rightResult);
-                GelExpression leftResult = reverseVisit(left, inParameters);
+                GelExpression leftResult = reverseVisit(left, inParameters[0], inParameters[1], inParameters[2], rightResult);
                 resultOperand.add(leftResult);
             }
             return result;
         }
 
 
+        /**
+         * In case of an includes for example, we must first traverse the right
+         * operand in direct order then the left one in reverse order.
+         * 
+         * @param inStep
+         * @param inParameters
+         * @return
+         * @throws InstantiationException
+         * @throws IllegalAccessException 
+         */
         protected GelExpression reverseVisit(Step inStep, Object... inParameters) throws InstantiationException, IllegalAccessException {
             Step    current = inStep;
+            VariableDefinition variable = null;
+            VariableDefinition previous = (VariableDefinition) inParameters[3];
+            EteQuery query = (EteQuery)inParameters[QUERY];
+            EteFilter filter = (EteFilter)inParameters[FILTER];
             while (current != null) {
-                addJoin(current, (EteFilter)inParameters[FILTER], (EteQuery)inParameters[QUERY]);
                 List<GelExpression> operand = current.getOperand();
                 if (operand == null || operand.size() == 0) break;
+                if (operand instanceof Self) break;
+                Feature toFeature = current.getToFeature();
+                String  featureName = toFeature.getName();
+                Classifier owningMofClass = toFeature.getOwningMofClass();
+                MofType targetType = toFeature.getType();
+                if (targetType.isCollection()) {
+                    String  targetTableName = owningMofClass.getName().toUpperCase();
+                    String  auxTableName = targetTableName + "_" + targetType.getName().toUpperCase();
+                    variable = query.newVariable();
+                    Join join = new Join(previous.getName(), "ID", variable.getName(), auxTableName, featureName + "_ID");
+                    filter.addJoin(join);
+                    join = new Join(previous.getName(), featureName + "_ID", variable.getName(), targetTableName, "ID");
+                    filter.addJoin(join);
+                } else {
+                    String  targetTableName = owningMofClass.getName().toUpperCase();
+                    variable = query.newVariable(current);
+                    Join join = new Join(previous.getName(), featureName + "_ID", variable.getName(), targetTableName, "ID");
+                    filter.addJoin(join);
+                }
+                // Let' make a step "forward" (actually backward since it is a
+                // reverse traversal)
+                previous = variable;
                 current = (Step) operand.get(0);
             }
             // No : we should return a variable pointing to the first step (the
             // last traversed step)
-            VariableDefinition  variable = (VariableDefinition) FactoryRegistry.newInstance(VariableDefinition.class);
             return variable;
         }
 

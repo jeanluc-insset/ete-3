@@ -25,6 +25,11 @@ public class Join {
         this.targetVariable = targetVariable;
         this.targetTable = targetTable;
         this.targetProperty = targetProperty;
+        System.out.println("    Creating a join : "
+                + startVariable
+                + "." + startProperty
+                + "=" + targetTable
+                + " (AS " + targetVariable + ")." + targetProperty);
     }
 
 
