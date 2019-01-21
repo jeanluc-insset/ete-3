@@ -134,23 +134,36 @@ public class QueryToSql extends DynamicVisitorSupport implements Dialect {
     //==========================================================================//
 
 
-    public GelExpression visitStep(Step inStep, Object... inParameters) {
+    public GelExpression visitStep(Step inStep, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         StringBuilder builder = (StringBuilder) inParameters[0];
         Feature toFeature = inStep.getToFeature();
         if (toFeature == null) {
             return inStep;
         }
         EteQuery query = (EteQuery) inParameters[1];
-        VariableDefinition parameter = query.getParameter(inStep);
-        if (parameter == null) {
-            Step    previous = (Step)inStep.getOperand().get(0);
-            parameter = query.getParameter(previous);
-            builder.append(parameter.getName());
+        VariableDefinition variable = query.getVariable(inStep);
+        if (variable == null) {
+            List<GelExpression> operand = inStep.getOperand();
+            if (operand == null) {
+                return inStep;
+            }
+            GelExpression    previous = inStep.getOperand().get(0);
+            if (previous instanceof VariableDefinition) {
+                VariableDefinition prevVariable = (VariableDefinition) previous;
+                builder.append(prevVariable.getName());
+            } else {
+                genericVisit(previous, inParameters);
+            }
             builder.append(".");
             builder.append(toFeature.getName().toUpperCase());
         } else {
-            builder.append(parameter.getName());
-            builder.append(".ID");
+            builder.append(variable.getName());
+            if (toFeature.getType().getRecBaseType() instanceof MofClass) {
+                builder.append(".ID");
+            } else {
+                builder.append('.');
+                builder.append(toFeature.getName());
+            }
         }
         return  inStep;
     }
@@ -180,8 +193,14 @@ public class QueryToSql extends DynamicVisitorSupport implements Dialect {
 
     public VariableDefinition visitVariableDefinition(VariableDefinition inVariable, Object... inParameters) {
         StringBuilder builder = (StringBuilder) inParameters[0];
-        builder.append(":");
-        builder.append(inVariable.getName());
+        EteQuery query = (EteQuery) inParameters[1];
+        if (query.isParameter(inVariable)) {
+            builder.append(":");
+            builder.append(inVariable.getName());
+        } else {
+            builder.append(inVariable.getName());
+            builder.append(".ID");
+        }
         return inVariable;
     }
 

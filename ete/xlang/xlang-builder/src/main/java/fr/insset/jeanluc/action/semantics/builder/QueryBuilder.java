@@ -157,6 +157,7 @@ public class QueryBuilder extends DynamicVisitorSupport {
         registry.registerDefaultFactory("floatingpointliteral", FloatingPointLiteralImpl.class);
         registry.registerDefaultFactory("select", SelectImpl.class);
         registry.registerDefaultFactory("nav", NavImpl.class);
+        registry.registerDefaultFactory("step", StepImpl.class);
         registry.registerDefaultFactory("not", NotImpl.class);
         registry.registerDefaultFactory("greaterthan", GreaterThanImpl.class);
         registry.registerDefaultFactory("attributenav", AttributeNavImpl.class);
@@ -437,6 +438,11 @@ public class QueryBuilder extends DynamicVisitorSupport {
             return result;
         }
 
+
+        public GelExpression buildLiteral(Literal inExpression, Object... inParameters) {
+            return inExpression;
+        }
+
         /**
          * Builds the joins and returns the variable linked to the first join.
          */
@@ -448,12 +454,12 @@ public class QueryBuilder extends DynamicVisitorSupport {
                 VariableDefinition addParameter = query.addParameter(inStep);
                 return addParameter;
             }
-            VariableDefinition addJoins = addJoins(inStep, inParameters);
+            GelExpression addJoins = addJoins(inStep, inParameters);
             return addJoins;
         }
 
 
-        protected VariableDefinition addJoins(Step inStep, Object... inParameters) throws InstantiationException, IllegalAccessException {
+        protected GelExpression addJoins(Step inStep, Object... inParameters) throws InstantiationException, IllegalAccessException {
             List<GelExpression> operand = inStep.getOperand();
             if (operand == null) return null;
             String  startVariable = "v0";
@@ -470,7 +476,7 @@ public class QueryBuilder extends DynamicVisitorSupport {
                     query.addVariable(inStep, previousVariable);
                     return result;
                 }
-                result = addJoins((Step) operand.get(0), inParameters);
+                result = (VariableDefinition) addJoins((Step) operand.get(0), inParameters);
                 if (result == null) {
                     startVariable = "v0";
                 } else {
@@ -486,7 +492,13 @@ public class QueryBuilder extends DynamicVisitorSupport {
             MofType targetBaseType = targetType.getRecBaseType();
             // if the type of this step is not a table, we must not create a join
             if (! (targetBaseType instanceof MofClass)) {
-                return result;
+                Step  nav = (Step) FactoryRegistry.newInstance("step");
+                operand = FactoryMethods.newList(GelExpression.class);
+                operand.add(result);
+                nav.setOperand(operand);
+                nav.setToFeature(toFeature);
+                nav.setType(targetType);
+                return nav;
             }
             EteQuery query = (EteQuery)inParameters[QUERY];
             EteFilter filter = (EteFilter)inParameters[FILTER];
@@ -536,7 +548,9 @@ public class QueryBuilder extends DynamicVisitorSupport {
                 resultOperand.add(rightResult);
             } else {
                 VariableDefinition rightResult = (VariableDefinition) genericVisit(right, inParameters);
-                resultOperand.add(rightResult);
+                EteQuery    query = (EteQuery) inParameters[QUERY];
+                VariableDefinition theParameter = query.addParameter(firstRight);
+                resultOperand.add(theParameter);
                 GelExpression leftResult = reverseVisit(left, inParameters[0], inParameters[1], inParameters[2], rightResult);
                 resultOperand.add(leftResult);
             }
