@@ -458,22 +458,23 @@ public class QueryBuilder extends DynamicVisitorSupport {
             if (operand == null) return null;
             String  startVariable = "v0";
             VariableDefinition previousVariable = null;
+            VariableDefinition result = null;
             if (operand.size()>0) {
                 // First we build the previous joins
                 Step src = (Step) operand.get(0);
                 if (src instanceof Self) {
                     EteQuery query = (EteQuery) inParameters[QUERY];
-                    VariableDefinition result = (VariableDefinition) FactoryRegistry.newInstance(VariableDefinition.class);
+                    result = (VariableDefinition) FactoryRegistry.newInstance(VariableDefinition.class);
                     result.setName("v0");
                     result.setType(inStep.getType());
                     query.addVariable(inStep, previousVariable);
                     return result;
                 }
-                VariableDefinition addJoins = addJoins((Step) operand.get(0), inParameters);
-                if (addJoins == null) {
+                result = addJoins((Step) operand.get(0), inParameters);
+                if (result == null) {
                     startVariable = "v0";
                 } else {
-                    startVariable = addJoins.getName();
+                    startVariable = result.getName();
                 }
             };
             // Now we build this one (or these ones since a single step can be
@@ -482,6 +483,11 @@ public class QueryBuilder extends DynamicVisitorSupport {
             String  featureName = toFeature.getName();
             Classifier owningMofClass = toFeature.getOwningMofClass();
             MofType targetType = toFeature.getType();
+            MofType targetBaseType = targetType.getRecBaseType();
+            // if the type of this step is not a table, we must not create a join
+            if (! (targetBaseType instanceof MofClass)) {
+                return result;
+            }
             EteQuery query = (EteQuery)inParameters[QUERY];
             EteFilter filter = (EteFilter)inParameters[FILTER];
             String  targetTableName = targetType.getRecBaseType().getName().toUpperCase();
@@ -520,7 +526,7 @@ public class QueryBuilder extends DynamicVisitorSupport {
             Step firstLeft = getFirst(left);
             Step firstRight = getFirst(right);
             MofProperty filteredProperty = (MofProperty) inParameters[PROPERTY];
-            GelExpression result = (GelExpression) FactoryRegistry.newInstance("includes");
+            GelExpression result = (GelExpression) FactoryRegistry.newInstance("equal");
             List<GelExpression> resultOperand = FactoryMethods.newList(GelExpression.class);
             result.setOperand(resultOperand);
             if (firstLeft.getToFeature().equals(filteredProperty)) {
@@ -557,7 +563,8 @@ public class QueryBuilder extends DynamicVisitorSupport {
             while (current != null) {
                 List<GelExpression> operand = current.getOperand();
                 if (operand == null || operand.size() == 0) break;
-                if (operand instanceof Self) break;
+                Step  start = (Step) operand.get(0);
+                if (start instanceof Self) break;
                 Feature toFeature = current.getToFeature();
                 String  featureName = toFeature.getName();
                 Classifier owningMofClass = toFeature.getOwningMofClass();
@@ -567,15 +574,17 @@ public class QueryBuilder extends DynamicVisitorSupport {
                     String  targetTableName = owningMofClass.getName().toUpperCase();
                     String  auxTableName = targetTableName + "_" + targetType.getName().toUpperCase();
                     variable = query.newVariable();
-                    Join join = new Join(previous.getName(), "ID", variable.getName(), auxTableName, featureName + "_ID");
+                    String auxVariableName = variable.getName();
+                    Join join = new Join(previous.getName(), "ID", auxVariableName, auxTableName, featureName + "_ID");
                     filter.addJoin(join);
                     variable = query.newVariable();
-                    join = new Join(previous.getName(), featureName + "_ID", variable.getName(), targetTableName, "ID");
+                    String previousName = previous.getName().toUpperCase();
+                    join = new Join(auxVariableName, targetTableName + "_ID", variable.getName(), targetTableName, "ID");
                     filter.addJoin(join);
                 } else {
                     String  targetTableName = owningMofClass.getName().toUpperCase();
                     variable = query.newVariable(current);
-                    Join join = new Join(previous.getName(), featureName + "_ID", variable.getName(), targetTableName, "ID");
+                    Join join = new Join(previous.getName(), "ID", variable.getName(), targetTableName, featureName + "_ID");
                     filter.addJoin(join);
                 }
                 // Let' make a step "forward" (actually backward since it is a
