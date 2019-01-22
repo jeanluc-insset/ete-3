@@ -6,6 +6,7 @@ import ${current.owningPackage.name}.model.*;
 import fr.mis.ete.util.optional.OptionalList;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -89,8 +90,12 @@ public class ${current.name}Jpa extends AbstractJpa<${current.name}> {
     public List<${current.name}> getAll${current.name}As${dialect.i2uc($aProperty.name)}For${aProperty.owningMofClass.name}(${aProperty.owningMofClass.name} inFor) throws InstantiationException {
         StringBuilder   builder = new StringBuilder("${sql.getSelect($aQuery)}");
         System.out.println("====================================================\nBuilding the query for ${aProperty.name}");
+        // Some JPA implementations don't support named SQL parameters
+        // We keep the ordered collection of the parameters we have in our query
+        List    parameters = new LinkedList();
 #foreach ($aFilter in $support.get($aProperty).filters)
         System.out.println("******");
+
         System.out.println("    Examen du filtre pour l'invariant ${aFilter.invariant.name}");
 #foreach ($aVariable in $aFilter.variables)
         System.out.println("        Examen de la variable ${aVariable.name} de type ${aVariable.type.name}");
@@ -102,11 +107,16 @@ public class ${current.name}Jpa extends AbstractJpa<${current.name}> {
         Optional${dialect.mt2lt($aVariable.type)}  ${aVariable.name} = ${dialect.getValueOfParameter($aVariable)};
 #end
 #end## loop on variables
+
+        // Setting the variables
 #set ($join = $sql.getJoin($aFilter))
-#if ($join.length()>0 && $aFilter.variables.size()>0)
+#if ($aFilter.variables.size()>0)
         if (#foreach ($aVariable in $aFilter.variables)${aVariable.name}.isPresent()#if( $foreach.hasNext ) && #end#end) {
             System.out.println("All the variables are present, we add the joins");
             builder.append("${sql.getJoin($aFilter)}");
+#foreach ($aVariable in $aFilter.variables)
+            parameters.add(${aVariable.name});
+#end
         }
 #end
 #end
@@ -116,7 +126,7 @@ public class ${current.name}Jpa extends AbstractJpa<${current.name}> {
 #end
 #foreach ($aFilter in $support.get($aProperty).filters)
         System.out.println("        Ajout de la condition de l'invariant ${aFilter.invariant.name} ?");
-#if ($join.length()>0 && $aFilter.variables.size()>0)
+#if ($aFilter.variables.size()>0)
         if (#foreach ($aVariable in $aFilter.variables)${aVariable.name}.isPresent()#if( $foreach.hasNext ) && #end#end) {
             System.out.println("We add the filter for ${aFilter.invariant.name}");
             builder.append(where);
@@ -127,21 +137,12 @@ public class ${current.name}Jpa extends AbstractJpa<${current.name}> {
         }
 #end
 #end## loop on filters
-        String sqlQuery = builder.toString();
-        Query  query = getEntityManager().createNativeQuery(sqlQuery, ${current.name}.class);
 #foreach ($aFilter in $support.get($aProperty).filters)
         System.out.println("      ----------------------------------\nSet the variables for ${aFilter.invariant.name}");
-#if ($join.length()>0 && $aFilter.variables.size()>0)
-#foreach ($aVariable in $aFilter.variables)
-        System.out.println("Is the variable ${aVariable.name} present ?");
-        if (${aVariable.name}.isPresent()) {
-            System.out.println("YES");
-        } else {
-            System.out.println("NO");
-        }
-#end
+#if ($aFilter.variables.size()>0)
         if (#foreach ($aVariable in $aFilter.variables)${aVariable.name}.isPresent()#if( $foreach.hasNext ) && #end#end) {
             System.out.println("All variables are present");
+            int     i=1;
 #foreach ($aVariable in $aFilter.variables)
             System.out.println("Set the variable ${aVariable.name}");
 #if ($dialect.isEntity($aVariable.type.recBaseType))
@@ -149,20 +150,36 @@ public class ${current.name}Jpa extends AbstractJpa<${current.name}> {
             // Collection
 #else
             // ${aVariable.type.name} : ${dialect.isEntity($aVariable.type)}
-            System.out.println("Setting the parameter ${aVariable.name} to " + ${aVariable.name}.get().getId());
-            query.setParameter("${aVariable.name}", ${aVariable.name}.get().getId());
-            System.out.println("After this setting, the query is " + query);
+            System.out.println("Setting the parameter ${aVariable.name} to " + ${aVariable.name}.get().getId() + " in position " + i);
+//            query.setParameter(i, ${aVariable.name}.get().getId());
+//            query.setParameter("${aVariable.name}", ${aVariable.name}.get().getId());
+            System.out.println("After this setting, the query is " + builder.toString());
 #end
 #else
             // ${aVariable.type.name} : ${dialect.isEntity($aVariable.type)}
-            System.out.println("Setting the parameter ${aVariable.name} to " + ${aVariable.name}.get());
-            query.setParameter("${aVariable.name}", ${aVariable.name}.get());
-            System.out.println("The query is " + query);
+            System.out.println("Setting the parameter ${aVariable.name} to " + ${aVariable.name}.get());/            query.setParameter(i, ${aVariable.name}.get());
+//            query.setParameter("${aVariable.name}", ${aVariable.name}.get());
+            System.out.println("The query is " + builder.toString());
 #end
 #end
         }
 #end
 #end
+        String sqlQuery = builder.toString();
+#foreach ($aFilter in $support.get($aProperty).filters)
+#foreach ($aVariable in $aFilter.variables)
+        if (${aVariable.name}.isPresent()) {
+#if ($aVariable.type.name.equals("String"))
+            sqlQuery = sqlQuery.replace(":${aVariable.name}", "'" + ${aVariable.name}.get() + "'");
+#elseif ($dialect.isEntity($aVariable.type.recBaseType))
+         sqlQuery = sqlQuery.replace(":${aVariable.name}", "" + ${aVariable.name}.get().getId());
+#else
+            sqlQuery = sqlQuery.replace(":${aVariable.name}", ${aVariable.name}.get());
+#end
+        }
+#end
+#end
+        Query  query = getEntityManager().createNativeQuery(sqlQuery, ${current.name}.class);
         System.out.println("Resulting query : " + query);
         List<${current.name}>  result = query.getResultList();
         System.out.println("The result is : " + result + " (" + result.size() + " items)");
