@@ -117,6 +117,8 @@ public class EteQuery {
         variable.setName("p" + nextParameterNum++);
         parameters.put(inStep, variable);
         variables.put(inStep, variable);
+//        Feature toFeature = inStep.getToFeature();
+//        addDependency((MofProperty) toFeature);
         return variable;
     }
 

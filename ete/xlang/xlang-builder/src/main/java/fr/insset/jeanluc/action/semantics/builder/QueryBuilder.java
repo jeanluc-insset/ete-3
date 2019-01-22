@@ -62,7 +62,7 @@ import java.util.logging.Logger;
  * <div>
  * Summary :<ul>
  * <li>we add each property A.x : B to the "support" of B</li>
- * <li>we add each invariant context A inv P(A.x, A.y, B.z) to the "dependances of each property involved in the invariant.rgt
+ * <li>we add each invariant context A inv P(A.x, A.y, B.z) to the "dependencies of each property involved in the invariant.rgt
  * B can be reached transitively</li>
  * <li>we build a filter expression for each property B.z involved in invariant P in A (B can be A)</li>
  * <li>the filter means "filter instances of B such that A::P is true for a"</li>
@@ -451,8 +451,11 @@ public class QueryBuilder extends DynamicVisitorSupport {
             MofProperty property = query.getProperty();
             Step first = getFirst(inStep);
             if (!first.getToFeature().equals(property)) {
-                VariableDefinition addParameter = query.addParameter(inStep);
-                return addParameter;
+                VariableDefinition aParameter = query.addParameter(inStep);
+                query.addDependency((MofProperty) first.getToFeature());
+                EteFilter filter = (EteFilter) inParameters[FILTER];
+                filter.addVariable(inStep, aParameter);
+                return aParameter;
             }
             GelExpression addJoins = addJoins(inStep, inParameters);
             return addJoins;
@@ -474,6 +477,8 @@ public class QueryBuilder extends DynamicVisitorSupport {
                     result.setName("v0");
                     result.setType(inStep.getType());
                     query.addVariable(inStep, previousVariable);
+                    EteFilter filter = (EteFilter) inParameters[FILTER];
+//                    filter.addVariable(inStep, previousVariable);
                     return result;
                 }
                 result = (VariableDefinition) addJoins((Step) operand.get(0), inParameters);
@@ -549,10 +554,13 @@ public class QueryBuilder extends DynamicVisitorSupport {
             } else {
                 VariableDefinition rightResult = (VariableDefinition) genericVisit(right, inParameters);
                 EteQuery    query = (EteQuery) inParameters[QUERY];
-                VariableDefinition theParameter = query.addParameter(firstRight);
-                resultOperand.add(theParameter);
                 GelExpression leftResult = reverseVisit(left, inParameters[0], inParameters[1], inParameters[2], rightResult);
                 resultOperand.add(leftResult);
+                VariableDefinition theParameter = query.addParameter(firstLeft);
+                query.addDependency((MofProperty) firstLeft.getToFeature());
+                EteFilter filter = (EteFilter) inParameters[FILTER];
+                filter.addVariable(firstLeft, theParameter);
+                resultOperand.add(theParameter);
             }
             return result;
         }
@@ -576,9 +584,13 @@ public class QueryBuilder extends DynamicVisitorSupport {
             EteFilter filter = (EteFilter)inParameters[FILTER];
             while (current != null) {
                 List<GelExpression> operand = current.getOperand();
-                if (operand == null || operand.size() == 0) break;
+                if (operand == null || operand.size() == 0) {
+                    break;
+                }
                 Step  start = (Step) operand.get(0);
-                if (start instanceof Self) break;
+                if (start instanceof Self) {
+                    break;
+                }
                 Feature toFeature = current.getToFeature();
                 String  featureName = toFeature.getName();
                 Classifier owningMofClass = toFeature.getOwningMofClass();
@@ -604,7 +616,7 @@ public class QueryBuilder extends DynamicVisitorSupport {
                 // Let' make a step "forward" (actually backward since it is a
                 // reverse traversal)
                 previous = variable;
-                current = (Step) operand.get(0);
+                current = (Step) start;
             }
             // No : we should return a variable pointing to the first step (the
             // last traversed step)
