@@ -68,6 +68,15 @@ public class SqlGenerator extends DynamicVisitorSupport implements Dialect {
     }
 
 
+    public String getJoin(EteFilter aFilter) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+        StringBuilder builder = new StringBuilder();
+        for (Join aJoin : aFilter.getJoins()) {
+            addJoin(aJoin, builder);
+        }
+        return builder.toString();
+    }
+
+
 
     public String getJoin(Join inJoin) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
         StringBuilder builder = new StringBuilder();
@@ -116,6 +125,7 @@ public class SqlGenerator extends DynamicVisitorSupport implements Dialect {
 
 
     public GelExpression visitGelExpression(GelExpression inExpression, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException {
+        System.out.println("visitGelExpression " + inExpression);
         StringBuilder builder = (StringBuilder) inParameters[0];
         List<GelExpression> operand = inExpression.getOperand();
         if (operand != null) {
@@ -139,6 +149,7 @@ public class SqlGenerator extends DynamicVisitorSupport implements Dialect {
 
 
     protected void addSymbol(GelExpression inExpression, StringBuilder builder) throws NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        System.out.println("addSymbol " + inExpression);
         Object symbol;
         Method method = inExpression.getClass().getMethod("getSymbol", new Class[0]);
         if (method == null) {
@@ -158,6 +169,7 @@ public class SqlGenerator extends DynamicVisitorSupport implements Dialect {
 
 
     public GelExpression visitStep(Step inStep, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        System.out.println("visitStep " + inStep);
         StringBuilder builder = (StringBuilder) inParameters[0];
         Feature toFeature = inStep.getToFeature();
         if (toFeature == null) {
@@ -165,6 +177,8 @@ public class SqlGenerator extends DynamicVisitorSupport implements Dialect {
         }
         EteQuery query = (EteQuery) inParameters[1];
         VariableDefinition variable = query.getVariable(inStep);
+        System.out.println("Variable : " + variable);
+        System.out.println("   " + variable.getName());
         if (variable == null) {
             List<GelExpression> operand = inStep.getOperand();
             if (operand == null) {
@@ -192,6 +206,7 @@ public class SqlGenerator extends DynamicVisitorSupport implements Dialect {
     }
 
     public Includes visitIncludes(Includes inIncludes, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        System.out.println("visitIncludes " + inIncludes);
         StringBuilder builder = (StringBuilder) inParameters[0];
         List<GelExpression> operand = inIncludes.getOperand();
         GelExpression firstOperand = operand.get(0);
@@ -208,6 +223,7 @@ public class SqlGenerator extends DynamicVisitorSupport implements Dialect {
     }
 
     public Self visitSelf(Self inSelf, Object... inParameters) {
+        System.out.println("visitSelf " + inSelf);
         StringBuilder builder = (StringBuilder) inParameters[0];
         builder.append("v0.ID");
         return inSelf;
@@ -215,9 +231,11 @@ public class SqlGenerator extends DynamicVisitorSupport implements Dialect {
 
 
     public VariableDefinition visitVariableDefinition(VariableDefinition inVariable, Object... inParameters) {
+        System.out.println("visitVariableDefinition " + inVariable);
         StringBuilder builder = (StringBuilder) inParameters[0];
         EteQuery query = (EteQuery) inParameters[1];
         if (query.isParameter(inVariable)) {
+//            builder.append('?');
             builder.append(":");
             builder.append(inVariable.getName());
         } else {
@@ -229,12 +247,14 @@ public class SqlGenerator extends DynamicVisitorSupport implements Dialect {
 
 
     public Literal  visitLiteral(Literal inLiteral, Object... inParameters) {
+        System.out.println("visitLiteral " + inLiteral);
         StringBuilder builder = (StringBuilder) inParameters[0];
         builder.append(inLiteral.getValue());
         return inLiteral;
     }
 
     public StringLiteral visitStringLiteral(StringLiteral inLiteral, Object... inParameters) {
+        System.out.println("visitStringLiteral " + inLiteral);
         StringBuilder builder = (StringBuilder) inParameters[0];
         builder.append("'");
         builder.append(inLiteral.getValueAsString());
