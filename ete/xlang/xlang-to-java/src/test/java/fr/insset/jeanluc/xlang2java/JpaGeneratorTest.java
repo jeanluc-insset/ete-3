@@ -7,6 +7,7 @@ import fr.insset.jeanluc.action.semantics.builder.ConditionVisitor;
 import fr.insset.jeanluc.action.semantics.builder.EnhancedMofClassImpl;
 import fr.insset.jeanluc.action.semantics.builder.EteFilter;
 import fr.insset.jeanluc.action.semantics.builder.EteQuery;
+import fr.insset.jeanluc.action.semantics.builder.Join;
 import fr.insset.jeanluc.as2java.JPAGenerator;
 import fr.insset.jeanluc.ete.api.EteException;
 import fr.insset.jeanluc.ete.gel.Step;
@@ -133,7 +134,9 @@ public class JpaGeneratorTest {
         EteQuery aQuery = support.get(captain);
         EteFilter    aFilter = aQuery.getFilters().get(0);
         System.out.println(sqlGenerator.getSelect(aQuery));
-        System.out.println(sqlGenerator.getJoin(aFilter));
+        for (Join aJoin : aFilter.getJoins()) {
+            System.out.println(sqlGenerator.getJoin(aJoin));
+        }
         System.out.println(sqlGenerator.getWhere(aFilter, aQuery));
 //        List<VariableDeclaration> variables = aQuery.getVariables();
         JPAGenerator    generator = new JPAGenerator();
