@@ -9,6 +9,7 @@ import fr.insset.jeanluc.ete.gel.AttributeNav;
 import fr.insset.jeanluc.ete.gel.Collect;
 import fr.insset.jeanluc.ete.gel.Flatten;
 import fr.insset.jeanluc.ete.gel.GelExpression;
+import fr.insset.jeanluc.ete.gel.Literal;
 import fr.insset.jeanluc.ete.gel.OclOperation;
 import fr.insset.jeanluc.ete.gel.Self;
 import fr.insset.jeanluc.ete.gel.Step;
@@ -17,6 +18,7 @@ import fr.insset.jeanluc.ete.gel.Sum;
 import fr.insset.jeanluc.ete.gel.VariableDefinition;
 import fr.insset.jeanluc.ete.gel.VariableReference;
 import fr.insset.jeanluc.ete.meta.model.constraint.Condition;
+import fr.insset.jeanluc.ete.meta.model.constraint.Precondition;
 import fr.insset.jeanluc.ete.meta.model.emof.Feature;
 import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
@@ -150,6 +152,19 @@ public class JavaGenerator extends CBasedGenerator implements Generator, JavaDia
     }
 
 
+    public String getCheckCondition(MofOperation inOperation, Precondition inPrecondition, String inIndentation) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        StringWriter    buffer = new StringWriter();
+        PrintWriter output = new PrintWriter(buffer);
+//        output.append("if (!(");
+        Object specification = inPrecondition.getExpression();
+        genericVisit(specification, output, inIndentation);
+//        output.print(")) throw new RuntimeException(\"");
+//        output.print(inPrecondition.getName());
+//        output.print(" is invalid\"");
+//        output.println(");");
+//        output.flush();
+        return buffer.toString();
+    }
 
 
     //========================================================================//
@@ -408,12 +423,19 @@ public class JavaGenerator extends CBasedGenerator implements Generator, JavaDia
     public StringLiteral gelVisitStringLiteral(StringLiteral inLiteral, Object... inParameters) {
         PrintWriter output = (PrintWriter)inParameters[0];
         output.print('"');
-        output.print(inLiteral.getValue());
+        output.print(inLiteral.getValueAsString());
         output.print('"');
         return inLiteral;
     }
 
 
+    public Object gelVisitLiteral(Literal inExpression, Object... inParameters) {
+        PrintWriter output      = (PrintWriter)inParameters[0];
+        output.print(inExpression.getValueAsString());
+        return inExpression;
+    }
+
+  
     //------------------------------------------------------------------------//
 
 

@@ -16,6 +16,10 @@
         <h:panelGrid columns="2">
 #foreach ($aProperty in $current.allAttributes)
 #set ($var = $aProperty)
+##if ($aProperty.type.support.get($aProperty).dependencies)
+##et ($dep = $aProperty.type.support.get($aProperty).dependencies)
+##else
+##end
 #set ($varName = $aProperty.name)
 #set ($scope = "cc.attrs.selection.")
 #set ($title = $current.name)

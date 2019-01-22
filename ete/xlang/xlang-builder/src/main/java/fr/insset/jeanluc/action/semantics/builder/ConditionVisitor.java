@@ -15,6 +15,7 @@ import static fr.insset.jeanluc.ete.meta.model.constraint.Invariant.INVARIANT;
 import fr.insset.jeanluc.ete.meta.model.constraint.Postcondition;
 import static fr.insset.jeanluc.ete.meta.model.constraint.Postcondition.POSTCONDITION;
 import fr.insset.jeanluc.ete.meta.model.constraint.Precondition;
+import static fr.insset.jeanluc.ete.meta.model.constraint.Precondition.PRECONDITION;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 import static fr.insset.jeanluc.ete.meta.model.emof.MofClass.MOF_CLASS;
 import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
@@ -22,6 +23,7 @@ import static fr.insset.jeanluc.ete.meta.model.emof.MofOperation.MOF_OPERATION;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
 import fr.insset.jeanluc.ete.meta.model.types.MofType;
 import fr.insset.jeanluc.ete.xlang.builder.BodyBuilder;
+// import fr.insset.jeanluc.ete.xlang.builder.BodyBuilder;
 import fr.insset.jeanluc.meta.model.io.ModelReader;
 import fr.insset.jeanluc.util.factory.FactoryMethods;
 import fr.insset.jeanluc.util.factory.FactoryRegistry;
@@ -73,7 +75,8 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         register(Precondition.class, "visitPrecondition");
         register(Postcondition.class, "visitPostcondition");
         register(Invariant.class, "visitEnhancedInvariantImpl");
-        register(EnhancedPostcondition.class, "visitEnhancedPostcondition");
+        register(EnhancedPostconditionImpl.class, "visitEnhancedPostcondition");
+        register(EnhancedPreconditionImpl.class, "visitEnhancedPrecondition");
         // Registration of the methods to visit gel expression
         register("gelVisit", "fr.insset.jeanluc.ete.gel");
         register(EteModel.class, "visitEteModel");
@@ -85,7 +88,8 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         inoutRegistry.registerFactory(MOF_CLASS, fr.insset.jeanluc.action.semantics.builder.EnhancedMofClassImpl.class);
         inoutRegistry.registerFactory(MOF_OPERATION, fr.insset.jeanluc.action.semantics.builder.EnhancedMofOperationImpl.class);
         inoutRegistry.registerFactory(INVARIANT, EnhancedInvariantImpl.class);
-        inoutRegistry.registerFactory(POSTCONDITION, EnhancedPostcondition.class);
+        inoutRegistry.registerFactory(POSTCONDITION, EnhancedPostconditionImpl.class);
+        inoutRegistry.registerFactory(PRECONDITION, EnhancedPreconditionImpl.class);
     }
 
 
@@ -133,24 +137,23 @@ public class ConditionVisitor extends DynamicVisitorSupport {
 
 
 
-    public EnhancedPrecondition    visitEnhancedPrecondition(EnhancedPrecondition inCondition, Object... inParameters) throws InstantiationException {
+    public EnhancedPreconditionImpl    visitEnhancedPrecondition(EnhancedPreconditionImpl inCondition, Object... inParameters) throws InstantiationException {
         Logger logger = Logger.getLogger(getClass().getName());
         logger.log(Level.FINE, VISIT_OF, inCondition.getSpecificationAsString());
 
         logger.info(PARSING_PRECONDITION);
-        
-
         EnhancedMofOperationImpl    context = (EnhancedMofOperationImpl)inParameters[0];
 
-        Map<String, VariableDefinition> variables  = FactoryMethods.newMap(String.class, VariableDefinition.class);
-        addVariable("result", context.getType(), variables);
+        EteModel        model               = (EteModel)inParameters[1];
+        GelExpression expression = visitACondition(inCondition, model, context);
+        inCondition.setExpression(expression);
 
         return inCondition;
     }
 
 
 
-    public EnhancedPostcondition    visitEnhancedPostcondition(EnhancedPostcondition inCondition, Object... inParameters) throws InstantiationException {
+    public EnhancedPostconditionImpl    visitEnhancedPostcondition(EnhancedPostconditionImpl inCondition, Object... inParameters) throws InstantiationException {
         Logger logger = Logger.getLogger(getClass().getName());
         logger.log(Level.FINE, VISIT_OF, inCondition.getSpecificationAsString());
 
@@ -198,8 +201,8 @@ public class ConditionVisitor extends DynamicVisitorSupport {
     public EteModel visitEteModel(EteModel inModel, Object... inParameters) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         BodyBuilder builder = new BodyBuilder();
         builder.buildStatements(inModel);
-        FilterBuilder filterBuilder = new FilterBuilder();
-        filterBuilder.buildQueries(inModel);
+        QueryBuilder queryBuilder = new QueryBuilder();
+        queryBuilder.buildQueries(inModel);
         return inModel;
     }
 
@@ -235,9 +238,15 @@ public class ConditionVisitor extends DynamicVisitorSupport {
         gelContext.set("contextualClass", parser);
         TreeBuilder     treeBuilder           = new TreeBuilder(gelContext);
         GelExpression   expression            = treeBuilder.visitGelExpression(ctx);
-        ((EnhancedPostcondition)inCondition).setExpression(expression);
-        logger.log(Level.FINER, "GelExpression : {0}", expression);
-
+        inCondition.setExpression(expression);
+        logger.log(Level.INFO, "GelExpression : {0}", expression);
+        if (expression == null) {
+            System.out.println("THE EXPRESSION IS NULL");
+        } else {
+            System.out.println(expression.getClass().getName()
+                    + " is stored in [" + inCondition.getSpecificationAsString() + "]"
+                    + inCondition.getClass().getName());
+        }
         return expression;
     }
 

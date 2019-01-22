@@ -14,7 +14,5 @@ public interface EnhancedCondition {
 
     public List<Statement>  getStatements();
 
-    public GelExpression    getExpression();
-    public void             setExpression(GelExpression inExpression);
 
 }

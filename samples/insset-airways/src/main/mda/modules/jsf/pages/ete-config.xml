@@ -31,16 +31,20 @@
                       target="admin/${current.name.toLowerCase()}/view.xhtml"/>
             <velocity items='${classes.filter(c -> c.hasStereotype("Entity"))}'
                       template="create.vm"
+                      dialect="fr.insset.jeanluc.as2java.JPAGenerator"
                       target="admin/${current.name.toLowerCase()}/create.xhtml"/>
             <velocity items='${classes.filter(c -> c.hasStereotype("Entity"))}'
                       template="edit.vm"
+                      dialect="fr.insset.jeanluc.as2java.JPAGenerator"
                       target="admin/${current.name.toLowerCase()}/edit.xhtml"/>
                                     <!--   sub forms -->
             <velocity items='${classes.filter(c -> c.hasStereotype("Entity"))}'
                       template="form.vm"
+                      dialect="fr.insset.jeanluc.as2java.JPAGenerator"
                       target="resources/ete/${current.name}_form.xhtml"/>
             <velocity items='${classes.filter(c -> c.hasStereotype("Entity")).flatmap(c -> c.ownedOperation)}'
                       template="operation.vm"
+                      dialect="fr.insset.jeanluc.as2java.JPAGenerator"
                       target="resources/ete/${current.owningMofClass.name}_${current.name}_form.xhtml"/>            
 
         </transformation-set>

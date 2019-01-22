@@ -28,22 +28,20 @@
                 <!--          E N T I T Y   C R U D   F O R M S          -->
             <velocity template="jsfcrud_css.vm"
                       target="resources/css/jsfcrud.css"/>
-            <velocity items='${symbol_dollar}{classes.filter(c -> c.hasStereotype("Entity"))}'
-                      template="list.vm"
-                      target="admin/${symbol_dollar}{current.name.toLowerCase()}/list.xhtml"/>
-            <velocity items='${symbol_dollar}{classes.filter(c -> c.hasStereotype("Entity"))}'
-                      template="view.vm"
-                      target="admin/${symbol_dollar}{current.name.toLowerCase()}/view.xhtml"/>
-            <velocity items='${symbol_dollar}{classes.filter(c -> c.hasStereotype("Entity"))}'
-                      template="create.vm"
-                      target="admin/${symbol_dollar}{current.name.toLowerCase()}/create.xhtml"/>
-            <velocity items='${symbol_dollar}{classes.filter(c -> c.hasStereotype("Entity"))}'
-                      template="edit.vm"
-                      target="admin/${symbol_dollar}{current.name.toLowerCase()}/edit.xhtml"/>
-                                    <!--   sub forms -->
-            <velocity items='${symbol_dollar}{classes.filter(c -> c.hasStereotype("Entity"))}'
-                      template="form.vm"
-                      target="resources/ete/${symbol_dollar}{current.name}_form.xhtml"/>
+            <transformation-set items='${symbol_dollar}{classes.filter(c -> c.hasStereotype("Entity"))}'>
+                <velocity template="list.vm"
+                          target="admin/${symbol_dollar}{current.name.toLowerCase()}/list.xhtml"/>
+                <velocity template="view.vm"
+                          target="admin/${symbol_dollar}{current.name.toLowerCase()}/view.xhtml"/>
+                <velocity template="create.vm"
+                          target="admin/${symbol_dollar}{current.name.toLowerCase()}/create.xhtml"/>
+                <velocity template="edit.vm"
+                          target="admin/${symbol_dollar}{current.name.toLowerCase()}/edit.xhtml"/>
+                                        <!--   sub forms -->
+                <velocity template="form.vm"
+                          dialect="fr.insset.jeanluc.as2java.JPAGenerator"
+                          target="resources/ete/${symbol_dollar}{current.name}_form.xhtml"/>
+            </transformation-set>
             <velocity items='${symbol_dollar}{classes.filter(c -> c.hasStereotype("Entity")).flatmap(c -> c.ownedOperation)}'
                       template="operation.vm"
                       target="resources/ete/${symbol_dollar}{current.owningMofClass.name}_${symbol_dollar}{current.name}_form.xhtml"/>            

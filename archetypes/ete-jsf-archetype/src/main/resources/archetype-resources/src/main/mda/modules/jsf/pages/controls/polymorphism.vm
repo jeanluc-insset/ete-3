@@ -1,19 +1,31 @@
-#set( $symbol_pound = '#' )
-#set( $symbol_dollar = '$' )
-#set( $symbol_escape = '\' )
-                    <h:outputLabel value="${symbol_pound}{bundle.${symbol_dollar}{title}Label_${symbol_dollar}{var.name}}" for="${symbol_dollar}{var.name}" />
-${symbol_pound}set (${symbol_dollar}control = "controls/input.vm")
-${symbol_pound}if (${symbol_dollar}aProperty.type.hasStereotype("Entity"))
-${symbol_pound}set (${symbol_dollar}control = "controls/many_to_one.vm") 
-${symbol_pound}elseif (${symbol_dollar}aProperty.type.isCollection())
-${symbol_pound}if (${symbol_dollar}aProperty.type.baseType.hasStereotype("Entity"))
-${symbol_pound}if (${symbol_dollar}aProperty.aggregationKind.toString() == "COMPOSITION")
-${symbol_pound}set (${symbol_dollar}control = "controls/one_to_many_composition.vm")
+${symbol_pound}${symbol_pound} input :
+${symbol_pound}${symbol_pound}     ${symbol_dollar}title   : name of the current class
+${symbol_pound}${symbol_pound}     ${symbol_dollar}property: property we build the control for
+${symbol_pound}${symbol_pound}     ${symbol_dollar}var     : shortcut for ${symbol_dollar}property
+${symbol_pound}${symbol_pound}     ${symbol_dollar}varName : name of that property (shortcut for ${symbol_dollar}property.name or ${symbol_dollar}var.name)
+${symbol_pound}${symbol_pound}     ${symbol_dollar}scope   : the prefix to use for the controlled object
+${symbol_pound}${symbol_pound} Depending on the kind of the relationship, we must generate one or more
+${symbol_pound}${symbol_pound} controls.
+${symbol_pound}${symbol_pound} The following instructions build such an element through a polymorphic parse
+${symbol_pound}${symbol_pound} The template name is the concatenation of three boolean values
+${symbol_pound}${symbol_pound} The first value is whether the property composite or not
+${symbol_pound}${symbol_pound} The second value is whether the property is a collection or not
+${symbol_pound}${symbol_pound} The third value is whether the property is qualified or not
+${symbol_pound}${symbol_pound} See the controlTypes.txt for details
+<h:outputText value="${symbol_dollar}{dialect.cc2sw(${symbol_dollar}varName)}"/>
+${symbol_pound}set(${symbol_dollar}dp = ${symbol_dollar}dialect.getDependentProperties(${symbol_dollar}var, ${symbol_dollar}{var.type}))
+${symbol_pound}if (${symbol_dollar}var.type.name == "String" || ${symbol_dollar}var.type.name == "int" || ${symbol_dollar}var.type.name == "float")
+${symbol_pound}parse("controls/input.vm")
+${symbol_pound}elseif (${symbol_dollar}var.type.name == "date")
+${symbol_pound}parse("controls/calendar.vm")
 ${symbol_pound}else
-${symbol_pound}set (${symbol_dollar}control = "controls/one_to_many.vm") 
+${symbol_pound}set(${symbol_dollar}coll = ${symbol_dollar}var.type.collection)
+${symbol_pound}set(${symbol_dollar}composite = ${symbol_dollar}var.composite)
+${symbol_pound}if (${symbol_dollar}var.qualifierType)
+${symbol_pound}set(${symbol_dollar}qual = true)
+${symbol_pound}else
+${symbol_pound}set(${symbol_dollar}qual = false)
 ${symbol_pound}end
+${symbol_pound}set(${symbol_dollar}tn = "controls/" + ${symbol_dollar}composite + "_" + ${symbol_dollar}coll + "_" + ${symbol_dollar}qual + ".vm")
+${symbol_pound}parse(${symbol_dollar}tn)
 ${symbol_pound}end
-${symbol_pound}elseif (${symbol_dollar}aProperty.type.name == "date")
-${symbol_pound}set (${symbol_dollar}control = "controls/calendar.vm")
-${symbol_pound}end
-${symbol_pound}parse(${symbol_dollar}control)

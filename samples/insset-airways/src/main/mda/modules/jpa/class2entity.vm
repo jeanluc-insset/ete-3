@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -94,12 +95,24 @@ public class ${current.name} #if (${current.superClass.size()}>0)extends ${curre
     public void remove${dialect.i2uc($aProperty.name)}(${dialect.mt2lt($aProperty.type.baseType)} inValue) {
         ${aProperty.name}.remove(inValue);
     }
-#elseif ($aProperty.type.recBaseType.hasStereotype("Entity") || $aProperty.type.recBaseType.name.equals("String"))
-    public Optional<${aProperty.type}> get${dialect.i2uc($aProperty.name)}$() {
-        return Optional.ofNullable(${aProperty.name});
+#elseif ($aProperty.type.recBaseType.hasStereotype("Entity"))
+    public Optional${aProperty.type} get${dialect.i2uc($aProperty.name)}$() {
+        return Optional${aProperty.type}.ofNullable(${aProperty.name});
     }
 #elseif ($aProperty.type.recBaseType.name.equals("date"))
     public Optional<java.util.Date> get${dialect.i2uc($aProperty.name)}$() {
+        return Optional.ofNullable(${aProperty.name});
+    }
+#elseif ($aProperty.type.recBaseType.name.equals("String"))
+    public Optional<String> get${dialect.i2uc($aProperty.name)}$() {
+        return Optional.ofNullable(${aProperty.name});
+    }
+#elseif ($aProperty.type.recBaseType.name.equals("int"))
+    public Optional<Integer> get${dialect.i2uc($aProperty.name)}$() {
+        return Optional.ofNullable(${aProperty.name});
+    }
+#elseif ($aProperty.type.recBaseType.name.equals("double"))
+    public Optional<Double> get${dialect.i2uc($aProperty.name)}$() {
         return Optional.ofNullable(${aProperty.name});
     }
 #end
@@ -111,6 +124,11 @@ public class ${current.name} #if (${current.superClass.size()}>0)extends ${curre
 
 #foreach ($aMethod in $current.ownedOperation)
     public $dialect.moft2lt($aMethod.type.name) ${aMethod.name}(#foreach($aParam in ${aMethod.ownedParameter})${dialect.mt2lt($aParam.type)} ${aParam.name}#if( $foreach.hasNext ), #end #end) {
+#foreach ($aPrecondition in $aMethod.preconditions)
+        if (!(${dialect.getCheckCondition($aMethod, $aPrecondition, "        ")})) {
+            throw new RuntimeException("${aPrecondition.name}");
+        }
+#end
 ${dialect.getOperationBody($aMethod, "    ")}
     }
 #end
@@ -129,16 +147,16 @@ ${dialect.getOperationBody($aMethod, "    ")}
 
 #foreach ($aProperty in $current.ownedAttribute)
     #if ($aProperty.type.hasStereotype("Entity"))
-    @ManyToOne 
+    @ManyToOne #if ($aProperty.composite)(cascade = CascadeType.ALL)#end
     #end
     #if ($aProperty.type.isCollection())
     #if ($aProperty.type.baseType.hasStereotype("Entity"))
-    @OneToMany 
+    @OneToMany #if ($aProperty.composite)(cascade = CascadeType.ALL)#end
     #end
     #elseif ($aProperty.type.name == "date")
     @javax.persistence.Temporal(javax.persistence.TemporalType.DATE)
     #end
-    $dialect.mt2lt($aProperty.type)      ${aProperty.name};
+    $dialect.mt2lt($aProperty.type)      ${aProperty.name}#if ($aProperty.type.collection) = new LinkedList<>()#elseif ($aProperty.composite) = new $dialect.mt2lt($aProperty.type)()#end;
 #end
 
     private static final long serialVersionUID = 1L;

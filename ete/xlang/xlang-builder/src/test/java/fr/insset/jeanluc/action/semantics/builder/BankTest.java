@@ -79,10 +79,12 @@ public class BankTest {
         System.out.println("Transfer statements : " + statements);
         System.out.println("    begin");
         for (Statement s : statements) {
-            System.out.println("    " + s);
+            StatementWriter writer = new StatementWriter();
+            System.out.println("    " + writer.append(s));
         }
         System.out.println("    end");
     }
+
 
 
 }       // BankTest
