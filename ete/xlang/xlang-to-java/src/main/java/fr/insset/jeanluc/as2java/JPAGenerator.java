@@ -85,7 +85,7 @@ public class JPAGenerator implements Generator, JavaDialect  {
 
 
     public String   getDependentProperties(MofProperty inProperty) {
-        System.out.println("    the dialect is asked for the dependences of " + inProperty.getName());
+        System.out.println("    the dialect is asked for the dependencies of " + inProperty.getName());
         StringBuilder   builder = new StringBuilder();
         MofType type = inProperty.getType().getRecBaseType();
         if (type instanceof EnhancedMofClassImpl) {
