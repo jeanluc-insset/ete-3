@@ -147,7 +147,7 @@ ${dialect.getOperationBody($aMethod, "    ")}
 
 #foreach ($aProperty in $current.ownedAttribute)
     #if ($aProperty.type.hasStereotype("Entity"))
-    @ManyToOne 
+    @ManyToOne #if ($aProperty.composite)(cascade = CascadeType.ALL)#end
     #end
     #if ($aProperty.type.isCollection())
     #if ($aProperty.type.baseType.hasStereotype("Entity"))
@@ -156,7 +156,7 @@ ${dialect.getOperationBody($aMethod, "    ")}
     #elseif ($aProperty.type.name == "date")
     @javax.persistence.Temporal(javax.persistence.TemporalType.DATE)
     #end
-    $dialect.mt2lt($aProperty.type)      ${aProperty.name}#if ($aProperty.type.collection) = new LinkedList<>()#end;
+    $dialect.mt2lt($aProperty.type)      ${aProperty.name}#if ($aProperty.type.collection) = new LinkedList<>()#elseif ($aProperty.composite) = new $dialect.mt2lt($aProperty.type)()#end;
 #end
 
     private static final long serialVersionUID = 1L;

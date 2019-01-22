@@ -1,3 +1,2 @@
-                    <h:outputText value="template for ${varName}  : "/>
-                    <h:outputText value="true_false_false"/>
-
+                     <ete:${var.type.name}_form xmlns:ete="http://xmlns.jcp.org/jsf/composite/ete"
+                           selection="#{${dialect.i2lc($current.name)}Controller.selected.${varName}}"/>

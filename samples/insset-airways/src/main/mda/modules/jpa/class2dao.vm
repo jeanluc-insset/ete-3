@@ -115,7 +115,7 @@ public class ${current.name}Jpa extends AbstractJpa<${current.name}> {
         String          where = " WHERE ";
 #end
 #foreach ($aFilter in $support.get($aProperty).filters)
-        System.out.println("        Ajout de la condition de l'invariant ${filter.invariant.name} ?");
+        System.out.println("        Ajout de la condition de l'invariant ${aFilter.invariant.name} ?");
 #if ($join.length()>0 && $aFilter.variables.size()>0)
         if (#foreach ($aVariable in $aFilter.variables)${aVariable.name}.isPresent()#if( $foreach.hasNext ) && #end#end) {
             System.out.println("We add the filter for ${aFilter.invariant.name}");
@@ -151,6 +151,7 @@ public class ${current.name}Jpa extends AbstractJpa<${current.name}> {
             // ${aVariable.type.name} : ${dialect.isEntity($aVariable.type)}
             System.out.println("Setting the parameter ${aVariable.name} to " + ${aVariable.name}.get().getId());
             query.setParameter("${aVariable.name}", ${aVariable.name}.get().getId());
+            System.out.println("After this setting, the query is " + query);
 #end
 #else
             // ${aVariable.type.name} : ${dialect.isEntity($aVariable.type)}
