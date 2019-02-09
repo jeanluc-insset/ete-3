@@ -158,3 +158,4 @@ ete/constraints/constraint_test/target/
 ete/constraints/constraints_io/target/
 ete/meta-model/VisualParadigmReader/target/
 /ete/xlang/xlang-to-sql/nbproject/
+/samples/insset-airways/archetype/target/

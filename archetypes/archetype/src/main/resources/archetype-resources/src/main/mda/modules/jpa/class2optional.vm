@@ -1,0 +1,118 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+package ${symbol_dollar}{current.owningPackage}.model;
+
+
+
+import fr.mis.ete.util.optional.OptionalList;
+import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.xml.bind.annotation.XmlRootElement;
+
+/**
+ * Convenient class to manage complex navigations without worrying of null
+ * references.<br>
+ * Holds the same getters and methods than the ${symbol_dollar}{current.name} class.
+ *
+ * @author jldeleage
+ */
+public class Optional${symbol_dollar}{current.name} ${symbol_pound}if (${symbol_dollar}{current.superClass.size()}>0)extends ${symbol_dollar}{current.superClass.get(0).owningPackage.name}.model.Optional${symbol_dollar}{current.superClass.get(0).name} ${symbol_pound}end {
+
+
+    public static Optional${symbol_dollar}{current.name} ofNullable(${symbol_dollar}{current.name} inDelegate) {
+        Optional${symbol_dollar}{current.name} result = new Optional${symbol_dollar}{current.name}();
+        result.delegate = inDelegate;
+        return result;
+    }
+
+
+    public boolean isPresent() {
+        return delegate != null;
+    }
+
+
+    public ${symbol_dollar}{current.name} get() {
+        return delegate;
+    }
+
+
+    //========================================================================//
+
+${symbol_pound}foreach (${symbol_dollar}aProperty in ${symbol_dollar}current.ownedAttribute)
+
+${symbol_pound}set (${symbol_dollar}t = ${symbol_dollar}aProperty.type.recBaseType)
+
+${symbol_pound}if (${symbol_dollar}aProperty.type.collection)
+    public OptionalList${symbol_dollar}{t.name}  get${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)}() {
+        OptionalList${symbol_dollar}{t.name} result = new OptionalList${symbol_dollar}{t.name}();
+        if (isPresent()) {
+            result.setPresent(true);
+            for (${symbol_dollar}{t.name} anItem : delegate.get${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)}()) {
+                result.add(Optional${symbol_dollar}{t.name}.ofNullable(anItem));
+            }
+        }
+        return result;
+    }
+${symbol_pound}elseif (${symbol_dollar}t.hasStereotype("Entity"))
+    public Optional${symbol_dollar}dialect.mt2lt(${symbol_dollar}aProperty.type) get${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)}() {
+        ${symbol_dollar}dialect.mt2lt(${symbol_dollar}aProperty.type) newDelegate;
+        if (!isPresent()) {
+            newDelegate = null;
+        } else {
+            newDelegate = delegate.get${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)}();
+        }
+        return Optional${symbol_dollar}{aProperty.type}.ofNullable(newDelegate);
+    }
+${symbol_pound}else
+${symbol_pound}if (${symbol_dollar}t.name.equals("int")) ${symbol_pound}set(${symbol_dollar}t = "Integer")
+${symbol_pound}elseif (${symbol_dollar}t.name.equals("double")) ${symbol_pound}set(${symbol_dollar}t="Double")
+${symbol_pound}elseif (${symbol_dollar}t.name.equals("boolean")) ${symbol_pound}set(${symbol_dollar}t="Boolean")
+${symbol_pound}elseif (${symbol_dollar}t.name.equals("date")) ${symbol_pound}set(${symbol_dollar}t="java.util.Date")
+${symbol_pound}end
+    public Optional<${symbol_dollar}t> get${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)}() {
+        ${symbol_dollar}t newDelegate;
+        if (!isPresent()) {
+            newDelegate = null;
+        } else {
+            newDelegate = delegate.get${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)}();
+        }
+        return Optional.ofNullable(newDelegate);
+    }
+${symbol_pound}end
+${symbol_pound}end
+
+
+
+
+    //========================================================================//
+
+
+${symbol_pound}foreach (${symbol_dollar}aMethod in ${symbol_dollar}current.ownedOperation)
+    public ${symbol_dollar}dialect.moft2lt(${symbol_dollar}aMethod.type.name) ${symbol_dollar}{aMethod.name}(${symbol_pound}foreach(${symbol_dollar}aParam in ${symbol_dollar}{aMethod.ownedParameter})${symbol_dollar}{dialect.mt2lt(${symbol_dollar}aParam.type)} ${symbol_dollar}{aParam.name}${symbol_pound}if( ${symbol_dollar}foreach.hasNext ), ${symbol_pound}end ${symbol_pound}end) {
+        if (isPresent()) {
+            ${symbol_pound}if (! ${symbol_dollar}dialect.moft2lt(${symbol_dollar}aMethod.type.name).equals("void"))return ${symbol_pound}end${symbol_dollar}{aMethod.name}(${symbol_pound}foreach(${symbol_dollar}aParam in ${symbol_dollar}{aMethod.ownedParameter})${symbol_dollar}{aParam.name}${symbol_pound}if( ${symbol_dollar}foreach.hasNext ), ${symbol_pound}end ${symbol_pound}end);
+        }
+    }
+${symbol_pound}end
+
+
+
+
+    //========================================================================//
+
+    private     ${symbol_dollar}{current.name}     delegate;
+
+
+}

@@ -1,0 +1,5 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+                     <ete:${symbol_dollar}{var.type.name}_form xmlns:ete="http://xmlns.jcp.org/jsf/composite/ete"
+                           selection="${symbol_pound}{${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller.selected.${symbol_dollar}{varName}}"/>

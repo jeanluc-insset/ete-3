@@ -1,0 +1,27 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+<?xml version='1.0' encoding='UTF-8'?>
+<faces-config version="2.2"
+              xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
+${symbol_pound}foreach (${symbol_dollar}aClass in ${symbol_dollar}current.classes)
+${symbol_pound}if (${symbol_dollar}aClass.hasStereotype("Entity"))
+    <managed-bean>
+        <managed-bean-name>${symbol_dollar}{dialect.i2lc(${symbol_dollar}aClass.name)}Controller</managed-bean-name>
+        <managed-bean-class>${symbol_dollar}{aClass.owningPackage}.jsf.${symbol_dollar}{aClass.name}Controller</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+${symbol_pound}end
+${symbol_pound}end
+    
+    <application>
+        <resource-bundle>
+            <base-name>/Bundle</base-name>
+            <var>bundle</var>
+        </resource-bundle>
+    </application>
+
+</faces-config>
+

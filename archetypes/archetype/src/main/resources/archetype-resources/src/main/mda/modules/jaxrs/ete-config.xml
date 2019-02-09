@@ -1,0 +1,28 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  This module generates the Jersey facade.
+  It DOES NOT generate the JPA stuff.
+  -->
+
+<mda>
+
+    <transformation-set  output_base="generated-sources/ete">
+
+            <!-- JPA -->
+            <!--    <module href="../jpa/ete-config.xml"/>-->
+
+        <velocity items="${symbol_dollar}{classes}"
+                        dialect="fr.insset.jeanluc.as2java.JavaGenerator"
+                        template="entity2jersey.vm"
+                        target="${packageInPathFormat}/ete/api/${symbol_dollar}{current.name}Resource.java"/> 
+
+    </transformation-set>
+
+</mda>
+
+
+

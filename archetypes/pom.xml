@@ -11,5 +11,6 @@
     <modules>
         <module>ete-jsf-archetype</module>
         <module>ete-constraint-natural-language-archetype</module>
+        <module>archetype</module>
     </modules>
 </project>
