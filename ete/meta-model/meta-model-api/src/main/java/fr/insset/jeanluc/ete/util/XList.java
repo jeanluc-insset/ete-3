@@ -207,7 +207,7 @@ public class XList<T> implements List<T> {
         return result;
     }
 
-    public      List    flatmap(LambdaExpression inExpression) {
+    public      List    flatMap(LambdaExpression inExpression) {
         List result = new XList();
         for (T t : this) {
             Iterable    it = (Iterable) inExpression.invoke(t);
