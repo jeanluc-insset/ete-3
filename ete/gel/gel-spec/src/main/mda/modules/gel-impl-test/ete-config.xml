@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<mda>
+
+    <!--
+        This module receives the ${projectName} parameter.
+        The output_base parameter is set to ${projectName}
+      -->
+
+    <transformation-set output_base="${projectName}-test-fmwk/src/main/java/">
+
+
+    </transformation-set>
+
+</mda>
+
+
+

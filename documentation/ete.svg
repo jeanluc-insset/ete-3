@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <radialGradient id="grad1" fx="30%" fy="20%" r="70%" cx="50%" cy="50%">
+            <stop offset="0%" style="stop-color:rgb(200,200,140);stop-opacity:1" />
+            <stop offset="100%" style="stop-color:rgb(255,0,0);stop-opacity:1" />
+        </radialGradient>
+    </defs>
+    <g transform="translate(300,150)">
+        <circle r="100" cy="-10" fill="url(#grad1)"/>
+        <g transform="translate(0,50) scale(0.5,0.5)">
+            <path d="M-90,-60 a140,50 0 0,0 180,0 l0,16 a140,50 0 0,1 -180,0z" style="fill:white;"/>
+            <path d="M8,-48 l0,125 -16,0 0,-125z" fill="white"/>
+            <path d="M-85,-38 a145,55 0 0,0 70,10 l0,16 a140,50 0 0,1 -70,-10z" style="fill:white;"/>
+            <path d="M-70,10 a102,42 0 0,0 55,10 l0,12 a84,42 0 0,1 -55,-10z" style="fill:white;"/>
+            <path d="M-15,-28 l0,100 -16,0 0,-100z" fill="white"/>
+            <path d="M-55,60 a60,30 0 0,0 40,10 l0,6 a60,30 0 0,1 -40,-10z" style="fill:white;"/>
+<!--            <polyline points="-90,-60 90,-60 90,-50 5,-50 5,70 -5,70 -5,-50 -90,-50 -90,-60" fill="white"/>
+            <polyline points="10,-40 75,-40 75,-30 20,-30 20,-5 60,-5 60,5 20,5 20,30 50,30, 50,40 10,40 10,-40" fill="white"/>
+            <polyline points="-10,-40 -75,-40 -75,-30 -20,-30 -20,-5 -60,-5 -60,5 -20,5 -20,30 -50,30, -50,40 -10,40 -10,-40" fill="white"/>-->
+        </g>
+    </g>
+</svg>
+

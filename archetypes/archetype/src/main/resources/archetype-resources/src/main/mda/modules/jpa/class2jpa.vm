@@ -1,0 +1,129 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+package ${symbol_dollar}{current.owningPackage.name}.jpa;
+
+
+import ${package}.ete.jpa.AbstractJpa;
+import ${symbol_dollar}{current.owningPackage.name}.model.*;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import javax.ejb.Stateless;
+${symbol_pound}${symbol_pound}if (${symbol_dollar}javase)
+${symbol_pound}${symbol_pound}import javax.persistence.EntityManagerFactory;
+${symbol_pound}${symbol_pound}import javax.persistence.Persistence;
+${symbol_pound}${symbol_pound}end
+import javax.persistence.*;
+import javax.persistence.criteria.*;
+import javax.persistence.metamodel.*;
+
+
+
+/**
+ *
+ * @author jldeleage
+ */
+@Stateless
+public class ${symbol_dollar}{current.name}Jpa extends AbstractJpa<${symbol_dollar}{current.name}> {
+
+${symbol_pound}if (true == ${symbol_dollar}javase)
+    private EntityManagerFactory factory;
+${symbol_pound}else
+    @PersistenceContext(unitName = "${symbol_dollar}{pu}")
+${symbol_pound}end
+    private EntityManager em;
+
+    @Override
+    protected EntityManager getEntityManager() {
+${symbol_pound}if (true == ${symbol_dollar}javase)
+        if (factory == null) {
+            factory = Persistence.createEntityManagerFactory("${symbol_dollar}{pu}");
+        }
+        if (em == null) {
+            em = factory.createEntityManager();
+        }
+${symbol_pound}end
+        return em;
+    }
+
+    public ${symbol_dollar}{current.name}Jpa() {
+        super(${symbol_dollar}{current.name}.class);
+    }
+
+
+    //========================================================================//
+
+${symbol_pound}foreach (${symbol_dollar}aProperty in ${symbol_dollar}current.ownedAttribute)
+${symbol_pound}if (${symbol_dollar}dialect.isEntity(${symbol_dollar}aProperty.type))
+
+    public List<${symbol_dollar}{current.name}> findBy${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)}(${symbol_dollar}{dialect.mt2lt(${symbol_dollar}aProperty.type)} inValue) {
+        EntityManager em = getEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<${symbol_dollar}{current.name}> cq = cb.createQuery(${symbol_dollar}{current.name}.class);
+        Root<${symbol_dollar}{current.name}> from = cq.from(${symbol_dollar}{current.name}.class);
+        // There is an "unkown compilation error" if we try to use the metamodel
+        // generator processor so we use the metamodel on runtime only
+        Metamodel metamodel = em.getMetamodel();
+        EntityType<${symbol_dollar}{current.name}> entity = metamodel.entity(${symbol_dollar}{current.name}.class);
+        SingularAttribute<? super ${symbol_dollar}{current.name}, ?> singularAttribute = entity.getSingularAttribute("${symbol_dollar}{dialect.i2lc(${symbol_dollar}aProperty.type.name)}");
+        from.join(singularAttribute);
+        cq.where(cb.equal(from.get(singularAttribute), inValue));
+        TypedQuery<${symbol_dollar}{current.name}> query = em.createQuery(cq);
+        return query.getResultList();
+    }
+${symbol_pound}end
+${symbol_pound}end
+
+
+    //========================================================================//
+    //           F I L T E R S   F O R   I N V A R I A N T S   O F            //
+    //            E V E N T U A L L Y   O T H E R   C L A S S E S             //
+    //========================================================================//
+
+
+${symbol_pound}foreach (${symbol_dollar}aProperty in ${symbol_dollar}current.support.keySet())
+    /**
+     * Should return all the instances of ${symbol_dollar}{current.name} which are acceptable
+     * as values of ${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)} of ${symbol_dollar}{aProperty.owningMofClass.name}
+     * without violating any constraint on ${symbol_dollar}{aQuery.clientClass.name}
+     */
+    public List<${symbol_dollar}{current.name}> getAll${symbol_dollar}{current.name}As${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)}For${symbol_dollar}{aProperty.owningMofClass.name}(${symbol_dollar}{aProperty.owningMofClass.name} inFor) {
+        CriteriaBuilder cb = getCriteriaBuilder();
+        CriteriaQuery<${symbol_dollar}{current.name}> cq = cb.createQuery(${symbol_dollar}{current.name}.class);
+        Root<${symbol_dollar}{current.name}> root = cq.from(${symbol_dollar}{current.name}.class);
+        cq.select(root);
+${symbol_pound}foreach (${symbol_dollar}aQuery in ${symbol_dollar}current.support.get(${symbol_dollar}{aProperty}))
+        select${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)}For${symbol_dollar}{dialect.i2uc(${symbol_dollar}aQuery.invariant.name)}(cq, root, inFor);
+${symbol_pound}end
+        TypedQuery<${symbol_dollar}{current.name}> query = em.createQuery(cq);
+        return query.getResultList();
+    }
+
+
+
+${symbol_pound}foreach (${symbol_dollar}aQuery in ${symbol_dollar}current.support.get(${symbol_dollar}aProperty))
+    public void select${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)}For${symbol_dollar}{dialect.i2uc(${symbol_dollar}aQuery.invariant.name)}(CriteriaQuery cq,
+                                Root<${symbol_dollar}{current.name}> root,
+                                ${symbol_dollar}{aQuery.clientClass.name} inFor) {
+        CriteriaBuilder cb = getCriteriaBuilder();
+${symbol_pound}foreach (${symbol_dollar}aVariable in ${symbol_dollar}aQuery.variables)
+        Optional<${symbol_dollar}{dialect.mt2lt(${symbol_dollar}aVariable.type)}> ${symbol_dollar}{aVariable.name}Opt = ${symbol_dollar}{dialect.addChecking(${symbol_dollar}aVariable.initValue)};
+        if (! ${symbol_dollar}{aVariable.name}Opt.isPresent()) {
+            return;
+        }
+${symbol_pound}end
+${symbol_pound}foreach (${symbol_dollar}aVariable in ${symbol_dollar}aQuery.variables)
+        Expression<${symbol_dollar}{dialect.mt2lt(${symbol_dollar}aVariable.type)}> ${symbol_dollar}{aVariable.name} = cb.literal(${symbol_dollar}{aVariable.name}Opt.get());
+        cq.where(${symbol_dollar}{dialect.getPredicate(${symbol_dollar}aQuery)});
+${symbol_pound}end
+    }
+
+${symbol_pound}end
+${symbol_pound}end
+
+
+
+}

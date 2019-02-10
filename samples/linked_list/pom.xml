@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>fr.insset.jeanluc</groupId>
+        <artifactId>samples</artifactId>
+        <version>3.1</version>
+    </parent>
+    <artifactId>linked_list</artifactId>
+    <packaging>jar</packaging>
+
+
+
+
+    <build>
+        <plugins>
+
+            <plugin>
+                <groupId>fr.insset.jeanluc</groupId>
+                <artifactId>ete-maven-plugin</artifactId>
+                <version>3.1</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>fr.insset.jeanluc</groupId>
+                        <artifactId>util</artifactId>
+                        <version>1.1</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>fr.insset.jeanluc</groupId>
+                        <artifactId>meta-model-api</artifactId>
+                        <version>3.1</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>fr.insset.jeanluc</groupId>
+                        <artifactId>meta-model-impl</artifactId>
+                        <version>3.1</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>fr.insset.jeanluc</groupId>
+                        <artifactId>ete-lib-api</artifactId>
+                        <version>3.1</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>fr.insset.jeanluc</groupId>
+                        <artifactId>ete-lib-impl</artifactId>
+                        <version>3.1</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>fr.insset.jeanluc</groupId>
+                        <artifactId>el-evaluator</artifactId>
+                        <version>3.1</version>
+                    </dependency>                    
+                    <dependency>
+                        <groupId>fr.insset.jeanluc</groupId>
+                        <artifactId>gel-api</artifactId>
+                        <version>3.1</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>fr.insset.jeanluc</groupId>
+                        <artifactId>gel-impl</artifactId>
+                        <version>3.1</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>fr.insset.jeanluc</groupId>
+                        <artifactId>xlang-api</artifactId>
+                        <version>3.1</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>fr.insset.jeanluc</groupId>
+                        <artifactId>xlang-impl</artifactId>
+                        <version>3.1</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>fr.insset.jeanluc</groupId>
+                        <artifactId>xlang-builder</artifactId>
+                        <version>3.1</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>fr.insset.jeanluc</groupId>
+                        <artifactId>xlang-to-c</artifactId>
+                        <version>3.1</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>ete</id>
+                        <goals>
+                            <goal>ete</goal>
+                        </goals>
+                        <phase>generate-sources</phase>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+        </plugins>
+    </build>
+
+</project>

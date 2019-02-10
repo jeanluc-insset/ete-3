@@ -1,0 +1,8 @@
+
+
+function convert(event) {
+    var rect = event.target.getBoundingClientRect();
+    event.monX = event.x - rect.x;
+    event.monY = event.y - rect .y;
+}
+

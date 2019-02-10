@@ -1,0 +1,6 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+                    <h:inputText id="${symbol_dollar}{var.name}" value="${symbol_pound}{${symbol_dollar}{scope}${symbol_dollar}{varName}}" title="${symbol_pound}{bundle.Create${symbol_dollar}{current.name}Title_street}">
+                        <f:ajax ${symbol_pound}if(${symbol_dollar}dp)render="${symbol_dollar}{dp}"${symbol_pound}end/>
+                    </h:inputText>

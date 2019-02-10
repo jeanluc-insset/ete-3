@@ -1,0 +1,461 @@
+package fr.insset.jeanluc.ete.xlang.builder;
+
+
+##foreach ($aClass in $current.allClasses)
+##if (! $aClass.hasStereotype("ignore"))
+##import ${aClass.owningPackage.name}.${aClass.name};
+##end
+##end
+import fr.insset.jeanluc.ete.xlang.impl.*;
+import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
+#foreach ($aClass in $current.allClasses)
+#if (! $aClass.hasStereotype("ignore"))
+##import ${aClass.owningPackage.name}.impl.${aClass.name}Impl;
+#end
+#end
+import fr.insset.jeanluc.action.semantics.builder.EnhancedMofOperationImpl;
+import fr.insset.jeanluc.action.semantics.builder.EnhancedPostconditionImpl;
+import fr.insset.jeanluc.ete.gel.*;
+import fr.insset.jeanluc.ete.gel.impl.*;
+import fr.insset.jeanluc.ete.meta.model.constraint.Postcondition;
+import fr.insset.jeanluc.ete.meta.model.emof.impl.FeatureImpl;
+import fr.insset.jeanluc.ete.meta.model.emof.impl.MofParameterImpl;
+import fr.insset.jeanluc.ete.meta.model.emof.MofOperation;
+import fr.insset.jeanluc.ete.meta.model.mofpackage.EteModel;
+import fr.insset.jeanluc.ete.meta.model.types.MofType;
+import fr.insset.jeanluc.ete.meta.model.types.collections.impl.MofBagImpl;
+import fr.insset.jeanluc.ete.meta.model.types.collections.impl.MofCollectionImpl;
+import fr.insset.jeanluc.ete.meta.model.types.collections.impl.MofOrderedSetImpl;
+import fr.insset.jeanluc.ete.meta.model.types.collections.impl.MofSequenceImpl;
+import fr.insset.jeanluc.ete.meta.model.types.collections.impl.MofSetImpl;
+import fr.insset.jeanluc.ete.meta.model.types.impl.TypedElementImpl;
+import fr.insset.jeanluc.ete.xlang.Allocation;
+import fr.insset.jeanluc.ete.xlang.Assignment;
+import fr.insset.jeanluc.ete.xlang.Statement;
+import fr.insset.jeanluc.ete.xlang.VariableDeclaration;
+import fr.insset.jeanluc.ete.xlang.impl.AssignmentImpl;
+import fr.insset.jeanluc.ete.xlang.impl.VariableDeclarationImpl;
+import fr.insset.jeanluc.util.factory.FactoryMethods;
+import fr.insset.jeanluc.util.factory.FactoryRegistry;
+import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+
+
+
+/**
+ * An instance of this class builds statements to realize a postcondition. 
+ *
+ * @author jldeleage
+ */
+public class BodyBuilder extends DynamicVisitorSupport {
+
+
+    public BodyBuilder() throws InstantiationException {
+        register("visit", "fr.insset.jeanluc.ete.gel");
+        FactoryRegistry registry = FactoryRegistry.getRegistry();
+        registry.registerDefaultFactory(Assignment.class, AssignmentImpl.class);
+#foreach ($aClass in $current.allClasses)
+#if (! $aClass.hasStereotype("ignore"))
+        registry.registerDefaultFactory("${aClass.name.toLowerCase()}", ${aClass.name}Impl.class);
+#end
+#end
+    }
+
+
+    //========================================================================//
+
+
+    public void buildStatements(EteModel inModel) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        for (MofClass aClass : inModel.getClasses()) {
+            for (MofOperation anOperation : aClass.getOwnedOperation()) {
+                EnhancedMofOperationImpl thisOperation = (EnhancedMofOperationImpl) anOperation;
+                buildStatements(thisOperation);
+            }
+        }
+    }
+
+
+    public void buildStatements(EnhancedMofOperationImpl inOperation) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        System.out.println("   building statements for " + inOperation.getName());
+        List<Statement>   statements = FactoryMethods.newList(Statement.class);
+        List<Postcondition> postconditions = inOperation.getPostconditions();
+        Collections.sort(postconditions, new PostconditionsComparator());
+        System.out.println("Postconditions are sorted ; there is (are) " + variables.size() + " local variable(s)");
+        for (GelExpression anExpression : variables.keySet()) {
+            VariableDeclaration aDeclaration = variables.get(anExpression);
+            statements.add(aDeclaration);
+        }
+        inOperation.setLocalVariables(variables);
+        for (Postcondition aPostcondition : postconditions) {
+            EnhancedPostconditionImpl thisCondition = (EnhancedPostconditionImpl) aPostcondition;
+            buildStatements(thisCondition.getExpression(), statements, null);
+            System.out.println("    building statements for " + thisCondition.getSpecificationAsString()
+                                                + " -> " + statements.size() + " statement(s)");
+            for (Statement aStatement : statements) {
+                displayStatement(aStatement);
+            }
+        }
+        inOperation.setBody(statements);
+    }
+
+
+
+    protected void displayStatement(Statement aStatement) {
+        displayOperand(aStatement, "        ");
+    }
+
+
+    protected void displayOperand(GelExpression anExpression, String indentation) {
+        System.out.print(indentation);
+        System.out.println(anExpression.getClass().getName());
+        List<GelExpression> operand = anExpression.getOperand();
+        if (operand == null) {
+            return;
+        }
+        indentation += "    ";
+        for (GelExpression anOperand : operand) {
+            displayOperand(anOperand, indentation);
+        }
+    }
+
+
+
+    /**
+     * We should extract the top operator to guarantee that statements must be
+     * emitted
+     */
+    public void buildStatements(GelExpression inExpression, List<Statement> inoutStatements, Map<GelExpression, VariableDeclaration> inLocalVariables) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        genericVisit(inExpression, inoutStatements);
+    }
+
+
+    public IsNew visitIsNew(IsNew inIsNew, Object... inParameters) throws InstantiationException, IllegalAccessException {
+        List<Statement> statements = (List<Statement>) inParameters[0];
+        Allocation newInstance = (Allocation) FactoryRegistry.newInstance("allocation");
+        List<GelExpression> operands = FactoryMethods.newList(GelExpression.class);
+        operands.add(inIsNew);
+        newInstance.setOperand(operands);
+        statements.add(newInstance);
+        newInstance.setMofClass((MofClass)inIsNew.getType());
+        return inIsNew;
+    }
+
+
+
+    public Equal visitEqual(Equal inEqual, Object... inParameters) throws InstantiationException, IllegalAccessException {
+        Logger      logger = Logger.getGlobal();
+        logger.log(Level.FINE, "Visit of an equality");
+        Assignment assignment = (Assignment) FactoryRegistry.newInstance(Assignment.class);
+        List<GelExpression> operands = inEqual.getOperand();
+        GelExpression leftValue = operands.get(0);
+        GelExpression rightValue = operands.get(1);
+        assignment.setLeftValue(leftValue);
+        assignment.setValue(rightValue);
+        List<Statement> statements = (List<Statement>) inParameters[0];
+        statements.add(assignment);
+        return inEqual;
+    }
+
+
+    public Includes visitIncludes(Includes inIncludes, Object... inParameters) {
+        return inIncludes;
+    }
+
+   public GelExpression visitGelExpression(GelExpression inExpression, Object... inParameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        GelExpression result;
+        result = inExpression.getClass().newInstance();
+        List<GelExpression> operand = inExpression.getOperand();
+        if (operand != null) {
+            List<GelExpression> resultOperand = FactoryMethods.newList(GelExpression.class);
+            result.setOperand(resultOperand);
+            for (GelExpression anOperand : operand) {
+                resultOperand.add((GelExpression)genericVisit(anOperand, inParameters));
+            }
+        }
+        result.setType(inExpression.getType());
+        result.setName(inExpression.getName());
+        return result;
+    }
+
+
+        public GelExpression visitAttributeNav(AttributeNav inNav, Object... inParameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+//            VariableDeclaration aVariable = variables.get(inNav);
+//            if (aVariable != null) {
+//                VariableReference   ref = (VariableReference) FactoryRegistry.newInstance("variablereference");
+//                ref.setDefinition(aVariable);
+//                ref.setName(aVariable.getIdentifier());
+//                ref.setType(aVariable.getType());
+//                return ref;
+//            }
+            AttributeNav result = (AttributeNav) visitGelExpression(inNav, inParameters);
+            result.setToFeature(inNav.getToFeature());
+            return result;
+        }
+
+
+        public GelExpression visitAtPre(AtPre inAtPre, Object... inParameters) throws InstantiationException, IllegalAccessException {
+            VariableReference   ref = (VariableReference) FactoryRegistry.newInstance("variablereference");
+            VariableDeclaration aVariable = variables.get(inAtPre.getOperand().get(0));
+            ref.setDefinition(aVariable);
+            ref.setName(aVariable.getIdentifier());
+            ref.setType(aVariable.getType());
+            return ref;
+        }
+
+
+    //========================================================================//
+
+
+
+    protected void buildTemporalGraph() {
+        
+    }
+
+
+
+    //========================================================================//
+
+
+
+    /**
+     * Clones any GelExpression but substitutes any @pre expression with a
+     * reference to the matching variable.
+     */
+    public class VariableSubstitutor extends DynamicVisitorSupport {
+
+        public VariableSubstitutor() {
+            register("visit", "fr.insset.jeanluc.ete.gel");
+        }
+
+        public GelExpression visitGelExpression(GelExpression inExpression, Object... inParameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+            GelExpression result;
+            result = inExpression.getClass().newInstance();
+            List<GelExpression> operand = inExpression.getOperand();
+            if (operand != null) {
+                List<GelExpression> resultOperand = FactoryMethods.newList(GelExpression.class);
+                result.setOperand(resultOperand);
+                for (GelExpression anOperand : operand) {
+                    resultOperand.add((GelExpression)genericVisit(anOperand, inParameters));
+                }
+            }
+            result.setType(inExpression.getType());
+            result.setName(inExpression.getName());
+            return result;
+        }
+
+
+        public GelExpression visitAttributeNav(AttributeNav inNav, Object... inParameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+//            VariableDeclaration aVariable = variables.get(inNav);
+//            if (aVariable != null) {
+//                VariableReference   ref = (VariableReference) FactoryRegistry.newInstance("variablereference");
+//                ref.setDefinition(aVariable);
+//                ref.setName(aVariable.getIdentifier());
+//                ref.setType(aVariable.getType());
+//                return ref;
+//            }
+            AttributeNav result = (AttributeNav) visitGelExpression(inNav, inParameters);
+            result.setToFeature(inNav.getToFeature());
+            return result;
+        }
+
+
+        public GelExpression visitAtPre(AtPre inAtPre, Object... inParameters) throws InstantiationException, IllegalAccessException {
+            VariableReference   ref = (VariableReference) FactoryRegistry.newInstance("variablereference");
+            VariableDeclaration aVariable = variables.get(inAtPre.getOperand().get(0));
+            ref.setDefinition(aVariable);
+            ref.setName(aVariable.getIdentifier());
+            ref.setType(aVariable.getType());
+            return ref;
+        }
+
+
+
+    }           // VariableSubstitutor
+
+
+
+    //========================================================================//
+
+
+    protected final void addVariable(GelExpression inExpression) {
+        VariableDeclaration variable = addVariable("local" + numVariable++, inExpression.getType());
+        variable.getDefinitionExpression().setValue(inExpression);
+        variables.put(inExpression, variable);
+    }
+
+
+    protected final VariableDeclaration addVariable(String inName, MofType inType) {
+        VariableDeclaration variable = new VariableDeclarationImpl();
+        variable.setIdentifier(inName);
+        VariableDefinition definition = new VariableDefinitionImpl();
+        definition.setIdentifier(inName);
+        definition.setType(inType);
+        variable.setDefinitionExpression(definition);
+        return variable;
+    }
+
+
+
+
+    //========================================================================//
+
+
+    private     Map<GelExpression, VariableDeclaration>    variables = new HashMap<>();
+    private     int                                     numVariable = 0;
+
+
+
+
+    //========================================================================//
+
+
+
+    public class PostconditionsComparator extends DynamicVisitorSupport implements Comparator<Postcondition> {
+
+        public PostconditionsComparator() {
+            register("visit", "fr.insset.jeanluc.ete.gel");
+        }
+
+
+        @Override
+        public int compare(Postcondition o1, Postcondition o2) {
+            System.out.println("Comparing "+ o1.getSpecificationAsString() + " with " + o2.getSpecificationAsString());
+            EnhancedPostconditionImpl eo1 = (EnhancedPostconditionImpl) o1;
+            EnhancedPostconditionImpl eo2 = (EnhancedPostconditionImpl) o2;
+            GelExpression exp1 = eo1.getExpression();
+            GelExpression exp2 = eo2.getExpression();
+            
+            if (leftValueOfO1IsContainedInRightValueOfO2(exp1, exp2)) {
+                System.out.println("The property modified in " + o1.getSpecificationAsString()
+                        + " is used in right part of " + o2.getSpecificationAsString());
+                if (leftValueOfO1IsContainedInRightValueOfO2(exp2, exp1)) {
+                    // circular dependance
+                    throw new RuntimeException("Circular dependance between " 
+                            + eo1.getSpecificationAsString()
+                            + " and " + eo2.getSpecificationAsString());
+                }
+                return 1;
+            }
+            System.out.println("Comparing "+ o2.getSpecificationAsString() + " with " + o1.getSpecificationAsString());
+            if (leftValueOfO1IsContainedInRightValueOfO2(exp2, exp1)) {
+                System.out.println("The property modified in " + o1.getSpecificationAsString()
+                        + " is used in right part of " + o2.getSpecificationAsString());
+                return -1;
+            }
+            return 0;
+        }       // compare
+
+
+        protected boolean   leftValueOfO1IsContainedInRightValueOfO2(GelExpression o1, GelExpression o2) {
+            GelExpression lefto1 = null;
+            GelExpression righto2 = null;
+            if (o1 instanceof Equal || o1 instanceof IsNew) {
+                lefto1 = o1.getOperand().get(0);
+            } else {
+                return false;
+            }
+            if (o2 instanceof Equal) {
+                righto2 = o2.getOperand().get(1);
+            } else {
+                return false;
+            }
+            try {
+                genericVisit(righto2, lefto1);
+            } catch (IllegalAccessException ex) {
+                Logger.getLogger(BodyBuilder.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IllegalArgumentException ex) {
+                Logger.getLogger(BodyBuilder.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InvocationTargetException ex) {
+                Logger.getLogger(BodyBuilder.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return false;
+        }
+
+
+        public Boolean visitGelExpression(GelExpression inExpression, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+            List<GelExpression> operand = inExpression.getOperand();
+            if (operand == null) {
+                return Boolean.FALSE;
+            }
+            for (GelExpression anOperand : operand) {
+                Boolean bool = (Boolean) genericVisit(anOperand, inParameters);
+                if (bool) {
+                    return bool;
+                }
+            }
+            return Boolean.FALSE;
+        }
+
+
+        public Boolean visitAttributeNav(AttributeNav inStep, Object... inParameters) {
+            Step me    = inStep;
+            Step other = (Step) inParameters[0];
+            try {
+                while (other != null) {
+                    if (! other.getClass().equals(me.getClass())) {
+                        return Boolean.FALSE;
+                    }
+                    if (! other.getToFeature().equals(me.getToFeature())) {
+                        return Boolean.FALSE;
+                    }
+                    other = (Step) other.getOperand().get(0);
+                    me = (Step) me.getOperand().get(0);
+                }
+            } catch (Exception ex) {
+                List<GelExpression> operand = me.getOperand();
+                if (operand == null) {
+                    return Boolean.TRUE;
+                }
+                return operand.isEmpty();
+            }
+            return Boolean.TRUE;
+        }
+
+
+        public Boolean visitStep(Step inStep, Object... inParameters) {
+            Step me    = inStep;
+            Step other = (Step) inParameters[0];
+            try {
+                while (other != null) {
+                    if (! other.getClass().equals(me.getClass())) {
+                        return Boolean.FALSE;
+                    }
+                    if (! other.getToFeature().equals(me.getToFeature())) {
+                        return Boolean.FALSE;
+                    }
+                    other = (Step) other.getOperand().get(0);
+                    me = (Step) me.getOperand().get(0);
+                }
+            } catch (Exception ex) {
+                List<GelExpression> operand = me.getOperand();
+                if (operand == null) {
+                    return Boolean.TRUE;
+                }
+                return operand.isEmpty();
+            }
+            return Boolean.TRUE;
+        }
+
+
+
+        public Boolean visitAtPre(AtPre inAtPre, Object... inParameters) {
+            GelExpression expression = inAtPre.getOperand().get(0);
+            addVariable(expression);
+            return Boolean.FALSE;
+        }
+
+
+    }       // PostconditionsComparator
+
+
+}       // BodyBuilder
+
+

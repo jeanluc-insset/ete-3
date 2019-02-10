@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>fr.insset.jeanluc</groupId>
+        <artifactId>incrementalantlr</artifactId>
+        <version>3.1</version>
+    </parent>
+    <artifactId>incremental-antlr-action</artifactId>
+    <packaging>jar</packaging>
+
+    <description>
+        The action allows usage of other languages than OCL for constraint files
+        (typically a natural language, but if could be ATL or B).
+
+        The language must be added as a dependency.
+
+        Typical usage :
+
+        ete-config.xml :
+<!--        <register name="constraints"
+                      action="fr.insset.jeanluc.ete.constraint.Language"/>
+            <constraints dir="src/main/mda/models/" name="myConstraints" language="french"/>-->
+
+        In this example, the constraints action looks for a class named
+        FrenchWrapper.
+
+        Constraints themselves can be written as two files. The first one
+        contains definitions, the second one contains rules.
+    </description>
+
+    <dependencies>
+        <dependency>
+            <groupId>fr.insset.jeanluc</groupId>
+            <artifactId>ete-lib-api</artifactId>
+            <version>3.1</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4</artifactId>
+            <version>4.7.1</version>
+            <classifier>complete</classifier>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.antlr</groupId>
+                    <artifactId>antlr-runtime</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-core</artifactId>
+            <version>1.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>fr.insset.jeanluc</groupId>
+            <artifactId>xmi-io</artifactId>
+            <version>3.1</version>
+            <scope>test</scope>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>fr.insset.jeanluc</groupId>
+            <artifactId>meta-model-impl</artifactId>
+            <version>3.1</version>
+            <scope>test</scope>
+            <type>jar</type>
+        </dependency>
+    </dependencies>
+</project>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<mda>
+
+
+    <transformation-set>
+
+        <register name="add-visitor-action" action="fr.insset.jeanluc.ete.api.impl.AddVisitorAction"/>
+
+        <model  url="Model.xml">
+            <add-visitor class="fr.insset.jeanluc.action.semantics.builder.ConditionVisitor"/>
+        </model>
+
+        <!-- API server -->
+        <transformation-set jaxrs="true" output_base="../../api/target">
+            <velocity template="modules/web/web_xml.vm" target="generated-web-pages/ete/WEB-INF/web.xml"/>
+            <velocity template="modules/web/index_html.vm" target="generated-web-pages/ete/index.html"/>
+            <module src="modules/jaxrs/ete-config.xml"/>
+            <module src="modules/jpa/ete-config.xml"/>
+        </transformation-set>
+
+        <!-- API REACT client -->
+        <transformation-set output_base="../../react/src/main/react/">
+            <module src="modules/react/ete-config.xml"/>
+        </transformation-set>
+
+    </transformation-set>
+
+</mda>
+
+
+

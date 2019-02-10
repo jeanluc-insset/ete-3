@@ -1,0 +1,137 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+package ${symbol_dollar}{current.owningPackage}.model;
+
+
+
+import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.xml.bind.annotation.XmlRootElement;
+
+/**
+ *
+ * @author jldeleage
+ */
+@Entity
+@XmlRootElement
+public class ${symbol_dollar}{current.name} \#if (${symbol_dollar}{current.superClass.size()}>0)extends ${symbol_dollar}{current.superClass.get(0).owningPackage.name}.model.${symbol_dollar}{current.superClass.get(0).name} \#end implements Serializable {
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+
+    //========================================================================//
+
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof ${symbol_dollar}{current.name})) {
+            return false;
+        }
+        ${symbol_dollar}{current.name} other = (${symbol_dollar}{current.name}) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+
+    //========================================================================//
+
+
+\#foreach (${symbol_dollar}tagValue in ${symbol_dollar}{current.getTagValues().keySet()})
+    public default String get${symbol_dollar}{dialect.i2uc(${symbol_dollar}tagValue.name)}() {
+        return "${symbol_dollar}{current.getValueOf(${symbol_dollar}tagValue.name)}";
+    }
+\#end
+
+
+    //========================================================================//
+
+\#foreach (${symbol_dollar}aProperty in ${symbol_dollar}current.ownedAttribute)
+    public ${symbol_dollar}dialect.mt2lt(${symbol_dollar}aProperty.type) get${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)}() {
+        return ${symbol_dollar}{aProperty.name};
+    }
+
+    public void set${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)}(${symbol_dollar}{dialect.mt2lt(${symbol_dollar}aProperty.type)} inValue) {
+        ${symbol_dollar}{aProperty.name} = inValue;
+    }
+
+\#if (${symbol_dollar}aProperty.type.collection)
+    public void add${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)}(${symbol_dollar}{dialect.mt2lt(${symbol_dollar}aProperty.type.baseType)} inValue) {
+        ${symbol_dollar}{aProperty.name}.add(inValue);
+    }
+
+    public void remove${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)}(${symbol_dollar}{dialect.mt2lt(${symbol_dollar}aProperty.type.baseType)} inValue) {
+        ${symbol_dollar}{aProperty.name}.remove(inValue);
+    }
+\#end
+\#end
+
+
+    //========================================================================//
+
+
+\#foreach (${symbol_dollar}aMethod in ${symbol_dollar}current.ownedOperation)
+    public ${symbol_dollar}dialect.moft2lt(${symbol_dollar}aMethod.type.name) ${symbol_dollar}{aMethod.name}(\#foreach(${symbol_dollar}aParam in ${symbol_dollar}{aMethod.ownedParameter})${symbol_dollar}{dialect.mt2lt(${symbol_dollar}aParam.type)} ${symbol_dollar}{aParam.name}\#if( ${symbol_dollar}foreach.hasNext ), \#end \#end) {
+${symbol_dollar}{dialect.getOperationBody(${symbol_dollar}aMethod, "    ")}
+    }
+\#end
+
+
+    @Override
+    public String toString() {
+\#if (${symbol_dollar}current.ownedAttribute.size() > 0)
+        return "" + ${symbol_dollar}{current.ownedAttribute.get(0)};
+\#else
+        return super.toString();
+\#end
+    }
+
+    //========================================================================//
+
+\#foreach (${symbol_dollar}aProperty in ${symbol_dollar}current.ownedAttribute)
+    \#if (${symbol_dollar}aProperty.type.hasStereotype("Entity"))
+    @ManyToOne 
+    \#end
+    \#if (${symbol_dollar}aProperty.type.isCollection())
+    \#if (${symbol_dollar}aProperty.type.baseType.hasStereotype("Entity"))
+    @OneToMany 
+    \#end
+    \#elseif (${symbol_dollar}aProperty.type.name == "date")
+    @javax.persistence.Temporal(javax.persistence.TemporalType.DATE)
+    \#end
+    ${symbol_dollar}dialect.mt2lt(${symbol_dollar}aProperty.type)      ${symbol_dollar}{aProperty.name};
+\#end
+
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+
+}

@@ -1,0 +1,168 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+package ${symbol_dollar}{current.owningPackage}.model;
+
+
+#foreach ($aDependance in $current.dependances)
+import ${aDependance.owningPackage.name}.model.${aDependance.name};
+#end
+import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.xml.bind.annotation.XmlRootElement;
+
+/**
+ *
+ * @author jldeleage
+ */
+@Entity
+@XmlRootElement
+@NamedQueries({
+${symbol_pound}foreach (${symbol_dollar}aProperty in ${symbol_dollar}current.allAttributes)
+    @NamedQuery(name = "${symbol_dollar}{current.name}.findBy${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)}", query = "SELECT f FROM ${symbol_dollar}{current.name} f WHERE f.${symbol_dollar}{aProperty.name} = :param"),
+${symbol_pound}end
+    @NamedQuery(name = "${symbol_dollar}{current.name}.findAll", query = "SELECT f FROM ${symbol_dollar}{current.name} f")
+})
+public class ${symbol_dollar}{current.name} ${symbol_pound}if (${symbol_dollar}{current.superClass.size()}>0)extends ${symbol_dollar}{current.superClass.get(0).owningPackage.name}.model.${symbol_dollar}{current.superClass.get(0).name} ${symbol_pound}end implements Serializable {
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+
+    //========================================================================//
+
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof ${symbol_dollar}{current.name})) {
+            return false;
+        }
+        ${symbol_dollar}{current.name} other = (${symbol_dollar}{current.name}) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+
+    //========================================================================//
+
+
+${symbol_pound}foreach (${symbol_dollar}tagValue in ${symbol_dollar}{current.getTagValues().keySet()})
+    public default String get${symbol_dollar}{dialect.i2uc(${symbol_dollar}tagValue.name)}() {
+        return "${symbol_dollar}{current.getValueOf(${symbol_dollar}tagValue.name)}";
+    }
+${symbol_pound}end
+
+
+    //========================================================================//
+
+${symbol_pound}foreach (${symbol_dollar}aProperty in ${symbol_dollar}current.ownedAttribute)
+    public ${symbol_dollar}dialect.mt2lt(${symbol_dollar}aProperty.type) get${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)}() {
+${symbol_pound}if (${symbol_dollar}aProperty.type.collection)
+        if (${symbol_dollar}{aProperty.name} == null) {
+            ${symbol_dollar}{aProperty.name} = new LinkedList<>();
+        }
+${symbol_pound}end
+        return ${symbol_dollar}{aProperty.name};
+    }
+
+    public void set${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)}(${symbol_dollar}{dialect.mt2lt(${symbol_dollar}aProperty.type)} inValue) {
+        ${symbol_dollar}{aProperty.name} = inValue;
+    }
+
+${symbol_pound}if (${symbol_dollar}aProperty.type.collection)
+    public void add${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)}(${symbol_dollar}{dialect.mt2lt(${symbol_dollar}aProperty.type.baseType)} inValue) {
+        ${symbol_dollar}{aProperty.name}.add(inValue);
+    }
+
+    public void remove${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)}(${symbol_dollar}{dialect.mt2lt(${symbol_dollar}aProperty.type.baseType)} inValue) {
+        ${symbol_dollar}{aProperty.name}.remove(inValue);
+    }
+${symbol_pound}elseif (${symbol_dollar}aProperty.type.recBaseType.hasStereotype("Entity") || ${symbol_dollar}aProperty.type.recBaseType.name.equals("String"))
+    public Optional<${symbol_dollar}{aProperty.type}> get${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)}${symbol_dollar}() {
+        return Optional.ofNullable(${symbol_dollar}{aProperty.name});
+    }
+${symbol_pound}elseif (${symbol_dollar}aProperty.type.recBaseType.name.equals("date"))
+    public Optional<java.util.Date> get${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)}${symbol_dollar}() {
+        return Optional.ofNullable(${symbol_dollar}{aProperty.name});
+    }
+${symbol_pound}end
+${symbol_pound}end
+
+
+    //========================================================================//
+
+
+${symbol_pound}foreach (${symbol_dollar}aMethod in ${symbol_dollar}current.ownedOperation)
+    public ${symbol_dollar}dialect.moft2lt(${symbol_dollar}aMethod.type.name) ${symbol_dollar}{aMethod.name}(${symbol_pound}foreach(${symbol_dollar}aParam in ${symbol_dollar}{aMethod.ownedParameter})${symbol_dollar}{dialect.mt2lt(${symbol_dollar}aParam.type)} ${symbol_dollar}{aParam.name}${symbol_pound}if( ${symbol_dollar}foreach.hasNext ), ${symbol_pound}end ${symbol_pound}end) {
+${symbol_pound}set (${symbol_dollar}body = ${symbol_dollar}dialect.getOperationBody(${symbol_dollar}aMethod, "    "))
+${symbol_pound}if (${symbol_dollar}body && ${symbol_dollar}body.length() > 0)
+${symbol_dollar}body
+${symbol_pound}else
+        throw new RuntimeException("Not implemented yet");
+${symbol_pound}end
+    }
+${symbol_pound}end
+
+
+    @Override
+    public String toString() {
+${symbol_pound}if (${symbol_dollar}current.ownedAttribute.size() > 0)
+        return "" + ${symbol_dollar}{current.ownedAttribute.get(0)};
+${symbol_pound}else
+        return super.toString();
+${symbol_pound}end
+    }
+
+    //========================================================================//
+
+${symbol_pound}foreach (${symbol_dollar}aProperty in ${symbol_dollar}current.ownedAttribute)
+    ${symbol_pound}if (${symbol_dollar}aProperty.type.hasStereotype("Entity"))
+    @ManyToOne 
+    ${symbol_pound}end
+    ${symbol_pound}if (${symbol_dollar}aProperty.type.isCollection())
+    ${symbol_pound}if (${symbol_dollar}aProperty.type.baseType.hasStereotype("Entity"))
+    @OneToMany${symbol_pound}if (${symbol_dollar}aProperty.aggregationKind.toString().equals("COMPOSITION"))(cascade = CascadeType.ALL)
+${symbol_pound}end
+    ${symbol_pound}end
+    ${symbol_pound}elseif (${symbol_dollar}aProperty.type.name == "date")
+    @javax.persistence.Temporal(javax.persistence.TemporalType.DATE)
+    ${symbol_pound}end
+    ${symbol_dollar}dialect.mt2lt(${symbol_dollar}aProperty.type)      ${symbol_dollar}{aProperty.name};
+${symbol_pound}end
+
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+
+}

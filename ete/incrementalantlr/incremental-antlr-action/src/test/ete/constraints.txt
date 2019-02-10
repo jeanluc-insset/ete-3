@@ -1,0 +1,6 @@
+
+
+context Flight :
+    inv captain is certified : the captain of this flight is certified for the plane of this flight.
+    inv copilot is certified : the copilot of this flight is certified for the plane of this flight.
+

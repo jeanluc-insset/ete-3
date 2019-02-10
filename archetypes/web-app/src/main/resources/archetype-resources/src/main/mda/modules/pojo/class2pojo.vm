@@ -1,0 +1,84 @@
+#set( $symbol_pound = '\\#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+package ${symbol_dollar}{current.owningPackage};
+
+
+
+import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.xml.bind.annotation.XmlRootElement;
+
+/**
+ *
+ * @author jldeleage
+ */
+public class ${symbol_dollar}{current.name} \#if (${symbol_dollar}current.superClass.size() > 0) extends ${symbol_dollar}{current.superClass.get(0).owningPackage.name}.${symbol_dollar}{current.superClass.get(0)} \#end  implements Serializable {
+
+
+\#foreach ($tagValue in ${symbol_dollar}{current.getTagValues().keySet()})
+    public default String get${symbol_dollar}{dialect.i2uc($tagValue.name)}() {
+        return "${symbol_dollar}{current.getValueOf($tagValue.name)}";
+    }
+\#end
+
+
+    //========================================================================//
+
+\#foreach (${symbol_dollar}aProperty in ${symbol_dollar}current.ownedAttribute)
+    public ${symbol_dollar}dialect.mt2lt($aProperty.type) get${symbol_dollar}{dialect.i2uc($aProperty.name)}() {
+        return ${symbol_dollar}{aProperty.name};
+    }
+
+    public void set${symbol_dollar}{dialect.i2uc($aProperty.name)}(${symbol_dollar}{dialect.mt2lt($aProperty.type)} inValue) {
+        ${symbol_dollar}{aProperty.name} = inValue;
+    }
+
+\#if ($aProperty.type.collection)
+    public void add${symbol_dollar}{dialect.i2uc($aProperty.name)}(${symbol_dollar}{dialect.mt2lt($aProperty.type.baseType)} inValue) {
+        ${symbol_dollar}{aProperty.name}.add(inValue);
+    }
+
+    public void remove${symbol_dollar}{dialect.i2uc($aProperty.name)}(${symbol_dollar}{dialect.mt2lt($aProperty.type.baseType)} inValue) {
+        ${symbol_dollar}{aProperty.name}.remove(inValue);
+    }
+\#end
+\#end
+
+
+    //========================================================================//
+
+
+\#foreach ($aMethod in $current.ownedOperation)
+    public $dialect.moft2lt($aMethod.type.name) ${symbol_dollar}{aMethod.name}(\#foreach($aParam in ${symbol_dollar}{aMethod.ownedParameter})${symbol_dollar}{aParam.type} ${symbol_dollar}{aParam.name} \#end) {
+${symbol_dollar}{dialect.getOperationBody($aMethod, "    ")}
+    }
+\#end
+
+
+    @Override
+    public String toString() {
+\#if ($current.ownedAttribute.size() > 0)
+        return "" + ${symbol_dollar}{current.ownedAttribute.get(0)};
+\#else
+        return super.toString();
+\#end
+    }
+
+    //========================================================================//
+
+\#foreach ($aProperty in $current.ownedAttribute)
+    $dialect.mt2lt($aProperty.type)      ${symbol_dollar}{aProperty.name};
+\#end
+
+
+
+}

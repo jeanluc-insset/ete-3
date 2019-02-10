@@ -1,0 +1,20 @@
+
+#ifndef   ${current.name.toUpperCase()}_H
+\#define   ${current.name.toUpperCase()}_H
+
+#foreach ($aDependance in ${current.dependances})
+\#include "${aDependance.name}.h"
+#end
+
+typedef struct s_${current.name} {
+#foreach ($aProperty in $current.ownedAttribute)
+    t_${aProperty.type.name}   *${aProperty.name};
+#end
+}  t_${current.name};
+
+#foreach ($anOperation in ${current.ownedOperation})
+#parse("result_type.vm") ${anOperation.name}(t_${current.name} *self#foreach ($aParameter in $anOperation.ownedParameter), #parse("parameter.vm")#end);
+#end
+
+
+#endif      /* ${current.name.toUpperCase()}_H */

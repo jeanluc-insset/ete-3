@@ -1,0 +1,15 @@
+import React, { Component } from 'react';
+
+
+
+export default class ${current.name}Component extends Component {
+    
+    render() {
+        return (
+            <div onClick={() => this.props.onClick(this) } className="${current.name}">
+                {this.props.name}
+            </div>
+        )
+    }
+
+}

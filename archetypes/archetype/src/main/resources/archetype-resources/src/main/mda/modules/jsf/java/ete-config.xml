@@ -1,0 +1,35 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  This module generates all JPA stuff. It first calls a template to generate
+  entities, then generate the DAOs and the persistence unit.
+  -->
+
+<mda>
+
+    <transformation-set output_base="generated-sources/ete/">
+
+            <!--<module src="xxxx"/>-->
+
+            <velocity items='${symbol_dollar}{classes.filter(c -> c.hasStereotype("Entity"))}'
+                        dialect="fr.insset.jeanluc.as2java.JavaGenerator"
+                        template="jsf_controller.vm"
+                        target='${symbol_dollar}{current.owningPackage.name.replace(".", "/")}/jsf/${symbol_dollar}{current.name}Controller.java'/>
+
+            <velocity dialect="fr.insset.jeanluc.as2java.JavaGenerator"
+                        template="pagination_helper.vm"
+                        target='${packageInPathFormat}/ete/jsf/util/PaginationHelper.java'/>
+
+                        <velocity dialect="fr.insset.jeanluc.as2java.JavaGenerator"
+                        template="jsf_util.vm"
+                        target='${packageInPathFormat}/ete/jsf/util/JsfUtil.java'/>
+
+    </transformation-set>
+
+</mda>
+
+
+

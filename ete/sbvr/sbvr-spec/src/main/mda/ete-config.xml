@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<mda>
+
+
+    <transformation-set >
+                              read the model
+        <!--<model  url="models/EssentialOCL.emof"/>-->
+        <model  url="Sbvr.xml"/>
+
+        <!--
+          - The context parameter specifies which context to use when
+          - resolving an identifier
+        -->
+        <transformation-set output_base="../../"
+                            projectName="sbvr"
+                            context="mof">
+
+                    <!--API and default implementation generation--> 
+            <module src="../../../../../src/main/mda/modules/from-spec/ete-config.xml"
+                    dialect="fr.insset.jeanluc.el.dialect.BasicJavaDialect"/>
+
+
+            <velocity template="parser-wrapper.vm"
+                    target="sbvr-impl/src/main/java/fr/insset/jeanluc/ete/sbvr/SbvrParserWrapper.java"/>
+            <velocity template="tree-builder.vm"
+                    target="sbvr-impl/src/main/java/fr/insset/jeanluc/ete/sbvr/SbvrTreeBuilder.java"/>
+
+        </transformation-set>
+
+
+    </transformation-set>
+
+</mda>
+
+
+

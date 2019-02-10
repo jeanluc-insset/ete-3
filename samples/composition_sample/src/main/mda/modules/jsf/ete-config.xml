@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  This module generates all JPA stuff. It first calls a template to generate
+  entities, then generate the DAOs and the persistence unit.
+  -->
+
+<mda>
+
+    <transformation-set>
+
+            <!-- JPA -->
+            <module src="../jpa/ete-config.xml"/>
+
+            <!-- Other Java stuff : Pojos and enumerations -->
+            <module src="../pojo/ete-config.xml"
+                    items='${classes.filter(c -> not c.hasStereotype("Entity"))}'
+                    target="${current.owningPackage.name.replace('.', '/')}/${current.name}.java"/>
+
+            <!-- CRUD pages -->
+            <module src="pages/ete-config.xml"/>
+
+            <!-- JSF controllers and utilities -->
+            <module src="java/ete-config.xml"/>
+
+            <!-- Configuration -->
+            <velocity template="config/faces_config_xml.vm"
+                      target="generated-web-pages/ete/WEB-INF/faces-config.xml"/> 
+            
+            <velocity template="config/bundle.vm"
+                      target="generated-web-pages/ete/WEB-INF/classes/Bundle.properties"/>
+
+    </transformation-set>
+
+</mda>
+
+
+

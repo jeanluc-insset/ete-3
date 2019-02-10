@@ -1,0 +1,145 @@
+package ${current.owningPackage}.model;
+
+
+import java.io.Serializable;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.xml.bind.annotation.XmlRootElement;
+
+/**
+ * Proxy to a ${current.name} instance.<br>
+ * The proxied object may be null.<br>
+ * Useful to write complex navigations without worrying about null references.
+ *
+ * @author jldeleage
+ */
+public class Optional${current.name} #if (${current.superClass.size()}>0)extends ${current.superClass.get(0).owningPackage.name}.model.Optional${current.superClass.get(0).name} #end {
+
+
+    public static Optional${current.name} ofNullable(${current.name} inProxied) {
+        Optional${current.name} result = new Optional${current.name}();
+        result.entity = inProxied;
+        return result;
+    }
+
+
+    public boolean isPresent() {
+        return entity != null;
+    }
+
+
+    public <T> Object ifPresent(Function<${current.name}, T> inFunction) {
+        return entity == null ? null : inFunction.apply(entity);
+    }
+
+
+    public void ifPresent(Consumer<${current.name}> inConsumer) {
+        if (entity != null) inConsumer.accept(entity);
+    }
+
+
+    public ${current.name} get() {
+        return entity;
+    }
+
+
+    //========================================================================//
+
+
+    @Override
+    public int hashCode() {
+        return entity == null ? 0 : entity.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (entity == null) return false;
+        if (object == null) return false;
+        if (! (object instanceof ${current.name} || object instanceof Optional${current.name})) return false;
+        return entity.hashCode() == object.hashCode();
+    }
+
+
+
+    //========================================================================//
+
+
+#foreach ($aProperty in $current.ownedAttribute)
+
+#if ($aProperty.type.collection)
+#set ($type = $aProperty.type.baseType)
+    public Optional<List<#parse("optionalType.vm")>> get${dialect.i2uc($aProperty.name)}() {
+        if (entity == null) {
+            // Should we return an EMPTY_LIST instead ?
+            return Optional.ofNullable(null);
+        }
+        List<#parse("optionalType.vm")> result = new LinkedList<>();
+        for (${aProperty.type.baseType.name} anItem : entity.get${dialect.i2uc($aProperty.name)}()) {
+#if (${dialect.isEntity($aProperty.type.baseType)})
+            result.add(Optional${aProperty.type.baseType.name}.ofNullable(anItem));
+#else
+            result.add(anItem);
+#end
+        }
+        return Optional.ofNullable(result);
+    }
+#else##not collection
+#set ($type = $aProperty.type)
+    public #parse("optionalType.vm") get${dialect.i2uc($aProperty.name)}() {
+#set ($who = "entity")
+        return #parse("newOptional.vm");
+    }
+#end  ##if/else collection
+#end
+
+
+
+
+    //========================================================================//
+
+
+#foreach ($aMethod in $current.ownedOperation)
+    public $dialect.moft2lt($aMethod.type.name) ${aMethod.name}(#foreach($aParam in ${aMethod.ownedParameter})${dialect.mt2lt($aParam.type)} ${aParam.name}#if( $foreach.hasNext ), #end #end) {
+#set ($t = $dialect.moft2lt($aMethod.type.name))
+#if ($dialect.moft2lt($aMethod.type.name).equals("void"))
+        if (entity != null) {
+            entity.${aMethod.name}(#foreach($aParam in ${aMethod.ownedParameter})${aParam.name}#if( $foreach.hasNext ), #end #end);
+        }
+#else
+        if (entity == null) {
+            return #parse("null.vm");
+        } else {
+#set ($type = $current)
+            return #parse("optionalType.vm").of(entity.${aMethod.name}(#foreach($aParam in ${aMethod.ownedParameter})${aParam.name}#if( $foreach.hasNext ), #end #end));
+        }
+#end
+    }
+#end
+
+
+    @Override
+    public String toString() {
+        return (entity == null) ? "" : entity.toString();
+    }
+
+    //========================================================================//
+
+
+    ${current.name}     entity;
+
+
+}

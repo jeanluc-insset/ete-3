@@ -1,0 +1,19 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+                <p:accordionPanel>
+                <ui:repeat var="var" value="${symbol_pound}{cc.attrs.selection.${symbol_dollar}{aProperty}}">
+<!-- p:panel id="toggleable" header="Toggleable" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="500" > -->                         <p:accordionPanel>
+                    <p:tab title="${symbol_pound}{var}">
+                       <ete:${symbol_dollar}{var.type.name}_form
+                             selection="${symbol_pound}{var}"/>
+                    </p:tab>
+                </ui:repeat>
+                </p:accordionPanel>
+                <h:outputLabel value="new" for="new" />
+                <ete:${symbol_dollar}{var.type.name}_form
+                           selection="${symbol_pound}{${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller.new${symbol_dollar}{dialect.i2uc(${symbol_dollar}varName)}}"
+                />
+                <h:outputText value=" "/>
+                <h:commandButton action="${symbol_pound}{${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller.addNew${symbol_dollar}{dialect.i2uc(${symbol_dollar}varName)}}" value="Add"/>
+

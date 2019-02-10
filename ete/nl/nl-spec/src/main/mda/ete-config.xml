@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<mda>
+
+
+    <transformation-set >
+        <model  url="models/NaturalLanguage.xml"/>
+
+        <!--
+          - The context parameter specifies which context to use when
+          - resolving an identifier
+        -->
+        <transformation-set output_base="../../"
+                            projectName="nl"
+                            context="mof">
+
+                    <!--API and default implementation generation--> 
+            <velocity template="modules/impl/java/tree-builder.vm"
+                target="${projectName}-impl/target/generated-sources/ete/fr/insset/jeanluc/ete/gel/impl/${dialect.i2uc(projectName)}TreeBuilder.java"/>
+
+        </transformation-set>
+
+
+    </transformation-set>
+
+</mda>
+
+
+

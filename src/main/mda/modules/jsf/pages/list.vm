@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.List${current.name}Title}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:form styleClass="jsfcrud_list_form">
+                <h:panelGroup id="messagePanel" layout="block">
+                    <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+                </h:panelGroup>
+                <h:outputText escape="false" value="#{bundle.List${current.name}Empty}" rendered="#{${dialect.i2lc($current.name)}Controller.items.rowCount == 0}"/>
+                <h:panelGroup rendered="#{${dialect.i2lc($current.name)}Controller.items.rowCount > 0}">
+                    <h:outputText value="#{${dialect.i2lc($current.name)}Controller.pagination.pageFirstItem + 1}..#{${dialect.i2lc($current.name)}Controller.pagination.pageLastItem + 1}/#{${dialect.i2lc($current.name)}Controller.pagination.itemsCount}"/>&nbsp;
+                    <h:commandLink action="#{${dialect.i2lc($current.name)}Controller.previous}" value="#{bundle.Previous} #{${dialect.i2lc($current.name)}Controller.pagination.pageSize}" rendered="#{${dialect.i2lc($current.name)}Controller.pagination.hasPreviousPage}"/>&nbsp;
+                    <h:commandLink action="#{${dialect.i2lc($current.name)}Controller.next}" value="#{bundle.Next} #{${dialect.i2lc($current.name)}Controller.pagination.pageSize}" rendered="#{${dialect.i2lc($current.name)}Controller.pagination.hasNextPage}"/>&nbsp;
+                    <h:dataTable value="#{${dialect.i2lc($current.name)}Controller.items}" var="item" border="0" cellpadding="2" cellspacing="0" rowClasses="jsfcrud_odd_row,jsfcrud_even_row" rules="all" style="border:solid 1px">
+#foreach ($aProperty in $current.ownedAttribute)
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.List${current.name}Title_${aProperty.name}}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.${aProperty.name}}"/>
+                        </h:column>
+#end
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="&nbsp;"/>
+                            </f:facet>
+                            <h:commandLink action="#{${dialect.i2lc($current.name)}Controller.prepareView}" value="#{bundle.List${current.name}ViewLink}"/>
+                            <h:outputText value=" "/>
+                            <h:commandLink action="#{${dialect.i2lc($current.name)}Controller.prepareEdit}" value="#{bundle.List${current.name}EditLink}"/>
+                            <h:outputText value=" "/>
+                            <h:commandLink action="#{${dialect.i2lc($current.name)}Controller.destroy}" value="#{bundle.List${current.name}DestroyLink}"/>
+                        </h:column>
+                    </h:dataTable>
+                </h:panelGroup>
+                <br />
+                <h:commandLink action="#{${dialect.i2lc($current.name)}Controller.prepareCreate}" value="#{bundle.List${current.name}CreateLink}"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.List${current.name}IndexLink}"/>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>
+

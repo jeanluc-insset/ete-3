@@ -1,0 +1,70 @@
+
+
+Infrastructure
+    - merge current branch into master branch
+    - add some xlang subprojects to .gitignore
+    - beautify the commits
+
+Metamodel
+    - default naming : navigable ends should be named, it would be nice to
+      provide default naming
+
+Constraints
+    ~ generation of "queries"
+    - OCL custom functions
+        - definition
+        - usage
+    - split conjonctions ("A and B" should be treated as separate constraints)
+    - full support of OCL
+    - external OCL files
+    - derived properties
+    - other constraint languages
+        - B
+        - ATL
+        - natural languages
+    - XMI output
+
+Projects
+    - Ete 4.0
+        - metametamodel
+        - Mof2Text
+        - MOF-QVTop
+        - MOF-QVTrel
+    - B
+
+Templates and modules
+    - composition in JPA, in forms
+    - custom boundaries components
+    - WebSockets
+    - SOAP
+    - REST
+    - JavaScript / TypeScript
+    - React
+    - Angular
+    - other languages
+    - Design Patterns
+
+Dialects
+    - SQL
+    - JavaScript
+    - TypeScript
+
+Archetyoes
+    X JSF some little cosmetic bugs with Ajax. Bidirectional associations
+        are not handled at all. Composition is not perfect
+    - React
+    - microservices
+    - custom natural language
+
+Documentation
+    - User Manual
+    - Developper Manual
+
+Examples
+    X airways : webapp Java, JSF + JPA
+    X bank : webapp Java, OCL
+    X linked list : C library, OCL
+    - airways strike back : WASM, RUST
+    - Meteo : webapp Java, SVG, JS, undo, OCL
+
+Miscellaneous

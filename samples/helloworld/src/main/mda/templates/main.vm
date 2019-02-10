@@ -1,0 +1,32 @@
+package fr.insset.jeanluc.ete.samples;
+
+#foreach ($aClass in $current.classes)
+import ${aClass.owningPackage.name}.${aClass.name};
+#end
+import java.util.Scanner;
+
+
+public class Main {
+
+
+    public static void main(String[] arg) {
+        Scanner scanner = new Scanner(System.in);
+#foreach ($aClass in $current.classes)
+        ${aClass.name} ${dialect.i2lc($aClass.name)} = new ${aClass.name}();
+#foreach ($aProperty in $aClass.ownedAttribute)
+        System.out.print("Please enter a value for \"${aProperty.name}\" of ${aClass.name} instance : ");
+#set ($fragment = "templates/fragments/" + ${aProperty.type.name} + ".vm")
+        ${dialect.i2lc($aClass.name)}.set${dialect.i2uc($aProperty.name)}(scanner.#parse($fragment));
+#end
+#end
+        System.out.println("Answer :"
+#foreach ($aClass in $current.classes)
+#foreach ($aProperty in $aClass.ownedAttribute)
+            + " " + ${dialect.i2lc($aClass.name)}.get${dialect.i2uc($aProperty.name)}()
+#end
+#end
+        );
+    }
+
+
+}

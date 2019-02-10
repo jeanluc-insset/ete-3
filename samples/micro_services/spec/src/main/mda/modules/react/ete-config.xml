@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  This module generates the REACT client
+  -->
+
+<mda>
+
+    <transformation-set  output_base="src/">
+
+            <!-- JPA -->
+            <!--    <module href="../jpa/ete-config.xml"/>-->
+
+        <velocity items='${classes}'
+                        template="entity2react.vm"
+                        target="${current.name}Component.js"/>
+        <velocity template="entityList.vm"
+                        target="EntityList.js"/> 
+
+    </transformation-set>
+
+</mda>
+
+
+
