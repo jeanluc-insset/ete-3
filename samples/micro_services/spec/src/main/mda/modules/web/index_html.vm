@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Start Page</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
+        <h1>This application provides an API without any GUI</h1>
+        <ul>
+#foreach ($aClass in $current.allClasses)
+#if ($aClass.hasStereotype("Entity"))
+            <li><a href="webresources/${dialect.i2lc($aClass.name)}">${aClass.name}</a></li>
+#end
+#end
+        </ul>
+    </body>
+</html>
+

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<mda>
+
+
+    <transformation-set>
+
+        <register name="add-visitor-action" action="fr.insset.jeanluc.ete.api.impl.AddVisitorAction"/>
+
+        <model  url="Bank.xml">
+            <add-visitor class="fr.insset.jeanluc.action.semantics.builder.ConditionVisitor"/>
+        </model>
+
+        <transformation-set jsf="true" jaxrs="true">
+
+            <!--
+                current dir :
+                ete-toolchain/samples/web-ete-bank/src/main/mda
+                template src dir :
+                ete-toolchain/src/main/mda/modules/jpa/ete-config.xml
+              -->
+            <module src="../../../../../src/main/mda/modules/web/ete-config.xml"/>
+            <velocity template="pojo-with-operations.vm"
+                    items="${classes}"
+                    dialect="fr.insset.jeanluc.as2java.JavaGenerator"
+                    target="generated-sources/ete/${current.owningPackage.name.replace('.', '/')}/${current.name}.java"
+                    />
+        </transformation-set>
+
+
+    </transformation-set>
+
+</mda>
+
+
+

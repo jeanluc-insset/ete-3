@@ -1,0 +1,427 @@
+cd /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank; JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_161.jdk/Contents/Home "/Applications/NetBeans/NetBeans 8.1.app/Contents/Resources/NetBeans/java/maven/bin/mvn" install
+Scanning for projects...
+                                                                        
+------------------------------------------------------------------------
+Building web-ete-bank 3.1
+------------------------------------------------------------------------
+
+--- maven-dependency-plugin:2.6:copy (default) @ web-ete-bank ---
+
+--- build-helper-maven-plugin:3.0.0:add-source (default) @ web-ete-bank ---
+Source directory: /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target/generated-sources/ete added.
+
+--- ete-maven-plugin:3.1:ete (ete) @ web-ete-bank ---
+mars 25, 2018 1:25:28 PM fr.insset.jeanluc.ete.maven.plugin.EteMojo execute
+INFOS: Ete plugin running
+mars 25, 2018 1:25:28 PM fr.insset.jeanluc.ete.maven.plugin.EteMojo execute
+INFOS: ConfigFilePath : src/main/mda/ete-config.xml
+mars 25, 2018 1:25:28 PM fr.insset.jeanluc.ete.meta.model.core.impl.Factories init
+INFOS: Registration of default factories
+mars 25, 2018 1:25:28 PM fr.insset.jeanluc.ete.meta.model.core.impl.Factories init
+INFOS: Registration of default factories
+mars 25, 2018 1:25:28 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@51c929ae
+mars 25, 2018 1:25:28 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@3c8bdd5b
+mars 25, 2018 1:25:28 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@29d2d081
+mars 25, 2018 1:25:28 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@51c929ae
+mars 25, 2018 1:25:28 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@3d829787
+mars 25, 2018 1:25:28 PM fr.insset.jeanluc.ete.api.impl.ModelAction postProcess
+INFOS: Reading model... Bank.xml
+mars 25, 2018 1:25:28 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor visitMofClass
+INFOS: the item Customer is put into package fr.insset.jeanluc.ete.example.bank
+mars 25, 2018 1:25:28 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor visitMofClass
+INFOS: the item Account is put into package fr.insset.jeanluc.ete.example.bank
+mars 25, 2018 1:25:28 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor visitMofClass
+INFOS: the item ExcessiveOverdraftException is put into package fr.insset.jeanluc.ete.example.bank
+mars 25, 2018 1:25:28 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor visitMofClass
+INFOS: the item Exception is put into package java.lang
+mars 25, 2018 1:25:28 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: Reading type
+mars 25, 2018 1:25:28 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: In readType, attribute = Account
+mars 25, 2018 1:25:28 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: The type is a collection of Accounts
+mars 25, 2018 1:25:28 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: After wrapping : Sequence<Account> (class fr.insset.jeanluc.ete.meta.model.types.collections.impl.MofSequenceImpl)
+mars 25, 2018 1:25:28 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: Reading type
+mars 25, 2018 1:25:28 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: In readType, typeAsString = String -> String
+mars 25, 2018 1:25:28 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: Reading type
+mars 25, 2018 1:25:28 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: In readType, typeAsString = String -> String
+mars 25, 2018 1:25:28 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: Reading type
+mars 25, 2018 1:25:28 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: In readType, typeAsString = String -> String
+mars 25, 2018 1:25:28 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: Reading type
+mars 25, 2018 1:25:28 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: In readType, typeAsString = float -> float
+mars 25, 2018 1:25:28 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: Reading type
+mars 25, 2018 1:25:28 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: In readType, attribute = Customer
+mars 25, 2018 1:25:28 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReader _doReadElements
+AVERTISSEMENT: Error when visiting null : java.lang.reflect.InvocationTargetException
+mars 25, 2018 1:25:28 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: Reading type
+mars 25, 2018 1:25:28 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: In readType, typeAsString = Element -> null
+mars 25, 2018 1:25:28 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReader _doReadElements
+AVERTISSEMENT: Error when visiting base_Element : java.lang.reflect.InvocationTargetException
+mars 25, 2018 1:25:28 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: Reading type
+mars 25, 2018 1:25:28 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: In readType, typeAsString = Element -> null
+mars 25, 2018 1:25:28 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReader _doReadElements
+AVERTISSEMENT: Error when visiting base_Element : java.lang.reflect.InvocationTargetException
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReader _doReadElements
+AVERTISSEMENT: Error when visiting null : java.lang.reflect.InvocationTargetException
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: Reading type
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: In readType, typeAsString = float -> float
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: Reading type
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: In readType, attribute = Account
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: Reading type
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: In readType, attribute = Account
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: Reading type
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: In readType, typeAsString = float -> float
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: Reading type
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: In readType, typeAsString = float -> float
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReader _doReadElements
+AVERTISSEMENT: Error when visiting withdraw : java.lang.reflect.InvocationTargetException
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReader _doReadElements
+AVERTISSEMENT: Error when visiting deposit : java.lang.reflect.InvocationTargetException
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: Reading type
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: In readType, typeAsString = Element -> null
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: Reading type
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: In readType, typeAsString = Element -> null
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: Reading type
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: In readType, attribute = null
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: Reading type
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: In readType, attribute = null
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: Reading type
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: In readType, attribute = null
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: Reading type
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: In readType, attribute = null
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: Reading type
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: In readType, attribute = null
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: Reading type
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: In readType, attribute = null
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: Reading type
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: In readType, attribute = null
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: Reading type
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: In readType, attribute = null
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: Reading type
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.xmi.io.impl.XmlModelReaderVisitor readType
+INFOS: In readType, attribute = null
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@50fb33a
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@51c929ae
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@2cae9b8
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@1457fde
+Parametre test de if : true
+Le paramètre n'est pas un booléen...
+Le résultat de test est true
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@50fb33a
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@51c929ae
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@50fb33a
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@50fb33a
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@50fb33a
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@50fb33a
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@1457fde
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@1457fde
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@51c929ae
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@618ff5c2
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@618ff5c2
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@618ff5c2
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@618ff5c2
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@618ff5c2
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@618ff5c2
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@618ff5c2
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@51c929ae
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@1457fde
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@1457fde
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@1457fde
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@1457fde
+DIALECT ADDED : fr.insset.jeanluc.el.dialect.BasicJavaDialect@352ed70d
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate performAnIteration
+INFOS: Template used on null -> /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target/generated-sources/ete/fr/insset/jeanluc/ete/jpa/AbstractJpa.java
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate openTargetUrl
+INFOS: Generated file : /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target/generated-sources/ete/fr/insset/jeanluc/ete/jpa/AbstractJpa.java
+DIALECT ADDED : fr.insset.jeanluc.as2java.JavaGenerator@7f5b9db
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate performAnIteration
+INFOS: Template used on Account -> /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target/generated-sources/ete/${current.owningPackage.name.replace('.', '/')}/model/${current.name}.java
+mars 25, 2018 1:25:29 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate openTargetUrl
+INFOS: Generated file : /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target/generated-sources/ete/fr/insset/jeanluc/ete/example/bank/model/Account.java
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate performAnIteration
+INFOS: Template used on Customer -> /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target/generated-sources/ete/${current.owningPackage.name.replace('.', '/')}/model/${current.name}.java
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate openTargetUrl
+INFOS: Generated file : /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target/generated-sources/ete/fr/insset/jeanluc/ete/example/bank/model/Customer.java
+DIALECT ADDED : fr.insset.jeanluc.as2java.JavaGenerator@c269425
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate performAnIteration
+INFOS: Template used on Account -> /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target/generated-sources/ete/${current.owningPackage.name.replace('.', '/')}/jpa/${current.name}Jpa.java
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate openTargetUrl
+INFOS: Generated file : /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target/generated-sources/ete/fr/insset/jeanluc/ete/example/bank/jpa/AccountJpa.java
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate performAnIteration
+INFOS: Template used on Customer -> /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target/generated-sources/ete/${current.owningPackage.name.replace('.', '/')}/jpa/${current.name}Jpa.java
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate openTargetUrl
+INFOS: Generated file : /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target/generated-sources/ete/fr/insset/jeanluc/ete/example/bank/jpa/CustomerJpa.java
+DIALECT ADDED : fr.insset.jeanluc.el.dialect.BasicJavaDialect@367f0121
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate performAnIteration
+INFOS: Template used on null -> /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target/generated-resources/ete/META-INF/persistence.xml
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate openTargetUrl
+INFOS: Generated file : /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target/generated-resources/ete/META-INF/persistence.xml
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@51c929ae
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@51c929ae
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@1457fde
+DIALECT ADDED : fr.insset.jeanluc.as2java.JavaGenerator@27fe9713
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate performAnIteration
+INFOS: Template used on ExcessiveOverdraftException -> /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target/generated-sources/ete/${current.owningPackage.name.replace('.', '/')}/${current.name}.java
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate openTargetUrl
+INFOS: Generated file : /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target/generated-sources/ete/fr/insset/jeanluc/ete/example/bank/ExcessiveOverdraftException.java
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@51c929ae
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@51c929ae
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@1457fde
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@1457fde
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@1457fde
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@1457fde
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@1457fde
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@1457fde
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@1457fde
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@1457fde
+DIALECT ADDED : fr.insset.jeanluc.el.dialect.BasicJavaDialect@6a87026
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate performAnIteration
+INFOS: Template used on null -> /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target//generated-web-pages/ete/index.xhtml
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate openTargetUrl
+INFOS: Generated file : /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target//generated-web-pages/ete/index.xhtml
+DIALECT ADDED : fr.insset.jeanluc.el.dialect.BasicJavaDialect@169268a7
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate performAnIteration
+INFOS: Template used on null -> /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target//generated-web-pages/ete/template.xhtml
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate openTargetUrl
+INFOS: Generated file : /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target//generated-web-pages/ete/template.xhtml
+DIALECT ADDED : fr.insset.jeanluc.el.dialect.BasicJavaDialect@4d499d65
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate performAnIteration
+INFOS: Template used on Account -> /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target//generated-web-pages/ete/admin/${current.name.toLowerCase()}/list.xhtml
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate openTargetUrl
+INFOS: Generated file : /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target//generated-web-pages/ete/admin/account/list.xhtml
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate performAnIteration
+INFOS: Template used on Customer -> /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target//generated-web-pages/ete/admin/${current.name.toLowerCase()}/list.xhtml
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate openTargetUrl
+INFOS: Generated file : /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target//generated-web-pages/ete/admin/customer/list.xhtml
+DIALECT ADDED : fr.insset.jeanluc.el.dialect.BasicJavaDialect@dd71b20
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate performAnIteration
+INFOS: Template used on Account -> /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target//generated-web-pages/ete/admin/${current.name.toLowerCase()}/view.xhtml
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate openTargetUrl
+INFOS: Generated file : /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target//generated-web-pages/ete/admin/account/view.xhtml
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate performAnIteration
+INFOS: Template used on Customer -> /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target//generated-web-pages/ete/admin/${current.name.toLowerCase()}/view.xhtml
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate openTargetUrl
+INFOS: Generated file : /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target//generated-web-pages/ete/admin/customer/view.xhtml
+DIALECT ADDED : fr.insset.jeanluc.el.dialect.BasicJavaDialect@59b65dce
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate performAnIteration
+INFOS: Template used on Account -> /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target//generated-web-pages/ete/admin/${current.name.toLowerCase()}/create.xhtml
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate openTargetUrl
+INFOS: Generated file : /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target//generated-web-pages/ete/admin/account/create.xhtml
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate performAnIteration
+INFOS: Template used on Customer -> /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target//generated-web-pages/ete/admin/${current.name.toLowerCase()}/create.xhtml
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate openTargetUrl
+INFOS: Generated file : /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target//generated-web-pages/ete/admin/customer/create.xhtml
+DIALECT ADDED : fr.insset.jeanluc.el.dialect.BasicJavaDialect@7d57dbb5
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate performAnIteration
+INFOS: Template used on Account -> /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target//generated-web-pages/ete/admin/${current.name.toLowerCase()}/edit.xhtml
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate openTargetUrl
+INFOS: Generated file : /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target//generated-web-pages/ete/admin/account/edit.xhtml
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate performAnIteration
+INFOS: Template used on Customer -> /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target//generated-web-pages/ete/admin/${current.name.toLowerCase()}/edit.xhtml
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate openTargetUrl
+INFOS: Generated file : /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target//generated-web-pages/ete/admin/customer/edit.xhtml
+DIALECT ADDED : fr.insset.jeanluc.el.dialect.BasicJavaDialect@2ef0dd86
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate performAnIteration
+INFOS: Template used on Account -> /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target//generated-web-pages/ete/resources/ete/${current.name}_form.xhtml
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate openTargetUrl
+INFOS: Generated file : /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target//generated-web-pages/ete/resources/ete/Account_form.xhtml
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate performAnIteration
+INFOS: Template used on Customer -> /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target//generated-web-pages/ete/resources/ete/${current.name}_form.xhtml
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate openTargetUrl
+INFOS: Generated file : /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target//generated-web-pages/ete/resources/ete/Customer_form.xhtml
+DIALECT ADDED : fr.insset.jeanluc.el.dialect.BasicJavaDialect@37496720
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate performAnIteration
+INFOS: Template used on deposit -> /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target//generated-web-pages/ete/resources/ete/${current.owningMofClass.name}_${current.name}_form.xhtml
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate openTargetUrl
+INFOS: Generated file : /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target//generated-web-pages/ete/resources/ete/Account_deposit_form.xhtml
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate performAnIteration
+INFOS: Template used on withdraw -> /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target//generated-web-pages/ete/resources/ete/${current.owningMofClass.name}_${current.name}_form.xhtml
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate openTargetUrl
+INFOS: Generated file : /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target//generated-web-pages/ete/resources/ete/Account_withdraw_form.xhtml
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate performAnIteration
+INFOS: Template used on transfer -> /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target//generated-web-pages/ete/resources/ete/${current.owningMofClass.name}_${current.name}_form.xhtml
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate openTargetUrl
+INFOS: Generated file : /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target//generated-web-pages/ete/resources/ete/Customer_transfer_form.xhtml
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@51c929ae
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@1457fde
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@1457fde
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.io.XmlActionReader readChildren
+INFOS: factory : fr.insset.jeanluc.util.factory.FactoryRegistryImpl$DefaultFactory@1457fde
+DIALECT ADDED : fr.insset.jeanluc.as2java.JavaGenerator@37baddde
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate performAnIteration
+INFOS: Template used on Account -> /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target/generated-sources/ete/${current.owningPackage.name.replace(".", "/")}/jsf/${current.name}Controller.java
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate openTargetUrl
+INFOS: Generated file : /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target/generated-sources/ete/fr/insset/jeanluc/ete/example/bank/jsf/AccountController.java
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate performAnIteration
+INFOS: Template used on Customer -> /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target/generated-sources/ete/${current.owningPackage.name.replace(".", "/")}/jsf/${current.name}Controller.java
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate openTargetUrl
+INFOS: Generated file : /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target/generated-sources/ete/fr/insset/jeanluc/ete/example/bank/jsf/CustomerController.java
+DIALECT ADDED : fr.insset.jeanluc.as2java.JavaGenerator@67f77f6e
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate performAnIteration
+INFOS: Template used on null -> /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target/generated-sources/ete/fr/insset/jeanluc/ete/jsf/util/PaginationHelper.java
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate openTargetUrl
+INFOS: Generated file : /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target/generated-sources/ete/fr/insset/jeanluc/ete/jsf/util/PaginationHelper.java
+DIALECT ADDED : fr.insset.jeanluc.as2java.JavaGenerator@290e8cab
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate performAnIteration
+INFOS: Template used on null -> /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target/generated-sources/ete/fr/insset/jeanluc/ete/jsf/util/JsfUtil.java
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate openTargetUrl
+INFOS: Generated file : /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target/generated-sources/ete/fr/insset/jeanluc/ete/jsf/util/JsfUtil.java
+DIALECT ADDED : fr.insset.jeanluc.el.dialect.BasicJavaDialect@5f14761c
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate performAnIteration
+INFOS: Template used on null -> /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target/generated-web-pages/ete/WEB-INF/faces-config.xml
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate openTargetUrl
+INFOS: Generated file : /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target/generated-web-pages/ete/WEB-INF/faces-config.xml
+DIALECT ADDED : fr.insset.jeanluc.el.dialect.BasicJavaDialect@7cca01a8
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate performAnIteration
+INFOS: Template used on null -> /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target/generated-resources/ete/Bundle.properties
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate openTargetUrl
+INFOS: Generated file : /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target/generated-resources/ete/Bundle.properties
+DIALECT ADDED : fr.insset.jeanluc.el.dialect.BasicJavaDialect@18137eab
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate performAnIteration
+INFOS: Template used on null -> /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target/generated-web-pages/ete/WEB-INF/web.xml
+mars 25, 2018 1:25:30 PM fr.insset.jeanluc.ete.api.impl.GenericTemplate openTargetUrl
+INFOS: Generated file : /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target/generated-web-pages/ete/WEB-INF/web.xml
+
+--- maven-resources-plugin:2.5:resources (default-resources) @ web-ete-bank ---
+[debug] execute contextualize
+Using 'UTF-8' encoding to copy filtered resources.
+Copying 2 resources
+
+--- maven-compiler-plugin:3.1:compile (default-compile) @ web-ete-bank ---
+Changes detected - recompiling the module!
+Compiling 10 source files to /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target/classes
+/Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target/generated-sources/ete/fr/insset/jeanluc/ete/example/bank/jsf/AccountController.java: Some input files use unchecked or unsafe operations.
+/Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target/generated-sources/ete/fr/insset/jeanluc/ete/example/bank/jsf/AccountController.java: Recompile with -Xlint:unchecked for details.
+
+--- maven-resources-plugin:2.5:testResources (default-testResources) @ web-ete-bank ---
+[debug] execute contextualize
+Using 'UTF-8' encoding to copy filtered resources.
+skip non existing resourceDirectory /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/src/test/resources
+
+--- maven-compiler-plugin:3.1:testCompile (default-testCompile) @ web-ete-bank ---
+Nothing to compile - all classes are up to date
+
+--- maven-surefire-plugin:2.10:test (default-test) @ web-ete-bank ---
+Surefire report directory: /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target/surefire-reports
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+
+Results :
+
+Tests run: 0, Failures: 0, Errors: 0, Skipped: 0
+
+
+--- maven-war-plugin:3.2.0:war (default-war) @ web-ete-bank ---
+Packaging webapp
+Assembling webapp [web-ete-bank] in [/Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target/web-ete-bank-3.1]
+Processing war project
+Copying webapp webResources [/Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target/generated-web-pages/ete] to [/Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target/web-ete-bank-3.1]
+Copying webapp resources [/Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/src/main/webapp]
+Webapp assembled in [197 msecs]
+Building war: /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target/web-ete-bank-3.1.war
+
+--- maven-install-plugin:2.3.1:install (default-install) @ web-ete-bank ---
+Installing /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/target/web-ete-bank-3.1.war to /Users/jldeleage/.m2/repository/fr/insset/jeanluc/web-ete-bank/3.1/web-ete-bank-3.1.war
+Installing /Users/jldeleage/NetBeansProjects/ete-toolchain-2016/samples/web-ete-bank/pom.xml to /Users/jldeleage/.m2/repository/fr/insset/jeanluc/web-ete-bank/3.1/web-ete-bank-3.1.pom
+------------------------------------------------------------------------
+BUILD SUCCESS
+------------------------------------------------------------------------
+Total time: 8.385s
+Finished at: Sun Mar 25 13:25:35 CEST 2018
+Final Memory: 40M/534M
+------------------------------------------------------------------------
+

@@ -1,0 +1,8 @@
+
+context Pilot:
+    - definition : this Pilot is certified for a PlaneModel :
+        the model of the certificates of this Pilot contains the PlaneModel.
+
+    -definition : this Pilot is certified for a Plane :
+        this Pilot is certified for the model of the Plane.
+

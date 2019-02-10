@@ -1,0 +1,134 @@
+package fr.insset.jeanluc.ete.xlang.to.xxx;
+
+
+import fr.insset.jeanluc.action.semantics.builder.EnhancedMofOperation;
+import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
+import fr.insset.jeanluc.ete.gel.*;
+import fr.insset.jeanluc.ete.meta.model.emof.*;
+import fr.insset.jeanluc.ete.meta.model.types.*;
+import fr.insset.jeanluc.ete.xlang.*;
+import fr.insset.jeanluc.util.factory.FactoryMethods;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+
+public class GeneratorSupport extends DynamicVisitorSupport implements Generator {
+
+
+    public GeneratorSupport() throws InstantiationException {
+        this ("    ");
+    }
+
+
+    public GeneratorSupport(String inIndentation)throws InstantiationException {
+        symbols = FactoryMethods.newMap(String.class, String.class);
+#foreach ($aClass in $current.allClasses)
+#if ($aClass.getValueOf("symbol"))
+        symbols.put("${aClass.getValueOf("symbol")}","${aClass.getValueOf("symbol")}");
+#end
+#end
+        register("visit",
+                 "fr.insset.jeanluc.ete.gel",
+                 "fr.insset.jeanluc.ete.meta.model.emof",
+                 "fr.insset.jeanluc.ete.meta.model.types",
+                 "fr.insset.jeanluc.ete.xlang");
+    }
+
+
+    //========================================================================//
+
+
+    public String getOperationBody(MofOperation inOperation, String inIndentation) {
+            EnhancedMofOperation operation = (EnhancedMofOperation) inOperation;
+            List<Statement> statementList = operation.getBody();
+//            this.operation = inOperation;
+            StringWriter    stringWriter = new StringWriter();
+            PrintWriter     printWriter = new PrintWriter(stringWriter);
+            printWriter.append(inIndentation);
+            for (Statement aStatement : statementList) {
+                try {
+                    genericVisit(aStatement, printWriter, inIndentation);
+                } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+                    Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
+                    printWriter.append("// Unable to compile : ");
+                    printWriter.append(aStatement.toString());
+                    printWriter.append('\n');
+                    printWriter.append(inIndentation);
+                    printWriter.append(getExceptionMessage());
+                }
+            }
+            printWriter.flush();
+            String result = stringWriter.toString();
+            Logger      logger = Logger.getGlobal();
+            logger.log(Level.FINE, "Operation generee : \n" + result);
+            return result;
+    }
+
+    //========================================================================//
+
+
+#foreach ($aClass in $current.allClasses)
+#if ($aClass.name.equals("VariableReference"))
+
+    public VariableReference visitVariableReference(VariableReference inExpression, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        PrintWriter output = (PrintWriter) inParameters[0];
+        String      variableName = inExpression.getName();
+        System.out.println("Generating a variable reference : " + variableName);
+        output.print(variableName);
+        return inExpression;
+    }
+#elseif ($aClass.getValueOf("priority"))
+
+    public ${aClass.name} visit${aClass.name}(${aClass.name} inExpression, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        PrintWriter output = (PrintWriter) inParameters[0];
+        List<GelExpression> operand = inExpression.getOperand();
+        // TODO : we must take care of the priority
+#if ($aClass.getValueOf("kind").equals("prefix"))
+        // prefixed unary operation
+        output.print(symbols.get("${aClass.getValueOf("symbol")}"));
+        genericVisit(operand.get(0), inParameters);
+#elseif ($aClass.getValueOf("kind").equals("infix") || $aClass.getValueOf("kind").equals("rightPartOfInfix"))
+        // infix binary operation
+        genericVisit(operand.get(0), inParameters);
+        output.print(' ');
+        output.print(symbols.get("${aClass.getValueOf("symbol")}"));
+        output.print(' ');
+        genericVisit(operand.get(1), inParameters);
+#elseif ($aClass.name.equals("AtPre"))
+        // atpre operation  
+        genericVisit(operand.get(0), inParameters);
+#else
+        // other operation
+        // ${aClass.getValueOf("kind")}
+#end
+        return inExpression;
+    }
+#end
+#end
+
+
+    //========================================================================//
+
+
+
+    protected String getExceptionMessage() {
+        return "";
+    }
+
+
+    public      void setSymbol(String inFor, String inSymbol) {
+        symbols.put(inFor, inSymbol);
+    }
+
+
+    //========================================================================//
+
+
+    private     Map<String, String>     symbols;
+
+}

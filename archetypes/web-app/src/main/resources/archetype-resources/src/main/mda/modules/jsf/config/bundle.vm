@@ -1,0 +1,63 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+PersistenceErrorOccured=A persistence error occurred.
+Previous=Previous
+Next=Next
+
+\#foreach (${symbol_dollar}aClass in ${symbol_dollar}current.classes)
+
+\#if (${symbol_dollar}aClass.hasStereotype("Entity"))
+
+${symbol_dollar}{aClass.name}Created=${symbol_dollar}{aClass.name} was successfully created.
+${symbol_dollar}{aClass.name}Updated=${symbol_dollar}{aClass.name} was successfully updated.
+${symbol_dollar}{aClass.name}Deleted=${symbol_dollar}{aClass.name} was successfully deleted.
+Create${symbol_dollar}{aClass.name}Title=Create New ${symbol_dollar}{aClass.name}
+Create${symbol_dollar}{aClass.name}SaveLink=Save
+Create${symbol_dollar}{aClass.name}ShowAllLink=Show All ${symbol_dollar}{aClass.name} Items
+Create${symbol_dollar}{aClass.name}IndexLink=Index
+
+Edit${symbol_dollar}{aClass.name}Title=Edit ${symbol_dollar}{aClass.name}
+Edit${symbol_dollar}{aClass.name}SaveLink=Save
+Edit${symbol_dollar}{aClass.name}ViewLink=View
+Edit${symbol_dollar}{aClass.name}ShowAllLink=Show All ${symbol_dollar}{aClass.name} Items
+Edit${symbol_dollar}{aClass.name}IndexLink=Index
+
+\#\# These labels are used in the Create form and in the Edit form as well.
+\#foreach (${symbol_dollar}aProperty in ${symbol_dollar}aClass.ownedAttribute)
+${symbol_dollar}{aClass.name}Label_${symbol_dollar}{aProperty.name}=${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)} :
+${symbol_dollar}{aClass.name}Title_street=${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)}
+\#end
+
+View${symbol_dollar}{aClass.name}Title=View
+View${symbol_dollar}{aClass.name}DestroyLink=Destroy
+View${symbol_dollar}{aClass.name}EditLink=Edit
+View${symbol_dollar}{aClass.name}CreateLink=Create New ${symbol_dollar}{aClass.name}
+View${symbol_dollar}{aClass.name}ShowAllLink=Show All ${symbol_dollar}{aClass.name} Items
+View${symbol_dollar}{aClass.name}IndexLink=Index
+\#foreach (${symbol_dollar}aProperty in ${symbol_dollar}aClass.ownedAttribute)
+View${symbol_dollar}{aClass.name}Label_${symbol_dollar}{aProperty.name}=${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)} :
+View${symbol_dollar}{aClass.name}Title_${symbol_dollar}{aProperty.name}=${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)}
+\#end
+\#foreach (${symbol_dollar}aMethod in ${symbol_dollar}aClass.ownedOperation)
+\#foreach (${symbol_dollar}aParameter in ${symbol_dollar}aMethod.ownedParameter)
+${symbol_dollar}{aClass.name}${symbol_dollar}{dialect.i2uc(${symbol_dollar}aMethod.name)}Label_${symbol_dollar}{aParameter.name} = ${symbol_dollar}{aParameter.name} :
+${symbol_dollar}{aClass.name}${symbol_dollar}{dialect.i2uc(${symbol_dollar}aMethod.name)}Title_${symbol_dollar}{aParameter.name} = ${symbol_dollar}{aParameter.name}
+\#end
+\#end
+
+List${symbol_dollar}{aClass.name}Title=List
+List${symbol_dollar}{aClass.name}Empty=(No ${symbol_dollar}{aClass.name} Items Found)
+List${symbol_dollar}{aClass.name}DestroyLink=Destroy
+List${symbol_dollar}{aClass.name}EditLink=Edit
+List${symbol_dollar}{aClass.name}ViewLink=View
+List${symbol_dollar}{aClass.name}CreateLink=Create New ${symbol_dollar}{aClass.name}
+List${symbol_dollar}{aClass.name}IndexLink=Index
+\#foreach (${symbol_dollar}aProperty in ${symbol_dollar}aClass.ownedAttribute)
+List${symbol_dollar}{aClass.name}Label_${symbol_dollar}{aProperty.name}=${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)} :
+List${symbol_dollar}{aClass.name}Title_${symbol_dollar}{aProperty.name}=${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)}
+\#end
+
+\#end
+
+\#end

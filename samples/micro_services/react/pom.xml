@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+    <artifactId>micro_services</artifactId>
+    <groupId>fr.insset.jeanluc</groupId>
+    <version>3.1</version>
+  </parent>
+
+    <groupId>fr.insset.jeanluc</groupId>
+    <artifactId>react</artifactId>
+    <version>3.1</version>
+    <packaging>jar</packaging>
+
+    <name>react</name>
+
+    <description>
+        React.js Blank Project (from https://github.com/making/maven-reactjs-blank)
+    </description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+
+    <build>
+        <plugins>
+
+            <plugin>
+                <artifactId>exec-maven-plugin</artifactId>
+                <groupId>org.codehaus.mojo</groupId>
+                <version>1.6.0</version>
+                <executions>
+                    <execution>
+                        <id>clean react</id>
+                        <phase>clean</phase>
+                        <configuration>
+                            <executable>rm</executable>
+                            <arguments>
+                                <argument>-rf</argument>
+                                <argument>build</argument>
+                            </arguments>
+                            <workingDirectory>src/main/react</workingDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>clean 2</id>
+                        <phase>clean</phase>
+                        <configuration>
+                            <executable>echo</executable>
+                            <arguments>
+                                <argument>-rf</argument>
+                                <argument>build</argument>
+                            </arguments>
+                            <workingDirectory>src/main/react</workingDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <!--Run our version calculation script--> 
+                        <id>Yarn install</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>/usr/local/bin/yarn</executable>
+                            <workingDirectory>src/main/react</workingDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <!--Run our version calculation script--> 
+                        <id>Yarn build</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>/usr/local/bin/yarn</executable>
+                            <arguments>
+                                <argument>build</argument>
+                            </arguments>
+                            <workingDirectory>src/main/react</workingDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/classes/META-INF/resources</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>dest</directory>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+</project>

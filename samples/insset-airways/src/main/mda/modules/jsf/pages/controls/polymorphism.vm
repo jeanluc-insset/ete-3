@@ -1,0 +1,35 @@
+## input :
+##     $title   : name of the current class
+##     $property: property we build the control for
+##     $var     : shortcut for $property
+##     $varName : name of that property (shortcut for $property.name or $var.name)
+##     $scope   : the prefix to use for the controlled object
+## Depending on the kind of the relationship, we must generate one or more
+## controls.
+## The following instructions build such an element through a polymorphic parse
+## The template name is the concatenation of three boolean values
+## The first value is whether the property composite or not
+## The second value is whether the property is a collection or not
+## The third value is whether the property is qualified or not
+## See the controlTypes.txt for details
+<h:outputText value="${dialect.cc2sw($varName)}"/>
+#set($dp = $dialect.getDependentProperties($var))
+#if ($var.type.name.equals("String") || $var.type.equals("int") || $var.type.name.equals("float"))
+#parse("controls/input.vm")
+#elseif ($var.type.name.equals("date"))
+#parse("controls/calendar.vm")
+#else
+#set($coll = $var.type.collection)
+#if ($var.composite)
+#set($composite = true)
+#else
+#set($composite = false)
+#end
+#if ($var.qualifierType)
+#set($qual = true)
+#else
+#set($qual = false)
+#end
+#set($tn = "controls/" + $composite + "_" + $coll + "_" + $qual + ".vm")
+#parse($tn)
+#end

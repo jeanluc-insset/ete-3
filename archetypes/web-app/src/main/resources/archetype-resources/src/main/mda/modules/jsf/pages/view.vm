@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ete="http://xmlns.jcp.org/jsf/composite/ete"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="View"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+                <h:panelGrid columns="2">
+\#foreach (${symbol_dollar}aProperty in ${symbol_dollar}current.ownedAttribute)
+                    <h:outputText value="${symbol_dollar}{aProperty.name}"/>
+                    <h:outputText value="\#{${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller.selected.${symbol_dollar}{aProperty.name}" title="${symbol_dollar}{aProperty.name}"/>
+\#end
+            </h:panelGrid>
+\#foreach (${symbol_dollar}aMethod in ${symbol_dollar}current.ownedOperation)
+                <fieldset>
+                    <legend>${symbol_dollar}{aMethod.name}</legend>
+                <h:form>
+                    <ete:${symbol_dollar}{current.name}_${symbol_dollar}{aMethod.name}_form />
+                </h:form>
+                </fieldset>
+\#end
+                <h:form>
+                <br />
+                <h:commandLink action="\#{${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller.destroyAndView}" value="Destroy"/>
+                <br />
+                <br />
+                <h:link outcome="edit" value="Edit"/>
+                <br />
+                <h:commandLink action="\#{${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller.prepareCreate}" value="Create new ${symbol_dollar}{current.name}" />
+                <br />
+                <h:commandLink action="\#{${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller.prepareList}" value="Show All ${symbol_dollar}{current.name} Items"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="\#{bundle.View${symbol_dollar}{current.name}IndexLink}"/>
+
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>
+

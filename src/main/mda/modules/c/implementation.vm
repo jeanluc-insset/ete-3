@@ -1,0 +1,9 @@
+\#include   "${current.name}.h"
+\#include    <stdlib.h>
+
+#foreach ($anOperation in $current.ownedOperation)
+#parse("result_type.vm") ${anOperation.name}(t_${current.name} *self#foreach ($aParameter in $anOperation.ownedParameter), #parse("parameter.vm")#end) {
+${dialect.getOperationBody($anOperation, "    ")}
+}
+
+#end

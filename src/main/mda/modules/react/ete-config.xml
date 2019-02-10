@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  This module generates all JPA stuff. It first calls a template to generate
+  entities, then generate the DAOs and the persistence unit.
+  -->
+
+<mda>
+
+    <transformation-set>
+
+            <!-- JAX-RS -->
+            <!-- The jax-rs runs the jpa module first -->
+            <module href="../jaxrs/ete-config.xml"/>
+
+        <!--<velocity items="${classes}"
+                        dialect="fr.insset.jeanluc.as2java.JavaGenerator"
+                        template="xxx.vm"
+                        target="admin/${current.name}.xhtml"/> -->
+
+    </transformation-set>
+
+</mda>
+
+
+

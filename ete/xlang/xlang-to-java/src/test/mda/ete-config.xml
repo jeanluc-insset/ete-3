@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<mda>
+
+
+    <transformation-set output_base="../../as-target/target/generated-sources/ete/">
+
+        <transformation-set
+                >
+            <!-- reads the model -->
+            <model url="../../../../../../src/test/mda/models/full_MCQ.xml"/>
+
+
+
+        </transformation-set>
+
+    </transformation-set>
+
+</mda>

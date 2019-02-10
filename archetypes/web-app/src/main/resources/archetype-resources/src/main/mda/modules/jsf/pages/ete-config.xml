@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+<!--
+  This module generates all JSF stuff. It first calls a module to generate
+  JPA material.
+  Then it runs templates for controllers, forms, lists...
+  -->
+
+<mda>
+
+    <transformation-set>
+
+        <transformation-set output_base="/generated-web-pages/ete/">
+
+
+            <velocity template="index_xhtml.vm"
+                      target="index.xhtml"/>
+
+            <velocity template="form_template.vm"
+                      target="template.xhtml"/>
+<!--            <velocity template="bordertemplate.vm"
+                      target="bordertemplate.xhtml"/>-->
+
+
+                <!--          E N T I T Y   C R U D   F O R M S          -->
+            <velocity items='${symbol_dollar}{classes.filter(c -> c.hasStereotype("Entity"))}'
+                      template="list.vm"
+                      target="admin/${symbol_dollar}{current.name.toLowerCase()}/list.xhtml"/>
+            <velocity items='${symbol_dollar}{classes.filter(c -> c.hasStereotype("Entity"))}'
+                      template="view.vm"
+                      target="admin/${symbol_dollar}{current.name.toLowerCase()}/view.xhtml"/>
+            <velocity items='${symbol_dollar}{classes.filter(c -> c.hasStereotype("Entity"))}'
+                      template="create.vm"
+                      target="admin/${symbol_dollar}{current.name.toLowerCase()}/create.xhtml"/>
+            <velocity items='${symbol_dollar}{classes.filter(c -> c.hasStereotype("Entity"))}'
+                      template="edit.vm"
+                      target="admin/${symbol_dollar}{current.name.toLowerCase()}/edit.xhtml"/>
+                                    <!--   sub forms -->
+            <velocity items='${symbol_dollar}{classes.filter(c -> c.hasStereotype("Entity"))}'
+                      template="form.vm"
+                      target="resources/ete/${symbol_dollar}{current.name}_form.xhtml"/>
+            <velocity items='${symbol_dollar}{classes.filter(c -> c.hasStereotype("Entity")).flatmap(c -> c.ownedOperation)}'
+                      template="operation.vm"
+                      target="resources/ete/${symbol_dollar}{current.owningMofClass.name}_${symbol_dollar}{current.name}_form.xhtml"/>            
+
+        </transformation-set>
+
+    </transformation-set>
+
+</mda>
+
+
+

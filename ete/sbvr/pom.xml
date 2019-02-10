@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>fr.insset.jeanluc</groupId>
+        <artifactId>ete</artifactId>
+        <version>3.1</version>
+    </parent>
+    <artifactId>sbvr</artifactId>
+    <packaging>pom</packaging>
+
+    <description>
+        This project defines the sbvr language which extends and embeds GEL.
+        This is achieve with the following techniques:
+        - the sbvr lexer imports and refines the GEL lexer
+        - the sbvr parser imports and refines the GEL parser
+        - the 
+    </description>
+
+    <modules>
+        <module>sbvr-spec</module>
+        <module>sbvr-api</module>
+        <module>sbvr-impl</module>
+    </modules>
+
+</project>

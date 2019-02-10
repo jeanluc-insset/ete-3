@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<mda>
+
+
+    <transformation-set>
+
+        <register name="add-visitor-action" action="fr.insset.jeanluc.ete.api.impl.AddVisitorAction"/>
+
+        <model  url="FormalLinkedList.xml">
+            <add-visitor class="fr.insset.jeanluc.action.semantics.builder.ConditionVisitor"/>
+        </model>
+
+
+            <!--
+                The module is defined by
+                ete-toolchain/src/main/mda/modules/jpa/ete-config.xml
+              -->
+        <module src="../../../../../src/main/mda/modules/C/ete-config.xml"/>
+
+        <velocity   template="main.vm"
+                    target="main.c"/>
+
+    </transformation-set>
+
+</mda>
+
+
+

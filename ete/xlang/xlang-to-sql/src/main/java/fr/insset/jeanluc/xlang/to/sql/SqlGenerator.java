@@ -1,0 +1,267 @@
+package fr.insset.jeanluc.xlang.to.sql;
+
+
+
+import fr.insset.jeanluc.action.semantics.builder.EnhancedMofClassImpl;
+import fr.insset.jeanluc.action.semantics.builder.EteFilter;
+import fr.insset.jeanluc.action.semantics.builder.EteQuery;
+import fr.insset.jeanluc.action.semantics.builder.Join;
+import fr.insset.jeanluc.el.dialect.Dialect;
+import fr.insset.jeanluc.ete.gel.AttributeNav;
+import fr.insset.jeanluc.ete.gel.GelExpression;
+import fr.insset.jeanluc.ete.gel.Includes;
+import fr.insset.jeanluc.ete.gel.Literal;
+import fr.insset.jeanluc.ete.gel.Self;
+import fr.insset.jeanluc.ete.gel.Step;
+import fr.insset.jeanluc.ete.gel.StringLiteral;
+import fr.insset.jeanluc.ete.gel.VariableDefinition;
+import fr.insset.jeanluc.ete.meta.model.emof.Feature;
+import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
+import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
+import fr.insset.jeanluc.ete.meta.model.types.MofType;
+import fr.insset.jeanluc.util.visit.DynamicVisitorSupport;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * <div>
+ * As expected, this class builds an SQL query from an EteQuery instance.<br>
+ * Provides three methods which are intented to be called from templates:<ul>
+ * <li>getSelect returns the SELECT clause, without any join</li>
+ * <li>getJoin returns a JOIN clause</li>
+ * <li>getWhere returns a WHERE/AND clause</li>
+ * </ul>
+ * The first method should always been called.<br>
+ * The other methods should not be called but when all the parameters are
+ * present.
+ * </div>
+ * 
+ * @author jldeleage
+ */
+public class SqlGenerator extends DynamicVisitorSupport implements Dialect {
+
+
+    public SqlGenerator() {
+        register("visit", "fr.insset.jeanluc.ete.gel");
+    }
+
+
+    //==========================================================================//
+
+
+    public String getSelect(EteQuery inQuery) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        StringBuilder builder = new StringBuilder();
+        addSelect(inQuery, builder);
+        return builder.toString();
+    }
+
+
+    public void addSelect(EteQuery inQuery, StringBuilder builder) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        MofProperty root = inQuery.getProperty();
+        EnhancedMofClassImpl targetClass = (EnhancedMofClassImpl) root.getType().getRecBaseType();
+        EteQuery query = targetClass.getSupport().get(root);
+        builder.append("SELECT DISTINCT v0.* FROM ");
+        builder.append(query.getTargetClass().getName().toUpperCase());
+        builder.append(" AS v0");
+    }
+
+
+    public String getJoin(EteFilter aFilter) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+        StringBuilder builder = new StringBuilder();
+        for (Join aJoin : aFilter.getJoins()) {
+            addJoin(aJoin, builder);
+        }
+        return builder.toString();
+    }
+
+
+
+    public String getJoin(Join inJoin) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+        StringBuilder builder = new StringBuilder();
+        addJoin(inJoin, builder);
+        return builder.toString();
+    }
+
+    /**
+     * If all parameters of a filter are present we must add the joins.<br>
+     * 
+     * @param inJoin
+     * @param builder
+     * @return 
+     */
+    public void addJoin(Join inJoin, StringBuilder builder) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+        builder.append(" LEFT OUTER JOIN ");
+        builder.append(inJoin.getTargetTable());
+        builder.append(" AS ");
+        builder.append(inJoin.getTargetVariable());
+        builder.append(" ON ");
+        builder.append(inJoin.getStartVariable());
+        builder.append(".");
+        builder.append(inJoin.getStartProperty());
+        builder.append("=");
+        builder.append(inJoin.getTargetVariable());
+        builder.append(".");
+        builder.append(inJoin.getTargetProperty());
+    }
+
+
+
+
+    public String getWhere(EteFilter aFilter, EteQuery inQuery) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        StringBuilder builder = new StringBuilder();
+        addWhere(aFilter, builder, inQuery);
+        return builder.toString();
+    }
+
+    public void addWhere(EteFilter aFilter, StringBuilder builder, EteQuery inQuery) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        genericVisit(aFilter.getExpression(), builder, inQuery);
+    }
+
+
+
+    //==========================================================================//
+
+
+    public GelExpression visitGelExpression(GelExpression inExpression, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException {
+        System.out.println("visitGelExpression " + inExpression);
+        StringBuilder builder = (StringBuilder) inParameters[0];
+        List<GelExpression> operand = inExpression.getOperand();
+        if (operand != null) {
+            switch (operand.size()) {
+                case 0:
+                    System.out.println("noop");
+                    return inExpression;
+                case 1:
+                    addSymbol(inExpression, builder);
+                    genericVisit(operand.get(0), inParameters);
+                    return inExpression;
+                case 2:
+                    genericVisit(operand.get(0), inParameters);
+                    addSymbol(inExpression, builder);
+                    genericVisit(operand.get(1), inParameters);
+                    return inExpression;
+            }
+        }
+        return inExpression;
+    }
+
+
+    protected void addSymbol(GelExpression inExpression, StringBuilder builder) throws NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        System.out.println("addSymbol " + inExpression);
+        Object symbol;
+        Method method = inExpression.getClass().getMethod("getSymbol", new Class[0]);
+        if (method == null) {
+            symbol = inExpression.getValueOf("symbol");
+        } else {
+            symbol = method.invoke(inExpression, new Object[0]);
+        }
+        if (symbol != null) {
+            builder.append(symbol);
+        } else {
+            builder.append(inExpression.getClass().getName());
+        }
+    }
+
+
+    //==========================================================================//
+
+
+    public GelExpression visitStep(Step inStep, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        System.out.println("visitStep " + inStep);
+        StringBuilder builder = (StringBuilder) inParameters[0];
+        Feature toFeature = inStep.getToFeature();
+        if (toFeature == null) {
+            return inStep;
+        }
+        EteQuery query = (EteQuery) inParameters[1];
+        VariableDefinition variable = query.getVariable(inStep);
+        System.out.println("Variable : " + variable);
+        System.out.println("   " + variable.getName());
+        if (variable == null) {
+            List<GelExpression> operand = inStep.getOperand();
+            if (operand == null) {
+                return inStep;
+            }
+            GelExpression    previous = inStep.getOperand().get(0);
+            if (previous instanceof VariableDefinition) {
+                VariableDefinition prevVariable = (VariableDefinition) previous;
+                builder.append(prevVariable.getName());
+            } else {
+                genericVisit(previous, inParameters);
+            }
+            builder.append(".");
+            builder.append(toFeature.getName().toUpperCase());
+        } else {
+            builder.append(variable.getName());
+            if (toFeature.getType().getRecBaseType() instanceof MofClass) {
+                builder.append(".ID");
+            } else {
+                builder.append('.');
+                builder.append(toFeature.getName());
+            }
+        }
+        return  inStep;
+    }
+
+    public Includes visitIncludes(Includes inIncludes, Object... inParameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        System.out.println("visitIncludes " + inIncludes);
+        StringBuilder builder = (StringBuilder) inParameters[0];
+        List<GelExpression> operand = inIncludes.getOperand();
+        GelExpression firstOperand = operand.get(0);
+        if (firstOperand.getType().isCollection()) {
+            genericVisit(firstOperand, inParameters);
+            builder.append("=");
+            genericVisit(operand.get(1), inParameters);
+        } else {
+            genericVisit(operand.get(1), inParameters);
+            builder.append(" IN ");
+            genericVisit(firstOperand, inParameters);
+        }
+        return inIncludes;
+    }
+
+    public Self visitSelf(Self inSelf, Object... inParameters) {
+        System.out.println("visitSelf " + inSelf);
+        StringBuilder builder = (StringBuilder) inParameters[0];
+        builder.append("v0.ID");
+        return inSelf;
+    }
+
+
+    public VariableDefinition visitVariableDefinition(VariableDefinition inVariable, Object... inParameters) {
+        System.out.println("visitVariableDefinition " + inVariable);
+        StringBuilder builder = (StringBuilder) inParameters[0];
+        EteQuery query = (EteQuery) inParameters[1];
+        if (query.isParameter(inVariable)) {
+//            builder.append('?');
+            builder.append(":");
+            builder.append(inVariable.getName());
+        } else {
+            builder.append(inVariable.getName());
+            builder.append(".ID");
+        }
+        return inVariable;
+    }
+
+
+    public Literal  visitLiteral(Literal inLiteral, Object... inParameters) {
+        System.out.println("visitLiteral " + inLiteral);
+        StringBuilder builder = (StringBuilder) inParameters[0];
+        builder.append(inLiteral.getValue());
+        return inLiteral;
+    }
+
+    public StringLiteral visitStringLiteral(StringLiteral inLiteral, Object... inParameters) {
+        System.out.println("visitStringLiteral " + inLiteral);
+        StringBuilder builder = (StringBuilder) inParameters[0];
+        builder.append("'");
+        builder.append(inLiteral.getValueAsString());
+        builder.append("'");
+        return inLiteral;
+    }
+
+
+
+}

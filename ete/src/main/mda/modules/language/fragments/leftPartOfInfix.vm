@@ -1,0 +1,15 @@
+################################################################################
+##                                                                            ##
+## Fragment for TreeBuilder.vm                                                ##
+##                                                                            ##
+## Used for the second operand of left associative operations                 ##
+##                                                                            ##
+################################################################################
+            GelExpression result = children.get(0).accept(this);
+            for (int i=1 ; i<children.size() ; i++) {
+                GelExpression next = children.get(i).accept(this);
+                List<GelExpression> operands = next.getOperand();
+                operands.add(0, result);
+                result = next;
+            }
+            return result;

@@ -1,0 +1,161 @@
+/ete/meta-model/nbproject/
+/ete/meta-model/target/
+/ete/meta-model-impl/target/
+/ete/meta-model-api/nbproject/
+/ete/meta-model-api/target/
+/ete/meta-model/meta-model-api/nbproject/
+/ete/meta-model/meta-model-api/target/
+/ete/meta-model/meta-model-impl/target/
+/ete/meta-model/meta-model-io/target/
+/ete/meta-model/xmi-io/target/
+/ete/el/el-evaluator/target/
+/ete/el/el-evaluator/nbproject/
+/ete/meta-model/plain-text-io/target/
+/ete/ete-lib/ete-lib-impl/target/
+/ete/execution-language/action-semantics-builder/nbproject/
+/ete/execution-language/action-semantics-to-java/nbproject/
+/ete/execution-language/execution-language-spec/target/
+/ete/gel/gel-api/nbproject/
+/ete/gel/gel-impl/target/
+/ete/gel/gel-api/target/
+/ete/gel/gel-spec/target/
+/ete/ete-maven-plugin/target/
+/ete/xlang/xlang-to-sql/target/
+/target/
+/ete/gel/gel-evaluator/target/
+/ete/gel/gel-evaluator/nbproject/
+/ete/execution-language/execution-language-api/target/
+/ete/execution-language/execution-language-impl/target/
+/ete/gel/gel-spec/nbproject/
+/ete/ete-lib/ete-lib-impl/target/
+/ete/ete-lib/ete-lib-impl/nbproject/
+/ete/ete-lib/ete-lib-api/target/
+/ete/gel/essai-gel/nbproject/
+/ete/gel/essai-gel/target/
+/Ete - short introduction.odt
+/Ete - user manual.odt
+/ete/xlang/action-semantics-builder/nbproject/
+/ete/xlang/execution-language-api/target/
+/ete/xlang/execution-language-impl/target/
+/ete/xlang/action-semantics-to-java/nbproject/
+/ete/xlang/xlang-api/target/
+/ete/xlang/xlang-impl/target/
+/ete/xlang/xlang-builder/nbproject/
+/ete/xlang/xlang-builder/target/
+/ete/gel/gel-api/src/main/java
+/ete/gel/gel-impl/src/main/java
+/ete/gel/xlang-api/src/main/java
+/ete/gel/xlang-impl/src/main/java
+/ete/xlang-to-sql/target/
+/ete/gel/gel-impl/nbproject/
+/ete/xlang/action-semantics-to-java/target/
+/samples/helloworld/target/
+/ete/gel/target/
+/samples/web-ete-bank/target/
+/ete/xlang/xlang-to-xxx/target/
+/ete copie/el/el-evaluator/nbproject/
+/ete copie/el/el-evaluator/target/
+/ete copie/ete-lib/ete-lib-api/target/
+/ete copie/ete-lib/ete-lib-impl/target/
+/ete copie/ete-maven-plugin/target/
+/ete copie/gel/gel-api/target/
+/ete copie/gel/gel-evaluator/target/
+/ete copie/gel/gel-impl/target/
+/ete copie/meta-model/meta-model-api/target/
+/ete copie/meta-model/meta-model-impl/target/
+/ete copie/meta-model/meta-model-io/target/
+/ete copie/meta-model/plain-text-io/target/
+/ete copie/meta-model/xmi-io/target/
+/ete copie/xlang/action-semantics-to-java/target/
+/ete copie/xlang/xlang-api/target/
+/ete copie/xlang/xlang-builder/target/
+/ete copie/xlang/xlang-impl/target/
+/ete copie/xlang/xlang-to-xxx/target/
+/ete copie/ete-lib/ete-lib-impl/nbproject/
+/ete copie/gel/gel-api/nbproject/
+/ete copie/gel/gel-impl/nbproject/
+/ete copie/gel/gel-spec/nbproject/
+/ete copie/meta-model/meta-model-api/nbproject/
+/ete copie/xlang/action-semantics-to-java/nbproject/
+/ete copie/xlang/xlang-builder/nbproject/
+/samples/EssaiClassLoaders/target/
+/samples/miniweb/target/
+/samples/web-ete-bank-builder/target/
+/samples/linked_list/target/
+/samples/modeleur/target/
+/samples/mavenproject1/target/
+/ete/xlang/xlang-to-c/target/
+/samples/dsl/target/
+/ete/xlang/xlang_builder-api/target/
+/ete/xlang/xlang_builder-impl/target/
+/ete/xlang/actual-xlang_builder/target/
+/ete/xlang/xlang-to-java/target/
+/ete/xlang/xlang-to-java/nbproject/
+/samples/target/
+/samples/web-ete-bank/archetype/target/
+/samples/web-ete-bank/web-app/target/
+/archetypes/web-app/target/
+/samples/insset-airways/target/
+/archetypes/archetype/target/
+/ete/meta-model/xmi-io/nbproject/
+/archetypes/essai_ete/target/
+/ete/database/introspection/target/
+/ete/database/introspection/nbproject/
+/ete/target/
+/ete/database/target/
+/ete/xlang/target/
+/archetypes/target/
+/ete/el/target/
+/ete/ete-lib/target/
+/ete/xlang/xlang-spec/target/
+/ete/meta-model/meta-model-impl/nbproject/
+/ete/defs/target/
+/ete/methodeb/methodeb-api/target/
+/ete/methodeb/methodeb-impl/target/
+/ete/methodeb/target/
+/ete/methodeb/methodeb-spec/target/
+/samples/micro_services/spec/target/
+/samples/micro_services/api/target/
+/samples/micro_services/react/target/
+/samples/micro_services/frontend/target/
+/samples/composition_sample/target/
+/archetypes/ete-jsf-archetype/target/
+/ete/cucumber/cucumber-spec/target/
+/ete/natural_language/nl-spec/target/
+/ete/natural_language/nl-api/target/
+/archetypes/language-archetype/target/
+/archetypes/lang-archetype/target/
+/ete/natural_language/nl-impl/target/
+/ete/nl/nl-api/target/
+/ete/nl/nl-impl/target/
+/ete/nl/nl-spec/target/
+/ete/nl/target/
+/archetypes/language/target/
+/archetypes/ete-constraint-natural-language-archetype/target/
+/samples/micro_services/target/
+/ete/tutu/target/
+/ete/cucumber/target/
+/ete/gel/gel-test-fmwk/target/
+/ete/external_constraint_file/target/
+/ete/sbvr/sbvr-api/target/
+/ete/sbvr/sbvr-impl/target/
+/ete/incremental_antlr/target/
+/ete/incrementalantlr-maven-plugin/target/
+/ete/incrementalantlr/incremental_antlr/target/
+/ete/incrementalantlr/incrementalantlr-maven-plugin/target/
+/ete/incrementalantlr/incrementalantlr-maven-plugin/nbproject/
+/ete/incrementalantlr/incremental-antlr-action/target/
+/ete/incrementalantlr/incremental-antlr-action/nbproject/
+/ete/constraint/target/
+/ete/constraints/constraint_language/target/
+/ete/constraints/constraint_language/nbproject/
+/ete/sbvr/sbvr-impl/nbproject/
+/ete/sbvr_old/sbvr-api/target/
+/ete/sbvr_old/sbvr-impl/target/
+/ete/sbvr_old/sbvr-impl/nbproject/
+/ete/sbvr/sbvr-spec/target/
+ete/constraints/constraint_test/target/
+ete/constraints/constraints_io/target/
+ete/meta-model/VisualParadigmReader/target/
+/ete/xlang/xlang-to-sql/nbproject/
+/samples/insset-airways/archetype/target/

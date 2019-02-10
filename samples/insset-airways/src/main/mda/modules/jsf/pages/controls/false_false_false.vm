@@ -1,0 +1,4 @@
+                    <h:selectOneMenu id="${var.name}" value="#{${scope}${varName}}">
+                        <f:selectItems value="#{${dialect.i2lc($var.type.name)}Controller.getItemsAvailableAs${dialect.i2uc($var.name)}For${current.name}SelectOne(cc.attrs.selection)}"/>
+                        <f:ajax #if($dp)render="${dp}"#end/>
+                    </h:selectOneMenu>

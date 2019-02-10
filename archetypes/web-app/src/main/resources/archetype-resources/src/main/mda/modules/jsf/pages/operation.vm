@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:cc="http://xmlns.jcp.org/jsf/composite">
+
+    <!-- INTERFACE -->
+    <cc:interface>
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+        <h:panelGrid columns="2">
+\#foreach (${symbol_dollar}aProperty in ${symbol_dollar}current.ownedParameter)
+\#set (${symbol_dollar}var = ${symbol_dollar}aProperty)
+\#set (${symbol_dollar}varName = ${symbol_dollar}dialect.i2uc(${symbol_dollar}aProperty.name))
+\#set (${symbol_dollar}scope = "" + ${symbol_dollar}dialect.i2lc(${symbol_dollar}current.owningMofClass.name) + "Controller." + ${symbol_dollar}{current.name})
+\#set (${symbol_dollar}title = ${symbol_dollar}current.owningMofClass.name + ${symbol_dollar}dialect.i2uc(${symbol_dollar}current.name))
+\#parse ("controls/polymorphism.vm")
+\#end
+        </h:panelGrid>
+        <h:commandButton action="\#{${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.owningMofClass.name)}Controller.${symbol_dollar}{current.name}}"
+                         value="${symbol_dollar}{current.name}"/>
+    </cc:implementation>
+</html>
+

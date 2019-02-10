@@ -1,0 +1,16 @@
+                <p:accordionPanel>
+                <ui:repeat var="var" value="#{cc.attrs.selection.${aProperty}}">
+<!-- p:panel id="toggleable" header="Toggleable" toggleable="true" closable="true" toggleSpeed="500" closeSpeed="500" > -->                         <p:accordionPanel>
+                    <p:tab title="#{var}">
+                       <ete:${var.type.name}_form
+                             selection="#{var}"/>
+                    </p:tab>
+                </ui:repeat>
+                </p:accordionPanel>
+                <h:outputLabel value="new" for="new" />
+                <ete:${var.type.name}_form
+                           selection="#{${dialect.i2lc($current.name)}Controller.new${dialect.i2uc($varName)}}"
+                />
+                <h:outputText value=" "/>
+                <h:commandButton action="#{${dialect.i2lc($current.name)}Controller.addNew${dialect.i2uc($varName)}}" value="Add"/>
+

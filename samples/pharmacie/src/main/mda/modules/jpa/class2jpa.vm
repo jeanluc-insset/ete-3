@@ -1,0 +1,106 @@
+package ${current.owningPackage.name}.jpa;
+
+
+import fr.insset.jeanluc.ete.jpa.AbstractJpa;
+import ${current.owningPackage.name}.model.*;
+import java.io.Serializable;
+import java.util.List;
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+#if ($javase)
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+#end
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.ParameterExpression;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Root;
+import javax.persistence.metamodel.EntityType;
+import javax.persistence.metamodel.Metamodel;
+import javax.persistence.metamodel.SingularAttribute;
+
+
+
+/**
+ *
+ * @author jldeleage
+ */
+@Stateless
+public class ${current.name}Jpa extends AbstractJpa<${current.name}> {
+
+#if (true == $javase)
+    private EntityManagerFactory factory;
+#else
+    @PersistenceContext(unitName = "${pu}")
+#end
+    private EntityManager em;
+
+    @Override
+    protected EntityManager getEntityManager() {
+#if (true == $javase)
+        if (factory == null) {
+            factory = Persistence.createEntityManagerFactory("${pu}");
+        }
+        if (em == null) {
+            em = factory.createEntityManager();
+        }
+#end
+        return em;
+    }
+
+    public ${current.name}Jpa() {
+        super(${current.name}.class);
+    }
+
+#foreach ($aProperty in $current.ownedAttribute)
+#if ($dialect.isEntity($aProperty.type))
+
+    public List<$aProperty.type> findAll${dialect.i2uc($aProperty.name)}For($current.name item) {
+        javax.persistence.criteria.CriteriaQuery cq = getEntityManager().getCriteriaBuilder().createQuery();
+        cq.select(cq.from(${aProperty.type.name}.class));
+        // we must now add all constraints to the request
+        // now we can build the query
+        TypedQuery query = getEntityManager().createQuery(cq);
+        // we must set the parameters
+        // finally we can fetch the data and return the result
+        return query.getResultList();
+    }
+
+
+
+    public List<${current.name}> findBy(${dialect.mt2lt($aProperty.type)} inValue) {
+        EntityManager em = getEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<${current.name}> cq = cb.createQuery(${current.name}.class);
+        Root<${current.name}> from = cq.from(${current.name}.class);
+        // There is an "unkown compilation error" if we try to use the metamodel
+        // generator processor so we use the metamodel on runtime only
+        Metamodel metamodel = em.getMetamodel();
+        EntityType<${current.name}> entity = metamodel.entity(${current.name}.class);
+        SingularAttribute<? super ${current.name}, ?> singularAttribute = entity.getSingularAttribute("${dialect.i2lc($aProperty.type.name)}");
+        from.join(singularAttribute);
+        cq.where(cb.equal(from.get(singularAttribute), inValue));
+        TypedQuery<${current.name}> query = em.createQuery(cq);
+        return query.getResultList();
+    }
+#end
+
+#end
+
+
+//============================================================================//
+
+// FILTERS
+#foreach ($aFilter in $current.filters)
+/*
+    public List<${dialect.mt2lt($aFilter.feature.type)}> filterAvailable${dialect.mt2lt($aFilter.feature.type)}As${dialect.i2uc($aFilter.feature.name)}(${current.name} inSelf) {
+${dialect.getBody($aFilter)}
+    }
+*/
+#end
+
+}

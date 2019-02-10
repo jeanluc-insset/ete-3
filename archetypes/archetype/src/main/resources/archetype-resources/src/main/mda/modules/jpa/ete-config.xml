@@ -1,0 +1,53 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  This module generates all JPA stuff. It first calls a template to generate
+  entities, then generate the DAOs and the persistence unit.
+  -->
+
+<mda>
+
+    <transformation-set>
+        <parameter name="javase"     default="false"/>
+        <parameter name="datasource" default="jdbc/sample"/>
+        <parameter name="pu"         default="${package}.ete_PU"/>
+        <parameter name="url"        default="jdbc:derby://localhost:1527/ete"/>
+        <parameter name="user"       default="ete"/>
+        <parameter name="password"   default="ete"/>
+        <parameter name="driver"     default="org.apache.derby.jdbc.ClientDriver"/>
+
+
+        <transformation-set output_base="generated-sources/ete">
+
+            <!-- JPA -->
+            <velocity   template="abstract_jpa.vm"
+                        target="${packageInPathFormat}/ete/jpa/AbstractJpa.java"/>
+            <transformation-set  items='${symbol_dollar}{classes.filter(c -> c.hasStereotype("Entity"))}'>
+                <velocity dialect="fr.insset.jeanluc.as2java.JavaGenerator"
+                            template="class2entity.vm"
+                            target="${symbol_dollar}{current.owningPackage.name.replace('.', '/')}/model/${symbol_dollar}{current.name}.java"/>
+                <velocity dialect="fr.insset.jeanluc.as2java.JavaGenerator"
+                            template="class2optional.vm"
+                            target="${symbol_dollar}{current.owningPackage.name.replace('.', '/')}/model/Optional${symbol_dollar}{current.name}.java"/>
+                <velocity dialect="fr.insset.jeanluc.as2java.JavaGenerator"
+                            template="class2optional_list.vm"
+                            target="${symbol_dollar}{current.owningPackage.name.replace('.', '/')}/model/OptionalList${symbol_dollar}{current.name}.java"/>
+                <velocity dialect="fr.insset.jeanluc.as2java.JPAGenerator"
+                            template="class2dao.vm"
+                            target="${symbol_dollar}{current.owningPackage.name.replace('.', '/')}/jpa/${symbol_dollar}{current.name}Jpa.java">
+                    <dialect name="sql" class="fr.insset.jeanluc.xlang.to.sql.SqlGenerator"/>
+                </velocity>
+            </transformation-set>
+        </transformation-set>
+
+        <velocity   template="pu.vm"
+                        target="generated-web-pages/ete/WEB-INF/classes/META-INF/persistence.xml"/>
+    </transformation-set>
+
+</mda>
+
+
+

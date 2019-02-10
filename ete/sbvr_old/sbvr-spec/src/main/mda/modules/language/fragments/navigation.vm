@@ -1,0 +1,16 @@
+################################################################################
+##                                                                            ##
+## Fragment for TreeBuilder.vm                                                ##
+##                                                                            ##
+################################################################################
+            GelExpression result = children.get(0).accept(this);
+            for (int i=1 ; i<children.size() ; i++) {
+                GelExpression next = children.get(i).accept(this);
+                List<GelExpression> operands = next.getOperand();
+//              FactoryMethods.newList(GelExpression.class);
+//                next.setOperand(operands);
+                operands.add(0, result);
+                result = next;
+            }
+            context.remove(CURRENT);
+            return result;

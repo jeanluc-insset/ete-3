@@ -1,0 +1,51 @@
+package ${current.owningPackage.name};
+
+
+
+public class $current.name {
+
+    public ${current.name}() {
+    }
+
+
+    //========================================================================//
+
+
+#foreach ($aProperty in $current.ownedAttribute)
+#if($aProperty.name && $aProperty.type.name)
+    public ${aProperty.type.name} get${dialect.i2uc($aProperty.name)}() {
+        return ${aProperty.name};
+    }
+
+    public void set${dialect.i2uc($aProperty.name)}(${aProperty.type.name} inValue) {
+        ${aProperty.name} = inValue;
+    }
+    #end
+#end
+
+    //========================================================================//
+
+    @Override
+    public String toString() {
+        StringBuilder   builder = new StringBuilder();
+#foreach ($aProperty in $current.ownedAttribute)
+        builder.append(${aProperty.name});
+        builder.append(" ");
+#end
+        return builder.toString();
+    }
+
+
+    //========================================================================//
+
+
+#foreach ($aProperty in $current.ownedAttribute)
+    #if($aProperty.name && $aProperty.type.name)
+    private ${aProperty.type.name} ${aProperty.name};
+    #end
+#end
+
+
+}
+
+

@@ -1,0 +1,11 @@
+################################################################################
+##                                                                            ##
+## Fragment for TreeBuilder.vm                                                ##
+##                                                                            ##
+################################################################################
+## We could have turned this into a method instead of generating all this     ##
+## stuff each time                                                            ##
+################################################################################
+            CollectionMethodNav   result = (CollectionMethodNav)FactoryRegistry.newInstance("${dialect.i2lc($aClass.name)}");
+            result.setOperation(children.get(1).getText());
+            return result;

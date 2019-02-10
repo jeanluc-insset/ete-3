@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+#set( $symbol_pound = '\#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+
+<!--
+  This module generates all JPA stuff. It first calls a template to generate
+  entities, then generate the DAOs and the persistence unit.
+  -->
+
+<mda>
+
+    <transformation-set>
+
+        <transformation-set output_base="generated-sources/ete">
+            <velocity items='${symbol_dollar}{classes.filter(c -> !c.hasStereotype("Entity"))}'
+                        dialect="fr.insset.jeanluc.as2java.JavaGenerator"
+                        template="class2pojo.vm"
+                        target="${symbol_dollar}{current.owningPackage.name.replace('.', '/')}/${symbol_dollar}{current.name}.java"/>
+        </transformation-set>
+
+    </transformation-set>
+
+</mda>
+
+
+

@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+
+    <modelVersion>4.0.0</modelVersion>
+
+
+    <parent>
+        <groupId>fr.insset.jeanluc</groupId>
+        <artifactId>constraints</artifactId>
+        <version>3.1</version>
+    </parent>
+    <artifactId>constraint_language</artifactId>
+    <packaging>jar</packaging>
+
+
+    <description>
+        The project defines an action to load a constraint file.
+        The constraint file may be written in a custom language.
+
+
+================================================================================
+                                   U S A G E                                   
+================================================================================
+
+
+A project using the constraint action MUST add in the src/main/antlr4/imports
+directory the following grammars :
+- BasicLexer.g4
+- BasicParser.g4
+- XxxLexer.g4
+- XxxParser.g4
+where Xxx is the name of the language used by the constraints file.
+
+
+================================================================================
+                                 D E T A I L S
+================================================================================
+
+
+        The actual grammar is made of four layers :
+        - the basic language grammar
+        - the natural language grammar
+        - the model grammar
+        - the actual grammar
+
+        The first two levels should be provided in the project in the
+        imports directory (see above).
+        The third and fourth level are dynamically built by the action.
+
+        The basic language grammar defines expressions and navigations :
+            - leftToRight and rightToLeft navigations
+            - logical operations (and, or, implies, not both...)
+
+        The "natural language" grammar defines the keywords of the language :
+            - modalities (it is mandatory that...)
+            - determiners (the, a)
+            - quantifiers (for each, any...)
+            - the navigation operator 
+        The natural language grammar chooses which navigation to use. It may
+        define its own rule.
+
+        The model grammar defines tokens from the model : any entity is turned
+        into a token, any property is turned into a token as well.
+        
+        The definition grammar defines tokens for every definition found in the
+        constraint file.
+
+        The actual grammar contains rules generated from the definitions
+        provided in a constraint file.
+
+        The basic and natural language grammars are supposed to be provided
+        in the "import" directory.
+        The language action generates the model grammars then launches Antlr to
+        build the ModelLexer and ModelParser java classes. Then it compiles
+        these classes.
+
+        Then the constraint action reads the constraint file and parses it with
+        the ModelParser.
+        The constraint file can contain definitions of functions. A specific
+        visitor builds the actual grammar.
+
+        Then the constraint action launches Antlr to actually build the
+        ActualLexr and ActualParser java classes. The action compile these
+        classes.
+        It compiles and instantiates the ParserWrapper class as well.
+        Finally, it reads again the constraint file and parses it with the
+        actual Parser.
+
+        Example :
+        <!--
+            <constraint language="english" file="src/main/mda/myConstraints.txt"/>
+        -->
+        The following lexer is generated :
+[
+lexer grammar ModelEnglishLexer;
+
+import EnglishLexer;
+
+Pilot  : 'Pilot' | 'pilot';
+Flight : 'Flight' | 'flight';
+Plane  : 'Plane' | 'plane';
+PlaneModel : ('Plane' | 'plane') 'model';
+...
+]
+
+        Then the constraint file contains the following definitions :
+[
+Definition :
+    a Pilot is certified for a PlaneModel :
+    the model of the certificates of the Pilot contains the PlaneModel.
+Definition :
+    a Pilot is certified for a Plane :
+    the Pilot is certified for the model of the Plane.
+]
+
+The generated final parser grammar will contain :
+
+[
+aPilotIsCertifiedForAPlaneModel :
+    a Pilot is certified for a PlaneModel;
+aPilotIsCertifiedForAPlane :
+    a Pilot is certified for a Plane;
+
+function : aPilotIsCertifiedForAPlaneModel | aPilotIsCertifiedForAPlane;
+]
+
+        In turn the constraint file can also contain rules such that :
+
+[
+Context Flight :
+    inv captain is certified : the captain of this flight is certified for the plane of this flight
+    inv copilot is certified : the copilot ot this flight is certified for the plane of this flight.
+]
+
+The next tools will leverage the function definition in the model to
+generate functions for example in generated code.
+
+
+As we can see, the is an overload of the sentence "a Pilot is certified for".
+This can be embarassing for antlr.
+
+A good solution would be to avoid such situations.
+
+    </description>
+
+
+    <dependencies>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-core</artifactId>
+            <version>1.3</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4</artifactId>
+            <version>4.7.1</version>
+            <classifier>complete</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.plugin-tools</groupId>
+            <artifactId>maven-plugin-annotations</artifactId>
+            <version>3.5.2</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-plugin-api</artifactId>
+            <version>3.5.4</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-core</artifactId>
+            <version>3.3.9</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-compiler-api</artifactId>
+            <version>2.8.2</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.sonatype.plexus</groupId>
+            <artifactId>plexus-build-api</artifactId>
+            <version>0.0.7</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4-maven-plugin</artifactId>
+            <version>4.7</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>fr.insset.jeanluc</groupId>
+            <artifactId>meta-model-api</artifactId>
+            <version>3.1</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>fr.insset.jeanluc</groupId>
+            <artifactId>el-evaluator</artifactId>
+            <version>3.1</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>fr.insset.jeanluc</groupId>
+            <artifactId>xmi-io</artifactId>
+            <version>3.1</version>
+            <scope>test</scope>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>fr.insset.jeanluc</groupId>
+            <artifactId>meta-model-impl</artifactId>
+            <version>3.1</version>
+            <scope>test</scope>
+            <type>jar</type>
+        </dependency>
+
+       <dependency>
+            <groupId>fr.insset.jeanluc</groupId>
+            <artifactId>ete-lib-api</artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>gel-api</artifactId>
+            <version>${project.version}</version>
+        </dependency> 
+
+ <!--        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4</artifactId>
+            <version>4.7.1</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-compiler-api</artifactId>
+            <version>2.8.2</version>
+            <type>jar</type>
+        </dependency>
+
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-core</artifactId>
+            <version>1.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>fr.insset.jeanluc</groupId>
+            <artifactId>meta-model-impl</artifactId>
+            <version>3.1</version>
+            <scope>test</scope>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>fr.insset.jeanluc</groupId>
+            <artifactId>xmi-io</artifactId>
+            <version>3.1</version>
+            <scope>test</scope>
+            <type>jar</type>
+        </dependency>-->
+    </dependencies>
+
+
+</project>

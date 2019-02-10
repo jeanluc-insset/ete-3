@@ -1,0 +1,73 @@
+################################################################################
+##                                                                            ##
+## Generates a convenience class to instantiate a parser for a simple String  ##
+##                                                                            ##
+################################################################################
+package fr.insset.jeanluc.ete.${dialect.i2lc($projectName)}.impl;
+
+import fr.insset.jeanluc.ete.${projectName.toLowerCase()}.${dialect.i2uc($projectName)}Expression;
+import fr.insset.jeanluc.ete.${projectName.toLowerCase()}.${dialect.i2uc($projectName)}Context;
+import fr.insset.jeanluc.ete.meta.model.mofpackage.MofPackage;
+import fr.insset.jeanluc.ete.meta.model.types.TypedElement;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Map;
+import javax.annotation.Generated;
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CommonTokenStream;
+import fr.insset.jeanluc.ete.util.XList;
+
+
+/**
+ *
+ * @author jldeleage
+ */
+@Generated("ete - jean-luc@insset.fr  ete/src/main/mda/modules/language/contexts/genericcontext.vm")
+public class ${dialect.i2uc($projectName)}ContextImpl implements ${dialect.i2uc($projectName)}Context<Object> {
+
+    public ${dialect.i2uc($projectName)}ContextImpl() {
+        push();
+    }
+
+
+    @Override
+    public Object resolve(String inString) {
+        Iterator<Map<String, Object>> iterator = stack.descendingIterator();
+        while (iterator.hasNext()) {
+            Map<String, Object> map = iterator.next();
+            Object expression = map.get(inString);
+            if (expression != null) {
+                return expression;
+            }
+        }
+        return null;
+    }
+
+    public void set(String inString, Object inObject) {
+        set${dialect.i2uc($projectName)}(inString, inObject);
+    }
+
+    public void set${dialect.i2uc($projectName)}(String inString, Object inObject) {
+        stack.getLast().put(inString, inObject);
+    }
+
+
+    @Override
+    public final void push() {
+        Map<String, Object> map = new HashMap<>();
+        stack.addLast(map);
+    }
+
+    @Override
+    public void pop() {
+        stack.removeLast();
+    }
+
+
+    private Deque<Map<String, Object>>     stack = new XList<>();
+
+}
+
+

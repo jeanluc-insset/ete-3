@@ -1,0 +1,22 @@
+
+Definition :
+    a Pilot is certified for a PlaneModel :
+        the model of the certificates of the Pilot contains the PlaneModel.
+
+Definition :
+    a Pilot is entitled for a Plane :
+        the Pilot is certified for the model of the Plane.
+
+Context Flight :
+    inv the captain must be certified :
+        the captain is entitled for the plane.
+
+    inv the copilot must be certified :
+        the copilot is entitled for the plane.
+
+    inv screw :
+        the captain and the copilot are different.
+
+
+
+
