@@ -5,6 +5,7 @@ import fr.insset.jeanluc.ete.defs.Constants;
 import fr.insset.jeanluc.ete.meta.model.constraint.Postcondition;
 import fr.insset.jeanluc.ete.meta.model.constraint.Precondition;
 import fr.insset.jeanluc.ete.meta.model.datatype.UnlimitedNatural;
+import fr.insset.jeanluc.ete.meta.model.emof.Enumeration;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 import fr.insset.jeanluc.ete.meta.model.types.MofType;
 import fr.insset.jeanluc.ete.meta.model.types.collections.MofCollection;
@@ -55,7 +56,7 @@ public class MofOperationImpl extends FeatureImpl implements MofOperation {
             MofCollection coll = (MofCollection) type;
             type = coll.getBaseType();
         }
-        if (type instanceof MofClass) {
+        if (type instanceof MofClass || type instanceof Enumeration) {
             addDependency(type);
         }
     }
