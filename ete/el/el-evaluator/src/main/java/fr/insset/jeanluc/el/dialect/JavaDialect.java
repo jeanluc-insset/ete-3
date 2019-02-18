@@ -80,6 +80,9 @@ public interface JavaDialect extends Dialect {
         if (inType == null) {
             return "void";
         }
+        if (inType.isEnumeration()) {
+            return inType.getName();
+        }
         if (inType.isCollection()) {
             MofCollection coll = (MofCollection) inType;
             if (coll.isOrdered()) {
