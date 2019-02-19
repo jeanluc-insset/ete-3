@@ -7,18 +7,16 @@
 
 <mda>
 
-    <transformation-set>
-        
-        <if test="${jsf}">
-            <module src="../jsf/ete-config.xml"/>
-        </if>
+    <transformation-set output_base="../../react/src">
 
-        <if test="${jaxrs}">
-            <module src="../jaxrs/ete-config.xml"/>
-        </if>
-
-        <velocity template="web_xml.vm"
-            target="generated-web-pages/ete/WEB-INF/web.xml"/>
+        <velocity template="app.vm"
+            target="App.js"/>
+        <velocity template="entity_component.vm"
+            items='${classes.filter(c->c.hasStereotype("Entity"))}'
+            target="components/${current.name}.js"/>
+        <velocity template="entity_list_component.vm"
+            items='${classes.filter(c->c.hasStereotype("Entity"))}'
+            target="components/${current.name}List.js"/>
 
     </transformation-set>
 

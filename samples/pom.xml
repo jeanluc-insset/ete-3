@@ -17,5 +17,6 @@
         <module>dsl</module>
         <module>insset-airways</module>
         <module>micro_services</module>
+        <!--<module>react_jsf</module>-->
     </modules>
 </project>

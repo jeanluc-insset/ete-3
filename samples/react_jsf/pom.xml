@@ -3,14 +3,13 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>fr.insset.jeanluc</groupId>
-        <artifactId>ete-toolchain</artifactId>
+        <artifactId>samples</artifactId>
         <version>3.1</version>
     </parent>
-    <artifactId>archetypes</artifactId>
+    <artifactId>react_jsf</artifactId>
     <packaging>pom</packaging>
-    <modules>
-        <!--<module>ete-jsf-archetype</module>-->
-        <module>ete-constraint-natural-language-archetype</module>
-        <module>archetype</module>
-    </modules>
+  <modules>
+    <module>jsf</module>
+    <module>react</module>
+  </modules>
 </project>

@@ -191,6 +191,7 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
     public Object visitEnumeration(Enumeration inElement, Object... inParam) throws InstantiationException, IllegalAccessException {
         inElement = (Enumeration) visitPackageableElement(inElement, inParam);
 
+        System.out.println("Visiting an enumeration : " + inElement.getName());
         Element     element = (Element) inParam[2];
         NodeList childNodes = element.getChildNodes();
         // Read the literals
@@ -207,6 +208,7 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
                 String literalName = aChildElement.getAttribute("name");
                 newLiteral.setValue(literalName);
                 inElement.addLiteral(newLiteral);
+                System.out.println("   added " + literalName + " to enumeration " + inElement.getName());
             }
         }
 
@@ -256,7 +258,7 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
             logger.log(Level.FINER, "Reading {0} of type {1} in class {2}", new Object[]{inProperty.getName(), propertyType.getName(), parentClass});
         }
         if (propertyType != null) {
-            if (parentClass != null && propertyType instanceof MofClass) {
+            if (parentClass != null && ((propertyType instanceof MofClass) || (propertyType instanceof Enumeration))) {
                 logger.log(Level.INFO, "     " + parentClass.getName() + " depends of " + propertyType.getName());
                 parentClass.addDependency(propertyType);
             }            
@@ -328,6 +330,7 @@ public class XmlModelReaderVisitor extends DynamicVisitorSupport {
                         MofType     type = readType(aParamElement, model);
                         parameter.setType(type);
                         if (type instanceof MofClass) {
+                            System.out.println("The parameter " + type.getName() + " is added to the dependencies of " + inOperation.getOwningMofClass().getName());
                             inOperation.getOwningMofClass().addDependency(type);
                         }
                         inOperation.addOwnedParameter(parameter);

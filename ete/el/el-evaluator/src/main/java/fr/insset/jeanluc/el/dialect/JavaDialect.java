@@ -1,5 +1,7 @@
 package fr.insset.jeanluc.el.dialect;
 
+
+
 import fr.insset.jeanluc.ete.meta.model.core.MofElement;
 import fr.insset.jeanluc.ete.meta.model.core.NamedElement;
 import static fr.insset.jeanluc.ete.meta.model.core.PrimitiveDataTypes.BOOLEAN_TYPE;
