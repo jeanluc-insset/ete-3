@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  This module generates all JPA stuff. It first calls a template to generate
+  entities, then generate the DAOs and the persistence unit.
+  -->
+
+<mda>
+
+    <transformation-set>
+        
+        <if test="${jsf}">
+            <module src="../jsf/ete-config.xml"/>
+        </if>
+
+        <if test="${jaxrs}">
+            <module src="../jaxrs/ete-config.xml"/>
+        </if>
+
+        <velocity template="web_xml.vm"
+            target="generated-web-pages/ete/WEB-INF/web.xml"/>
+
+    </transformation-set>
+
+</mda>
+
+
+

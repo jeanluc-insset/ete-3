@@ -19,13 +19,18 @@
                         template="jsf_controller.vm"
                         target='${symbol_dollar}{current.owningPackage.name.replace(".", "/")}/jsf/${symbol_dollar}{current.name}Controller.java'/>
 
-            <velocity dialect="fr.insset.jeanluc.as2java.JavaGenerator"
-                        template="pagination_helper.vm"
-                        target='${packageInPathFormat}/ete/jsf/util/PaginationHelper.java'/>
+            <velocity items='${symbol_dollar}{enumerations}'
+                        dialect="fr.insset.jeanluc.as2java.JavaGenerator"
+                        template="enum_controller.vm"
+                        target='${symbol_dollar}{current.owningPackage.name.replace(".", "/")}/jsf/${symbol_dollar}{current.name}Controller.java'/>
 
-                        <velocity dialect="fr.insset.jeanluc.as2java.JavaGenerator"
-                        template="jsf_util.vm"
-                        target='${packageInPathFormat}/ete/jsf/util/JsfUtil.java'/>
+            <velocity dialect="fr.insset.jeanluc.as2java.JavaGenerator"
+            template="pagination_helper.vm"
+            target='${packageInPathFormat}/ete/jsf/util/PaginationHelper.java'/>
+
+            <velocity dialect="fr.insset.jeanluc.as2java.JavaGenerator"
+            template="jsf_util.vm"
+            target='${packageInPathFormat}/ete/jsf/util/JsfUtil.java'/>
 
     </transformation-set>
 

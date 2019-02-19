@@ -21,6 +21,10 @@ ${symbol_pound}if (${symbol_dollar}var.type.name.equals("String") || ${symbol_do
 ${symbol_pound}parse("controls/input.vm")
 ${symbol_pound}elseif (${symbol_dollar}var.type.name.equals("date"))
 ${symbol_pound}parse("controls/calendar.vm")
+${symbol_pound}elseif (${symbol_dollar}var.type.name.equals("boolean"))
+${symbol_pound}parse("controls/boolean.vm")
+${symbol_pound}elseif (${symbol_dollar}var.type.enumeration)
+${symbol_pound}parse("controls/enumeration.vm")
 ${symbol_pound}else
 ${symbol_pound}set(${symbol_dollar}coll = ${symbol_dollar}var.type.collection)
 ${symbol_pound}if (${symbol_dollar}var.composite)

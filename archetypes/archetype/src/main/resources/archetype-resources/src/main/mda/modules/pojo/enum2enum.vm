@@ -1,0 +1,54 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+
+
+package ${symbol_dollar}{current.owningPackage};
+
+
+
+import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.xml.bind.annotation.XmlRootElement;
+
+/**
+ *
+ * @author jldeleage
+ */
+public enum ${symbol_dollar}{current.name} {
+
+
+    //========================================================================//
+
+${symbol_pound}foreach (${symbol_dollar}aLiteral in ${symbol_dollar}current.literal)
+    ${symbol_dollar}{aLiteral.value}${symbol_pound}if(${symbol_dollar}foreach.hasNext),
+${symbol_pound}end
+${symbol_pound}end;
+
+    //========================================================================//
+
+
+${symbol_pound}foreach (${symbol_dollar}aMethod in ${symbol_dollar}current.ownedOperation)
+    public ${symbol_dollar}dialect.moft2lt(${symbol_dollar}aMethod.type.name) ${symbol_dollar}{aMethod.name}(${symbol_pound}foreach(${symbol_dollar}aParam in ${symbol_dollar}{aMethod.ownedParameter})${symbol_dollar}{aParam.type} ${symbol_dollar}{aParam.name} ${symbol_pound}end) {
+${symbol_dollar}{dialect.getOperationBody(${symbol_dollar}aMethod, "    ")}
+    }
+${symbol_pound}end
+
+
+    //========================================================================//
+
+${symbol_pound}foreach (${symbol_dollar}aProperty in ${symbol_dollar}current.ownedAttribute)
+    ${symbol_dollar}dialect.mt2lt(${symbol_dollar}aProperty.type)      ${symbol_dollar}{aProperty.name};
+${symbol_pound}end
+
+
+
+}

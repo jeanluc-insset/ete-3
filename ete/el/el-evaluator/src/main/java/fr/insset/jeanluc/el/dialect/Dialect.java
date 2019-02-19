@@ -12,6 +12,8 @@ import java.util.HashSet;
 import java.util.Set;
 import fr.insset.jeanluc.ete.meta.model.emof.MofProperty;
 import fr.insset.jeanluc.ete.meta.model.mofpackage.PackageableElement;
+import fr.insset.jeanluc.ete.meta.model.types.Classifier;
+import java.util.Enumeration;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -150,7 +152,7 @@ public interface Dialect {
             addDependency(((MofCollection)inType).getBaseType(), inoutDependencies);
         }
         else {
-            if (inType instanceof MofClass) {
+            if (inType instanceof MofClass || inType instanceof Enumeration) {
                 inoutDependencies.add(inType);
             }
         }
@@ -310,7 +312,7 @@ public interface Dialect {
      * @param inClass
      * @return 
      */
-    public default boolean isEntity(MofClass inClass) {
+    public default boolean isEntity(Classifier inClass) {
         if (inClass.hasStereotype(ENTITY)) {
             return true;
         }

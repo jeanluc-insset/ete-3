@@ -1,0 +1,200 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+package ${symbol_dollar}{current.owningPackage.name}.jsf;
+
+
+import ${symbol_dollar}{current.owningPackage.name}.${symbol_dollar}{current.name};
+import fr.upjv.mis.ete.essais.ete.jsf.util.JsfUtil;
+import fr.upjv.mis.ete.essais.ete.jsf.util.PaginationHelper;
+
+
+${symbol_pound}foreach (${symbol_dollar}aDependency in ${symbol_dollar}current.allDependencies)
+${symbol_pound}if (${symbol_dollar}aDependency.hasStereotype("Entity"))
+import ${symbol_dollar}{aDependency.owningPackage.name}.model.${symbol_dollar}{aDependency.name};
+${symbol_pound}else
+import ${symbol_dollar}{aDependency.owningPackage.name}.${symbol_dollar}{aDependency.name};
+${symbol_pound}end
+${symbol_pound}end
+${symbol_pound}foreach (${symbol_dollar}aProperty in ${symbol_dollar}current.support.keySet())
+import ${symbol_dollar}{aProperty.owningMofClass.owningPackage.name}.model.${symbol_dollar}{aProperty.owningMofClass.name};
+${symbol_pound}end
+${symbol_pound}foreach (${symbol_dollar}aProperty in ${symbol_dollar}current.ownedAttribute)
+${symbol_pound}if (${symbol_dollar}aProperty.composite)
+import ${symbol_dollar}{aProperty.type.recBaseType.owningPackage.name}.model.${symbol_dollar}{aProperty.type.recBaseType.name};
+${symbol_pound}end
+${symbol_pound}end
+
+import java.io.Serializable;
+import java.util.ResourceBundle;
+import javax.ejb.EJB;
+import javax.inject.Named;
+import javax.enterprise.context.ApplicationScoped;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.convert.Converter;
+import javax.faces.convert.FacesConverter;
+import javax.faces.model.DataModel;
+import javax.faces.model.ListDataModel;
+import javax.faces.model.SelectItem;
+
+@Named("${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller")
+@ApplicationScoped
+public class ${symbol_dollar}{current.name}Controller implements Serializable {
+
+    private ${symbol_dollar}{current.name} current;
+    private DataModel items = null;
+${symbol_pound}foreach (${symbol_dollar}aProperty in ${symbol_dollar}current.ownedAttribute)
+${symbol_pound}if (${symbol_dollar}aProperty.composite && ${symbol_dollar}aProperty.type.collection)
+    private ${symbol_dollar}{aProperty.type.recBaseType.name}  new${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)} = new ${symbol_dollar}{aProperty.type.recBaseType.name}();
+${symbol_pound}end
+${symbol_pound}end
+${symbol_pound}foreach (${symbol_dollar}aMethod in ${symbol_dollar}current.ownedOperation)
+${symbol_pound}foreach (${symbol_dollar}aParameter in ${symbol_dollar}aMethod.ownedParameter)
+    private ${symbol_dollar}{dialect.mt2lt(${symbol_dollar}aParameter.type)}  ${symbol_dollar}{aMethod.name}${symbol_dollar}{dialect.i2uc(${symbol_dollar}aParameter.name)};
+${symbol_pound}end
+${symbol_pound}end
+
+
+
+    //========================================================================//
+    //                          C O M P O N E N T S                           //
+    //========================================================================//
+
+
+/*
+${symbol_pound}foreach (${symbol_dollar}aProperty in ${symbol_dollar}current.ownedAttribute)
+${symbol_pound}if (${symbol_dollar}aProperty.composite && ${symbol_dollar}aProperty.type.collection)
+    public ${symbol_dollar}{aProperty.type.recBaseType.name}  getNew${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)}() {
+        return new${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)};
+    }
+
+    public void  setNew${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)}(${symbol_dollar}{aProperty.type.recBaseType.name} inValue) {
+        new${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)} = inValue;
+    }
+
+    public void addNew${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)}() {
+        getSelected().get${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)}().add(new${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)});
+        new${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)} = new ${symbol_dollar}{aProperty.type.recBaseType.name}();
+    }
+${symbol_pound}end
+${symbol_pound}end
+*/
+
+
+    //========================================================================//
+    //                          O P E R A T I O N S                           //
+    //========================================================================//
+
+
+/*
+${symbol_pound}foreach (${symbol_dollar}aMethod in ${symbol_dollar}current.ownedOperation)
+    public void ${symbol_dollar}{aMethod.name}() {
+        try {
+            getSelected().${symbol_dollar}{aMethod.name}(${symbol_pound}foreach (${symbol_dollar}aParameter in ${symbol_dollar}aMethod.ownedParameter)
+${symbol_dollar}{aMethod.name}${symbol_dollar}{dialect.i2uc(${symbol_dollar}aParameter.name)}${symbol_pound}if( ${symbol_dollar}foreach.hasNext ), ${symbol_pound}end
+${symbol_pound}end
+            );
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("${symbol_dollar}{current.name}Created"));
+        }
+        catch (Exception ex) {
+            JsfUtil.addErrorMessage(ex, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
+        }
+    }
+
+${symbol_pound}foreach (${symbol_dollar}aParameter in ${symbol_dollar}aMethod.ownedParameter)
+    public ${symbol_dollar}{dialect.mt2lt(${symbol_dollar}aParameter.type)} get${symbol_dollar}{aMethod.name}${symbol_dollar}{dialect.i2uc(${symbol_dollar}aParameter.name)}() {
+        return ${symbol_dollar}{aMethod.name}${symbol_dollar}{dialect.i2uc(${symbol_dollar}aParameter.name)};
+    }
+
+    public void set${symbol_dollar}{aMethod.name}${symbol_dollar}{dialect.i2uc(${symbol_dollar}aParameter.name)}(${symbol_dollar}{dialect.mt2lt(${symbol_dollar}aParameter.type)} inValue) {
+        ${symbol_dollar}{aMethod.name}${symbol_dollar}{dialect.i2uc(${symbol_dollar}aParameter.name)} = inValue;
+    }
+
+${symbol_pound}end
+
+${symbol_pound}end
+*/
+
+
+    //========================================================================//
+    //       M O D E L S   F O R   T A B L E S   A N D   S E L E C T S        //
+    //========================================================================//
+
+
+    public SelectItem[] getItemsAvailableSelectMany() {
+        SelectItem[]    result = new SelectItem[${symbol_dollar}{current.name}.values().length];
+${symbol_pound}foreach (${symbol_dollar}aLiteral in ${symbol_dollar}current.literal)
+        // new SelectItem(${symbol_dollar}{current.name}.${symbol_dollar}{aLiteral.value()}, "${symbol_dollar}{aLiteral.value()}");
+${symbol_pound}end
+        for (int i=0 ; i<${symbol_dollar}{current.name}.values().length ; i++) {
+            result[i] = new SelectItem(${symbol_dollar}{current.name}.values()[i], ${symbol_dollar}{current.name}.values()[i].name());
+        }
+        return result;
+    }
+
+    public SelectItem[] getItemsAvailableSelectOne() {
+        SelectItem[]    result = new SelectItem[${symbol_dollar}{current.name}.values().length+1];
+        result[0] = new SelectItem(null, "---");
+        for (int i=0 ; i<${symbol_dollar}{current.name}.values().length ; i++) {
+            result[i+1] = new SelectItem(${symbol_dollar}{current.name}.values()[i], ${symbol_dollar}{current.name}.values()[i].name());
+        }
+        return result;
+    }
+
+
+${symbol_pound}foreach (${symbol_dollar}aProperty in ${symbol_dollar}{current.support.keySet()})
+    public SelectItem[] getItemsAvailableAs${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)}For${symbol_dollar}{aProperty.owningMofClass.name}SelectOne(${symbol_dollar}{aProperty.owningMofClass.name} inFor) throws InstantiationException {
+        return JsfUtil.getSelectItems(ejbFacade.getAll${symbol_dollar}{current.name}As${symbol_dollar}{dialect.i2uc(${symbol_dollar}aProperty.name)}For${symbol_dollar}{aProperty.owningMofClass.name}(inFor), true);
+    }
+${symbol_pound}end
+
+
+    //========================================================================//
+    //                           C O N V E R T E R                            //
+    //========================================================================//
+
+/*
+    @FacesConverter(forClass = ${symbol_dollar}{current.name}.class)
+    public static class ${symbol_dollar}{current.name}ControllerConverter implements Converter {
+
+        @Override
+        public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
+            if (value == null || value.length() == 0) {
+                return null;
+            }
+            ${symbol_dollar}{current.name}Controller controller = (${symbol_dollar}{current.name}Controller) facesContext.getApplication().getELResolver().
+                    getValue(facesContext.getELContext(), null, "${symbol_dollar}{dialect.i2lc(${symbol_dollar}current.name)}Controller");
+            return controller.get${symbol_dollar}{current.name}(getKey(value));
+        }
+
+        java.lang.Long getKey(String value) {
+            java.lang.Long key;
+            key = Long.valueOf(value);
+            return key;
+        }
+
+        String getStringKey(java.lang.Long value) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(value);
+            return sb.toString();
+        }
+
+        @Override
+        public String getAsString(FacesContext facesContext, UIComponent component, Object object) {
+            if (object == null) {
+                return null;
+            }
+            if (object instanceof ${symbol_dollar}{current.name}) {
+                ${symbol_dollar}{current.name} o = (${symbol_dollar}{current.name}) object;
+                return getStringKey(o.getId());
+            } else {
+                throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + ${symbol_dollar}{current.name}.class.getName());
+            }
+        }
+
+    }
+*/
+
+}
+

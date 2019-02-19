@@ -15,7 +15,7 @@
             <!-- JPA -->
             <!--    <module href="../jpa/ete-config.xml"/>-->
 
-        <velocity items="${symbol_dollar}{classes}"
+        <velocity items='${symbol_dollar}{classes.filter(c->c.hasStereotype("Entity"))}'
                         dialect="fr.insset.jeanluc.as2java.JavaGenerator"
                         template="entity2jersey.vm"
                         target="${packageInPathFormat}/ete/api/${symbol_dollar}{current.name}Resource.java"/> 

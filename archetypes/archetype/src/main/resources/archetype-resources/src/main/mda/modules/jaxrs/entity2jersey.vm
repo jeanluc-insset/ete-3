@@ -4,6 +4,13 @@
 package ${package}.ete.api;
 
 
+${symbol_pound}foreach (${symbol_dollar}aDependency in ${symbol_dollar}current.allDependencies)
+${symbol_pound}if (${symbol_dollar}aDependency.hasStereotype("Entity"))
+import ${symbol_dollar}{aDependency.owningPackage.name}.model.${symbol_dollar}{aDependency.name};
+${symbol_pound}else
+import ${symbol_dollar}{aDependency.owningPackage.name}.${symbol_dollar}{aDependency.name};
+${symbol_pound}end
+${symbol_pound}end
 import ${symbol_dollar}{current.package.name}.model.${symbol_dollar}{current.name};
 import ${symbol_dollar}{current.package.name}.jpa.${symbol_dollar}{current.name}Jpa;
 import java.util.List;

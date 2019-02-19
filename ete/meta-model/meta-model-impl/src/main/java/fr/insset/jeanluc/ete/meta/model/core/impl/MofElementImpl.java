@@ -23,30 +23,30 @@ public class MofElementImpl implements MofElement {
 
     @Override
     public void addDependency(MofElement inDependance) {
-        if (dependances == null) {
-            dependances = new HashSet<>();
+        if (dependencies == null) {
+            dependencies = new HashSet<>();
         }
-        dependances.add(inDependance);
+        dependencies.add(inDependance);
     }
 
     @Override
     public void removeDependency(MofElement inDependance) {
-        if (dependances == null) {
+        if (dependencies == null) {
             return;
         }
-        dependances.remove(inDependance);
+        dependencies.remove(inDependance);
     }
 
     @Override
     public Set<MofElement> getDependency() {
-        if (dependances == null) {
+        if (dependencies == null) {
             return Collections.EMPTY_SET;
         }
-        return dependances;
+        return dependencies;
     }
 
 
     private String      id;
-    private Set<MofElement>     dependances;
+    private Set<MofElement>     dependencies;
 
 }
