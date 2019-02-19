@@ -5,6 +5,13 @@ package ${symbol_dollar}{current.owningPackage}.model;
 
 
 
+${symbol_pound}foreach (${symbol_dollar}aDependency in ${symbol_dollar}current.allDependencies)
+${symbol_pound}if (${symbol_dollar}aDependency.hasStereotype("Entity"))
+import ${symbol_dollar}{aDependency.owningPackage.name}.model.${symbol_dollar}{aDependency.name};
+${symbol_pound}else
+import ${symbol_dollar}{aDependency.owningPackage.name}.${symbol_dollar}{aDependency.name};
+${symbol_pound}end
+${symbol_pound}end
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;

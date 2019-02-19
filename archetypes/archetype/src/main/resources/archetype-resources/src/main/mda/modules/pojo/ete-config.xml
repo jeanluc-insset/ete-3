@@ -13,10 +13,17 @@
     <transformation-set>
 
         <transformation-set output_base="generated-sources/ete">
+
             <velocity items='${symbol_dollar}{classes.filter(c -> !c.hasStereotype("Entity"))}'
                         dialect="fr.insset.jeanluc.as2java.JavaGenerator"
                         template="class2pojo.vm"
                         target="${symbol_dollar}{current.owningPackage.name.replace('.', '/')}/${symbol_dollar}{current.name}.java"/>
+
+            <velocity items='${enumerations}'
+                        dialect="fr.insset.jeanluc.as2java.JavaGenerator"
+                        template="enum2enum.vm"
+                        target="${current.owningPackage.name.replace('.', '/')}/${current.name}.java"/>
+
         </transformation-set>
 
     </transformation-set>

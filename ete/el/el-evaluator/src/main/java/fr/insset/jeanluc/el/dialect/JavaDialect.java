@@ -1,5 +1,7 @@
 package fr.insset.jeanluc.el.dialect;
 
+
+
 import fr.insset.jeanluc.ete.meta.model.core.MofElement;
 import fr.insset.jeanluc.ete.meta.model.core.NamedElement;
 import static fr.insset.jeanluc.ete.meta.model.core.PrimitiveDataTypes.BOOLEAN_TYPE;
@@ -79,6 +81,9 @@ public interface JavaDialect extends Dialect {
     public default String mt2lt(MofType inType) {
         if (inType == null) {
             return "void";
+        }
+        if (inType.isEnumeration()) {
+            return inType.getName();
         }
         if (inType.isCollection()) {
             MofCollection coll = (MofCollection) inType;

@@ -6,6 +6,7 @@ import fr.insset.jeanluc.ete.meta.model.datatype.UnlimitedNatural;
 import static fr.insset.jeanluc.ete.meta.model.datatype.UnlimitedNatural.UNLIMITED_NATURAL;
 import fr.insset.jeanluc.ete.meta.model.emof.AggregationKind;
 import fr.insset.jeanluc.ete.meta.model.emof.Association;
+import fr.insset.jeanluc.ete.meta.model.emof.Enumeration;
 import fr.insset.jeanluc.ete.meta.model.emof.MofClass;
 import fr.insset.jeanluc.ete.meta.model.types.MofType;
 import fr.insset.jeanluc.ete.meta.model.types.collections.MofCollection;
@@ -34,7 +35,7 @@ public class MofPropertyImpl extends FeatureImpl implements MofProperty {
             MofCollection coll = (MofCollection) inType;
             inType = coll.getBaseType();
         }
-        if (inType instanceof MofClass) {
+        if (inType instanceof MofClass || inType instanceof Enumeration) {
             this.getOwningMofClass().addDependency(inType);
         }
     }

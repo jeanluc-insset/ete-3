@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script>
+function Iterator() {
+    var self = this;
+    this.toArray = function() {
+        var result = [];
+        while (self.hasNext()) {
+            result.push(self.next());
+        }
+        return result;
+    }
+};
+
+Iterator.prototype.map = function(f) {
+    var result = new Iterator();
+    var self = this;
+    result.hasNext = function() {
+        return self.hasNext();
+    }
+    result.next = function() {
+        return f(self.next());
+    }
+    return result;
+}
+
+Iterator.prototype.filter = function(f) {
+    var result = new Iterator();
+    var self = this;
+    var findNext = function() {
+        while (self.hasNext()) {
+            var candidat = self.next();
+            if (f(candidat)) {
+                return candidat;
+            }
+        }
+        return undefined;
+    }
+    var nextValue = findNext();
+    result.hasNext = function() {
+        return nextValue;
+    }
+    result.next = function() {
+        var result = nextValue;
+        nextValue = findNext();
+        return result;
+    }
+    return result;
+}
+
+
+Iterator.prototype.reduce = function(init, f) {
+    var resultat = init;
+    while (this.hasNext()) {
+        resultat = f(resultat, this.next());
+    }
+    return resultat;
+}
+
+
+Array.prototype.iterator = function() {
+    var self = this;
+    var i = 0;
+    var result = new Iterator();
+    result.hasNext = function() {
+        return i<self.length;
+    }
+    result.next = function() {
+        return self[i++];
+    }
+    return result;
+}
+
+
+var a = [10, 30, 50, 30];
+var it = a.iterator().filter(x => x>15).map(x=> x+1);
+var b = it.toArray();
+console.log(a.iterator().reduce(0, (x,y) => x+y));
+console.log(b);
+var cumul = a.iterator()
+        .filter(x => x>15)
+        .map(x=> x+1)
+        .reduce({nb:0, total:0},
+                function(y,x) {
+                    return {nb:y.nb+1, total:y.total+x}
+        });
+console.log(cumul);
+        </script>
+    </head>
+    <body>
+        <div>TODO write content</div>
+    </body>
+</html>
