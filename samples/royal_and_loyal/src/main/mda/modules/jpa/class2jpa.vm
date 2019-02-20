@@ -1,0 +1,126 @@
+package ${current.owningPackage.name}.jpa;
+
+
+import fr.upjv.mis.ete.samples.ete.jpa.AbstractJpa;
+import ${current.owningPackage.name}.model.*;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import javax.ejb.Stateless;
+##if ($javase)
+##import javax.persistence.EntityManagerFactory;
+##import javax.persistence.Persistence;
+##end
+import javax.persistence.*;
+import javax.persistence.criteria.*;
+import javax.persistence.metamodel.*;
+
+
+
+/**
+ *
+ * @author jldeleage
+ */
+@Stateless
+public class ${current.name}Jpa extends AbstractJpa<${current.name}> {
+
+#if (true == $javase)
+    private EntityManagerFactory factory;
+#else
+    @PersistenceContext(unitName = "${pu}")
+#end
+    private EntityManager em;
+
+    @Override
+    protected EntityManager getEntityManager() {
+#if (true == $javase)
+        if (factory == null) {
+            factory = Persistence.createEntityManagerFactory("${pu}");
+        }
+        if (em == null) {
+            em = factory.createEntityManager();
+        }
+#end
+        return em;
+    }
+
+    public ${current.name}Jpa() {
+        super(${current.name}.class);
+    }
+
+
+    //========================================================================//
+
+#foreach ($aProperty in $current.ownedAttribute)
+#if ($dialect.isEntity($aProperty.type))
+
+    public List<${current.name}> findBy${dialect.i2uc($aProperty.name)}(${dialect.mt2lt($aProperty.type)} inValue) {
+        EntityManager em = getEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<${current.name}> cq = cb.createQuery(${current.name}.class);
+        Root<${current.name}> from = cq.from(${current.name}.class);
+        // There is an "unkown compilation error" if we try to use the metamodel
+        // generator processor so we use the metamodel on runtime only
+        Metamodel metamodel = em.getMetamodel();
+        EntityType<${current.name}> entity = metamodel.entity(${current.name}.class);
+        SingularAttribute<? super ${current.name}, ?> singularAttribute = entity.getSingularAttribute("${dialect.i2lc($aProperty.type.name)}");
+        from.join(singularAttribute);
+        cq.where(cb.equal(from.get(singularAttribute), inValue));
+        TypedQuery<${current.name}> query = em.createQuery(cq);
+        return query.getResultList();
+    }
+#end
+#end
+
+
+    //========================================================================//
+    //           F I L T E R S   F O R   I N V A R I A N T S   O F            //
+    //            E V E N T U A L L Y   O T H E R   C L A S S E S             //
+    //========================================================================//
+
+
+#foreach ($aProperty in $current.support.keySet())
+    /**
+     * Should return all the instances of ${current.name} which are acceptable
+     * as values of ${dialect.i2uc($aProperty.name)} of ${aProperty.owningMofClass.name}
+     * without violating any constraint on ${aQuery.clientClass.name}
+     */
+    public List<${current.name}> getAll${current.name}As${dialect.i2uc($aProperty.name)}For${aProperty.owningMofClass.name}(${aProperty.owningMofClass.name} inFor) {
+        CriteriaBuilder cb = getCriteriaBuilder();
+        CriteriaQuery<${current.name}> cq = cb.createQuery(${current.name}.class);
+        Root<${current.name}> root = cq.from(${current.name}.class);
+        cq.select(root);
+#foreach ($aQuery in $current.support.get(${aProperty}))
+        select${dialect.i2uc($aProperty.name)}For${dialect.i2uc($aQuery.invariant.name)}(cq, root, inFor);
+#end
+        TypedQuery<${current.name}> query = em.createQuery(cq);
+        return query.getResultList();
+    }
+
+
+
+#foreach ($aQuery in $current.support.get($aProperty))
+    public void select${dialect.i2uc($aProperty.name)}For${dialect.i2uc($aQuery.invariant.name)}(CriteriaQuery cq,
+                                Root<${current.name}> root,
+                                ${aQuery.clientClass.name} inFor) {
+        CriteriaBuilder cb = getCriteriaBuilder();
+#foreach ($aVariable in $aQuery.variables)
+        Optional<${dialect.mt2lt($aVariable.type)}> ${aVariable.name}Opt = ${dialect.addChecking($aVariable.initValue)};
+        if (! ${aVariable.name}Opt.isPresent()) {
+            return;
+        }
+#end
+#foreach ($aVariable in $aQuery.variables)
+        Expression<${dialect.mt2lt($aVariable.type)}> ${aVariable.name} = cb.literal(${aVariable.name}Opt.get());
+        cq.where(${dialect.getPredicate($aQuery)});
+#end
+    }
+
+#end
+#end
+
+
+
+}

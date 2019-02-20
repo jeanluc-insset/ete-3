@@ -1,0 +1,141 @@
+package ${current.owningPackage}.model;
+
+
+
+#foreach ($aDependency in $current.allDependencies)
+#if ($aDependency.hasStereotype("Entity"))
+import ${aDependency.owningPackage.name}.model.${aDependency.name};
+#else
+import ${aDependency.owningPackage.name}.${aDependency.name};
+#end
+#end
+import fr.insset.jeanluc.util.factory.FactoryMethods;
+import fr.mis.ete.util.optional.OptionalList;
+import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.xml.bind.annotation.XmlRootElement;
+
+/**
+ * Convenient class to manage complex navigations without worrying of null
+ * references.<br>
+ * Holds the same getters and methods than the ${current.name} class.
+ *
+ * @author jldeleage
+ */
+public class OptionalList${current.name} extends LinkedList<Optional${current.name}> {
+
+
+
+
+
+    public boolean isPresent() {
+        return present;
+    }
+
+    public void setPresent(boolean inPresent) {
+        present = inPresent;
+    }
+
+
+    /**
+     * 
+     */
+    public List<${current.name}> get() throws InstantiationException {
+        if (isPresent()) {
+            List<${current.name}>    result = FactoryMethods.newList(${current.name}.class);
+            for (Optional${current.name} item : this) {
+                result.add(item.get());
+            }
+            return result;
+        }
+        throw new RuntimeException("Optional object is absent");
+    }
+
+
+    //========================================================================//
+
+
+
+#foreach ($aProperty in $current.ownedAttribute)
+#set ($t = $aProperty.type.recBaseType)
+
+#if ($aProperty.type.collection)
+/*      // a collection of collections ! Not currently handled
+    public OptionalList${t.name}  get${dialect.i2uc($aProperty.name)}() {
+        OptionalList${t.name} result;
+        if (isPresent()) {
+            result = OptionalList${t.name}.ofNullable(null);
+        }
+
+        return result;
+    }
+*/
+#else
+##         not a collection 
+#if ($t.name.equals("int")) #set($tn = "Integer")
+#elseif ($t.name.equals("double")) #set($tn="Double")
+#elseif ($t.name.equals("date")) #set($tn="java.util.Date")
+#elseif ($t.name.equals("boolean")) #set($tn="Boolean")
+#else #set($tn=$t.name)
+#end
+
+#if ($dialect.isEntity($t))
+    public OptionalList$tn get${dialect.i2uc($aProperty.name)}() {
+        OptionalList$tn  result =  new OptionalList${tn}();
+        if (isPresent()) {
+            result.setPresent(present);
+            for (Optional${current.name} item : this) {
+                result.add(item.get${dialect.i2uc($aProperty.name)}());
+            }
+        }
+        return result;
+    }
+#else
+    public OptionalList<$tn> get${dialect.i2uc($aProperty.name)}() {
+        OptionalList<$tn>  result =  new OptionalList<$tn>();
+        if (isPresent()) {
+            result.setPresent(present);
+            for (Optional${current.name} item : this) {
+                result.add(item.get().get${dialect.i2uc($aProperty.name)}());
+            }
+        }
+        return result;
+    }
+ #end
+#end
+#end
+
+
+
+
+    //========================================================================//
+
+
+#foreach ($aMethod in $current.ownedOperation)
+    public $dialect.moft2lt($aMethod.type.name) ${aMethod.name}(#foreach($aParam in ${aMethod.ownedParameter})${dialect.mt2lt($aParam.type)} ${aParam.name}#if( $foreach.hasNext ), #end #end) {
+        if (isPresent()) {
+            #if (! $dialect.moft2lt($aMethod.type.name).equals("void"))return #end${aMethod.name}(#foreach($aParam in ${aMethod.ownedParameter})${aParam.name}#if( $foreach.hasNext ), #end #end);
+        }
+    }
+#end
+
+
+
+
+    //========================================================================//
+
+    private     boolean             present;
+
+
+}

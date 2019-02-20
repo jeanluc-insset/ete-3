@@ -1,0 +1,176 @@
+package ${current.owningPackage}.model;
+
+
+
+#foreach ($aDependency in $current.allDependencies)
+#if ($aDependency.hasStereotype("Entity"))
+import ${aDependency.owningPackage.name}.model.${aDependency.name};
+#else
+import ${aDependency.owningPackage.name}.${aDependency.name};
+#end
+#end
+import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.xml.bind.annotation.XmlRootElement;
+
+/**
+ *
+ * @author jldeleage
+ */
+@Entity
+@XmlRootElement
+@NamedQueries({
+#foreach ($aProperty in $current.allAttributes)
+    @NamedQuery(name = "${current.name}.findBy${dialect.i2uc($aProperty.name)}", query = "SELECT f FROM ${current.name} f WHERE f.${aProperty.name} = :param"),
+#end
+    @NamedQuery(name = "${current.name}.findAll", query = "SELECT f FROM ${current.name} f")
+})
+public class ${current.name} #if (${current.superClass.size()}>0)extends ${current.superClass.get(0).owningPackage.name}.model.${current.superClass.get(0).name} #end implements Serializable {
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+
+    //========================================================================//
+
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof ${current.name})) {
+            return false;
+        }
+        ${current.name} other = (${current.name}) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+
+    //========================================================================//
+
+
+#foreach ($tagValue in ${current.getTagValues().keySet()})
+    public default String get${dialect.i2uc($tagValue.name)}() {
+        return "${current.getValueOf($tagValue.name)}";
+    }
+#end
+
+
+    //========================================================================//
+
+#foreach ($aProperty in $current.ownedAttribute)
+    public $dialect.mt2lt($aProperty.type) get${dialect.i2uc($aProperty.name)}() {
+        return ${aProperty.name};
+    }
+
+    public void set${dialect.i2uc($aProperty.name)}(${dialect.mt2lt($aProperty.type)} inValue) {
+        ${aProperty.name} = inValue;
+    }
+
+#if ($aProperty.type.collection)
+    public void add${dialect.i2uc($aProperty.name)}(${dialect.mt2lt($aProperty.type.baseType)} inValue) {
+        ${aProperty.name}.add(inValue);
+    }
+
+    public void remove${dialect.i2uc($aProperty.name)}(${dialect.mt2lt($aProperty.type.baseType)} inValue) {
+        ${aProperty.name}.remove(inValue);
+    }
+#elseif ($aProperty.type.recBaseType.hasStereotype("Entity"))
+    public Optional${aProperty.type} get${dialect.i2uc($aProperty.name)}$() {
+        return Optional${aProperty.type}.ofNullable(${aProperty.name});
+    }
+#elseif ($aProperty.type.recBaseType.name.equals("date"))
+    public Optional<java.util.Date> get${dialect.i2uc($aProperty.name)}$() {
+        return Optional.ofNullable(${aProperty.name});
+    }
+#elseif ($aProperty.type.recBaseType.name.equals("String"))
+    public Optional<String> get${dialect.i2uc($aProperty.name)}$() {
+        return Optional.ofNullable(${aProperty.name});
+    }
+#elseif ($aProperty.type.recBaseType.name.equals("int"))
+    public Optional<Integer> get${dialect.i2uc($aProperty.name)}$() {
+        return Optional.ofNullable(${aProperty.name});
+    }
+#elseif ($aProperty.type.recBaseType.name.equals("double"))
+    public Optional<Double> get${dialect.i2uc($aProperty.name)}$() {
+        return Optional.ofNullable(${aProperty.name});
+    }
+#end
+#end
+
+
+    //========================================================================//
+
+
+#foreach ($aMethod in $current.ownedOperation)
+    public $dialect.moft2lt($aMethod.type.name) ${aMethod.name}(#foreach($aParam in ${aMethod.ownedParameter})${dialect.mt2lt($aParam.type)} ${aParam.name}#if( $foreach.hasNext ), #end #end) {
+#foreach ($aPrecondition in $aMethod.preconditions)
+        if (!(${dialect.getCheckCondition($aMethod, $aPrecondition, "        ")})) {
+            throw new RuntimeException("${aPrecondition.name}");
+        }
+#end
+${dialect.getOperationBody($aMethod, "    ")}
+    }
+#end
+
+
+    @Override
+    public String toString() {
+#if ($current.ownedAttribute.size() > 0)
+        return "" + ${current.ownedAttribute.get(0)};
+#else
+        return super.toString();
+#end
+    }
+
+    //========================================================================//
+
+#foreach ($aProperty in $current.ownedAttribute)
+    #if ($aProperty.type.hasStereotype("Entity"))
+    @ManyToOne #if ($aProperty.composite)(cascade = CascadeType.ALL)#end
+    #end
+    #if ($aProperty.type.isCollection())
+    #if ($aProperty.type.baseType.hasStereotype("Entity"))
+    @OneToMany #if ($aProperty.composite)(cascade = CascadeType.ALL)#end
+    #end
+    #elseif ($aProperty.type.name == "date")
+    @javax.persistence.Temporal(javax.persistence.TemporalType.DATE)
+    #end
+    $dialect.mt2lt($aProperty.type)      ${aProperty.name}#if ($aProperty.type.collection) = new LinkedList<>()#elseif ($aProperty.composite) = new $dialect.mt2lt($aProperty.type)()#end;
+#end
+
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+
+}

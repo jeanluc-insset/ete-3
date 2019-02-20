@@ -1,0 +1,194 @@
+package ${current.owningPackage.name}.jpa;
+
+
+import fr.upjv.mis.ete.samples.ete.jpa.AbstractJpa;
+import ${current.owningPackage.name}.model.*;
+import fr.mis.ete.util.optional.OptionalList;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import javax.ejb.Stateless;
+import javax.persistence.*;
+import javax.persistence.criteria.*;
+import javax.persistence.metamodel.*;
+
+
+
+/**
+ *
+ * @author jldeleage
+ */
+@Stateless
+public class ${current.name}Jpa extends AbstractJpa<${current.name}> {
+
+#if (true == $javase)
+    private EntityManagerFactory factory;
+#else
+    @PersistenceContext(unitName = "${pu}")
+#end
+    private EntityManager em;
+
+    @Override
+    protected EntityManager getEntityManager() {
+#if (true == $javase)
+        if (factory == null) {
+            factory = Persistence.createEntityManagerFactory("${pu}");
+        }
+        if (em == null) {
+            em = factory.createEntityManager();
+        }
+#end
+        return em;
+    }
+
+    public ${current.name}Jpa() {
+        super(${current.name}.class);
+    }
+
+
+    //========================================================================//
+
+#foreach ($aProperty in $current.ownedAttribute)
+#if ($dialect.isEntity($aProperty.type))
+
+    public List<${current.name}> findBy${dialect.i2uc($aProperty.name)}(${dialect.mt2lt($aProperty.type)} inValue) {
+        EntityManager em = getEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<${current.name}> cq = cb.createQuery(${current.name}.class);
+        Root<${current.name}> from = cq.from(${current.name}.class);
+        // There is an "unkown compilation error" if we try to use the metamodel
+        // generator processor so we use the metamodel on runtime only
+        Metamodel metamodel = em.getMetamodel();
+        EntityType<${current.name}> entity = metamodel.entity(${current.name}.class);
+        SingularAttribute<? super ${current.name}, ?> singularAttribute = entity.getSingularAttribute("${dialect.i2lc($aProperty.type.name)}");
+        from.join(singularAttribute);
+        cq.where(cb.equal(from.get(singularAttribute), inValue));
+        TypedQuery<${current.name}> query = em.createQuery(cq);
+        return query.getResultList();
+    }
+#end
+#end
+
+
+    //========================================================================//
+    //           F I L T E R S   F O R   I N V A R I A N T S   O F            //
+    //            E V E N T U A L L Y   O T H E R   C L A S S E S             //
+    //========================================================================//
+
+
+#set ($support = $current.support)
+#foreach ($aProperty in $support.keySet())
+#set ($aQuery = $support.get($aProperty))
+    /**
+     * Should return all the instances of ${current.name} which are acceptable
+     * as values of ${aProperty.name} of ${aProperty.owningMofClass.name}
+     * without violating any constraint on ${aQuery.clientClass.name}
+     */
+    public List<${current.name}> getAll${current.name}As${dialect.i2uc($aProperty.name)}For${aProperty.owningMofClass.name}(${aProperty.owningMofClass.name} inFor) throws InstantiationException {
+        StringBuilder   builder = new StringBuilder("${sql.getSelect($aQuery)}");
+        System.out.println("====================================================\nBuilding the query for ${aProperty.name}");
+        // Some JPA implementations don't support named SQL parameters
+        // We keep the ordered collection of the parameters we have in our query
+        List    parameters = new LinkedList();
+#foreach ($aFilter in $support.get($aProperty).filters)
+        System.out.println("******");
+
+        System.out.println("    Examen du filtre pour l'invariant ${aFilter.invariant.name}");
+#foreach ($aVariable in $aFilter.variables)
+        System.out.println("        Examen de la variable ${aVariable.name} de type ${aVariable.type.name}");
+#if ($aVariable.type.collection)
+        System.out.println("            c'est une collection");
+        OptionalList${dialect.mt2lt($aVariable.type.recBaseType)}  ${aVariable.name} = ${dialect.getValueOfParameter($aVariable)};
+#else
+        System.out.println("            ce n'est pas une collection");
+        Optional${dialect.mt2lt($aVariable.type)}  ${aVariable.name} = ${dialect.getValueOfParameter($aVariable)};
+#end
+#end## loop on variables
+
+        // Setting the variables
+#set ($join = $sql.getJoin($aFilter))
+#if ($aFilter.variables.size()>0)
+        if (#foreach ($aVariable in $aFilter.variables)${aVariable.name}.isPresent()#if( $foreach.hasNext ) && #end#end) {
+            System.out.println("All the variables are present, we add the joins");
+            builder.append("${sql.getJoin($aFilter)}");
+#foreach ($aVariable in $aFilter.variables)
+            parameters.add(${aVariable.name});
+#end
+        }
+#end
+#end
+#if ($support.get($aProperty).filters.size() >0)
+        System.out.println("    Ajout de la clause where");
+        String          where = " WHERE ";
+#end
+#foreach ($aFilter in $support.get($aProperty).filters)
+        System.out.println("        Ajout de la condition de l'invariant ${aFilter.invariant.name} ?");
+#if ($aFilter.variables.size()>0)
+        if (#foreach ($aVariable in $aFilter.variables)${aVariable.name}.isPresent()#if( $foreach.hasNext ) && #end#end) {
+            System.out.println("We add the filter for ${aFilter.invariant.name}");
+            builder.append(where);
+            builder.append("${sql.getWhere($aFilter, $aQuery)}");
+#if ($foreach.hasNext)
+            where = " AND ";
+#end
+        }
+#end
+#end## loop on filters
+#foreach ($aFilter in $support.get($aProperty).filters)
+        System.out.println("      ----------------------------------\nSet the variables for ${aFilter.invariant.name}");
+#if ($aFilter.variables.size()>0)
+        if (#foreach ($aVariable in $aFilter.variables)${aVariable.name}.isPresent()#if( $foreach.hasNext ) && #end#end) {
+            System.out.println("All variables are present");
+            int     i=1;
+#foreach ($aVariable in $aFilter.variables)
+            System.out.println("Set the variable ${aVariable.name}");
+#if ($dialect.isEntity($aVariable.type.recBaseType))
+#if ($aVariable.type.collection)
+            // Collection
+#else
+            // ${aVariable.type.name} : ${dialect.isEntity($aVariable.type)}
+            System.out.println("Setting the parameter ${aVariable.name} to " + ${aVariable.name}.get().getId() + " in position " + i);
+//            query.setParameter(i, ${aVariable.name}.get().getId());
+//            query.setParameter("${aVariable.name}", ${aVariable.name}.get().getId());
+            System.out.println("After this setting, the query is " + builder.toString());
+#end
+#else
+            // ${aVariable.type.name} : ${dialect.isEntity($aVariable.type)}
+            System.out.println("Setting the parameter ${aVariable.name} to " + ${aVariable.name}.get());/            query.setParameter(i, ${aVariable.name}.get());
+//            query.setParameter("${aVariable.name}", ${aVariable.name}.get());
+            System.out.println("The query is " + builder.toString());
+#end
+#end
+        }
+#end
+#end
+        String sqlQuery = builder.toString();
+#foreach ($aFilter in $support.get($aProperty).filters)
+#foreach ($aVariable in $aFilter.variables)
+        if (${aVariable.name}.isPresent()) {
+#if ($aVariable.type.name.equals("String"))
+            sqlQuery = sqlQuery.replace(":${aVariable.name}", "'" + ${aVariable.name}.get() + "'");
+#elseif ($dialect.isEntity($aVariable.type.recBaseType))
+         sqlQuery = sqlQuery.replace(":${aVariable.name}", "" + ${aVariable.name}.get().getId());
+#else
+            sqlQuery = sqlQuery.replace(":${aVariable.name}", ${aVariable.name}.get());
+#end
+        }
+#end
+#end
+        Query  query = getEntityManager().createNativeQuery(sqlQuery, ${current.name}.class);
+        System.out.println("Resulting query : " + query);
+        List<${current.name}>  result = query.getResultList();
+        System.out.println("The result is : " + result + " (" + result.size() + " items)");
+        return result;
+    }
+
+
+#end
+
+
+
+}

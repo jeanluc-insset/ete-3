@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  This module generates all JPA stuff. It first calls a template to generate
+  entities, then generate the DAOs and the persistence unit.
+  -->
+
+<mda>
+
+    <transformation-set>
+
+        <transformation-set output_base="generated-sources/ete">
+
+            <velocity items='${classes.filter(c -> !c.hasStereotype("Entity"))}'
+                        dialect="fr.insset.jeanluc.as2java.JavaGenerator"
+                        template="class2pojo.vm"
+                        target="${current.owningPackage.name.replace('.', '/')}/${current.name}.java"/>
+
+            <velocity items='${enumerations}'
+                        dialect="fr.insset.jeanluc.as2java.JavaGenerator"
+                        template="enum2enum.vm"
+                        target="${current.owningPackage.name.replace('.', '/')}/${current.name}.java"/>
+
+        </transformation-set>
+
+    </transformation-set>
+
+</mda>
+
+
+
