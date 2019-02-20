@@ -5,8 +5,8 @@ package ${symbol_dollar}{current.owningPackage.name}.jsf;
 
 
 import ${symbol_dollar}{current.owningPackage.name}.${symbol_dollar}{current.name};
-import fr.upjv.mis.ete.essais.ete.jsf.util.JsfUtil;
-import fr.upjv.mis.ete.essais.ete.jsf.util.PaginationHelper;
+import fr.upjv.mis.ete.jsf.util.JsfUtil;
+import fr.upjv.mis.ete.jsf.util.PaginationHelper;
 
 
 ${symbol_pound}foreach (${symbol_dollar}aDependency in ${symbol_dollar}current.allDependencies)

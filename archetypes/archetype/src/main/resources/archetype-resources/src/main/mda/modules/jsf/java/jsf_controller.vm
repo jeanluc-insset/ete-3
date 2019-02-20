@@ -5,8 +5,8 @@ package ${symbol_dollar}{current.owningPackage.name}.jsf;
 
 
 import ${symbol_dollar}{current.owningPackage.name}.model.${symbol_dollar}{current.name};
-import ${package}.ete.jsf.util.JsfUtil;
-import ${package}.ete.jsf.util.PaginationHelper;
+import fr.upjv.mis.ete.jsf.util.JsfUtil;
+import fr.upjv.mis.ete.jsf.util.PaginationHelper;
 import ${symbol_dollar}{current.owningPackage.name}.jpa.${symbol_dollar}{current.name}Jpa;
 
 

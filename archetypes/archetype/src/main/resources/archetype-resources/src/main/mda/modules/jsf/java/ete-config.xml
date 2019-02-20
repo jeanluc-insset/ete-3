@@ -26,11 +26,11 @@
 
             <velocity dialect="fr.insset.jeanluc.as2java.JavaGenerator"
             template="pagination_helper.vm"
-            target='${packageInPathFormat}/ete/jsf/util/PaginationHelper.java'/>
+            target='fr/upjv/mis/ete/jsf/util/PaginationHelper.java'/>
 
             <velocity dialect="fr.insset.jeanluc.as2java.JavaGenerator"
             template="jsf_util.vm"
-            target='${packageInPathFormat}/ete/jsf/util/JsfUtil.java'/>
+            target='fr/upjv/mis/ete/jsf/util/JsfUtil.java'/>
 
     </transformation-set>
 
