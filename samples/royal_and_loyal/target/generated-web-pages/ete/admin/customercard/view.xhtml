@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ete="http://xmlns.jcp.org/jsf/composite/ete"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.ViewCustomerCardTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+                <h:panelGrid columns="2">
+                    <h:outputText value="#{bundle.ViewCustomerCardLabel_valid}"/>
+                    <h:outputText value="#{customerCardController.selected.valid}" title="#{bundle.ViewcustomerCardTitle_valid}"/>
+                    <h:outputText value="#{bundle.ViewCustomerCardLabel_validFrom}"/>
+                    <h:outputText value="#{customerCardController.selected.validFrom}" title="#{bundle.ViewcustomerCardTitle_validFrom}"/>
+                    <h:outputText value="#{bundle.ViewCustomerCardLabel_goodThru}"/>
+                    <h:outputText value="#{customerCardController.selected.goodThru}" title="#{bundle.ViewcustomerCardTitle_goodThru}"/>
+                    <h:outputText value="#{bundle.ViewCustomerCardLabel_color}"/>
+                    <h:outputText value="#{customerCardController.selected.color}" title="#{bundle.ViewcustomerCardTitle_color}"/>
+                    <h:outputText value="#{bundle.ViewCustomerCardLabel_printedName}"/>
+                    <h:outputText value="#{customerCardController.selected.printedName}" title="#{bundle.ViewcustomerCardTitle_printedName}"/>
+                    <h:outputText value="#{bundle.ViewCustomerCardLabel_owner}"/>
+                    <h:outputText value="#{customerCardController.selected.owner}" title="#{bundle.ViewcustomerCardTitle_owner}"/>
+                    <h:outputText value="#{bundle.ViewCustomerCardLabel_transactions}"/>
+                    <h:outputText value="#{customerCardController.selected.transactions}" title="#{bundle.ViewcustomerCardTitle_transactions}"/>
+            </h:panelGrid>
+                <h:form>
+                <br />
+                <h:commandLink action="#{customerCardController.destroyAndView}" value="#{bundle.ViewCustomerCardDestroyLink}"/>
+                <br />
+                <br />
+                <h:link outcome="edit" value="#{bundle.ViewCustomerCardEditLink}"/>
+                <br />
+                <h:commandLink action="#{customerCardController.prepareCreate}" value="#{bundle.ViewCustomerCardCreateLink}" />
+                <br />
+                <h:commandLink action="#{customerCardController.prepareList}" value="#{bundle.ViewCustomerCardShowAllLink}"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.ViewCustomerCardIndexLink}"/>
+
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>
+

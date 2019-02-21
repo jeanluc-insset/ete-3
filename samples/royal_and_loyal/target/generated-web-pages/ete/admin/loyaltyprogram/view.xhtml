@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ete="http://xmlns.jcp.org/jsf/composite/ete"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.ViewLoyaltyProgramTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+                <h:panelGrid columns="2">
+                    <h:outputText value="#{bundle.ViewLoyaltyProgramLabel_name}"/>
+                    <h:outputText value="#{loyaltyProgramController.selected.name}" title="#{bundle.ViewloyaltyProgramTitle_name}"/>
+                    <h:outputText value="#{bundle.ViewLoyaltyProgramLabel_participants}"/>
+                    <h:outputText value="#{loyaltyProgramController.selected.participants}" title="#{bundle.ViewloyaltyProgramTitle_participants}"/>
+                    <h:outputText value="#{bundle.ViewLoyaltyProgramLabel_partners}"/>
+                    <h:outputText value="#{loyaltyProgramController.selected.partners}" title="#{bundle.ViewloyaltyProgramTitle_partners}"/>
+                    <h:outputText value="#{bundle.ViewLoyaltyProgramLabel_levels}"/>
+                    <h:outputText value="#{loyaltyProgramController.selected.levels}" title="#{bundle.ViewloyaltyProgramTitle_levels}"/>
+            </h:panelGrid>
+                <fieldset>
+                    <legend>enroll</legend>
+                <h:form>
+                    <ete:LoyaltyProgram_enroll_form />
+                </h:form>
+                </fieldset>
+                <h:form>
+                <br />
+                <h:commandLink action="#{loyaltyProgramController.destroyAndView}" value="#{bundle.ViewLoyaltyProgramDestroyLink}"/>
+                <br />
+                <br />
+                <h:link outcome="edit" value="#{bundle.ViewLoyaltyProgramEditLink}"/>
+                <br />
+                <h:commandLink action="#{loyaltyProgramController.prepareCreate}" value="#{bundle.ViewLoyaltyProgramCreateLink}" />
+                <br />
+                <h:commandLink action="#{loyaltyProgramController.prepareList}" value="#{bundle.ViewLoyaltyProgramShowAllLink}"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.ViewLoyaltyProgramIndexLink}"/>
+
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>
+

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:cc="http://xmlns.jcp.org/jsf/composite">
+
+    <!-- INTERFACE -->
+    <cc:interface>
+        <cc:attribute name="selection" class="fr.upjv.mis.jl.ete.example.airways.Earning"/>
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+        <h:panelGrid columns="2">
+<h:outputText value="account"/>
+                    <h:selectOneMenu id="account" value="#{cc.attrs.selection.account}">
+                        <f:selectItems value="#{loyaltyAccountController.getItemsAvailableAsAccountForEarningSelectOne(cc.attrs.selection)}"/>
+                        <f:ajax render=""/>
+                    </h:selectOneMenu>        </h:panelGrid>
+    </cc:implementation>
+</html>
+

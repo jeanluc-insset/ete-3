@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ete="http://xmlns.jcp.org/jsf/composite/ete"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.ViewMembershipTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+                <h:panelGrid columns="2">
+                    <h:outputText value="#{bundle.ViewMembershipLabel_card}"/>
+                    <h:outputText value="#{membershipController.selected.card}" title="#{bundle.ViewmembershipTitle_card}"/>
+                    <h:outputText value="#{bundle.ViewMembershipLabel_account}"/>
+                    <h:outputText value="#{membershipController.selected.account}" title="#{bundle.ViewmembershipTitle_account}"/>
+                    <h:outputText value="#{bundle.ViewMembershipLabel_currentLevel}"/>
+                    <h:outputText value="#{membershipController.selected.currentLevel}" title="#{bundle.ViewmembershipTitle_currentLevel}"/>
+            </h:panelGrid>
+                <h:form>
+                <br />
+                <h:commandLink action="#{membershipController.destroyAndView}" value="#{bundle.ViewMembershipDestroyLink}"/>
+                <br />
+                <br />
+                <h:link outcome="edit" value="#{bundle.ViewMembershipEditLink}"/>
+                <br />
+                <h:commandLink action="#{membershipController.prepareCreate}" value="#{bundle.ViewMembershipCreateLink}" />
+                <br />
+                <h:commandLink action="#{membershipController.prepareList}" value="#{bundle.ViewMembershipShowAllLink}"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.ViewMembershipIndexLink}"/>
+
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>
+
