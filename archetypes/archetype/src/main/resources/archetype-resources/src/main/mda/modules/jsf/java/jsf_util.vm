@@ -1,7 +1,7 @@
 #set( $symbol_pound = '#' )
 #set( $symbol_dollar = '$' )
 #set( $symbol_escape = '\' )
-package ${package}.ete.jsf.util;
+package fr.upjv.mis.ete.jsf.util;
 
 
 import java.util.List;
