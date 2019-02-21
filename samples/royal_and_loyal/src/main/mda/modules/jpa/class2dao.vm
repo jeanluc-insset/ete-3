@@ -3,7 +3,7 @@ package ${current.owningPackage.name}.jpa;
 
 import fr.upjv.mis.ete.samples.ete.jpa.AbstractJpa;
 import ${current.owningPackage.name}.model.*;
-import fr.mis.ete.util.optional.OptionalList;
+import fr.upjv.mis.ete.util.OptionalList;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedList;

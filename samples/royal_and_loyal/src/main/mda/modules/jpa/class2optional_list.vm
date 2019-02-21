@@ -10,7 +10,7 @@ import ${aDependency.owningPackage.name}.${aDependency.name};
 #end
 #end
 import fr.insset.jeanluc.util.factory.FactoryMethods;
-import fr.mis.ete.util.optional.OptionalList;
+import fr.upjv.mis.ete.util.OptionalList;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
