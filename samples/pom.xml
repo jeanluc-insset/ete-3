@@ -10,13 +10,14 @@
     <packaging>pom</packaging>
     <modules>
         <module>helloworld</module>
-        <module>web-ete-bank</module>
         <module>linked_list</module>
-        <module>composition_sample</module>
+<!--        <module>composition_sample</module>
         <module>modeleur</module>
         <module>dsl</module>
         <module>insset-airways</module>
         <module>micro_services</module>
+        <module>web-ete-bank</module> -->
         <!--<module>react_jsf</module>-->
-    </modules>
+    <module>royal_and_loyal</module>
+  </modules>
 </project>

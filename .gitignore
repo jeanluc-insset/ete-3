@@ -21,6 +21,8 @@
 /ete/gel/gel-spec/target/
 /ete/ete-maven-plugin/target/
 /ete/xlang/xlang-to-sql/target/
+/ete/xlang/xlang-impl/src/main/
+/ete/xlang/xlang-api/src/main/
 /target/
 /ete/gel/gel-evaluator/target/
 /ete/gel/gel-evaluator/nbproject/
@@ -67,9 +69,9 @@
 /ete copie/meta-model/plain-text-io/target/
 /ete copie/meta-model/xmi-io/target/
 /ete copie/xlang/action-semantics-to-java/target/
-/ete copie/xlang/xlang-api/target/
+/ete copie/xlang/xlang-api/
 /ete copie/xlang/xlang-builder/target/
-/ete copie/xlang/xlang-impl/target/
+/ete copie/xlang/xlang-impl/
 /ete copie/xlang/xlang-to-xxx/target/
 /ete copie/ete-lib/ete-lib-impl/nbproject/
 /ete copie/gel/gel-api/nbproject/
@@ -162,3 +164,8 @@ ete/meta-model/VisualParadigmReader/target/
 /samples/react_jsf/jsf/target/
 /samples/react_jsf/react/target/
 /samples/react_jsf/target/
+/ete/xlang/xlang-api/
+/ete/xlang/xlang-impl/
+/samples/react_jsf/react/node_modules/
+/samples/royal_and_loyal/
+
