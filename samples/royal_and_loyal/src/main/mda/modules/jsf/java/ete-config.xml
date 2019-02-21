@@ -1,6 +1,3 @@
-#set( $symbol_pound = '#' )
-#set( $symbol_dollar = '$' )
-#set( $symbol_escape = '\' )
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
@@ -14,15 +11,15 @@
 
             <!--<module src="xxxx"/>-->
 
-            <velocity items='${symbol_dollar}{classes.filter(c -> c.hasStereotype("Entity"))}'
+            <velocity items='${classes.filter(c -> c.hasStereotype("Entity"))}'
                         dialect="fr.insset.jeanluc.as2java.JavaGenerator"
                         template="jsf_controller.vm"
-                        target='${symbol_dollar}{current.owningPackage.name.replace(".", "/")}/jsf/${symbol_dollar}{current.name}Controller.java'/>
+                        target='${current.owningPackage.name.replace(".", "/")}/jsf/${current.name}Controller.java'/>
 
-            <velocity items='${symbol_dollar}{enumerations}'
+            <velocity items='${enumerations}'
                         dialect="fr.insset.jeanluc.as2java.JavaGenerator"
                         template="enum_controller.vm"
-                        target='${symbol_dollar}{current.owningPackage.name.replace(".", "/")}/jsf/${symbol_dollar}{current.name}Controller.java'/>
+                        target='${current.owningPackage.name.replace(".", "/")}/jsf/${current.name}Controller.java'/>
 
             <velocity dialect="fr.insset.jeanluc.as2java.JavaGenerator"
             template="pagination_helper.vm"

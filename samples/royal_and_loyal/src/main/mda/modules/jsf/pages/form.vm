@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:cc="http://xmlns.jcp.org/jsf/composite">
+
+    <!-- INTERFACE -->
+    <cc:interface>
+        <cc:attribute name="selection" class="${current.owningPackage.name}.${current.name}"/>
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+        <h:panelGrid columns="2">
+#foreach ($aProperty in $current.allAttributes)
+#set ($var = $aProperty)
+##if ($aProperty.type.support.get($aProperty).dependencies)
+##et ($dep = $aProperty.type.support.get($aProperty).dependencies)
+##else
+##end
+#set ($varName = $aProperty.name)
+#set ($scope = "cc.attrs.selection.")
+#set ($title = $current.name)
+#parse ("controls/polymorphism.vm")
+#end
+        </h:panelGrid>
+    </cc:implementation>
+</html>
+

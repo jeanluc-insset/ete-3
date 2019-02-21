@@ -1,6 +1,3 @@
-#set( $symbol_pound = '#' )
-#set( $symbol_dollar = '$' )
-#set( $symbol_escape = '\' )
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
@@ -13,7 +10,7 @@
     <transformation-set>
         <parameter name="javase"     default="false"/>
         <parameter name="datasource" default="jdbc/sample"/>
-        <parameter name="pu"         default="${package}.ete_PU"/>
+        <parameter name="pu"         default="fr.upjv.mis.ete.samples.ete_PU"/>
         <parameter name="url"        default="jdbc:derby://localhost:1527/ete"/>
         <parameter name="user"       default="ete"/>
         <parameter name="password"   default="ete"/>
@@ -27,21 +24,21 @@
 
             <!-- JPA -->
             <velocity   template="abstract_jpa.vm"
-                        target="${packageInPathFormat}/ete/jpa/AbstractJpa.java"/>
+                        target="fr/upjv/mis/ete/samples/ete/jpa/AbstractJpa.java"/>
 
-            <transformation-set  items='${symbol_dollar}{classes.filter(c -> c.hasStereotype("Entity"))}'>
+            <transformation-set  items='${classes.filter(c -> c.hasStereotype("Entity"))}'>
                 <velocity dialect="fr.insset.jeanluc.as2java.JavaGenerator"
                             template="class2entity.vm"
-                            target="${symbol_dollar}{current.owningPackage.name.replace('.', '/')}/model/${symbol_dollar}{current.name}.java"/>
+                            target="${current.owningPackage.name.replace('.', '/')}/model/${current.name}.java"/>
                 <velocity dialect="fr.insset.jeanluc.as2java.JavaGenerator"
                             template="class2optional.vm"
-                            target="${symbol_dollar}{current.owningPackage.name.replace('.', '/')}/model/Optional${symbol_dollar}{current.name}.java"/>
+                            target="${current.owningPackage.name.replace('.', '/')}/model/Optional${current.name}.java"/>
                 <velocity dialect="fr.insset.jeanluc.as2java.JavaGenerator"
                             template="class2optional_list.vm"
-                            target="${symbol_dollar}{current.owningPackage.name.replace('.', '/')}/model/OptionalList${symbol_dollar}{current.name}.java"/>
+                            target="${current.owningPackage.name.replace('.', '/')}/model/OptionalList${current.name}.java"/>
                 <velocity dialect="fr.insset.jeanluc.as2java.JPAGenerator"
                             template="class2dao.vm"
-                            target="${symbol_dollar}{current.owningPackage.name.replace('.', '/')}/jpa/${symbol_dollar}{current.name}Jpa.java">
+                            target="${current.owningPackage.name.replace('.', '/')}/jpa/${current.name}Jpa.java">
                     <dialect name="sql" class="fr.insset.jeanluc.xlang.to.sql.SqlGenerator"/>
                 </velocity>
             </transformation-set>

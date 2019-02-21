@@ -11,7 +11,7 @@ ${symbol_pound}else
 import ${symbol_dollar}{aDependency.owningPackage.name}.${symbol_dollar}{aDependency.name};
 ${symbol_pound}end
 ${symbol_pound}end
-import fr.mis.ete.util.optional.OptionalList;
+import fr.upjv.mis.ete.util.OptionalList;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;

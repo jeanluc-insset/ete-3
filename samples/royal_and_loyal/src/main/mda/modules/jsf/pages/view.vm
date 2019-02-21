@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ete="http://xmlns.jcp.org/jsf/composite/ete"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.View${current.name}Title}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+                <h:panelGrid columns="2">
+#foreach ($aProperty in $current.ownedAttribute)
+                    <h:outputText value="#{bundle.View${current.name}Label_${aProperty.name}}"/>
+                    <h:outputText value="#{${dialect.i2lc($current.name)}Controller.selected.${aProperty.name}}" title="#{bundle.View${dialect.i2lc($current.name)}Title_${aProperty.name}}"/>
+#end
+            </h:panelGrid>
+#foreach ($aMethod in $current.ownedOperation)
+                <fieldset>
+                    <legend>${aMethod.name}</legend>
+                <h:form>
+                    <ete:${current.name}_${aMethod.name}_form />
+                </h:form>
+                </fieldset>
+#end
+                <h:form>
+                <br />
+                <h:commandLink action="#{${dialect.i2lc($current.name)}Controller.destroyAndView}" value="#{bundle.View${current.name}DestroyLink}"/>
+                <br />
+                <br />
+                <h:link outcome="edit" value="#{bundle.View${current.name}EditLink}"/>
+                <br />
+                <h:commandLink action="#{${dialect.i2lc($current.name)}Controller.prepareCreate}" value="#{bundle.View${current.name}CreateLink}" />
+                <br />
+                <h:commandLink action="#{${dialect.i2lc($current.name)}Controller.prepareList}" value="#{bundle.View${current.name}ShowAllLink}"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.View${current.name}IndexLink}"/>
+
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>
+

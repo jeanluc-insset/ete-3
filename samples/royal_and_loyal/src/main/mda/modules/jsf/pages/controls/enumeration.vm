@@ -1,0 +1,3 @@
+                    <h:selectOneMenu id="${var.name}" value="#{${scope}${varName}}">
+                        <f:selectItems value="#{${dialect.i2lc($var.type.name)}Controller.itemsAvailableSelectOne}"/>
+                    </h:selectOneMenu>

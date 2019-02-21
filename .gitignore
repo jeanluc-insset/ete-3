@@ -21,6 +21,8 @@
 /ete/gel/gel-spec/target/
 /ete/ete-maven-plugin/target/
 /ete/xlang/xlang-to-sql/target/
+/ete/xlang/xlang-impl/src/main/
+/ete/xlang/xlang-api/src/main/
 /target/
 /ete/gel/gel-evaluator/target/
 /ete/gel/gel-evaluator/nbproject/
@@ -162,9 +164,8 @@ ete/meta-model/VisualParadigmReader/target/
 /samples/react_jsf/jsf/target/
 /samples/react_jsf/react/target/
 /samples/react_jsf/target/
-/samples/royal_and_loyal/nb-configuration.xml
-/samples/royal_and_loyal/
 /ete/xlang/xlang-api/
 /ete/xlang/xlang-impl/
-
+/samples/react_jsf/react/node_modules/
+/samples/royal_and_loyal/
 
