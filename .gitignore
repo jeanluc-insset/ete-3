@@ -69,9 +69,9 @@
 /ete copie/meta-model/plain-text-io/target/
 /ete copie/meta-model/xmi-io/target/
 /ete copie/xlang/action-semantics-to-java/target/
-/ete copie/xlang/xlang-api/target/
+/ete copie/xlang/xlang-api/
 /ete copie/xlang/xlang-builder/target/
-/ete copie/xlang/xlang-impl/target/
+/ete copie/xlang/xlang-impl/
 /ete copie/xlang/xlang-to-xxx/target/
 /ete copie/ete-lib/ete-lib-impl/nbproject/
 /ete copie/gel/gel-api/nbproject/
