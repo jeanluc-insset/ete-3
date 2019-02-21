@@ -18,6 +18,5 @@
         <module>micro_services</module>
         <module>web-ete-bank</module> -->
         <!--<module>react_jsf</module>-->
-    <module>royal_and_loyal</module>
   </modules>
 </project>
